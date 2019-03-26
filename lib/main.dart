@@ -26,7 +26,7 @@ class HeaderBackground extends CustomPainter {
     path.lineTo(0, size.height * 0.7);
     path.lineTo(size.width, size.height * 0.7);
     path.lineTo(size.width, size.height);
-    path.addOval(new Rect.fromCircle(center: new Offset(size.width / 2, size.height / 2), radius: 80.0));
+    path.addOval(new Rect.fromCircle(center: new Offset(size.width / 2, size.height / 2), radius: 75.0));
     path.close();
 
     paint.color = Color.fromARGB(255, 51, 51, 51);
@@ -51,8 +51,8 @@ class HeaderWidget extends StatelessWidget {
         ),
         Center(
           child: Container(
-            width: 140.0,
-            height: 140.0,
+            width: 100.0,
+            height: 100.0,
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
               image: new DecorationImage(
@@ -63,10 +63,10 @@ class HeaderWidget extends StatelessWidget {
           ),
         ),
         Align(
-          alignment: Alignment(0.0, 0.94),
+          alignment: Alignment(0.0, 0.85),
           child: Text(
             "Nome da Silva",
-            style: TextStyle(fontSize: 20.0,color: Colors.white),
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
           ),
         ),
       ],
@@ -91,8 +91,19 @@ class ActivityWidget extends StatelessWidget {
             Container(
               width: 70.0,
               height: 70.0,
-              color: Colors.red,
-              child: Icon(Icons.accessibility),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                color: Colors.red,
+                boxShadow: [
+                  new BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 3.0,
+                    spreadRadius: 1.0,
+                    offset: new Offset(1.0, 1.0),
+                  )
+                ],
+              ),
+              child: Icon(Icons.fitness_center, size: 42.0,),
             ),
             Text("Academia"),
           ],
@@ -123,12 +134,18 @@ class _MainPageState extends State<MainPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Atividades de hoje",
+                    "Hábitos de hoje",
                     style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Expanded(child: Center(child: ActivityWidget())),
-                OutlineButton(child: Text("Todas as metas"), onPressed: () {}),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: OutlineButton(
+                      child: Text("Todas os hábitos"),
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      onPressed: () {}),
+                ),
               ],
             ),
           ),

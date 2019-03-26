@@ -37,13 +37,11 @@ class HeaderWidget extends StatelessWidget {
           child: Container(
             width: 90.0,
             height: 90.0,
+            child: Icon(Icons.fitness_center, size: 50.0,),
             margin: EdgeInsets.only(top: 25.0),
             decoration: new BoxDecoration(
               shape: BoxShape.circle,
-              image: new DecorationImage(
-                fit: BoxFit.fill,
-                image: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
-              ),
+              color: Colors.red
             ),
           ),
         ),
@@ -88,20 +86,20 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     "5987",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Card(
-                  elevation: 3.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      children: <Widget>[
-                        Text("Dias concluidos: 567"),
-                      ],
-                    ),
-                  ),
-                ),
+//                Card(
+//                  elevation: 3.0,
+//                  child: Padding(
+//                    padding: const EdgeInsets.all(8.0),
+//                    child: Stack(
+//                      children: <Widget>[
+//                        Text("Dias concluidos: 567"),
+//                      ],
+//                    ),
+//                  ),
+//                ),
               ],
             ),
           ),
