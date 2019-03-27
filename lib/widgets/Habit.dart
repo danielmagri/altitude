@@ -10,7 +10,7 @@ class HabitWidget extends StatelessWidget {
 //        }));
       },
       child: Container(
-        height: 138.0,
+        height: 100.0,
         width: 100.0,
         child: Column(
           children: <Widget>[
