@@ -128,7 +128,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   AnimationController _controllerDragComplete;
   Animation _animationDragComplete;
 
-  List<int> habitsForToday = [1, 2, 3];
+  List<int> habitsForToday = [1, 2, 3, 4, 5, 6];
 
   initState() {
     super.initState();
@@ -157,14 +157,58 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
   }
 
-  List<Widget> habitsForTodayBuild() {
+  List<Widget> habitsForTodayWidget(BoxConstraints constraints) {
     List<Widget> widgets = new List();
 
+    const int width = 100;
+    const int height = 100;
+    final int maxHabitsWidth = constraints.maxWidth ~/ width;
+    final int numberLines = (habitsForToday.length / maxHabitsWidth).round();
+
+    int currentLine = 0; //Qual linha está relativa ao centro
+    int currentHabitsLine = 0; //Quantos hábitos tem na linha atual
+    int totalHabitAdded = 0;
+    int alternatorHabitPosition = 0; //Alterna a posição relativa ao centro
+    bool widthCentralized = false;
+
     for (int habit in habitsForToday) {
+      if (currentHabitsLine == maxHabitsWidth) {
+        currentHabitsLine = 0;
+        currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
+        alternatorHabitPosition = 0;
+        widthCentralized = ((habitsForToday.length - totalHabitAdded) % 2) == 0 ? true : false;
+        print(widthCentralized);
+      }
+
+      currentHabitsLine++;
+      totalHabitAdded++;
+
+      double left = 0;
+      double top = 0;
+
+      if ((numberLines % 2) == 0) {
+        top = (constraints.maxHeight / 2.0);
+        top += currentLine * height;
+      } else {
+        top = (constraints.maxHeight / 2.0) - height / 2.0;
+        top += currentLine * height;
+      }
+
+      if (widthCentralized) {
+        left = (constraints.maxWidth / 2.0) + alternatorHabitPosition * width;
+        alternatorHabitPosition =
+            alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
+      } else {
+        left = (constraints.maxWidth / 2.0) - width / 2.0;
+        left += alternatorHabitPosition * width;
+        alternatorHabitPosition =
+            alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
+      }
+
       widgets.add(
         Positioned(
-          left: habit * 100.0,
-          top: 20,
+          left: left,
+          top: top,
           child: Draggable(
             data: habit,
             child: HabitWidget(),
@@ -204,8 +248,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                     ),
                     Expanded(
-                      child: Stack(
-                        children: habitsForTodayBuild(),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) => Stack(
+                              fit: StackFit.expand,
+                              children: habitsForTodayWidget(constraints),
+                            ),
                       ),
                     ),
                     Padding(
