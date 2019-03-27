@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/habitDetailsPage.dart';
+import 'package:habit/widgets/Habit.dart';
 
 void main() => runApp(MyApp());
 
@@ -74,39 +74,43 @@ class HeaderWidget extends StatelessWidget {
   }
 }
 
-class ActivityWidget extends StatelessWidget {
+class DragComplete extends AnimatedWidget {
+  DragComplete({Key key, @required this.onAccept, Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  bool hover = false;
+  final Function onAccept;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return HabitDetailsPage();
-        }));
-      },
+    final Animation<double> animation = listenable;
+
+    return Positioned(
+      left: 40,
+      right: 40,
+      bottom: animation.value,
       child: Container(
-        height: 100.0,
-        width: 100.0,
-        child: Column(
-          children: <Widget>[
-            Container(
-              width: 70.0,
-              height: 70.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.red,
-                boxShadow: [
-                  new BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3.0,
-                    spreadRadius: 1.0,
-                    offset: new Offset(1.0, 1.0),
-                  )
-                ],
-              ),
-              child: Icon(Icons.fitness_center, size: 42.0,),
-            ),
-            Text("Academia"),
-          ],
+        height: 90,
+        color: Color.fromARGB(255, 221, 221, 221),
+        child: DragTarget(
+          builder: (context, List<int> candidateData, rejectedData) {
+            return Center(
+                child: Text(
+              "Concluído",
+              style: TextStyle(color: hover ? Colors.green : Colors.white, fontSize: 22.0),
+            ));
+          },
+          onWillAccept: (data) {
+            hover = true;
+            return true;
+          },
+          onAccept: (data) {
+            hover = false;
+            onAccept(data);
+          },
+          onLeave: (data) {
+            hover = false;
+          },
         ),
       ),
     );
@@ -120,7 +124,66 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+  AnimationController _controllerDragComplete;
+  Animation _animationDragComplete;
+
+  List<int> habitsForToday = [1, 2, 3];
+
+  initState() {
+    super.initState();
+
+    _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+
+    _animationDragComplete = Tween(begin: -100.0, end: 10.0)
+        .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.easeOutExpo));
+  }
+
+  @override
+  void dispose() {
+    _controllerDragComplete.dispose();
+    super.dispose();
+  }
+
+  void onAccept(data) {
+    _controllerDragComplete.reverse();
+
+    for (int i = 0; i < habitsForToday.length; i++) {
+      if (habitsForToday[i] == data) {
+        setState(() {
+          habitsForToday.removeAt(i);
+        });
+      }
+    }
+  }
+
+  List<Widget> habitsForTodayBuild() {
+    List<Widget> widgets = new List();
+
+    for (int habit in habitsForToday) {
+      widgets.add(
+        Positioned(
+          left: habit * 100.0,
+          top: 20,
+          child: Draggable(
+            data: habit,
+            child: HabitWidget(),
+            feedback: HabitWidget(),
+            childWhenDragging: Container(),
+            onDragStarted: () {
+              _controllerDragComplete.forward();
+            },
+            onDraggableCanceled: (velocity, offset) {
+              _controllerDragComplete.reverse();
+            },
+          ),
+        ),
+      );
+    }
+
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,23 +192,32 @@ class _MainPageState extends State<MainPage> {
           Expanded(flex: 1, child: HeaderWidget()),
           Expanded(
             flex: 2,
-            child: Column(
+            child: Stack(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Hábitos de hoje",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-                  ),
+                Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Hábitos de hoje",
+                        style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: Stack(
+                        children: habitsForTodayBuild(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: OutlineButton(
+                          child: Text("Todas os hábitos"),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                          onPressed: () {}),
+                    ),
+                  ],
                 ),
-                Expanded(child: Center(child: ActivityWidget())),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: OutlineButton(
-                      child: Text("Todas os hábitos"),
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      onPressed: () {}),
-                ),
+                DragComplete(onAccept: onAccept, animation: _animationDragComplete),
               ],
             ),
           ),
