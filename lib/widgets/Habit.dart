@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:habit/habitDetailsPage.dart';
 
 class HabitWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-//        Navigator.push(context, MaterialPageRoute(builder: (_) {
-//          return HabitDetailsPage();
-//        }));
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return HabitDetailsPage();
+        }));
       },
       child: Container(
         height: 100.0,

@@ -175,7 +175,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
         alternatorHabitPosition = 0;
         widthCentralized = ((habitsForToday.length - totalHabitAdded) % 2) == 0 ? true : false;
-        print(widthCentralized);
       }
 
       currentHabitsLine++;
