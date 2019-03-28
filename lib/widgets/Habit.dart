@@ -15,17 +15,16 @@ class HabitWidget extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Container(
-              width: 70.0,
-              height: 70.0,
+              width: 60.0,
+              height: 60.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),
-                color: Colors.red,
+                color: Color.fromARGB(255, 250, 127, 114),
                 boxShadow: [
                   new BoxShadow(
                     color: Colors.grey,
                     blurRadius: 3.0,
                     spreadRadius: 1.0,
-                    offset: new Offset(1.0, 1.0),
                   )
                 ],
               ),
@@ -34,9 +33,12 @@ class HabitWidget extends StatelessWidget {
                 size: 42.0,
               ),
             ),
-            Text(
-              "Academia",
-              style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "Academia",
+                style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal),
+              ),
             ),
           ],
         ),
