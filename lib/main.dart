@@ -8,36 +8,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habitos',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'Roboto'),
       home: MainPage(),
     );
   }
 }
 
-class HeaderBackground extends CustomPainter {
+class HeaderBackgroundClip extends CustomClipper<Path> {
   @override
-  void paint(Canvas canvas, Size size) {
-    Path path = Path();
-    Paint paint = Paint();
+  Path getClip(Size size) {
+    var path = Path();
 
-    path.moveTo(0, size.height);
-    path.lineTo(0, size.height * 0.7);
-    path.lineTo(size.width, size.height * 0.7);
-    path.lineTo(size.width, size.height);
-    path.addOval(new Rect.fromCircle(center: new Offset(size.width / 2, size.height / 2), radius: 75.0));
+    path.lineTo(0.0, size.height);
+    path.lineTo(size.width, size.height - 60);
+    path.lineTo(size.width, 0.0);
     path.close();
 
-    paint.color = Color.fromARGB(255, 51, 51, 51);
-    canvas.drawShadow(path, Colors.grey[900], 1.0, false);
-    canvas.drawPath(path, paint);
+    return path;
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
 class HeaderWidget extends StatelessWidget {
@@ -45,28 +36,35 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        CustomPaint(
-          foregroundPainter: HeaderBackground(),
-          child: Container(color: Color.fromARGB(255, 221, 221, 221)),
-        ),
-        Center(
+        ClipPath(
           child: Container(
-            width: 100.0,
-            height: 100.0,
-            decoration: new BoxDecoration(
-              shape: BoxShape.circle,
-              image: new DecorationImage(
-                fit: BoxFit.fill,
-                image: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
-              ),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 221, 221, 221),
             ),
+          ),
+          clipper: HeaderBackgroundClip(),
+        ),
+        Align(
+          alignment: Alignment(-0.9, 0.2),
+          child: Text(
+            "Nome da Silva",
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
           ),
         ),
         Align(
-          alignment: Alignment(0.0, 0.85),
+          alignment: Alignment(-0.9, 0.95),
           child: Text(
-            "Nome da Silva",
-            style: TextStyle(fontSize: 20.0, color: Colors.white),
+            "1395",
+            style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Align(
+          alignment: Alignment(0.85, 0.65),
+          child: FloatingActionButton(
+            onPressed: () {},
+            tooltip: 'Adicionar',
+            backgroundColor: Color.fromARGB(255, 250, 127, 114),
+            child: Icon(Icons.add,color: Colors.black,),
           ),
         ),
       ],
@@ -128,7 +126,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   AnimationController _controllerDragComplete;
   Animation _animationDragComplete;
 
-  List<int> habitsForToday = [1, 2, 3, 4, 5, 6];
+  List<int> habitsForToday = [1, 2, 3, 4, 5];
 
   initState() {
     super.initState();
@@ -240,12 +238,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Hábitos de hoje",
-                        style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-                      ),
+                    Text(
+                      "Hábitos de hoje",
+                      style: TextStyle(fontSize: 22.0),
                     ),
                     Expanded(
                       child: LayoutBuilder(
@@ -270,11 +265,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           ),
         ],
       ),
-//      floatingActionButton: FloatingActionButton(
-//        onPressed: () {},
-//        tooltip: 'Adicionar',
-//        child: Icon(Icons.add),
-//      ),
     );
   }
 }
