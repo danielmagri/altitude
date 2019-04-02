@@ -5,7 +5,7 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
   Path getClip(Size size) {
     var path = Path();
 
-    path.lineTo(0.0, size.height - 60);
+    path.lineTo(0.0, size.height - 40);
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0.0);
     path.close();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/widgets/Habit.dart';
+import 'package:habit/addHabitPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +21,7 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
     var path = Path();
 
     path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height - 60);
+    path.lineTo(size.width, size.height - 40);
     path.lineTo(size.width, 0.0);
     path.close();
 
@@ -61,7 +62,11 @@ class HeaderWidget extends StatelessWidget {
         Align(
           alignment: Alignment(0.85, 0.65),
           child: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return AddHabitPage();
+              }));
+            },
             tooltip: 'Adicionar',
             backgroundColor: Color.fromARGB(255, 250, 127, 114),
             child: Icon(Icons.add,color: Colors.black,),
