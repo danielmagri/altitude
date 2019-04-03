@@ -142,7 +142,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   AnimationController _controllerDragComplete;
   Animation _animationDragComplete;
 
-  List<Habit> habitsForToday = [new Habit(Category.FISICO, "teste", "Academia", "dasda", 10)];
+  List<Habit> habitsForToday = [new Habit(Category.FISICO, "teste", "012345678901234567890123456789", "dasda", 10)];
   Person person;
 
   @override
@@ -161,7 +161,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   @override
   void didChangeDependencies() {
-    print("rodou");
     if(person.habits.length > 0) {
       habitsForToday = person.habits;
     }
@@ -189,8 +188,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   List<Widget> habitsForTodayWidget(BoxConstraints constraints) {
     List<Widget> widgets = new List();
 
-    const int width = 100;
-    const int height = 100;
+    const int width = 110;
+    const int height = 90;
     final int maxHabitsWidth = constraints.maxWidth ~/ width;
     final int numberLines = (habitsForToday.length / maxHabitsWidth).round();
 
@@ -233,14 +232,16 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
       }
 
+      Widget habitWidget = HabitWidget(habit: habit);
+
       widgets.add(
         Positioned(
           left: left,
           top: top,
           child: Draggable(
             data: habit.score,
-            child: HabitWidget(),
-            feedback: HabitWidget(),
+            child: habitWidget,
+            feedback: Material(type: MaterialType.transparency, child: habitWidget),
             childWhenDragging: Container(),
             onDragStarted: () {
               _controllerDragComplete.forward();
