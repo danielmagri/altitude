@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit/widgets/Habit.dart';
+import 'package:habit/widgets/HabitCard.dart';
 import 'package:habit/addHabitPage.dart';
+import 'package:habit/objects/Person.dart';
+import 'package:habit/objects/Habit.dart';
+import 'package:habit/utils/enums.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,6 +36,11 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 }
 
 class HeaderWidget extends StatelessWidget {
+  HeaderWidget({Key key, this.name, this.score}) : super(key: key);
+
+  final String name;
+  final int score;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -48,14 +56,14 @@ class HeaderWidget extends StatelessWidget {
         Align(
           alignment: Alignment(-0.9, 0.2),
           child: Text(
-            "Nome da Silva",
+            name,
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
           ),
         ),
         Align(
           alignment: Alignment(-0.9, 0.95),
           child: Text(
-            "1395",
+            score.toString(),
             style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
           ),
         ),
@@ -69,7 +77,10 @@ class HeaderWidget extends StatelessWidget {
             },
             tooltip: 'Adicionar',
             backgroundColor: Color.fromARGB(255, 250, 127, 114),
-            child: Icon(Icons.add,color: Colors.black,),
+            child: Icon(
+              Icons.add,
+              color: Colors.black,
+            ),
           ),
         ),
       ],
@@ -131,15 +142,30 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   AnimationController _controllerDragComplete;
   Animation _animationDragComplete;
 
-  List<int> habitsForToday = [1, 2, 3, 4, 5];
+  List<Habit> habitsForToday = [new Habit(Category.FISICO, "teste", "Academia", "dasda", 10)];
+  Person person;
 
+  @override
   initState() {
     super.initState();
+
+    person = new Person();
+    person.name = "Daniel Magri";
+    person.score = 1234;
 
     _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
 
     _animationDragComplete = Tween(begin: -100.0, end: 10.0)
         .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.easeOutExpo));
+  }
+
+  @override
+  void didChangeDependencies() {
+    print("rodou");
+    if(person.habits.length > 0) {
+      habitsForToday = person.habits;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -174,7 +200,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     int alternatorHabitPosition = 0; //Alterna a posição relativa ao centro
     bool widthCentralized = false;
 
-    for (int habit in habitsForToday) {
+    for (Habit habit in habitsForToday) {
       if (currentHabitsLine == maxHabitsWidth) {
         currentHabitsLine = 0;
         currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
@@ -212,7 +238,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           left: left,
           top: top,
           child: Draggable(
-            data: habit,
+            data: habit.score,
             child: HabitWidget(),
             feedback: HabitWidget(),
             childWhenDragging: Container(),
@@ -235,7 +261,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(flex: 1, child: HeaderWidget()),
+          Expanded(
+              flex: 1,
+              child: HeaderWidget(
+                name: person.name,
+                score: person.score,
+              )),
           Expanded(
             flex: 2,
             child: Stack(

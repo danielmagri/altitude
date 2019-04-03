@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Person.dart';
+import 'package:habit/utils/enums.dart';
 
 class CategorySelection extends StatelessWidget {
   CategorySelection({Key key, this.onTap}) : super(key: key);
@@ -23,7 +26,9 @@ class CategorySelection extends StatelessWidget {
             crossAxisCount: 2,
             children: <Widget>[
               GestureDetector(
-                onTap: onTap,
+                onTap: () {
+                  onTap(1);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.red,
@@ -63,7 +68,9 @@ class CategorySelection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: onTap,
+                onTap: () {
+                  onTap(2);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.green,
@@ -103,7 +110,9 @@ class CategorySelection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: onTap,
+                onTap: () {
+                  onTap(3);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.blue,
@@ -143,7 +152,9 @@ class CategorySelection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: onTap,
+                onTap: () {
+                  onTap(4);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.yellow,
@@ -191,8 +202,9 @@ class CategorySelection extends StatelessWidget {
 }
 
 class RewardSetting extends StatelessWidget {
-  RewardSetting({Key key, this.onTap}) : super(key: key);
+  RewardSetting({Key key, this.controller, this.onTap}) : super(key: key);
 
+  final TextEditingController controller;
   final Function onTap;
 
   @override
@@ -219,6 +231,7 @@ class RewardSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22.0),
           child: TextField(
+            controller: controller,
             style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               hintText: "Escreva aqui",
@@ -258,8 +271,9 @@ class RewardSetting extends StatelessWidget {
 }
 
 class HabitSetting extends StatelessWidget {
-  HabitSetting({Key key, this.onTap}) : super(key: key);
+  HabitSetting({Key key, this.controller, this.onTap}) : super(key: key);
 
+  final TextEditingController controller;
   final Function onTap;
 
   @override
@@ -286,6 +300,7 @@ class HabitSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: TextField(
+            controller: controller,
             style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               hintText: "Escreva aqui",
@@ -325,8 +340,9 @@ class HabitSetting extends StatelessWidget {
 }
 
 class CueSetting extends StatelessWidget {
-  CueSetting({Key key, this.onTap}) : super(key: key);
+  CueSetting({Key key, this.controller, this.onTap}) : super(key: key);
 
+  final TextEditingController controller;
   final Function onTap;
 
   @override
@@ -353,6 +369,7 @@ class CueSetting extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: TextField(
+            controller: controller,
             style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               hintText: "Escreva aqui",
@@ -401,6 +418,11 @@ class AddHabitPage extends StatefulWidget {
 class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
+  final rewardController = TextEditingController();
+  final habitController = TextEditingController();
+  final cueController = TextEditingController();
+  int selection = 0;
+
   @override
   void initState() {
     super.initState();
@@ -413,7 +435,8 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
     super.dispose();
   }
 
-  void categorySelected() {
+  void categorySelected(int selection) {
+    this.selection = selection;
     _nextPage(1);
   }
 
@@ -435,6 +458,11 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
 
   void cueSettingTap(bool next) {
     if (next) {
+      Habit habit = new Habit(Category.FISICO, cueController.text, habitController.text, rewardController.text, 0);
+      new Person().habits.add(habit);
+
+      Navigator.pop(context);
+
       _nextPage(1);
     } else {
       _nextPage(-1);
@@ -460,12 +488,15 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
               onTap: categorySelected,
             ),
             RewardSetting(
+              controller: rewardController,
               onTap: rewardSettingTap,
             ),
             HabitSetting(
+              controller: habitController,
               onTap: habitSettingTap,
             ),
             CueSetting(
+              controller: cueController,
               onTap: cueSettingTap,
             )
           ],
