@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit/habitDetailsPage.dart';
+import 'package:habit/objects/Habit.dart';
 
 class HabitWidget extends StatelessWidget {
+  HabitWidget({Key key, this.habit}) : super(key: key);
+
+  final Habit habit;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -10,34 +15,30 @@ class HabitWidget extends StatelessWidget {
           return HabitDetailsPage();
         }));
       },
-      child: Container(
-        height: 100.0,
-        width: 100.0,
+      child: SizedBox(
+        height: 90.0,
+        width: 110.0,
         child: Column(
           children: <Widget>[
             Container(
-              width: 60.0,
-              height: 60.0,
+              width: 50.0,
+              height: 50.0,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(12.0),
                 color: Color.fromARGB(255, 250, 127, 114),
-                boxShadow: [
-                  new BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 3.0,
-                    spreadRadius: 1.0,
-                  )
-                ],
               ),
               child: Icon(
                 Icons.fitness_center,
-                size: 42.0,
+                size: 32.0,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                "Academia",
+                habit.getHabitText(),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.normal),
               ),
             ),
