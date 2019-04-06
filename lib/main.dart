@@ -3,7 +3,7 @@ import 'package:habit/widgets/HabitCard.dart';
 import 'package:habit/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/utils/enums.dart';
+import 'package:habit/controllers/DataControl.dart';
 
 void main() => runApp(MyApp());
 
@@ -115,6 +115,7 @@ class DragComplete extends AnimatedWidget {
             ));
           },
           onWillAccept: (data) {
+            print(data);
             hover = true;
             return true;
           },
@@ -142,8 +143,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   AnimationController _controllerDragComplete;
   Animation _animationDragComplete;
 
-  List<Habit> habitsForToday = [new Habit(Category.FISICO, "teste", "012345678901234567890123456789", "dasda", 10)];
+  List<Habit> habitsForToday = [];
   Person person;
+
+  bool _loading = true;
 
   @override
   initState() {
@@ -161,9 +164,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
   @override
   void didChangeDependencies() {
-    if(person.habits.length > 0) {
-      habitsForToday = person.habits;
-    }
+    getData();
+
     super.didChangeDependencies();
   }
 
@@ -173,11 +175,21 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  void getData() async {
+    habitsForToday = await DataControl().getHabitsToday();
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
   void onAccept(data) {
     _controllerDragComplete.reverse();
 
+    DataControl().habitDone(data);
+
     for (int i = 0; i < habitsForToday.length; i++) {
-      if (habitsForToday[i] == data) {
+      if (habitsForToday[i].id == data) {
         setState(() {
           habitsForToday.removeAt(i);
         });
@@ -188,70 +200,76 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   List<Widget> habitsForTodayWidget(BoxConstraints constraints) {
     List<Widget> widgets = new List();
 
-    const int width = 110;
-    const int height = 90;
-    final int maxHabitsWidth = constraints.maxWidth ~/ width;
-    final int numberLines = (habitsForToday.length / maxHabitsWidth).round();
+    if (_loading) {
+      widgets.add(Center(child: CircularProgressIndicator()));
+    } else if (habitsForToday.length == 0) {
+      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+    } else {
+      const int width = 110;
+      const int height = 90;
+      final int maxHabitsWidth = constraints.maxWidth ~/ width;
+      final int numberLines = (habitsForToday.length / maxHabitsWidth).round();
 
-    int currentLine = 0; //Qual linha está relativa ao centro
-    int currentHabitsLine = 0; //Quantos hábitos tem na linha atual
-    int totalHabitAdded = 0;
-    int alternatorHabitPosition = 0; //Alterna a posição relativa ao centro
-    bool widthCentralized = false;
+      int currentLine = 0; //Qual linha está relativa ao centro
+      int currentHabitsLine = 0; //Quantos hábitos tem na linha atual
+      int totalHabitAdded = 0;
+      int alternatorHabitPosition = 0; //Alterna a posição relativa ao centro
+      bool widthCentralized = false;
 
-    for (Habit habit in habitsForToday) {
-      if (currentHabitsLine == maxHabitsWidth) {
-        currentHabitsLine = 0;
-        currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
-        alternatorHabitPosition = 0;
-        widthCentralized = ((habitsForToday.length - totalHabitAdded) % 2) == 0 ? true : false;
-      }
+      for (Habit habit in habitsForToday) {
+        if (currentHabitsLine == maxHabitsWidth) {
+          currentHabitsLine = 0;
+          currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
+          alternatorHabitPosition = 0;
+          widthCentralized = ((habitsForToday.length - totalHabitAdded) % 2) == 0 ? true : false;
+        }
 
-      currentHabitsLine++;
-      totalHabitAdded++;
+        currentHabitsLine++;
+        totalHabitAdded++;
 
-      double left = 0;
-      double top = 0;
+        double left = 0;
+        double top = 0;
 
-      if ((numberLines % 2) == 0) {
-        top = (constraints.maxHeight / 2.0);
-        top += currentLine * height;
-      } else {
-        top = (constraints.maxHeight / 2.0) - height / 2.0;
-        top += currentLine * height;
-      }
+        if ((numberLines % 2) == 0) {
+          top = (constraints.maxHeight / 2.0);
+          top += currentLine * height;
+        } else {
+          top = (constraints.maxHeight / 2.0) - height / 2.0;
+          top += currentLine * height;
+        }
 
-      if (widthCentralized) {
-        left = (constraints.maxWidth / 2.0) + alternatorHabitPosition * width;
-        alternatorHabitPosition =
-            alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
-      } else {
-        left = (constraints.maxWidth / 2.0) - width / 2.0;
-        left += alternatorHabitPosition * width;
-        alternatorHabitPosition =
-            alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
-      }
+        if (widthCentralized) {
+          left = (constraints.maxWidth / 2.0) + alternatorHabitPosition * width;
+          alternatorHabitPosition =
+              alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
+        } else {
+          left = (constraints.maxWidth / 2.0) - width / 2.0;
+          left += alternatorHabitPosition * width;
+          alternatorHabitPosition =
+              alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
+        }
 
-      Widget habitWidget = HabitWidget(habit: habit);
+        Widget habitWidget = HabitWidget(habit: habit);
 
-      widgets.add(
-        Positioned(
-          left: left,
-          top: top,
-          child: Draggable(
-            data: habit.score,
-            child: habitWidget,
-            feedback: Material(type: MaterialType.transparency, child: habitWidget),
-            childWhenDragging: Container(),
-            onDragStarted: () {
-              _controllerDragComplete.forward();
-            },
-            onDraggableCanceled: (velocity, offset) {
-              _controllerDragComplete.reverse();
-            },
+        widgets.add(
+          Positioned(
+            left: left,
+            top: top,
+            child: Draggable(
+              data: habit.id,
+              child: habitWidget,
+              feedback: Material(type: MaterialType.transparency, child: habitWidget),
+              childWhenDragging: Container(),
+              onDragStarted: () {
+                _controllerDragComplete.forward();
+              },
+              onDraggableCanceled: (velocity, offset) {
+                _controllerDragComplete.reverse();
+              },
+            ),
           ),
-        ),
-      );
+        );
+      }
     }
 
     return widgets;
