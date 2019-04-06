@@ -35,7 +35,7 @@ class HabitWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                habit.getHabitText(),
+                habit.habit,
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

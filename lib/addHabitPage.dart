@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Person.dart';
-import 'package:habit/utils/enums.dart';
+import 'dart:async';
+import 'package:habit/controllers/DataControl.dart';
 
 class CategorySelection extends StatelessWidget {
   CategorySelection({Key key, this.onTap}) : super(key: key);
@@ -458,10 +459,16 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
 
   void cueSettingTap(bool next) {
     if (next) {
-      Habit habit = new Habit(Category.FISICO, cueController.text, habitController.text, rewardController.text, 0);
-      new Person().habits.add(habit);
+      Habit habit = new Habit(
+          category: 1,
+          cue: cueController.text,
+          habit: habitController.text,
+          reward: rewardController.text,
+          score: 0);
 
-      Navigator.pop(context);
+      DataControl().addHabit(habit).then((result) {
+        Navigator.pop(context);
+      });
 
       _nextPage(1);
     } else {
