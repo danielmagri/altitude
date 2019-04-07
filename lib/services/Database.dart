@@ -118,9 +118,8 @@ class DatabaseService {
   Future<bool> habitDone(int id) async {
     DateTime now = new DateTime.now();
     final db = await database;
-    var result = await db.rawQuery('''
+    await db.rawQuery('''
         SELECT * FROM DiasFeito''');
-    print(result);
     await db.rawInsert(
         'INSERT INTO DiasFeito (Feito, Dia, Habitos_id) VALUES (1, \'${now.year.toString()}-${now.month.toString()}-${now.day.toString()}\', $id);');
 
