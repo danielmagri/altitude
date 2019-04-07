@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/objects/Habit.dart';
 
 class HeaderBackgroundClip extends CustomClipper<Path> {
   @override
@@ -18,6 +19,11 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 }
 
 class HeaderWidget extends StatelessWidget {
+  HeaderWidget({Key key, this.name, this.score}) : super(key: key);
+
+  final String name;
+  final int score;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -46,14 +52,14 @@ class HeaderWidget extends StatelessWidget {
         Align(
           alignment: Alignment(0.9, 0.0),
           child: Text(
-            "Academia",
+            name,
             style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
           ),
         ),
         Align(
           alignment: Alignment(0.9, 0.75),
           child: Text(
-            "1000",
+            score.toString(),
             style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
           ),
         ),
@@ -63,19 +69,21 @@ class HeaderWidget extends StatelessWidget {
 }
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key}) : super(key: key);
+  HabitDetailsPage({Key key, this.habit}) : super(key: key);
+
+  final Habit habit;
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
 class _HabitDetailsPageState extends State<HabitDetailsPage> {
-  @override
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Expanded(flex: 1, child: HeaderWidget()),
+          Expanded(flex: 1, child: HeaderWidget(name: widget.habit.habit, score: widget.habit.score,)),
           Expanded(
             flex: 2,
             child: Column(
