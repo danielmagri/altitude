@@ -115,11 +115,16 @@ class DatabaseService {
     return list;
   }
 
+  Future<Habit> getHabit(int id) async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT * FROM Habitos WHERE id=$id;');
+    
+    return Habit.fromJson(result[0]);
+  }
+
   Future<bool> habitDone(int id) async {
     DateTime now = new DateTime.now();
     final db = await database;
-    await db.rawQuery('''
-        SELECT * FROM DiasFeito''');
     await db.rawInsert(
         'INSERT INTO DiasFeito (Feito, Dia, Habitos_id) VALUES (1, \'${now.year.toString()}-${now.month.toString()}-${now.day.toString()}\', $id);');
 
@@ -136,11 +141,7 @@ class DatabaseService {
     return true;
   }
 
-//  Future<List> getAllNotes() async {
-//    var result = await db.rawQuery('SELECT * FROM $tableNote');
-//
-//    return result.toList();
-//  }
+
 
 //  Future<Note> getNote(int id) async {
 //    var result = await db.rawQuery('SELECT * FROM $tableNote WHERE $columnId = $id');
