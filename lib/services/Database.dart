@@ -78,6 +78,25 @@ class DatabaseService {
           );''');
   }
 
+  Future<List> getAllHabits() async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT * FROM Habitos;');
+
+    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
+    return list;
+  }
+
+  Future<Habit> getHabit(int id) async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT * FROM Habitos WHERE id=$id;');
+
+    if (result.isNotEmpty) {
+      return Habit.fromJson(result.first);
+    } else {
+      return null;
+    }
+  }
+
   Future<List> getHabitsToday() async {
     DateTime now = new DateTime.now();
     String weekday = "";
@@ -115,13 +134,6 @@ class DatabaseService {
     return list;
   }
 
-  Future<Habit> getHabit(int id) async {
-    final db = await database;
-    var result = await db.rawQuery('SELECT * FROM Habitos WHERE id=$id;');
-    
-    return Habit.fromJson(result[0]);
-  }
-
   Future<bool> habitDone(int id) async {
     DateTime now = new DateTime.now();
     final db = await database;
@@ -140,18 +152,6 @@ class DatabaseService {
 
     return true;
   }
-
-
-
-//  Future<Note> getNote(int id) async {
-//    var result = await db.rawQuery('SELECT * FROM $tableNote WHERE $columnId = $id');
-//
-//    if (result.length > 0) {
-//      return new Note.fromMap(result.first);
-//    }
-//
-//    return null;
-//  }
 
 //  Future<int> updateNote(Note note) async {
 //    return await db.rawUpdate(

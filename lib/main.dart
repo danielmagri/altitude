@@ -5,6 +5,7 @@ import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/ui/allHabitsPage.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -311,9 +312,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: OutlineButton(
-                          child: Text("Todas os hábitos"),
+                          child: Text("Todos os hábitos"),
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                          onPressed: () {}),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) {
+                              return AllHabitsPage();
+                            }));
+                          }),
                     ),
                   ],
                 ),
