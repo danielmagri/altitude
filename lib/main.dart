@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 import 'package:habit/widgets/HabitCard.dart';
+import 'package:habit/widgets/ClipShadowPath.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
@@ -50,30 +52,40 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        ClipPath(
+        ClipShadowPath(
           child: Container(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 221, 221, 221),
+              image: DecorationImage(image: AssetImage('assets/praia.jpg'), fit: BoxFit.cover),
+            ),
+            child: new BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: new Container(
+                decoration: new BoxDecoration(color: Colors.white.withOpacity(0.4)),
+              ),
             ),
           ),
           clipper: HeaderBackgroundClip(),
+          shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
         ),
-        Align(
-          alignment: Alignment(-0.9, 0.2),
-          child: Text(
-            name,
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+        Container(
+          alignment: Alignment(-0.92, 0.95),
+
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                name,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+              ),
+              Text(
+                score.toString(),
+                style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
         Align(
-          alignment: Alignment(-0.9, 0.95),
-          child: Text(
-            score.toString(),
-            style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Align(
-          alignment: Alignment(0.85, 0.65),
+          alignment: Alignment(0.85, 0.85),
           child: FloatingActionButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -81,7 +93,7 @@ class HeaderWidget extends StatelessWidget {
               }));
             },
             tooltip: 'Adicionar',
-            backgroundColor: Color.fromARGB(255, 250, 127, 114),
+            backgroundColor: Color.fromARGB(255, 220, 220, 220),
             child: Icon(
               Icons.add,
               color: Colors.black,
@@ -299,7 +311,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   children: <Widget>[
                     Text(
                       "Hábitos de hoje",
-                      style: TextStyle(fontSize: 22.0),
+                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300,height: 1.3),
                     ),
                     Expanded(
                       child: LayoutBuilder(
@@ -310,10 +322,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: OutlineButton(
-                          child: Text("Todos os hábitos"),
-                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: RaisedButton(
+                          child: Text("TODOS OS HÁBITOS"),
+                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          elevation: 0.0,
+                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (_) {
                               return AllHabitsPage();

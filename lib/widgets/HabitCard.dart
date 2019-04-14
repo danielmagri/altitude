@@ -29,7 +29,7 @@ class HabitWidget extends StatelessWidget {
               height: 50.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: Color.fromARGB(255, 250, 127, 114),
+                color: Color.fromARGB(255, 239, 83, 80),
               ),
               child: Icon(
                 Icons.fitness_center,
