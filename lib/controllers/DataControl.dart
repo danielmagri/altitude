@@ -19,7 +19,7 @@ class DataControl {
     return await DatabaseService().habitDone(id);
   }
 
-  Future<bool> addHabit(Habit habit) async {
-    return await DatabaseService().addHabit(habit);
+  Future<bool> addHabit(Habit habit, dynamic frequency) async {
+    return await DatabaseService().addHabit(habit, frequency);
   }
 }
