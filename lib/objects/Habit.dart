@@ -12,18 +12,18 @@ class Habit {
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
-      category: json["Categoria"],
-      cue: json["DeixaText"],
-      habit: json["HabitoText"],
-      reward: json["RecompensaText"],
-      score: json["Pontuacao"]);
+      category: json["category"],
+      cue: json["cue_text"],
+      habit: json["habit_text"],
+      reward: json["reward_text"],
+      score: json["score"]);
 
   Map<String, dynamic> toJson() => {
-    "Id": id,
-    "Categoria": category,
-    "DeixaText": cue,
-    "HabitoText": habit,
-    "RecompensaText": reward,
-    "Pontuacao": score,
+    "id": id,
+    "category": category,
+    "cue_text": cue,
+    "habit_text": habit,
+    "reward_text": reward,
+    "score": score,
   };
 }
