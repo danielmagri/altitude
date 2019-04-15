@@ -14,6 +14,10 @@ class DataControl {
   Future<List<Habit>> getHabitsToday() async {
     return await DatabaseService().getHabitsToday();
   }
+  
+  Future<dynamic> getFrequency(int id) async {
+    return await DatabaseService().getFrequency(id);
+  }
 
   Future<bool> habitDone(int id) async {
     return await DatabaseService().habitDone(id);

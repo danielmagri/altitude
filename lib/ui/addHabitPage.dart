@@ -371,13 +371,13 @@ class _FrequencySettingState extends State<FrequencySetting> {
   void validateData() {
     if (expanded == 0) {
       FreqDayWeek dayWeek = new FreqDayWeek(
-          monday: _filters.contains(_days[0]),
-          tuesday: _filters.contains(_days[1]),
-          wednesday: _filters.contains(_days[2]),
-          thursday: _filters.contains(_days[3]),
-          friday: _filters.contains(_days[4]),
-          saturday: _filters.contains(_days[5]),
-          sunday: _filters.contains(_days[6]));
+          monday: _filters.contains(_days[0]) ? 1 : 0,
+          tuesday: _filters.contains(_days[1]) ? 1 : 0,
+          wednesday: _filters.contains(_days[2]) ? 1 : 0,
+          thursday: _filters.contains(_days[3]) ? 1 : 0,
+          friday: _filters.contains(_days[4]) ? 1 : 0,
+          saturday: _filters.contains(_days[5]) ? 1 : 0,
+          sunday: _filters.contains(_days[6]) ? 1 : 0);
 
       widget.onTap(true, dayWeek);
     } else if (expanded == 1) {

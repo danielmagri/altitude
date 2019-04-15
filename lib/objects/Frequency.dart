@@ -1,6 +1,6 @@
 class FreqDayWeek {
   int habitId;
-  bool monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+  int monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
   FreqDayWeek(
       {this.habitId,

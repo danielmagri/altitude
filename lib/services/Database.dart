@@ -41,11 +41,13 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE habit (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            category INTEGER NOT NULL,
+            score INTEGER NOT NULL,
             habit_text VARCHAR(45) NOT NULL,
             reward_text VARCHAR(45) NOT NULL,
             cue_text VARCHAR(45) NOT NULL,
-            category INTEGER NOT NULL,
-            score INTEGER NOT NULL);''');
+            initial_date DATE NOT NULL,
+            days_done INTEGER NOT NULL);''');
 
     await db.execute('''
           CREATE TABLE freq_day_week (
@@ -88,7 +90,7 @@ class DatabaseService {
           CREATE TABLE day_done (
             done TINYINT NOT NULL,
             date_done DATE NOT NULL,
-            habit_id INTEGER NOT NULL UNIQUE,
+            habit_id INTEGER NOT NULL,
             CONSTRAINT fk_DiasFeito_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
@@ -98,7 +100,7 @@ class DatabaseService {
 
   Future<List> getAllHabits() async {
     final db = await database;
-    var result = await db.rawQuery('SELECT * FROM habit;');
+    var result = await db.rawQuery('SELECT id, category, habit_text FROM habit;');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
@@ -106,6 +108,7 @@ class DatabaseService {
 
   Future<Habit> getHabit(int id) async {
     final db = await database;
+
     var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
 
     if (result.isNotEmpty) {
@@ -117,80 +120,109 @@ class DatabaseService {
 
   Future<List> getHabitsToday() async {
     DateTime now = new DateTime.now();
-    DateTime start_week;
+    DateTime startWeek;
     String weekday = "";
     switch (now.weekday) {
       case 1:
         weekday = "monday";
-        start_week = now.subtract(Duration(days: 1));
+        startWeek = now.subtract(Duration(days: 1));
         break;
       case 2:
         weekday = "tuesday";
-        start_week = now.subtract(Duration(days: 2));
+        startWeek = now.subtract(Duration(days: 2));
         break;
       case 3:
         weekday = "wednesday";
-        start_week = now.subtract(Duration(days: 3));
+        startWeek = now.subtract(Duration(days: 3));
         break;
       case 4:
         weekday = "thursday";
-        start_week = now.subtract(Duration(days: 4));
+        startWeek = now.subtract(Duration(days: 4));
         break;
       case 5:
         weekday = "friday";
-        start_week = now.subtract(Duration(days: 5));
+        startWeek = now.subtract(Duration(days: 5));
         break;
       case 6:
         weekday = "saturday";
-        start_week = now.subtract(Duration(days: 6));
+        startWeek = now.subtract(Duration(days: 6));
         break;
       case 7:
         weekday = "sunday";
-        start_week = now;
+        startWeek = now;
         break;
     }
 
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT * FROM habit WHERE id IN (
-							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year}-${now.month}-${now.day}\')
+        SELECT id, category, habit_text FROM habit WHERE id IN (
+							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
 							 UNION ALL
-               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${start_week.year}-${start_week.month}-${start_week.day}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
-							                            														 UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year}-${now.month}-${now.day}\')
+               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
+							                            														 UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
                UNION ALL
                SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') GROUP BY habit_id HAVING COUNT(*) >= days_time
-							                              															UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year}-${now.month}-${now.day}\')
+							                              															UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
         );''');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
   }
 
+  Future<dynamic> getFrequency(int id) async {
+    final db = await database;
+
+    var resultDayWeek = await db.rawQuery('SELECT * FROM freq_day_week WHERE habit_id=$id;');
+
+    var resultWeekly = await db.rawQuery('SELECT * FROM freq_weekly WHERE habit_id=$id;');
+
+    var resultRepeating = await db.rawQuery('SELECT * FROM freq_repeating WHERE habit_id=$id;');
+
+    if (resultDayWeek.isNotEmpty) {
+      return FreqDayWeek.fromJson(resultDayWeek.first);
+    } else if (resultWeekly.isNotEmpty) {
+      return FreqWeekly.fromJson(resultWeekly.first);
+    } else if (resultRepeating.isNotEmpty) {
+      return FreqRepeating.fromJson(resultRepeating.first);
+    } else {
+      return null;
+    }
+  }
+
   Future<bool> habitDone(int id) async {
     DateTime now = new DateTime.now();
     final db = await database;
     await db.rawInsert(
-        'INSERT INTO day_done (done, date_done, habit_id) VALUES (1, \'${now.year.toString()}-${now.month.toString()}-${now.day.toString()}\', $id);');
+        'INSERT INTO day_done (done, date_done, habit_id) VALUES (1, \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\', $id);');
+
+    await db.rawInsert('UPDATE habit SET days_done = days_done+1 WHERE id=$id;');
 
     return true;
   }
 
   Future<bool> addHabit(Habit habit, dynamic frequency) async {
+    DateTime now = new DateTime.now();
     final db = await database;
     var id = await db.rawInsert(
-        'INSERT INTO habit (habit_text, reward_text, cue_text, category, score) VALUES (\'${habit.habit}\', \'${habit.reward}\', \'${habit.cue}\', ${habit.category}, ${habit.score});');
+        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, score, initial_date, days_done) VALUES (\'${habit.habit}\',
+                                                                                                                   \'${habit.reward}\',
+                                                                                                                   \'${habit.cue}\',
+                                                                                                                   ${habit.category},
+                                                                                                                   ${habit.score},
+                                                                                                                   \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
+                                                                                                                   0);''');
 
     if (frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = frequency;
       await db.rawInsert(
           '''INSERT INTO freq_day_week (monday, tuesday, wednesday, thursday, friday, saturday, sunday, habit_id) VALUES (${freq.monday},
-                                                                                                                            ${freq.tuesday},
-                                                                                                                            ${freq.wednesday},
-                                                                                                                            ${freq.thursday},
-                                                                                                                            ${freq.friday},
-                                                                                                                            ${freq.saturday},
-                                                                                                                            ${freq.sunday},
+                                                                                                                          ${freq.tuesday},
+                                                                                                                          ${freq.wednesday},
+                                                                                                                          ${freq.thursday},
+                                                                                                                          ${freq.friday},
+                                                                                                                          ${freq.saturday},
+                                                                                                                          ${freq.sunday},
                                                                                                                             $id);''');
     } else if (frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = frequency;
@@ -204,10 +236,4 @@ class DatabaseService {
 
     return true;
   }
-
-//  Future<int> updateNote(Note note) async {
-//    return await db.rawUpdate(
-//        'UPDATE $tableNote SET $columnTitle = \'${note.title}\', $columnDescription = \'${note.description}\' WHERE $columnId = ${note.id}'
-//    );
-//  }
 }
