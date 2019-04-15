@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
-import 'package:habit/widgets/ClipShadowPath.dart';
+import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HeaderBackgroundClip extends CustomClipper<Path> {

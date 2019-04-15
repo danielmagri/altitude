@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/widgets/HabitCard.dart';
+import 'package:habit/ui/widgets/HabitCard.dart';
 
 class AllHabitsPage extends StatefulWidget {
   AllHabitsPage({Key key}) : super(key: key);

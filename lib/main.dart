@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
-import 'package:habit/widgets/HabitCard.dart';
-import 'package:habit/widgets/ClipShadowPath.dart';
+import 'package:habit/ui/widgets/HabitCard.dart';
+import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
