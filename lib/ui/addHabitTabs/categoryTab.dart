@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CategoryTab extends StatelessWidget {
-  CategoryTab({Key key, this.onTap}) : super(key: key);
+  CategoryTab({Key key, this.onCategoryTap}) : super(key: key);
 
-  final Function onTap;
+  final Function onCategoryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CategoryTab extends StatelessWidget {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  onTap(1);
+                  onCategoryTap(1);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -66,7 +66,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onTap(2);
+                  onCategoryTap(2);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -108,7 +108,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onTap(3);
+                  onCategoryTap(3);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onTap(4);
+                  onCategoryTap(4);
                 },
                 child: Container(
                   decoration: BoxDecoration(
