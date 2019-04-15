@@ -14,30 +14,59 @@ class AddHabitPage extends StatefulWidget {
   _AddHabitPageState createState() => _AddHabitPageState();
 }
 
-class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderStateMixin {
+class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMixin {
   TabController _tabController;
+  AnimationController _backgroundController;
+  Animation _backgroundAnimation;
 
+  final Color _startColor = Colors.white;
   final rewardController = TextEditingController();
   final habitController = TextEditingController();
   final cueController = TextEditingController();
-  int selection = 0;
 
+  int categoryId = 0;
   dynamic frequency;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 5);
+    _backgroundController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _backgroundController.dispose();
     super.dispose();
   }
 
   void categorySelected(int selection) {
-    this.selection = selection;
+    categoryId = selection;
+    Color color;
+
+    switch (categoryId) {
+      case 1:
+        color = Colors.red;
+        break;
+      case 2:
+        color = Colors.green;
+        break;
+      case 3:
+        color = Colors.blue;
+        break;
+      case 4:
+        color = Colors.yellow;
+        break;
+    }
+
+    _backgroundAnimation = ColorTween(begin: _startColor, end: color)
+        .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
+
+    _backgroundController.forward();
     _nextPage(1);
   }
 
@@ -45,6 +74,7 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
     if (next) {
       _nextPage(1);
     } else {
+      _backgroundController.reverse();
       _nextPage(-1);
     }
   }
@@ -69,7 +99,7 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
   void cueSettingTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: 1, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
+          category: categoryId, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
@@ -89,42 +119,47 @@ class _AddHabitPageState extends State<AddHabitPage> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Color.fromARGB(255, 250, 127, 114),
-        body: TabBarView(
-          controller: _tabController,
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            CategoryTab(
-              onTap: categorySelected,
+    return AnimatedBuilder(
+      animation: _backgroundController,
+      builder: (context, child) {
+        return MaterialApp(
+          home: Scaffold(
+            backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
+            body: TabBarView(
+              controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                CategoryTab(
+                  onCategoryTap: categorySelected,
+                ),
+                RewardTab(
+                  controller: rewardController,
+                  onTap: rewardSettingTap,
+                ),
+                HabitTab(
+                  controller: habitController,
+                  onTap: habitSettingTap,
+                ),
+                FrequencyTab(
+                  onTap: frequencySettingTap,
+                ),
+                CueTab(
+                  controller: cueController,
+                  onTap: cueSettingTap,
+                )
+              ],
             ),
-            RewardTab(
-              controller: rewardController,
-              onTap: rewardSettingTap,
+            bottomNavigationBar: Container(
+              height: 52.0,
+              alignment: Alignment.center,
+              child: TabPageSelector(
+                controller: _tabController,
+                selectedColor: Color.fromARGB(255, 221, 221, 221),
+              ),
             ),
-            HabitTab(
-              controller: habitController,
-              onTap: habitSettingTap,
-            ),
-            FrequencyTab(
-              onTap: frequencySettingTap,
-            ),
-            CueTab(
-              controller: cueController,
-              onTap: cueSettingTap,
-            )
-          ],
-        ),
-        bottomNavigationBar: Container(
-          height: 52.0,
-          alignment: Alignment.center,
-          child: TabPageSelector(
-            controller: _tabController,
-            selectedColor: Color.fromARGB(255, 221, 221, 221),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
