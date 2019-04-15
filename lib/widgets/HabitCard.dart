@@ -13,9 +13,10 @@ class HabitWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         Habit data = await DataControl().getHabit(habit.id);
-        if(data!= null) {
+        dynamic frequency = await DataControl().getFrequency(habit.id);
+        if(data!= null && data.id != null) {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return HabitDetailsPage(habit: data,);
+            return HabitDetailsPage(habit: data, frequency: frequency);
           }));
         }
       },
