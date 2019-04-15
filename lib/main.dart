@@ -69,7 +69,6 @@ class HeaderWidget extends StatelessWidget {
         ),
         Container(
           alignment: Alignment(-0.92, 0.95),
-
           child: new Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -214,7 +213,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
   }
 
-  List<Widget> habitsForTodayWidget(BoxConstraints constraints) {
+  List<Widget> habitsForTodayWidget() {
     List<Widget> widgets = new List();
 
     if (_loading) {
@@ -222,68 +221,21 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     } else if (habitsForToday.length == 0) {
       widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
     } else {
-      const int width = 110;
-      const int height = 90;
-      final int maxHabitsWidth = constraints.maxWidth ~/ width;
-      final int numberLines = (habitsForToday.length / maxHabitsWidth).round();
-
-      int currentLine = 0; //Qual linha está relativa ao centro
-      int currentHabitsLine = 0; //Quantos hábitos tem na linha atual
-      int totalHabitAdded = 0;
-      int alternatorHabitPosition = 0; //Alterna a posição relativa ao centro
-      bool widthCentralized = false;
-
       for (Habit habit in habitsForToday) {
-        if (currentHabitsLine == maxHabitsWidth) {
-          currentHabitsLine = 0;
-          currentLine = currentLine >= 0 ? -currentLine - 1 : currentLine * (-1);
-          alternatorHabitPosition = 0;
-          widthCentralized = ((habitsForToday.length - totalHabitAdded) % 2) == 0 ? true : false;
-        }
-
-        currentHabitsLine++;
-        totalHabitAdded++;
-
-        double left = 0;
-        double top = 0;
-
-        if ((numberLines % 2) == 0) {
-          top = (constraints.maxHeight / 2.0);
-          top += currentLine * height;
-        } else {
-          top = (constraints.maxHeight / 2.0) - height / 2.0;
-          top += currentLine * height;
-        }
-
-        if (widthCentralized) {
-          left = (constraints.maxWidth / 2.0) + alternatorHabitPosition * width;
-          alternatorHabitPosition =
-              alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
-        } else {
-          left = (constraints.maxWidth / 2.0) - width / 2.0;
-          left += alternatorHabitPosition * width;
-          alternatorHabitPosition =
-              alternatorHabitPosition >= 0 ? -alternatorHabitPosition - 1 : alternatorHabitPosition * (-1);
-        }
-
         Widget habitWidget = HabitWidget(habit: habit);
 
         widgets.add(
-          Positioned(
-            left: left,
-            top: top,
-            child: Draggable(
-              data: habit.id,
-              child: habitWidget,
-              feedback: Material(type: MaterialType.transparency, child: habitWidget),
-              childWhenDragging: Container(),
-              onDragStarted: () {
-                _controllerDragComplete.forward();
-              },
-              onDraggableCanceled: (velocity, offset) {
-                _controllerDragComplete.reverse();
-              },
-            ),
+          Draggable(
+            data: habit.id,
+            child: habitWidget,
+            feedback: Material(type: MaterialType.transparency, child: habitWidget),
+            childWhenDragging: Container(height: 90.0, width: 110.0),
+            onDragStarted: () {
+              _controllerDragComplete.forward();
+            },
+            onDraggableCanceled: (velocity, offset) {
+              _controllerDragComplete.reverse();
+            },
           ),
         );
       }
@@ -311,14 +263,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   children: <Widget>[
                     Text(
                       "Hábitos de hoje",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300,height: 1.3),
+                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
                     ),
                     Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => Stack(
-                              fit: StackFit.expand,
-                              children: habitsForTodayWidget(constraints),
-                            ),
+                      child: Center(
+                        child: Wrap(
+                          children: habitsForTodayWidget(),
+                        ),
                       ),
                     ),
                     Padding(
