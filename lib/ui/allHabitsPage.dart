@@ -30,31 +30,42 @@ class _AllHabitsPageState extends State<AllHabitsPage> with SingleTickerProvider
     });
   }
 
+  List<Widget> habitsWidget() {
+    List<Widget> widgets = new List();
+
+    if (_loading) {
+      widgets.add(Center(child: CircularProgressIndicator()));
+    } else if (habits.length == 0) {
+      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+    } else {
+      for (Habit habit in habits) {
+        widgets.add(HabitWidget(habit: habit));
+      }
+    }
+
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: 40.0),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Text(
               "Todos os hábitos",
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+              style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
-            _loading
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: habits.length,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 90.0),
-                    itemBuilder: (BuildContext context, int index) {
-                      return HabitWidget(
-                        habit: habits[index],
-                      );
-                    },
-                  ),
+            Container(
+              margin: EdgeInsets.only(top: 32.0),
+              width: double.maxFinite,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: habitsWidget(),
+              ),
+            )
           ],
         ),
       ),
