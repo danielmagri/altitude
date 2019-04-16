@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/utils/Validator.dart';
 
-class CueTab extends StatelessWidget {
+class CueTab extends StatefulWidget {
   CueTab({Key key, this.controller, this.onTap}) : super(key: key);
 
   final TextEditingController controller;
   final Function onTap;
+
+  @override
+  _CueTabState createState() => new _CueTabState();
+}
+
+class _CueTabState extends State<CueTab> {
+  void validate() {
+    String result = Validate.cueTextValidate(widget.controller.text);
+
+    if (result == "") {
+      widget.onTap(true);
+    } else {
+      Fluttertoast.showToast(
+          msg: result,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +54,7 @@ class CueTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: TextField(
-            controller: controller,
+            controller: widget.controller,
             style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               hintText: "Escreva aqui",
@@ -52,14 +76,12 @@ class CueTab extends StatelessWidget {
           children: <Widget>[
             RaisedButton(
               onPressed: () {
-                onTap(false);
+                widget.onTap(false);
               },
               child: const Text("VOLTAR"),
             ),
             RaisedButton(
-              onPressed: () {
-                onTap(true);
-              },
+              onPressed: validate,
               child: const Text("CRIAR"),
             ),
           ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/objects/Frequency.dart';
 
-
 class FrequencyTab extends StatefulWidget {
   FrequencyTab({Key key, this.onTap}) : super(key: key);
 
