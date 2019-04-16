@@ -1,10 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/utils/Validator.dart';
 
-class RewardTab extends StatelessWidget {
+class RewardTab extends StatefulWidget {
   RewardTab({Key key, this.controller, this.onTap}) : super(key: key);
 
   final TextEditingController controller;
   final Function onTap;
+
+  @override
+  _RewardTabState createState() => new _RewardTabState();
+}
+
+class _RewardTabState extends State<RewardTab> {
+  void validate() {
+    String result = Validate.rewardTextValidate(widget.controller.text);
+
+    if (result == "") {
+      widget.onTap(true);
+    } else {
+      Fluttertoast.showToast(
+          msg: result,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +54,7 @@ class RewardTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22.0),
           child: TextField(
-            controller: controller,
+            controller: widget.controller,
             style: TextStyle(fontSize: 16.0),
             decoration: InputDecoration(
               hintText: "Escreva aqui",
@@ -52,14 +76,12 @@ class RewardTab extends StatelessWidget {
           children: <Widget>[
             RaisedButton(
               onPressed: () {
-                onTap(false);
+                widget.onTap(false);
               },
               child: const Text("VOLTAR"),
             ),
             RaisedButton(
-              onPressed: () {
-                onTap(true);
-              },
+              onPressed: validate,
               child: const Text("AVANÇAR"),
             ),
           ],

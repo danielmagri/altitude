@@ -41,10 +41,13 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void dispose() {
     _tabController.dispose();
     _backgroundController.dispose();
+    rewardController.dispose();
+    habitController.dispose();
+    cueController.dispose();
     super.dispose();
   }
 
-  void categorySelected(int selection) {
+  void categoryTabTap(int selection) {
     categoryId = selection;
     Color color;
 
@@ -70,7 +73,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     _nextPage(1);
   }
 
-  void rewardSettingTap(bool next) {
+  void rewardTabTap(bool next) {
     if (next) {
       _nextPage(1);
     } else {
@@ -79,7 +82,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void habitSettingTap(bool next) {
+  void habitTabTap(bool next) {
     if (next) {
       _nextPage(1);
     } else {
@@ -87,7 +90,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void frequencySettingTap(bool next, dynamic frequency) {
+  void frequencyTabTap(bool next, dynamic frequency) {
     this.frequency = frequency;
     if (next) {
       _nextPage(1);
@@ -96,7 +99,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void cueSettingTap(bool next) {
+  void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
           category: categoryId, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
@@ -124,28 +127,29 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       builder: (context, child) {
         return MaterialApp(
           home: Scaffold(
+            resizeToAvoidBottomPadding: false,
             backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
             body: TabBarView(
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
                 CategoryTab(
-                  onCategoryTap: categorySelected,
+                  onCategoryTap: categoryTabTap,
                 ),
                 RewardTab(
                   controller: rewardController,
-                  onTap: rewardSettingTap,
+                  onTap: rewardTabTap,
                 ),
                 HabitTab(
                   controller: habitController,
-                  onTap: habitSettingTap,
+                  onTap: habitTabTap,
                 ),
                 FrequencyTab(
-                  onTap: frequencySettingTap,
+                  onTap: frequencyTabTap,
                 ),
                 CueTab(
                   controller: cueController,
-                  onTap: cueSettingTap,
+                  onTap: cueTabTap,
                 )
               ],
             ),
