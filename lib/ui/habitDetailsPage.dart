@@ -130,23 +130,9 @@ class CoolDataWidget extends StatelessWidget {
 }
 
 class CalendarWidget extends StatelessWidget {
-  Map<DateTime, List> _events = {
-    DateTime.now().subtract(Duration(days: 30)): ['Event A0', 'Event B0', 'Event C0'],
-    DateTime.now().subtract(Duration(days: 27)): ['Event A1'],
-    DateTime.now().subtract(Duration(days: 20)): ['Event A2', 'Event B2', 'Event C2', 'Event D2'],
-    DateTime.now().subtract(Duration(days: 16)): ['Event A3', 'Event B3'],
-    DateTime.now().subtract(Duration(days: 10)): ['Event A4', 'Event B4', 'Event C4'],
-    DateTime.now().subtract(Duration(days: 4)): ['Event A5', 'Event B5', 'Event C5'],
-    DateTime.now().subtract(Duration(days: 2)): ['Event A6', 'Event B6'],
-    DateTime.now(): ['Event A7', 'Event B7', 'Event C7', 'Event D7'],
-    DateTime.now().add(Duration(days: 1)): ['Event A8', 'Event B8', 'Event C8', 'Event D8'],
-    DateTime.now().add(Duration(days: 3)): Set.from(['Event A9', 'Event A9', 'Event B9']).toList(),
-    DateTime.now().add(Duration(days: 7)): ['Event A10', 'Event B10', 'Event C10'],
-    DateTime.now().add(Duration(days: 11)): ['Event A11', 'Event B11'],
-    DateTime.now().add(Duration(days: 17)): ['Event A12', 'Event B12', 'Event C12', 'Event D12'],
-    DateTime.now().add(Duration(days: 22)): ['Event A13', 'Event B13'],
-    DateTime.now().add(Duration(days: 26)): ['Event A14', 'Event B14', 'Event C14'],
-  };
+  CalendarWidget({Key key, @required this.markedDays}) : super(key: key);
+
+  final Map<DateTime, List> markedDays;
 
   @override
   Widget build(BuildContext context) {
@@ -158,16 +144,11 @@ class CalendarWidget extends StatelessWidget {
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TableCalendar(
-              events: _events,
-              initialCalendarFormat: CalendarFormat.month,
+              events: markedDays,
               formatAnimation: FormatAnimation.slide,
               startingDayOfWeek: StartingDayOfWeek.sunday,
               availableGestures: AvailableGestures.horizontalSwipe,
-              availableCalendarFormats: const {
-                CalendarFormat.month: 'Month',
-                CalendarFormat.twoWeeks: '2 weeks',
-                CalendarFormat.week: 'Week',
-              },
+              forcedCalendarFormat: CalendarFormat.month,
               calendarStyle: CalendarStyle(
                 selectedColor: Colors.deepOrange[400],
                 todayColor: Colors.deepOrange[200],
@@ -175,6 +156,19 @@ class CalendarWidget extends StatelessWidget {
                 markersMaxAmount: 1,
                 markersColor: Colors.brown[700],
               ),
+              builders: CalendarBuilders(markersBuilder: (context, date, list) {
+                return Container(
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    alignment: Alignment(0.0, 0.0),
+                    margin: EdgeInsets.all(5.0),
+                    decoration: new BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ));
+              }),
               headerStyle: HeaderStyle(
                 formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
                 formatButtonDecoration: BoxDecoration(
@@ -189,27 +183,27 @@ class CalendarWidget extends StatelessWidget {
 }
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key, this.habit, this.frequency}) : super(key: key);
+  HabitDetailsPage({Key key, this.habit, this.frequency, this.markedDays}) : super(key: key);
 
   final Habit habit;
   final dynamic frequency;
+  final Map<DateTime, List> markedDays;
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
 class _HabitDetailsPageState extends State<HabitDetailsPage> {
-
   String frequencyText() {
     if (widget.frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = widget.frequency;
       return (freq.monday == 1 ? "Segunda, " : "") +
-             (freq.tuesday == 1 ? "Terça, " : "") +
-             (freq.wednesday == 1 ? "Quarta, " : "") +
-             (freq.thursday == 1 ? "Quinta, " : "") +
-             (freq.friday == 1 ? "Sexta, " : "") +
-             (freq.saturday == 1 ? "Sábado, " : "") +
-             (freq.sunday == 1 ? "Domingo, " : "");
+          (freq.tuesday == 1 ? "Terça, " : "") +
+          (freq.wednesday == 1 ? "Quarta, " : "") +
+          (freq.thursday == 1 ? "Quinta, " : "") +
+          (freq.friday == 1 ? "Sexta, " : "") +
+          (freq.saturday == 1 ? "Sábado, " : "") +
+          (freq.sunday == 1 ? "Domingo, " : "");
     } else if (widget.frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = widget.frequency;
       return freq.daysTime.toString() + " vezes por semana";
@@ -238,7 +232,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
                   daysDone: widget.habit.daysDone,
                 ),
-                CalendarWidget(),
+                CalendarWidget(markedDays: widget.markedDays,),
               ],
             ),
           ),
