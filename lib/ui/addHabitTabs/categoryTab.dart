@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/utils/enums.dart';
 
 class CategoryTab extends StatelessWidget {
   CategoryTab({Key key, this.onCategoryTap}) : super(key: key);
@@ -24,7 +25,7 @@ class CategoryTab extends StatelessWidget {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  onCategoryTap(1);
+                    onCategoryTap(Category.FISICO);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -66,7 +67,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onCategoryTap(2);
+                  onCategoryTap(Category.MENTAL);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -108,7 +109,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onCategoryTap(3);
+                  onCategoryTap(Category.LOCURA);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -150,7 +151,7 @@ class CategoryTab extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  onCategoryTap(4);
+                  onCategoryTap(Category.DOIDERA);
                 },
                 child: Container(
                   decoration: BoxDecoration(

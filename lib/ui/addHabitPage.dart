@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitTabs/categoryTab.dart';
 import 'package:habit/ui/addHabitTabs/rewardTab.dart';
@@ -24,7 +25,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   final habitController = TextEditingController();
   final cueController = TextEditingController();
 
-  int categoryId = 0;
+  Category category;
   dynamic frequency;
 
   @override
@@ -47,21 +48,21 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     super.dispose();
   }
 
-  void categoryTabTap(int selection) {
-    categoryId = selection;
+  void categoryTabTap(Category selection) {
+    category = selection;
     Color color;
 
-    switch (categoryId) {
-      case 1:
+    switch (category) {
+      case Category.FISICO:
         color = Colors.red;
         break;
-      case 2:
+      case Category.MENTAL:
         color = Colors.green;
         break;
-      case 3:
+      case Category.LOCURA:
         color = Colors.blue;
         break;
-      case 4:
+      case Category.DOIDERA:
         color = Colors.yellow;
         break;
     }
@@ -102,7 +103,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: categoryId, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
+          category: category, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);

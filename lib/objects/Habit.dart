@@ -1,6 +1,8 @@
+import 'package:habit/utils/enums.dart';
+
 class Habit {
   final int id;
-  final int category;
+  final Category category;
   final String cue;
   final String habit;
   final String reward;
@@ -12,7 +14,7 @@ class Habit {
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
-      category: json["category"],
+      category: Category.values[json["category"]],
       cue: json["cue_text"],
       habit: json["habit_text"],
       reward: json["reward_text"],
@@ -24,7 +26,7 @@ class Habit {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "category": category,
+        "category": category.index,
         "cue_text": cue,
         "habit_text": habit,
         "reward_text": reward,
