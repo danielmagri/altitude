@@ -208,7 +208,7 @@ class DatabaseService {
         '''INSERT INTO habit (habit_text, reward_text, cue_text, category, score, initial_date, days_done) VALUES (\'${habit.habit}\',
                                                                                                                    \'${habit.reward}\',
                                                                                                                    \'${habit.cue}\',
-                                                                                                                   ${habit.category},
+                                                                                                                   ${habit.category.index},
                                                                                                                    ${habit.score},
                                                                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                    0);''');
