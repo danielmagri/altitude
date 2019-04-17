@@ -14,9 +14,10 @@ class HabitWidget extends StatelessWidget {
       onTap: () async {
         Habit data = await DataControl().getHabit(habit.id);
         dynamic frequency = await DataControl().getFrequency(habit.id);
-        if(data!= null && data.id != null) {
+        Map<DateTime, List> daysDone = await DataControl().getDaysDone(habit.id);
+        if(data!= null && data.id != null && frequency != null) {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return HabitDetailsPage(habit: data, frequency: frequency);
+            return HabitDetailsPage(habit: data, frequency: frequency, markedDays: daysDone,);
           }));
         }
       },

@@ -29,7 +29,7 @@ class Habit {
         "habit_text": habit,
         "reward_text": reward,
         "score": score,
-        "initial_date": initialDate,
+        "initial_date": '${initialDate.year.toString()}-${initialDate.month.toString().padLeft(2, '0')}-${initialDate.day.toString().padLeft(2, '0')}',
         "days_done": daysDone
       };
 }

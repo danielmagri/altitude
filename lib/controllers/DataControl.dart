@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/DayDone.dart';
 
 class DataControl {
   Future<List<Habit>> getAllHabits() async {
@@ -17,6 +18,16 @@ class DataControl {
   
   Future<dynamic> getFrequency(int id) async {
     return await DatabaseService().getFrequency(id);
+  }
+
+  Future<Map<DateTime, List>> getDaysDone(int id) async {
+    Map<DateTime, List> map = new Map();
+    List<DayDone> list = await DatabaseService().getDaysDone(id);
+
+    for(DayDone day in list) {
+      map.putIfAbsent(day.dateDone, ()=> ['']);
+    }
+    return map;
   }
 
   Future<bool> habitDone(int id) async {

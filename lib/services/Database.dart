@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'dart:io';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
+import 'package:habit/objects/DayDone.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
@@ -188,6 +189,15 @@ class DatabaseService {
     } else {
       return null;
     }
+  }
+
+  Future<List> getDaysDone(int id) async {
+    final db = await database;
+
+    var result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id;');
+
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    return list;
   }
 
   Future<bool> habitDone(int id) async {
