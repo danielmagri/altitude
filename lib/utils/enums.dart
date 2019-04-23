@@ -1,1 +1,1 @@
-enum Category { FISICO, MENTAL}
+enum Category { FISICO, MENTAL, LOCURA, DOIDERA }
