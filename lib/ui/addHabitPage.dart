@@ -17,6 +17,7 @@ class AddHabitPage extends StatefulWidget {
 
 class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMixin {
   TabController _tabController;
+  PageController _pageController = PageController();
   AnimationController _backgroundController;
   Animation _backgroundAnimation;
 
@@ -27,6 +28,8 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
 
   Category category;
   dynamic frequency;
+
+  int _index = 0;
 
   @override
   void initState() {
@@ -71,7 +74,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
         .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
 
     _backgroundController.forward();
-    _nextPage(1);
+    _nextTab(1);
   }
 
   void rewardTabTap(bool next) {
@@ -79,7 +82,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       _nextPage(1);
     } else {
       _backgroundController.reverse();
-      _nextPage(-1);
+      _nextTab(-1);
     }
   }
 
@@ -103,7 +106,11 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: category, cue: cueController.text, habit: habitController.text, reward: rewardController.text, score: 0);
+          category: category,
+          cue: cueController.text,
+          habit: habitController.text,
+          reward: rewardController.text,
+          score: 0);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
@@ -115,10 +122,17 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void _nextPage(int delta) {
+  void _nextTab(int delta) {
     final int newIndex = _tabController.index + delta;
     if (newIndex < 0 || newIndex >= _tabController.length) return;
     _tabController.animateTo(newIndex);
+  }
+
+  void _nextPage(int delta) {
+    if(delta == 1)
+    _pageController.nextPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
+    else if (delta == -1)
+      _pageController.previousPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
   }
 
   @override
@@ -137,30 +151,28 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                 CategoryTab(
                   onCategoryTap: categoryTabTap,
                 ),
-                RewardTab(
-                  controller: rewardController,
-                  onTap: rewardTabTap,
-                ),
-                HabitTab(
-                  controller: habitController,
-                  onTap: habitTabTap,
-                ),
-                FrequencyTab(
-                  onTap: frequencyTabTap,
-                ),
-                CueTab(
-                  controller: cueController,
-                  onTap: cueTabTap,
+                PageView(
+                  controller: _pageController,
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    RewardTab(
+                      controller: rewardController,
+                      onTap: rewardTabTap,
+                    ),
+                    HabitTab(
+                      controller: habitController,
+                      onTap: habitTabTap,
+                    ),
+                    FrequencyTab(
+                      onTap: frequencyTabTap,
+                    ),
+                    CueTab(
+                      controller: cueController,
+                      onTap: cueTabTap,
+                    )
+                  ],
                 )
               ],
-            ),
-            bottomNavigationBar: Container(
-              height: 52.0,
-              alignment: Alignment.center,
-              child: TabPageSelector(
-                controller: _tabController,
-                selectedColor: Color.fromARGB(255, 221, 221, 221),
-              ),
             ),
           ),
         );
