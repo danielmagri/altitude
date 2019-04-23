@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/objects/Frequency.dart';
 
-
 class FrequencyTab extends StatefulWidget {
   FrequencyTab({Key key, this.onTap}) : super(key: key);
 
@@ -79,118 +78,121 @@ class _FrequencyTabState extends State<FrequencyTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50.0),
-          child: new ExpansionPanelList(
-            expansionCallback: (int index, bool isExpanded) {
-              if (!isExpanded) {
-                expandList[expanded] = false;
-                expanded = index;
-              }
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50.0),
+            child: new ExpansionPanelList(
+              expansionCallback: (int index, bool isExpanded) {
+                if (!isExpanded) {
+                  expandList[expanded] = false;
+                  expanded = index;
+                }
 
-              setState(() {
-                expandList[index] = !isExpanded;
-              });
-            },
-            children: <ExpansionPanel>[
-              new ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: const Text("Dias da semana"),
-                    subtitle: const Text("Segunda, Terça, Quarta ..."),
-                  );
-                },
-                isExpanded: expandList[0],
-                body: new Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        children: dayWeekWidgets.toList(),
-                      ),
-                    ],
+                setState(() {
+                  expandList[index] = !isExpanded;
+                });
+              },
+              children: <ExpansionPanel>[
+                new ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: const Text("Dias da semana"),
+                      subtitle: const Text("Segunda, Terça, Quarta ..."),
+                    );
+                  },
+                  isExpanded: expandList[0],
+                  body: new Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          children: dayWeekWidgets.toList(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+                new ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: const Text("Semanalmente"),
+                      subtitle: const Text("X dias na semana"),
+                    );
+                  },
+                  isExpanded: expandList[1],
+                  body: new Container(
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new NumberPicker.integer(
+                          initialValue: _currentValue,
+                          minValue: 1,
+                          maxValue: 7,
+                          listViewWidth: 50.0,
+                          onChanged: (newValue) => setState(() => _currentValue = newValue),
+                        ),
+                        Text("dias por semana")
+                      ],
+                    ),
+                  ),
+                ),
+                new ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: const Text("Recorrente"),
+                      subtitle: const Text("X vezes em Y dias"),
+                    );
+                  },
+                  isExpanded: expandList[2],
+                  body: new Container(
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        new NumberPicker.integer(
+                          initialValue: _currentValue2,
+                          minValue: 1,
+                          maxValue: 15,
+                          listViewWidth: 50.0,
+                          onChanged: (newValue) => setState(() => _currentValue2 = newValue),
+                        ),
+                        Text("vezes em"),
+                        new NumberPicker.integer(
+                          initialValue: _currentValue3,
+                          minValue: 1,
+                          maxValue: 15,
+                          listViewWidth: 50.0,
+                          onChanged: (newValue) => setState(() => _currentValue3 = newValue),
+                        ),
+                        Text("dias")
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              RaisedButton(
+                onPressed: () {
+                  widget.onTap(false, null);
+                },
+                child: const Text("VOLTAR"),
               ),
-              new ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: const Text("Semanalmente"),
-                    subtitle: const Text("X dias na semana"),
-                  );
-                },
-                isExpanded: expandList[1],
-                body: new Container(
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new NumberPicker.integer(
-                        initialValue: _currentValue,
-                        minValue: 1,
-                        maxValue: 7,
-                        listViewWidth: 50.0,
-                        onChanged: (newValue) => setState(() => _currentValue = newValue),
-                      ),
-                      Text("dias por semana")
-                    ],
-                  ),
-                ),
-              ),
-              new ExpansionPanel(
-                headerBuilder: (BuildContext context, bool isExpanded) {
-                  return ListTile(
-                    title: const Text("Recorrente"),
-                    subtitle: const Text("X vezes em Y dias"),
-                  );
-                },
-                isExpanded: expandList[2],
-                body: new Container(
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new NumberPicker.integer(
-                        initialValue: _currentValue2,
-                        minValue: 1,
-                        maxValue: 15,
-                        listViewWidth: 50.0,
-                        onChanged: (newValue) => setState(() => _currentValue2 = newValue),
-                      ),
-                      Text("vezes em"),
-                      new NumberPicker.integer(
-                        initialValue: _currentValue3,
-                        minValue: 1,
-                        maxValue: 15,
-                        listViewWidth: 50.0,
-                        onChanged: (newValue) => setState(() => _currentValue3 = newValue),
-                      ),
-                      Text("dias")
-                    ],
-                  ),
-                ),
+              RaisedButton(
+                onPressed: validateData,
+                child: const Text("AVANÇAR"),
               ),
             ],
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            RaisedButton(
-              onPressed: () {
-                widget.onTap(false);
-              },
-              child: const Text("VOLTAR"),
-            ),
-            RaisedButton(
-              onPressed: validateData,
-              child: const Text("AVANÇAR"),
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
