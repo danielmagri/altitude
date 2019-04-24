@@ -162,41 +162,28 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   List<Habit> habitsForToday = [];
   Person person;
 
-  bool _loading = true;
-
   @override
   initState() {
     super.initState();
 
-    person = new Person();
-    person.name = "Daniel Magri";
-    person.score = 1234;
+    person = new Person(name: "...", score: 0);
+
+    DataControl().getPerson().then((person) {
+      setState(() {
+        this.person = person;
+      });
+    });
 
     _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
 
     _animationDragComplete = Tween(begin: -100.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.easeOutExpo));
-  }
-
-  @override
-  void didChangeDependencies() {
-    getData();
-
-    super.didChangeDependencies();
+        .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.elasticOut));
   }
 
   @override
   void dispose() {
     _controllerDragComplete.dispose();
     super.dispose();
-  }
-
-  void getData() async {
-    habitsForToday = await DataControl().getHabitsToday();
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   void onAccept(data) {
@@ -213,14 +200,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
   }
 
-  List<Widget> habitsForTodayWidget() {
+  Widget habitsForTodayBuild(BuildContext context, AsyncSnapshot snapshot) {
     List<Widget> widgets = new List();
 
-    if (_loading) {
+    if (!snapshot.hasData) {
       widgets.add(Center(child: CircularProgressIndicator()));
-    } else if (habitsForToday.length == 0) {
+    } else if (snapshot.hasData == null) {
       widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
     } else {
+      habitsForToday = snapshot.data;
       for (Habit habit in habitsForToday) {
         Widget habitWidget = HabitWidget(habit: habit);
 
@@ -241,7 +229,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       }
     }
 
-    return widgets;
+    return Wrap(
+      alignment: WrapAlignment.center,
+      children: widgets,
+    );
   }
 
   @override
@@ -267,10 +258,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     ),
                     Expanded(
                       child: Center(
-                        child: Wrap(
-                          children: habitsForTodayWidget(),
-                        ),
-                      ),
+                          child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),

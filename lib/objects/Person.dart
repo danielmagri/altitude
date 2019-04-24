@@ -1,17 +1,13 @@
-import 'package:habit/objects/Habit.dart';
-
 class Person {
-  static final Person _singleton = new Person._internal();
+  final String name;
+  final int score;
 
-  String name;
-  int score;
-  List<Habit> habits;
+  Person({this.name, this.score});
 
-  factory Person() {
-    return _singleton;
-  }
+  factory Person.fromJson(Map<String, dynamic> json) => new Person(name: json["full_name"], score: json["score"]);
 
-  Person._internal() {
-    habits = new List();
-  }
+  Map<String, dynamic> toJson() => {
+        "full_name": name,
+        "score": score,
+      };
 }
