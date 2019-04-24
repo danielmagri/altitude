@@ -2,6 +2,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io';
+import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -97,6 +98,19 @@ class DatabaseService {
               REFERENCES habit(id)
               ON DELETE NO ACTION
               ON UPDATE NO ACTION);''');
+  }
+
+  Future<Person> getPerson() async {
+    final db = await database;
+
+    var result = await db.rawQuery('SELECT * FROM person;');
+
+    if (result.isNotEmpty) {
+      return Person.fromJson(result.first);
+    } else {
+      await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'Teste\', 100);');
+      return Person(name: "Teste", score: 100);
+    }
   }
 
   Future<List> getAllHabits() async {

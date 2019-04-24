@@ -1,9 +1,22 @@
 import 'dart:async';
 import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/DayDone.dart';
 
 class DataControl {
+  static final DataControl _singleton = new DataControl._internal();
+
+  factory DataControl() {
+    return _singleton;
+  }
+
+  DataControl._internal();
+
+  Future<Person> getPerson() async {
+    return await DatabaseService().getPerson();
+  }
+
   Future<List<Habit>> getAllHabits() async {
     return await DatabaseService().getAllHabits();
   }
