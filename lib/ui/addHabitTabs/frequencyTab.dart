@@ -47,7 +47,7 @@ class _FrequencyTabState extends State<FrequencyTab> {
 
       widget.onTap(true, weekly);
     } else if (expanded == 2) {
-      FreqRepeating repeating = new FreqRepeating(daysTime: _currentValue2, daysCicle: _currentValue3);
+      FreqRepeating repeating = new FreqRepeating(daysTime: _currentValue2, daysCycle: _currentValue3);
 
       widget.onTap(true, repeating);
     }

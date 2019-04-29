@@ -209,7 +209,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       return freq.daysTime.toString() + " vezes por semana";
     } else if (widget.frequency.runtimeType == FreqRepeating) {
       FreqRepeating freq = widget.frequency;
-      return freq.daysTime.toString() + " vezes em " + freq.daysCicle.toString() + " dias";
+      return freq.daysTime.toString() + " vezes em " + freq.daysCycle.toString() + " dias";
     }
   }
 

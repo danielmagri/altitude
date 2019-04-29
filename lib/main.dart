@@ -131,7 +131,6 @@ class DragComplete extends AnimatedWidget {
             ));
           },
           onWillAccept: (data) {
-            print(data);
             hover = true;
             return true;
           },
@@ -168,16 +167,21 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
 
     person = new Person(name: "...", score: 0);
 
+    _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+
+    _animationDragComplete = Tween(begin: -100.0, end: 10.0)
+        .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.elasticOut));
+  }
+
+  @override
+  void didChangeDependencies() {
     DataControl().getPerson().then((person) {
       setState(() {
         this.person = person;
       });
     });
 
-    _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-
-    _animationDragComplete = Tween(begin: -100.0, end: 10.0)
-        .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.elasticOut));
+    super.didChangeDependencies();
   }
 
   @override
@@ -186,18 +190,20 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
-  void onAccept(data) {
+  void onAccept(id) {
     _controllerDragComplete.reverse();
 
-    DataControl().habitDone(data);
+    int cycle = habitsForToday.firstWhere((habit) => habit.id==id, orElse: () => null).cycle;
 
-    for (int i = 0; i < habitsForToday.length; i++) {
-      if (habitsForToday[i].id == data) {
-        setState(() {
-          habitsForToday.removeAt(i);
-        });
+    DataControl().setHabitDoneAndScore(id, cycle).then((success) {
+      for (int i = 0; i < habitsForToday.length; i++) {
+        if (habitsForToday[i].id == id) {
+          setState(() {
+            habitsForToday.removeAt(i);
+          });
+        }
       }
-    }
+    });
   }
 
   Widget habitsForTodayBuild(BuildContext context, AsyncSnapshot snapshot) {

@@ -29,12 +29,10 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   Category category;
   dynamic frequency;
 
-  int _index = 0;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 5);
+    _tabController = TabController(vsync: this, length: 2);
     _backgroundController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -109,8 +107,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
           category: category,
           cue: cueController.text,
           habit: habitController.text,
-          reward: rewardController.text,
-          score: 0);
+          reward: rewardController.text);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
