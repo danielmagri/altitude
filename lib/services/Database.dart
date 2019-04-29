@@ -45,6 +45,7 @@ class DatabaseService {
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             category INTEGER NOT NULL,
             score INTEGER NOT NULL,
+            cycle INTEGER NOT NULL,
             habit_text VARCHAR(45) NOT NULL,
             reward_text VARCHAR(45) NOT NULL,
             cue_text VARCHAR(45) NOT NULL,
@@ -91,6 +92,7 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE day_done (
             done TINYINT NOT NULL,
+            cycle INTEGER NOT NULL,
             date_done DATE NOT NULL,
             habit_id INTEGER NOT NULL,
             CONSTRAINT fk_DiasFeito_habit_id
@@ -108,8 +110,8 @@ class DatabaseService {
     if (result.isNotEmpty) {
       return Person.fromJson(result.first);
     } else {
-      await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'Teste\', 100);');
-      return Person(name: "Teste", score: 100);
+      await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'Teste\', 0);');
+      return Person(name: "Teste", score: 0);
     }
   }
 
@@ -171,7 +173,7 @@ class DatabaseService {
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT id, category, habit_text FROM habit WHERE id IN (
+        SELECT id, category, habit_text, cycle FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
 							 UNION ALL
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
@@ -214,13 +216,35 @@ class DatabaseService {
     return list;
   }
 
-  Future<bool> habitDone(int id) async {
-    DateTime now = new DateTime.now();
+  Future<List> getCycleDaysDone(int id, int cycle) async {
     final db = await database;
-    await db.rawInsert(
-        'INSERT INTO day_done (done, date_done, habit_id) VALUES (1, \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\', $id);');
 
-    await db.rawInsert('UPDATE habit SET days_done = days_done+1 WHERE id=$id;');
+    var result = await db.rawQuery('''SELECT date_done FROM day_done WHERE habit_id=$id AND cycle=$cycle;''');
+
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    return list;
+  }
+
+  Future<bool> habitDone(int id, int cycle, bool changeCycle) async {
+    DateTime now = new DateTime.now();
+    int numCycle = changeCycle ? cycle + 1 : cycle;
+
+    final db = await database;
+    await db.rawInsert('''INSERT INTO day_done (done, cycle, date_done, habit_id) VALUES (1,
+                                                                           $numCycle,
+                                                                           \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
+                                                                           $id);''');
+
+    await db.rawInsert('UPDATE habit SET days_done=days_done+1, cycle=$numCycle WHERE id=$id;');
+
+    return true;
+  }
+
+  Future<bool> updateScore(int id, int score) async {
+    final db = await database;
+
+    await db.rawInsert('UPDATE habit SET score = score+$score WHERE id=$id;');
+    await db.rawInsert('UPDATE person SET score = score+$score;');
 
     return true;
   }
@@ -229,11 +253,12 @@ class DatabaseService {
     DateTime now = new DateTime.now();
     final db = await database;
     var id = await db.rawInsert(
-        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, score, initial_date, days_done) VALUES (\'${habit.habit}\',
+        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
                                                                                                                    \'${habit.reward}\',
                                                                                                                    \'${habit.cue}\',
                                                                                                                    ${habit.category.index},
-                                                                                                                   ${habit.score},
+                                                                                                                   0,
+                                                                                                                   1,
                                                                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                    0);''');
 
@@ -254,7 +279,7 @@ class DatabaseService {
     } else if (frequency.runtimeType == FreqRepeating) {
       FreqRepeating freq = frequency;
       await db.rawInsert('''INSERT INTO freq_repeating (days_time, days_cicle, habit_id) VALUES (${freq.daysTime},
-                                                                                                   ${freq.daysCicle},
+                                                                                                   ${freq.daysCycle},
                                                                                                    $id);''');
     }
 

@@ -7,10 +7,20 @@ class Habit {
   final String habit;
   final String reward;
   final int score;
+  final int cycle;
   final DateTime initialDate;
   final int daysDone;
 
-  Habit({this.id, this.category, this.cue, this.habit, this.reward, this.score, this.initialDate, this.daysDone});
+  Habit(
+      {this.id,
+      this.category,
+      this.cue,
+      this.habit,
+      this.reward,
+      this.score,
+      this.cycle,
+      this.initialDate,
+      this.daysDone});
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
@@ -19,6 +29,7 @@ class Habit {
       habit: json["habit_text"],
       reward: json["reward_text"],
       score: json["score"],
+      cycle: json["cycle"],
       initialDate: json.containsKey("initial_date") && json["initial_date"] != null
           ? DateTime.parse(json["initial_date"])
           : null,
@@ -31,7 +42,9 @@ class Habit {
         "habit_text": habit,
         "reward_text": reward,
         "score": score,
-        "initial_date": '${initialDate.year.toString()}-${initialDate.month.toString().padLeft(2, '0')}-${initialDate.day.toString().padLeft(2, '0')}',
+        "cycle": cycle,
+        "initial_date":
+            '${initialDate.year.toString()}-${initialDate.month.toString().padLeft(2, '0')}-${initialDate.day.toString().padLeft(2, '0')}',
         "days_done": daysDone
       };
 }
