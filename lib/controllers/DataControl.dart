@@ -58,7 +58,7 @@ class DataControl {
     return await DatabaseService().getCycleDaysDone(id, cycle);
   }
 
-  Future<bool> setHabitDoneAndScore(int id, int cycle) async {
+  Future<int> setHabitDoneAndScore(int id, int cycle) async {
     dynamic freq = await getFrequency(id);
     Map result;
 
@@ -74,9 +74,10 @@ class DataControl {
       int score = await ScoreControl().calculateScore(id, freq, result[1]);
       print("Pontuação: $score");
       await DatabaseService().updateScore(id, score);
-      return await DatabaseService().habitDone(id, cycle, result[0]);
+      await DatabaseService().habitDone(id, cycle, result[0]);
+      return score;
     } else {
-      return false;
+      return 0;
     }
   }
 }

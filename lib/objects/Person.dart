@@ -1,6 +1,6 @@
 class Person {
   final String name;
-  final int score;
+  int score;
 
   Person({this.name, this.score});
 

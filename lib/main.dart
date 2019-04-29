@@ -25,6 +25,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class ScoreWidget extends AnimatedWidget {
+  ScoreWidget({Key key, Animation<int> animation}) : super(key: key, listenable: animation);
+
+  Widget build(BuildContext context) {
+    final Animation<int> animation = listenable;
+    return Text(
+      animation.value.toString(),
+      style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+    );
+  }
+}
+
 class HeaderBackgroundClip extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
@@ -43,10 +55,16 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score}) : super(key: key);
+  HeaderWidget({Key key, this.name, this.score, this.previousScore, this.controller})
+      : animation = IntTween(begin: previousScore, end: score)
+            .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
+        super(key: key);
 
+  final AnimationController controller;
   final String name;
   final int score;
+  final int previousScore;
+  final Animation<int> animation;
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +94,8 @@ class HeaderWidget extends StatelessWidget {
                 name,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
               ),
-              Text(
-                score.toString(),
-                style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+              ScoreWidget(
+                animation: animation,
               ),
             ],
           ),
@@ -154,12 +171,14 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerDragComplete;
+  AnimationController _controllerScore;
   Animation _animationDragComplete;
 
   List<Habit> habitsForToday = [];
   Person person;
+  int previousScore = 0;
 
   @override
   initState() {
@@ -168,6 +187,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     person = new Person(name: "...", score: 0);
 
     _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+    _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
     _animationDragComplete = Tween(begin: -100.0, end: 10.0)
         .animate(CurvedAnimation(parent: _controllerDragComplete, curve: Curves.elasticOut));
@@ -179,6 +199,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       setState(() {
         this.person = person;
       });
+      animateScore();
     });
 
     super.didChangeDependencies();
@@ -190,17 +211,26 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  void animateScore() {
+    _controllerScore.reset();
+    _controllerScore.forward().then((v) {
+      previousScore = person.score;
+    });
+  }
+
   void onAccept(id) {
     _controllerDragComplete.reverse();
 
-    int cycle = habitsForToday.firstWhere((habit) => habit.id==id, orElse: () => null).cycle;
+    int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
 
-    DataControl().setHabitDoneAndScore(id, cycle).then((success) {
+    DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
           setState(() {
             habitsForToday.removeAt(i);
+            person.score += earnedScore;
           });
+          animateScore();
         }
       }
     });
@@ -251,6 +281,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               child: HeaderWidget(
                 name: person.name,
                 score: person.score,
+                previousScore: previousScore,
+                controller: _controllerScore,
               )),
           Expanded(
             flex: 2,
