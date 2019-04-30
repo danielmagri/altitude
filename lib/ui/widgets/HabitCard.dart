@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/utils/Color.dart';
 
 class HabitWidget extends StatelessWidget {
   HabitWidget({Key key, this.habit}) : super(key: key);
@@ -32,7 +33,7 @@ class HabitWidget extends StatelessWidget {
               height: 50.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: Color.fromARGB(255, 239, 83, 80),
+                color: CategoryColors.getColor(habit.category),
               ),
               child: Icon(
                 Icons.fitness_center,

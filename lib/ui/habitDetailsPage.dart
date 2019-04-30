@@ -222,6 +222,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
             margin: EdgeInsets.only(top: 180.0),
             child: ListView(
               padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
+              physics: BouncingScrollPhysics(),
               children: <Widget>[
                 Text(
                   frequencyText(),

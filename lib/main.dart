@@ -184,7 +184,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   initState() {
     super.initState();
 
-    person = new Person(name: "...", score: 0);
+    person = new Person(name: "", score: 0);
 
     _controllerDragComplete = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
@@ -299,11 +299,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
+                      padding: const EdgeInsets.only(bottom: 18.0),
                       child: RaisedButton(
                           child: Text("TODOS OS HÁBITOS"),
                           shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                          elevation: 0.0,
+                          elevation: 5.0,
                           padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (_) {
