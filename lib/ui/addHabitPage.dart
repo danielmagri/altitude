@@ -7,6 +7,7 @@ import 'package:habit/ui/addHabitTabs/rewardTab.dart';
 import 'package:habit/ui/addHabitTabs/cueTab.dart';
 import 'package:habit/ui/addHabitTabs/habitTab.dart';
 import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
+import 'package:habit/utils/Color.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -53,20 +54,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     category = selection;
     Color color;
 
-    switch (category) {
-      case Category.FISICO:
-        color = Colors.red;
-        break;
-      case Category.MENTAL:
-        color = Colors.green;
-        break;
-      case Category.LOCURA:
-        color = Colors.blue;
-        break;
-      case Category.DOIDERA:
-        color = Colors.yellow;
-        break;
-    }
+    color = CategoryColors.getColor(category);
 
     _backgroundAnimation = ColorTween(begin: _startColor, end: color)
         .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
@@ -151,6 +139,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                 PageView(
                   controller: _pageController,
                   scrollDirection: Axis.vertical,
+                  physics: BouncingScrollPhysics(),
                   children: <Widget>[
                     RewardTab(
                       controller: rewardController,
