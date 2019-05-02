@@ -121,16 +121,49 @@ class HeaderWidget extends StatelessWidget {
   }
 }
 
-class CoolDataWidget extends StatelessWidget {
-  CoolDataWidget({Key key, this.initialDate, this.daysDone}) : super(key: key);
+class CueRewardWidget extends StatelessWidget {
+  CueRewardWidget({Key key, this.cue, this.reward}) : super(key: key);
 
-  final DateTime initialDate;
-  final int daysDone;
+  final String cue;
+  final String reward;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110,
+      width: double.infinity,
+      margin: EdgeInsets.only(top: 12.0),
+      child: Card(
+        elevation: 1.0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text("Deixa e meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+              Text(
+                  "Meta: " + reward,
+                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Deixa: " + cue,
+                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CoolDataWidget extends StatelessWidget {
+  CoolDataWidget({Key key, this.initialDate, this.daysDone, this.cycles}) : super(key: key);
+
+  final DateTime initialDate;
+  final int daysDone;
+  final int cycles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
       width: double.infinity,
       margin: EdgeInsets.only(top: 12.0),
       child: Card(
@@ -151,6 +184,8 @@ class CoolDataWidget extends StatelessWidget {
                       initialDate.year.toString(),
                   style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
               Text("Dias cumpridos: " + daysDone.toString(),
+                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Ciclos feitos: " + cycles.toString(),
                   style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
             ],
           ),
@@ -243,6 +278,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     animateScore();
   }
 
+  @override
+  void dispose() {
+    _controllerScore.dispose();
+    super.dispose();
+  }
+
   void animateScore() {
     _controllerScore.reset();
     _controllerScore.forward().then((v) {
@@ -304,9 +345,14 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
                 ),
+                CueRewardWidget(
+                  cue: widget.habit.cue,
+                  reward: widget.habit.reward,
+                ),
                 CoolDataWidget(
                   initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
                   daysDone: widget.habit.daysDone,
+                  cycles: widget.habit.cycle,
                 ),
                 CalendarWidget(
                   markedDays: markedDays,

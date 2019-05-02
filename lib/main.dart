@@ -199,6 +199,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controllerDragComplete.dispose();
+    _controllerScore.dispose();
     super.dispose();
   }
 
