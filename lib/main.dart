@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habitos',
-      theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'Roboto'),
+      theme: ThemeData(fontFamily: 'Roboto'),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -242,27 +242,29 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     if (!snapshot.hasData) {
       widgets.add(Center(child: CircularProgressIndicator()));
-    } else if (snapshot.hasData == null) {
-      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
     } else {
       habitsForToday = snapshot.data;
-      for (Habit habit in habitsForToday) {
-        Widget habitWidget = HabitWidget(habit: habit);
+      if (habitsForToday.length == 0) {
+        widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+      } else {
+        for (Habit habit in habitsForToday) {
+          Widget habitWidget = HabitWidget(habit: habit);
 
-        widgets.add(
-          Draggable(
-            data: habit.id,
-            child: habitWidget,
-            feedback: Material(type: MaterialType.transparency, child: habitWidget),
-            childWhenDragging: Container(height: 90.0, width: 110.0),
-            onDragStarted: () {
-              _controllerDragComplete.forward();
-            },
-            onDraggableCanceled: (velocity, offset) {
-              _controllerDragComplete.reverse();
-            },
-          ),
-        );
+          widgets.add(
+            Draggable(
+              data: habit.id,
+              child: habitWidget,
+              feedback: Material(type: MaterialType.transparency, child: habitWidget),
+              childWhenDragging: Container(height: 90.0, width: 110.0),
+              onDragStarted: () {
+                _controllerDragComplete.forward();
+              },
+              onDraggableCanceled: (velocity, offset) {
+                _controllerDragComplete.reverse();
+              },
+            ),
+          );
+        }
       }
     }
 
