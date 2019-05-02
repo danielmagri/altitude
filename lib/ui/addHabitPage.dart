@@ -43,6 +43,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   @override
   void dispose() {
     _tabController.dispose();
+    _pageController.dispose();
     _backgroundController.dispose();
     rewardController.dispose();
     habitController.dispose();
