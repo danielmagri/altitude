@@ -27,12 +27,13 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
-      {Key key, this.name, this.score, this.previousScore, this.color, this.done, this.setDoneHabit, this.controller})
+      {Key key, this.id, this.name, this.score, this.previousScore, this.color, this.done, this.setDoneHabit, this.controller})
       : animation = IntTween(begin: previousScore, end: score)
             .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
         super(key: key);
 
   final AnimationController controller;
+  final int id;
   final String name;
   final int score;
   final int previousScore;
@@ -82,9 +83,13 @@ class HeaderWidget extends StatelessWidget {
                     height: 100.0,
                     margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
                     alignment: Alignment(0.0, 0.0),
-                    child: Text(
-                      "100%",
-                      style: TextStyle(fontSize: 20.0),
+                    child: Hero(
+                      tag: id,
+                      transitionOnUserGestures: true,
+                      child: Icon(
+                        Icons.fitness_center,
+                        size: 50.0,
+                      ),
                     ),
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
@@ -364,6 +369,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             height: 200.0,
             width: double.maxFinite,
             child: HeaderWidget(
+              id: widget.habit.id,
               name: widget.habit.habit,
               score: score,
               previousScore: previousScore,

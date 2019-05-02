@@ -17,9 +17,13 @@ class HabitWidget extends StatelessWidget {
         dynamic frequency = await DataControl().getFrequency(habit.id);
         Map<DateTime, List> daysDone = await DataControl().getDaysDone(habit.id);
 
-        if(data!= null && data.id != null && frequency != null) {
+        if (data != null && data.id != null && frequency != null) {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return HabitDetailsPage(habit: data, frequency: frequency, markedDays: daysDone,);
+            return HabitDetailsPage(
+              habit: data,
+              frequency: frequency,
+              markedDays: daysDone,
+            );
           }));
         }
       },
@@ -35,9 +39,13 @@ class HabitWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12.0),
                 color: CategoryColors.getColor(habit.category),
               ),
-              child: Icon(
-                Icons.fitness_center,
-                size: 32.0,
+              child: Hero(
+                tag: habit.id,
+                transitionOnUserGestures: true,
+                child: Icon(
+                  Icons.fitness_center,
+                  size: 32.0,
+                ),
               ),
             ),
             Padding(
