@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Habitos',
       theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'Roboto'),
+      debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/ui/widgets/ClipShadowPath.dart';
@@ -23,10 +24,11 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score}) : super(key: key);
+  HeaderWidget({Key key, this.name, this.score, this.color}) : super(key: key);
 
   final String name;
   final int score;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -47,44 +49,62 @@ class HeaderWidget extends StatelessWidget {
           clipper: HeaderBackgroundClip(),
           shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
         ),
-        Align(
-          alignment: Alignment(-0.9, 0.9),
-          child: Container(
-            width: 100.0,
-            height: 100.0,
-            alignment: Alignment(0.0, 0.0),
-            child: Text(
-              "100%",
-              style: TextStyle(fontSize: 20.0),
+        Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBox(
+              height: 75.0,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Expanded(
+                  child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton()),
+                ),
+                IconButton(icon: Icon(Icons.edit), onPressed: () {}),
+              ]),
             ),
-            decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color.fromARGB(255, 250, 127, 114),
-                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
-          ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    width: 100.0,
+                    height: 100.0,
+                    margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
+                    alignment: Alignment(0.0, 0.0),
+                    child: Text(
+                      "100%",
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color,
+                        boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            name,
+                            softWrap: true,
+                            textAlign: TextAlign.end,
+                            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+                          ),
+                          Text(
+                            score.toString(),
+                            style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
         ),
-        Align(
-          alignment: Alignment(0.9, 0.0),
-          child: Text(
-            name,
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
-          ),
-        ),
-        Align(
-          alignment: Alignment(0.9, 0.75),
-          child: Text(
-            score.toString(),
-            style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Align(
-          alignment: Alignment(-1.0, -0.7),
-          child: BackButton(),
-        ),
-        Align(
-          alignment: Alignment(0.98, -0.7),
-          child: IconButton(icon: Icon(Icons.edit), onPressed: () {}),
-        )
       ],
     );
   }
@@ -103,7 +123,7 @@ class CoolDataWidget extends StatelessWidget {
       width: double.infinity,
       margin: EdgeInsets.only(top: 12.0),
       child: Card(
-        elevation: 3.0,
+        elevation: 1.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -140,7 +160,7 @@ class CalendarWidget extends StatelessWidget {
       width: double.infinity,
       margin: EdgeInsets.only(top: 12.0),
       child: Card(
-        elevation: 3.0,
+        elevation: 1.0,
         child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TableCalendar(
@@ -219,7 +239,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 180.0),
+            margin: EdgeInsets.only(top: 160.0),
             child: ListView(
               padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
               physics: BouncingScrollPhysics(),
@@ -233,16 +253,19 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
                   daysDone: widget.habit.daysDone,
                 ),
-                CalendarWidget(markedDays: widget.markedDays,),
+                CalendarWidget(
+                  markedDays: widget.markedDays,
+                ),
               ],
             ),
           ),
           Container(
-            height: 220.0,
+            height: 200.0,
             width: double.maxFinite,
             child: HeaderWidget(
               name: widget.habit.habit,
               score: widget.habit.score,
+              color: CategoryColors.getColor(widget.habit.category),
             ),
           ),
         ],
