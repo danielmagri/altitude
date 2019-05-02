@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
+import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -24,11 +26,20 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score, this.color}) : super(key: key);
+  HeaderWidget(
+      {Key key, this.name, this.score, this.previousScore, this.color, this.done, this.setDoneHabit, this.controller})
+      : animation = IntTween(begin: previousScore, end: score)
+            .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
+        super(key: key);
 
+  final AnimationController controller;
   final String name;
   final int score;
+  final int previousScore;
   final Color color;
+  final bool done;
+  final Function setDoneHabit;
+  final Animation<int> animation;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +69,7 @@ class HeaderWidget extends StatelessWidget {
                 Expanded(
                   child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton()),
                 ),
+                IconButton(icon: Icon(Icons.check), onPressed: done ? null : setDoneHabit),
                 IconButton(icon: Icon(Icons.edit), onPressed: () {}),
               ]),
             ),
@@ -90,11 +102,10 @@ class HeaderWidget extends StatelessWidget {
                             name,
                             softWrap: true,
                             textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w300),
+                            style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.w300),
                           ),
-                          Text(
-                            score.toString(),
-                            style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
+                          ScoreWidget(
+                            animation: animation,
                           ),
                         ],
                       ),
@@ -213,7 +224,51 @@ class HabitDetailsPage extends StatefulWidget {
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends State<HabitDetailsPage> {
+class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
+  AnimationController _controllerScore;
+
+  int score;
+  int previousScore = 0;
+  Map<DateTime, List> markedDays;
+
+  @override
+  initState() {
+    super.initState();
+
+    score = widget.habit.score;
+    markedDays = widget.markedDays;
+
+    _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+
+    animateScore();
+  }
+
+  void animateScore() {
+    _controllerScore.reset();
+    _controllerScore.forward().then((v) {
+      previousScore = score;
+    });
+  }
+
+  bool hasDoneToday() {
+    DateTime now = DateTime.now();
+    if (widget.markedDays.containsKey(DateTime(now.year, now.month, now.day))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void setDoneHabit() {
+    DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
+      setState(() {
+        score += earnedScore;
+        markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
+      });
+      animateScore();
+    });
+  }
+
   String frequencyText() {
     if (widget.frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = widget.frequency;
@@ -254,7 +309,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
                   daysDone: widget.habit.daysDone,
                 ),
                 CalendarWidget(
-                  markedDays: widget.markedDays,
+                  markedDays: markedDays,
                 ),
               ],
             ),
@@ -264,8 +319,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
             width: double.maxFinite,
             child: HeaderWidget(
               name: widget.habit.habit,
-              score: widget.habit.score,
+              score: score,
+              previousScore: previousScore,
               color: CategoryColors.getColor(widget.habit.category),
+              done: hasDoneToday(),
+              setDoneHabit: setDoneHabit,
+              controller: _controllerScore,
             ),
           ),
         ],

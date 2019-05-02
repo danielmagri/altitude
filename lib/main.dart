@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCard.dart';
+import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
@@ -22,18 +23,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'Roboto'),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
-    );
-  }
-}
-
-class ScoreWidget extends AnimatedWidget {
-  ScoreWidget({Key key, Animation<int> animation}) : super(key: key, listenable: animation);
-
-  Widget build(BuildContext context) {
-    final Animation<int> animation = listenable;
-    return Text(
-      animation.value.toString(),
-      style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
     );
   }
 }
@@ -90,9 +79,10 @@ class HeaderWidget extends StatelessWidget {
           alignment: Alignment(-0.92, 0.95),
           child: new Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                name,
+                " " + name,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
               ),
               ScoreWidget(
