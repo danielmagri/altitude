@@ -36,21 +36,12 @@ class _RewardTabState extends State<RewardTab> {
       padding: EdgeInsets.only(bottom: 8.0),
       child: Column(
         children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: Align(
-              alignment: Alignment(0.0, 1.0),
-              child: Text("Texto explicando sobre a meta"),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Align(
-              alignment: Alignment(-0.6, 0.6),
-              child: Text(
-                "Qual é sua meta?",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
+          Container(
+            margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
+            width: double.maxFinite,
+            child: Text(
+              "Qual é sua meta?",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
           ),
           Padding(
