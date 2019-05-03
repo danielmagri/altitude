@@ -36,7 +36,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
+                              "Físico",
                               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
                           ))),
@@ -72,7 +72,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
+                              "Mental",
                               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
                           ))),
@@ -108,7 +108,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
+                              "Social",
                               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
                           ))),

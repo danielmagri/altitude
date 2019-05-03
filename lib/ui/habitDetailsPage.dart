@@ -79,8 +79,8 @@ class HeaderWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    width: 100.0,
-                    height: 100.0,
+                    width: 90.0,
+                    height: 90.0,
                     margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
                     alignment: Alignment(0.0, 0.0),
                     child: Hero(
@@ -88,7 +88,7 @@ class HeaderWidget extends StatelessWidget {
                       transitionOnUserGestures: true,
                       child: Icon(
                         Icons.fitness_center,
-                        size: 50.0,
+                        size: 40.0,
                       ),
                     ),
                     decoration: new BoxDecoration(
@@ -107,7 +107,7 @@ class HeaderWidget extends StatelessWidget {
                             name,
                             softWrap: true,
                             textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.w300),
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
                           ),
                           ScoreWidget(
                             animation: animation,
@@ -227,18 +227,20 @@ class CalendarWidget extends StatelessWidget {
                 markersMaxAmount: 1,
                 markersColor: Colors.brown[700],
               ),
-              builders: CalendarBuilders(markersBuilder: (context, date, list) {
-                return Container(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    alignment: Alignment(0.0, 0.0),
-                    margin: EdgeInsets.all(5.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                    ));
+              builders: CalendarBuilders(markersBuilder: (context, date, event, list) {
+                return <Widget>[
+                  Container(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      alignment: Alignment(0.0, 0.0),
+                      margin: EdgeInsets.all(5.0),
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.green,
+                      ))
+                ];
               }),
               headerStyle: HeaderStyle(
                 formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
@@ -340,7 +342,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 160.0),
+            margin: EdgeInsets.only(top: 155.0),
             child: ListView(
               padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
               physics: BouncingScrollPhysics(),
@@ -366,7 +368,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             ),
           ),
           Container(
-            height: 200.0,
+            height: 190.0,
             width: double.maxFinite,
             child: HeaderWidget(
               id: widget.habit.id,
