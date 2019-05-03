@@ -27,7 +27,15 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
-      {Key key, this.id, this.name, this.score, this.previousScore, this.color, this.done, this.setDoneHabit, this.controller})
+      {Key key,
+      this.id,
+      this.name,
+      this.score,
+      this.previousScore,
+      this.color,
+      this.done,
+      this.setDoneHabit,
+      this.controller})
       : animation = IntTween(begin: previousScore, end: score)
             .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
         super(key: key);
@@ -146,11 +154,8 @@ class CueRewardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("Deixa e meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
-              Text(
-                  "Meta: " + reward,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              Text("Deixa: " + cue,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Meta: " + reward, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
             ],
           ),
         ),
@@ -227,18 +232,20 @@ class CalendarWidget extends StatelessWidget {
                 markersMaxAmount: 1,
                 markersColor: Colors.brown[700],
               ),
-              builders: CalendarBuilders(markersBuilder: (context, date, list) {
-                return Container(
-                    child: Text(
-                      date.day.toString(),
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    alignment: Alignment(0.0, 0.0),
-                    margin: EdgeInsets.all(5.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.green,
-                    ));
+              builders: CalendarBuilders(markersBuilder: (context, date, event, list) {
+                return <Widget>[
+                  Container(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      alignment: Alignment(0.0, 0.0),
+                      margin: EdgeInsets.all(5.0),
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.green,
+                      ))
+                ];
               }),
               headerStyle: HeaderStyle(
                 formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),

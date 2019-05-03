@@ -285,4 +285,15 @@ class DatabaseService {
 
     return true;
   }
+
+  Future<bool> updateHabit(Habit habit) async {
+    final db = await database;
+
+    await db.rawInsert('''UPDATE habit SET habit_text=\'${habit.habit}\',
+                                           reward_text=\'${habit.reward}\',
+                                           cue_text=\'${habit.cue}\',
+                                           category=${habit.category.index}  WHERE id=${habit.id};''');
+
+    return true;
+  }
 }
