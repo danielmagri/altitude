@@ -375,7 +375,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               name: widget.habit.habit,
               score: score,
               previousScore: previousScore,
-              color: CategoryColors.getColor(widget.habit.category),
+              color: CategoryColors.getPrimaryColor(widget.habit.category),
               done: hasDoneToday(),
               setDoneHabit: setDoneHabit,
               controller: _controllerScore,

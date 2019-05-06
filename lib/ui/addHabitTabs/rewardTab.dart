@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/utils/Validator.dart';
+import 'package:habit/utils/enums.dart';
+import 'package:habit/utils/Color.dart';
 
 class RewardTab extends StatefulWidget {
-  RewardTab({Key key, this.controller, this.onTap}) : super(key: key);
+  RewardTab({Key key, this.category, this.controller, this.onTap}) : super(key: key);
 
+  final Category category;
   final TextEditingController controller;
   final Function onTap;
 
@@ -64,20 +67,31 @@ class _RewardTabState extends State<RewardTab> {
             flex: 8,
             child: Text("Lista das sugestões"),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  widget.onTap(false);
-                },
-                child: const Text("VOLTAR"),
-              ),
-              RaisedButton(
-                onPressed: validate,
-                child: const Text("AVANÇAR"),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                RaisedButton(
+                  color: CategoryColors.getSecundaryColor(widget.category),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  elevation: 5.0,
+                  onPressed: () {
+                    widget.onTap(false);
+                  },
+                  child: const Text("VOLTAR"),
+                ),
+                RaisedButton(
+                  color: CategoryColors.getSecundaryColor(widget.category),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  elevation: 5.0,
+                  onPressed: validate,
+                  child: const Text("AVANÇAR"),
+                ),
+              ],
+            ),
           ),
         ],
       ),

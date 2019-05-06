@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/objects/Frequency.dart';
+import 'package:habit/utils/enums.dart';
+import 'package:habit/utils/Color.dart';
 
 class FrequencyTab extends StatefulWidget {
-  FrequencyTab({Key key, this.onTap}) : super(key: key);
+  FrequencyTab({Key key, this.category, this.onTap}) : super(key: key);
 
+  final Category category;
   final Function onTap;
 
   @override
@@ -176,20 +179,31 @@ class _FrequencyTabState extends State<FrequencyTab> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              RaisedButton(
-                onPressed: () {
-                  widget.onTap(false, null);
-                },
-                child: const Text("VOLTAR"),
-              ),
-              RaisedButton(
-                onPressed: validateData,
-                child: const Text("AVANÇAR"),
-              ),
-            ],
+          Padding(
+            padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                RaisedButton(
+                  color: CategoryColors.getSecundaryColor(widget.category),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  elevation: 5.0,
+                  onPressed: () {
+                    widget.onTap(false, null);
+                  },
+                  child: const Text("VOLTAR"),
+                ),
+                RaisedButton(
+                  color: CategoryColors.getSecundaryColor(widget.category),
+                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                  elevation: 5.0,
+                  onPressed: validateData,
+                  child: const Text("AVANÇAR"),
+                ),
+              ],
+            ),
           ),
         ],
       ),

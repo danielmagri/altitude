@@ -55,7 +55,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     category = selection;
     Color color;
 
-    color = CategoryColors.getColor(category);
+    color = CategoryColors.getPrimaryColor(category);
 
     _backgroundAnimation = ColorTween(begin: _startColor, end: color)
         .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
@@ -93,10 +93,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: category,
-          cue: cueController.text,
-          habit: habitController.text,
-          reward: rewardController.text);
+          category: category, cue: cueController.text, habit: habitController.text, reward: rewardController.text);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
@@ -115,8 +112,8 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   }
 
   void _nextPage(int delta) {
-    if(delta == 1)
-    _pageController.nextPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
+    if (delta == 1)
+      _pageController.nextPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
     else if (delta == -1)
       _pageController.previousPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
   }
@@ -127,6 +124,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       animation: _backgroundController,
       builder: (context, child) {
         return MaterialApp(
+          theme: Theme.of(context).copyWith(
+              textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
+              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary)),
           home: Scaffold(
             resizeToAvoidBottomPadding: false,
             backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
@@ -143,17 +143,21 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                   physics: BouncingScrollPhysics(),
                   children: <Widget>[
                     RewardTab(
+                      category: category,
                       controller: rewardController,
                       onTap: rewardTabTap,
                     ),
                     HabitTab(
+                      category: category,
                       controller: habitController,
                       onTap: habitTabTap,
                     ),
                     FrequencyTab(
+                      category: category,
                       onTap: frequencyTabTap,
                     ),
                     CueTab(
+                      category: category,
                       controller: cueController,
                       onTap: cueTabTap,
                     )
