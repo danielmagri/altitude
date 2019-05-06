@@ -37,7 +37,7 @@ class HabitWidget extends StatelessWidget {
               height: 50.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: CategoryColors.getColor(habit.category),
+                color: CategoryColors.getPrimaryColor(habit.category),
               ),
               child: Hero(
                 tag: habit.id,
