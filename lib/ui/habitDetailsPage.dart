@@ -7,6 +7,7 @@ import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vibration/vibration.dart';
 
 class HeaderBackgroundClip extends CustomClipper<Path> {
   @override
@@ -316,6 +317,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
+      Vibration.vibrate();
       setState(() {
         score += earnedScore;
         markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
@@ -346,6 +348,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           Container(

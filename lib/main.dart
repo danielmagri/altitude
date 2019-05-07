@@ -8,7 +8,7 @@ import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/allHabitsPage.dart';
+import 'package:vibration/vibration.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habitos',
-      theme: ThemeData(fontFamily: 'Montserrat'),
+      theme: ThemeData(fontFamily: 'Montserrat', canvasColor: Colors.transparent),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -163,11 +163,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   AnimationController _controllerDragComplete;
   AnimationController _controllerScore;
   Animation _animationDragComplete;
 
   List<Habit> habitsForToday = [];
+  List<Habit> habits = [];
   Person person;
   int previousScore = 0;
 
@@ -193,6 +195,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       animateScore();
     });
 
+    DataControl().getAllHabits().then((habits) {
+      this.habits = habits;
+    });
+
     super.didChangeDependencies();
   }
 
@@ -206,10 +212,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void animateScore() {
     if (previousScore != person.score) {
       _controllerScore.reset();
-      _controllerScore
-          .forward()
-          .orCancel
-          .then((e) {
+      _controllerScore.forward().orCancel.then((e) {
         previousScore = person.score;
       }).catchError((error) {
         print(error.toString());
@@ -226,6 +229,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
+          Vibration.vibrate();
           setState(() {
             habitsForToday.removeAt(i);
             person.score += earnedScore;
@@ -276,6 +280,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -303,15 +309,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 18.0),
                       child: RaisedButton(
-                          child: Text("TODOS OS HÁBITOS"),
-                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                          elevation: 5.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) {
-                              return AllHabitsPage();
-                            }));
-                          }),
+                        child: Text("TODOS OS HÁBITOS"),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                        elevation: 5.0,
+                        padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
+                        onPressed: _bottomSheet,
+                      ),
                     ),
                   ],
                 ),
@@ -322,5 +325,50 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  void _bottomSheet() {
+    List<Widget> widgets = new List();
+
+    if (habits.length == 0) {
+      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+    } else {
+      for (Habit habit in habits) {
+        widgets.add(HabitWidget(habit: habit));
+      }
+    }
+
+    _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) {
+      return Container(
+        margin: EdgeInsets.only(top: 50.0, left: 8.0, right: 8.0),
+        decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius:
+                new BorderRadius.only(topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0))),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Container(
+              width: 35.0,
+              height: 8.0,
+              margin: EdgeInsets.only(top: 8.0),
+              decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
+            ),
+            Text(
+              "Todos os hábitos",
+              style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.w300, height: 1.9),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20.0),
+              width: double.maxFinite,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: widgets,
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }
