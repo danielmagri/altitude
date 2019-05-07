@@ -204,10 +204,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void animateScore() {
-    _controllerScore.reset();
-    _controllerScore.forward().then((v) {
-      previousScore = person.score;
-    });
+    if (previousScore != person.score) {
+      _controllerScore.reset();
+      _controllerScore
+          .forward()
+          .orCancel
+          .then((e) {
+        previousScore = person.score;
+      }).catchError((error) {
+        print(error.toString());
+        previousScore = person.score;
+      });
+    }
   }
 
   void onAccept(id) {

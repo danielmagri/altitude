@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/utils/enums.dart';
 
-class CategoryColors {
+abstract class CategoryColors {
   static const Color physicalPrimary = Color.fromARGB(255, 190, 60, 60);
   static const Color physicalSecundary = Color.fromARGB(255, 150, 50, 50);
 
