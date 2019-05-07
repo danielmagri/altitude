@@ -27,7 +27,15 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
-      {Key key, this.id, this.name, this.score, this.previousScore, this.color, this.done, this.setDoneHabit, this.controller})
+      {Key key,
+      this.id,
+      this.name,
+      this.score,
+      this.previousScore,
+      this.color,
+      this.done,
+      this.setDoneHabit,
+      this.controller})
       : animation = IntTween(begin: previousScore, end: score)
             .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
         super(key: key);
@@ -146,11 +154,8 @@ class CueRewardWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text("Deixa e meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
-              Text(
-                  "Meta: " + reward,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              Text("Deixa: " + cue,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Meta: " + reward, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+              Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
             ],
           ),
         ),
@@ -292,10 +297,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   void animateScore() {
-    _controllerScore.reset();
-    _controllerScore.forward().then((v) {
-      previousScore = score;
-    });
+    if (previousScore != score) {
+      _controllerScore.reset();
+      _controllerScore.forward().then((e) {
+        previousScore = score;
+      });
+    }
   }
 
   bool hasDoneToday() {
