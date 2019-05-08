@@ -7,7 +7,7 @@ class ScoreWidget extends AnimatedWidget {
     final Animation<int> animation = listenable;
     return Text(
       animation.value.toString(),
-      style: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 55.0, fontWeight: FontWeight.bold),
     );
   }
 }

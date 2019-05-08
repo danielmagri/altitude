@@ -7,14 +7,15 @@ import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vibration/vibration.dart';
 
 class HeaderBackgroundClip extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
 
-    path.lineTo(0.0, size.height - 40);
-    path.lineTo(size.width, size.height);
+    path.lineTo(0.0, size.height - 20);
+    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 10);
     path.lineTo(size.width, 0.0);
     path.close();
 
@@ -67,7 +68,7 @@ class HeaderWidget extends StatelessWidget {
             ),
           ),
           clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
+          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
         ),
         Column(
           mainAxisSize: MainAxisSize.max,
@@ -87,8 +88,8 @@ class HeaderWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Container(
-                    width: 100.0,
-                    height: 100.0,
+                    width: 90.0,
+                    height: 90.0,
                     margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
                     alignment: Alignment(0.0, 0.0),
                     child: Hero(
@@ -96,7 +97,7 @@ class HeaderWidget extends StatelessWidget {
                       transitionOnUserGestures: true,
                       child: Icon(
                         Icons.fitness_center,
-                        size: 50.0,
+                        size: 40.0,
                       ),
                     ),
                     decoration: new BoxDecoration(
@@ -115,7 +116,7 @@ class HeaderWidget extends StatelessWidget {
                             name,
                             softWrap: true,
                             textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.w300),
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
                           ),
                           ScoreWidget(
                             animation: animation,
@@ -297,10 +298,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   void animateScore() {
-    _controllerScore.reset();
-    _controllerScore.forward().then((v) {
-      previousScore = score;
-    });
+    if (previousScore != score) {
+      _controllerScore.reset();
+      _controllerScore.forward().then((e) {
+        previousScore = score;
+      });
+    }
   }
 
   bool hasDoneToday() {
@@ -314,6 +317,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
+      Vibration.vibrate();
       setState(() {
         score += earnedScore;
         markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
@@ -347,7 +351,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 160.0),
+            margin: EdgeInsets.only(top: 150.0),
             child: ListView(
               padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
               physics: BouncingScrollPhysics(),
@@ -373,14 +377,14 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             ),
           ),
           Container(
-            height: 200.0,
+            height: 190.0,
             width: double.maxFinite,
             child: HeaderWidget(
               id: widget.habit.id,
               name: widget.habit.habit,
               score: score,
               previousScore: previousScore,
-              color: CategoryColors.getColor(widget.habit.category),
+              color: CategoryColors.getPrimaryColor(widget.habit.category),
               done: hasDoneToday(),
               setDoneHabit: setDoneHabit,
               controller: _controllerScore,

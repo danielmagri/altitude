@@ -8,7 +8,8 @@ import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/allHabitsPage.dart';
+import 'package:vibration/vibration.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habitos',
-      theme: ThemeData(fontFamily: 'Roboto'),
+      theme: ThemeData(fontFamily: 'Montserrat'),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -33,8 +34,9 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
     var path = Path();
 
     path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height - 40);
+    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 20);
     path.lineTo(size.width, 0.0);
+
     path.close();
 
     return path;
@@ -73,7 +75,7 @@ class HeaderWidget extends StatelessWidget {
             ),
           ),
           clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
+          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
         ),
         Container(
           alignment: Alignment(-0.92, 0.95),
@@ -163,11 +165,13 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+  PanelController _panelController = new PanelController();
   AnimationController _controllerDragComplete;
   AnimationController _controllerScore;
   Animation _animationDragComplete;
 
   List<Habit> habitsForToday = [];
+  List<Habit> habits = [];
   Person person;
   int previousScore = 0;
 
@@ -193,6 +197,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       animateScore();
     });
 
+    DataControl().getAllHabits().then((habits) {
+      this.habits = habits;
+    });
+
     super.didChangeDependencies();
   }
 
@@ -204,10 +212,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void animateScore() {
-    _controllerScore.reset();
-    _controllerScore.forward().then((v) {
-      previousScore = person.score;
-    });
+    if (previousScore != person.score) {
+      _controllerScore.reset();
+      _controllerScore.forward().orCancel.then((e) {
+        previousScore = person.score;
+      }).catchError((error) {
+        print(error.toString());
+        previousScore = person.score;
+      });
+    }
   }
 
   void onAccept(id) {
@@ -218,6 +231,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
+          Vibration.vibrate();
           setState(() {
             habitsForToday.removeAt(i);
             person.score += earnedScore;
@@ -261,6 +275,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     return Wrap(
       alignment: WrapAlignment.center,
+      spacing: 4.0,
+      runSpacing: 4.0,
       children: widgets,
     );
   }
@@ -268,49 +284,96 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              flex: 1,
-              child: HeaderWidget(
-                name: person.name,
-                score: person.score,
-                previousScore: previousScore,
-                controller: _controllerScore,
-              )),
-          Expanded(
-            flex: 2,
-            child: Stack(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "Hábitos de hoje",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
-                    ),
-                    Expanded(
-                      child: Center(
-                          child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 18.0),
-                      child: RaisedButton(
+      body: SlidingUpPanel(
+        controller: _panelController,
+        minHeight: 0.0,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        backdropEnabled: true,
+        panel: Center(
+          child: _bottomSheet(),
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+                flex: 1,
+                child: HeaderWidget(
+                  name: person.name,
+                  score: person.score,
+                  previousScore: previousScore,
+                  controller: _controllerScore,
+                )),
+            Expanded(
+              flex: 2,
+              child: Stack(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Hábitos de hoje",
+                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
+                      ),
+                      Expanded(
+                        child: Center(
+                            child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 18.0),
+                        child: RaisedButton(
                           child: Text("TODOS OS HÁBITOS"),
                           shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                           elevation: 5.0,
                           padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) {
-                              return AllHabitsPage();
-                            }));
-                          }),
-                    ),
-                  ],
-                ),
-                DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-              ],
+                          onPressed: () => _panelController.open(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+                ],
+              ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomSheet() {
+    List<Widget> widgets = new List();
+
+    if (habits.length == 0) {
+      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+    } else {
+      for (Habit habit in habits) {
+        widgets.add(HabitWidget(habit: habit));
+      }
+    }
+
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Container(
+            width: 35.0,
+            height: 8.0,
+            margin: EdgeInsets.only(top: 8.0),
+            decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
           ),
+          Text(
+            "Todos os hábitos",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300, height: 1.9),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 20.0),
+            width: double.maxFinite,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 4.0,
+              runSpacing: 4.0,
+              children: widgets,
+            ),
+          )
         ],
       ),
     );

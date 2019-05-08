@@ -16,7 +16,7 @@ class CategoryTab extends StatelessWidget {
               child: Text(
             "Qual categoria se encaixa no seu hábito?",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300, height: 1.3),
+            style: TextStyle(fontSize: 22.0, color: Colors.black, fontWeight: FontWeight.w300, height: 1.3),
           )),
         ),
         Expanded(
@@ -26,18 +26,18 @@ class CategoryTab extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: CategoryColors.physicalPrimary,
+                image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
               ),
               child: Column(
                 children: <Widget>[
                   Expanded(
                       child: Align(
-                          alignment: Alignment(-0.7, -0.2),
+                          alignment: Alignment(-0.9, -0.4),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                              "Físico",
+                              style: TextStyle(fontSize: 22.0, color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ))),
                   Expanded(
@@ -46,7 +46,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Descrição",
+                              "",
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
                             ),
                           ))),
@@ -62,18 +62,18 @@ class CategoryTab extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: CategoryColors.mentalPrimary,
+                image: DecorationImage(image: AssetImage('assets/category/mental.png'), fit: BoxFit.cover),
               ),
               child: Column(
                 children: <Widget>[
                   Expanded(
                       child: Align(
-                          alignment: Alignment(-0.7, -0.2),
+                          alignment: Alignment(-0.9, -0.4),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                              "Mental",
+                              style: TextStyle(fontSize: 22.0, color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ))),
                   Expanded(
@@ -82,7 +82,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Descrição",
+                              "",
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
                             ),
                           ))),
@@ -98,18 +98,18 @@ class CategoryTab extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: CategoryColors.socialPrimary,
+                image: DecorationImage(image: AssetImage('assets/category/social.png'), fit: BoxFit.cover),
               ),
               child: Column(
                 children: <Widget>[
                   Expanded(
                       child: Align(
-                          alignment: Alignment(-0.7, -0.2),
+                          alignment: Alignment(-0.9, -0.4),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Nome",
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                              "Social",
+                              style: TextStyle(fontSize: 22.0, color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ))),
                   Expanded(
@@ -118,7 +118,7 @@ class CategoryTab extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Descrição",
+                              "",
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
                             ),
                           ))),

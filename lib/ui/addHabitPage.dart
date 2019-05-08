@@ -8,6 +8,7 @@ import 'package:habit/ui/addHabitTabs/cueTab.dart';
 import 'package:habit/ui/addHabitTabs/habitTab.dart';
 import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -19,6 +20,7 @@ class AddHabitPage extends StatefulWidget {
 class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMixin {
   TabController _tabController;
   PageController _pageController = PageController();
+  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
   AnimationController _backgroundController;
   Animation _backgroundAnimation;
 
@@ -55,7 +57,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     category = selection;
     Color color;
 
-    color = CategoryColors.getColor(category);
+    color = CategoryColors.getPrimaryColor(category);
 
     _backgroundAnimation = ColorTween(begin: _startColor, end: color)
         .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
@@ -93,10 +95,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: category,
-          cue: cueController.text,
-          habit: habitController.text,
-          reward: rewardController.text);
+          category: category, cue: cueController.text, habit: habitController.text, reward: rewardController.text);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
@@ -115,10 +114,10 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   }
 
   void _nextPage(int delta) {
-    if(delta == 1)
-    _pageController.nextPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
+    if (delta == 1)
+      _pageController.nextPage(duration: Duration(milliseconds: 2000), curve: Curves.elasticOut);
     else if (delta == -1)
-      _pageController.previousPage(duration: Duration(milliseconds: 1500), curve: Curves.elasticOut);
+      _pageController.previousPage(duration: Duration(milliseconds: 2000), curve: Curves.elasticOut);
   }
 
   @override
@@ -127,6 +126,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       animation: _backgroundController,
       builder: (context, child) {
         return MaterialApp(
+          theme: Theme.of(context).copyWith(
+              textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
+              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary)),
           home: Scaffold(
             resizeToAvoidBottomPadding: false,
             backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
@@ -140,21 +142,28 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                 PageView(
                   controller: _pageController,
                   scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                   children: <Widget>[
                     RewardTab(
+                      category: category,
                       controller: rewardController,
+                      keyboard: _keyboardVisibility,
                       onTap: rewardTabTap,
                     ),
                     HabitTab(
+                      category: category,
                       controller: habitController,
+                      keyboard: _keyboardVisibility,
                       onTap: habitTabTap,
                     ),
                     FrequencyTab(
+                      category: category,
                       onTap: frequencyTabTap,
                     ),
                     CueTab(
+                      category: category,
                       controller: cueController,
+                      keyboard: _keyboardVisibility,
                       onTap: cueTabTap,
                     )
                   ],
