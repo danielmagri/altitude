@@ -348,7 +348,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
           Container(
