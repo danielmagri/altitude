@@ -9,6 +9,7 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:vibration/vibration.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Habitos',
-      theme: ThemeData(fontFamily: 'Montserrat', canvasColor: Colors.transparent),
+      theme: ThemeData(fontFamily: 'Montserrat'),
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );
@@ -163,7 +164,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  PanelController _panelController = new PanelController();
   AnimationController _controllerDragComplete;
   AnimationController _controllerScore;
   Animation _animationDragComplete;
@@ -280,54 +281,61 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              flex: 1,
-              child: HeaderWidget(
-                name: person.name,
-                score: person.score,
-                previousScore: previousScore,
-                controller: _controllerScore,
-              )),
-          Expanded(
-            flex: 2,
-            child: Stack(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "Hábitos de hoje",
-                      style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
-                    ),
-                    Expanded(
-                      child: Center(
-                          child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 18.0),
-                      child: RaisedButton(
-                        child: Text("TODOS OS HÁBITOS"),
-                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                        elevation: 5.0,
-                        padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                        onPressed: _bottomSheet,
+      body: SlidingUpPanel(
+        controller: _panelController,
+        minHeight: 0.0,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        backdropEnabled: true,
+        panel: Center(
+          child: _bottomSheet(),
+        ),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+                flex: 1,
+                child: HeaderWidget(
+                  name: person.name,
+                  score: person.score,
+                  previousScore: previousScore,
+                  controller: _controllerScore,
+                )),
+            Expanded(
+              flex: 2,
+              child: Stack(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Hábitos de hoje",
+                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
                       ),
-                    ),
-                  ],
-                ),
-                DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-              ],
+                      Expanded(
+                        child: Center(
+                            child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 18.0),
+                        child: RaisedButton(
+                          child: Text("TODOS OS HÁBITOS"),
+                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          elevation: 5.0,
+                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
+                          onPressed: () => _panelController.open(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  void _bottomSheet() {
+  Widget _bottomSheet() {
     List<Widget> widgets = new List();
 
     if (habits.length == 0) {
@@ -338,37 +346,31 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       }
     }
 
-    _scaffoldKey.currentState.showBottomSheet<void>((BuildContext context) {
-      return Container(
-        margin: EdgeInsets.only(top: 50.0, left: 8.0, right: 8.0),
-        decoration: new BoxDecoration(
-            color: Colors.white,
-            borderRadius:
-                new BorderRadius.only(topLeft: const Radius.circular(10.0), topRight: const Radius.circular(10.0))),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Container(
-              width: 35.0,
-              height: 8.0,
-              margin: EdgeInsets.only(top: 8.0),
-              decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Container(
+            width: 35.0,
+            height: 8.0,
+            margin: EdgeInsets.only(top: 8.0),
+            decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
+          ),
+          Text(
+            "Todos os hábitos",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300, height: 1.9),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 20.0),
+            width: double.maxFinite,
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              children: widgets,
             ),
-            Text(
-              "Todos os hábitos",
-              style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.w300, height: 1.9),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              width: double.maxFinite,
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: widgets,
-              ),
-            )
-          ],
-        ),
-      );
-    });
+          )
+        ],
+      ),
+    );
   }
 }
