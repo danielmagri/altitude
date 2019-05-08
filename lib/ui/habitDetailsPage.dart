@@ -14,8 +14,8 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
   Path getClip(Size size) {
     var path = Path();
 
-    path.lineTo(0.0, size.height - 40);
-    path.lineTo(size.width, size.height);
+    path.lineTo(0.0, size.height - 20);
+    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 10);
     path.lineTo(size.width, 0.0);
     path.close();
 
@@ -68,7 +68,7 @@ class HeaderWidget extends StatelessWidget {
             ),
           ),
           clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
+          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
         ),
         Column(
           mainAxisSize: MainAxisSize.max,
@@ -351,7 +351,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 155.0),
+            margin: EdgeInsets.only(top: 150.0),
             child: ListView(
               padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
               physics: BouncingScrollPhysics(),

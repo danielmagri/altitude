@@ -34,8 +34,9 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
     var path = Path();
 
     path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height - 40);
+    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 20);
     path.lineTo(size.width, 0.0);
+
     path.close();
 
     return path;
@@ -74,7 +75,7 @@ class HeaderWidget extends StatelessWidget {
             ),
           ),
           clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.black.withOpacity(0.5)),
+          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
         ),
         Container(
           alignment: Alignment(-0.92, 0.95),
@@ -274,6 +275,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     return Wrap(
       alignment: WrapAlignment.center,
+      spacing: 4.0,
+      runSpacing: 4.0,
       children: widgets,
     );
   }
@@ -366,6 +369,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             width: double.maxFinite,
             child: Wrap(
               alignment: WrapAlignment.center,
+              spacing: 4.0,
+              runSpacing: 4.0,
               children: widgets,
             ),
           )
