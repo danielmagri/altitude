@@ -5,8 +5,8 @@ abstract class Validate {
       return "Por favor preencha o campo.";
     } else if (treatedText.length < 3) {
       return "A meta precisa ser maior que 3 letras.";
-    } else if (treatedText.length > 25) {
-      return "A meta pode ter no máximo 25 caracteres.";
+    } else if (treatedText.length > 40) {
+      return "A meta pode ter no máximo 40 caracteres.";
     }
 
     return "";
@@ -31,8 +31,8 @@ abstract class Validate {
       return "Por favor preencha o campo.";
     } else if (treatedText.length < 3) {
       return "A meta precisa ser maior que 3 letras.";
-    } else if (treatedText.length > 25) {
-      return "A meta pode ter no máximo 25 caracteres.";
+    } else if (treatedText.length > 40) {
+      return "A meta pode ter no máximo 40 caracteres.";
     }
 
     return "";
