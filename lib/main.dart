@@ -237,57 +237,67 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
+  Future<bool> _onBackPressed() async {
+    if (_panelController.isPanelOpen()) {
+      _panelController.close();
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SlidingUpPanel(
-        controller: _panelController,
-        minHeight: 0.0,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-        backdropEnabled: true,
-        panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: HeaderWidget(
-                  name: person.name,
-                  score: person.score,
-                  previousScore: previousScore,
-                  controller: _controllerScore,
-                )),
-            Expanded(
-              flex: 2,
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "Hábitos de hoje",
-                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
-                      ),
-                      Expanded(
-                        child: Center(
-                            child:
-                                FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 18.0),
-                        child: RaisedButton(
-                          child: Text("TODOS OS HÁBITOS"),
-                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                          elevation: 5.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                          onPressed: () => _panelController.open(),
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        body: SlidingUpPanel(
+          controller: _panelController,
+          minHeight: 0.0,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+          backdropEnabled: true,
+          panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                  flex: 1,
+                  child: HeaderWidget(
+                    name: person.name,
+                    score: person.score,
+                    previousScore: previousScore,
+                    controller: _controllerScore,
+                  )),
+              Expanded(
+                flex: 2,
+                child: Stack(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Text(
+                          "Hábitos de hoje",
+                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
                         ),
-                      ),
-                    ],
-                  ),
-                  DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-                ],
+                        Expanded(
+                          child: Center(
+                              child:
+                                  FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 18.0),
+                          child: RaisedButton(
+                            child: Text("TODOS OS HÁBITOS"),
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            elevation: 5.0,
+                            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
+                            onPressed: () => _panelController.open(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
