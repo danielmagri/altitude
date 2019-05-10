@@ -5,9 +5,10 @@ import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Color.dart';
 
 class HabitWidget extends StatelessWidget {
-  HabitWidget({Key key, this.habit}) : super(key: key);
+  HabitWidget({Key key, this.habit, this.fromAllHabits}) : super(key: key);
 
   final Habit habit;
+  final bool fromAllHabits;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class HabitWidget extends StatelessWidget {
               habit: data,
               frequency: frequency,
               markedDays: daysDone,
+              fromAllHabits: fromAllHabits,
             );
           }));
         }
@@ -40,7 +42,7 @@ class HabitWidget extends StatelessWidget {
                 color: CategoryColors.getPrimaryColor(habit.category),
               ),
               child: Hero(
-                tag: habit.id,
+                tag: fromAllHabits ? habit.id + 1000 : habit.id,
                 transitionOnUserGestures: true,
                 child: Icon(
                   Icons.fitness_center,

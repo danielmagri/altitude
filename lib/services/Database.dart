@@ -65,7 +65,7 @@ class DatabaseService {
             CONSTRAINT fk_freq_day_week_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
-              ON DELETE NO ACTION
+              ON DELETE CASCADE
               ON UPDATE NO ACTION);''');
 
     await db.execute('''
@@ -75,7 +75,7 @@ class DatabaseService {
             CONSTRAINT fk_freq_weekly_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
-              ON DELETE NO ACTION
+              ON DELETE CASCADE
               ON UPDATE NO ACTION);''');
 
     await db.execute('''
@@ -86,7 +86,7 @@ class DatabaseService {
             CONSTRAINT fk_freq_repeating_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
-              ON DELETE NO ACTION
+              ON DELETE CASCADE
               ON UPDATE NO ACTION);''');
 
     await db.execute('''
@@ -98,7 +98,7 @@ class DatabaseService {
             CONSTRAINT fk_DiasFeito_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
-              ON DELETE NO ACTION
+              ON DELETE CASCADE
               ON UPDATE NO ACTION);''');
   }
 
@@ -293,6 +293,14 @@ class DatabaseService {
                                            reward_text=\'${habit.reward}\',
                                            cue_text=\'${habit.cue}\',
                                            category=${habit.category.index}  WHERE id=${habit.id};''');
+
+    return true;
+  }
+
+  Future<bool> deleteHabit(int id) async {
+    final db = await database;
+
+    await db.rawInsert('''DELETE FROM habit WHERE id=$id''');
 
     return true;
   }

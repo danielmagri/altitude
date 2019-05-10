@@ -171,7 +171,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Animation _animationDragComplete;
 
   List<Habit> habitsForToday = [];
-  List<Habit> habits = [];
   Person person;
   int previousScore = 0;
 
@@ -195,10 +194,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         this.person = person;
       });
       animateScore();
-    });
-
-    DataControl().getAllHabits().then((habits) {
-      this.habits = habits;
     });
 
     super.didChangeDependencies();
@@ -242,7 +237,63 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
-  Widget habitsForTodayBuild(BuildContext context, AsyncSnapshot snapshot) {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SlidingUpPanel(
+        controller: _panelController,
+        minHeight: 0.0,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+        backdropEnabled: true,
+        panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
+        body: Column(
+          children: <Widget>[
+            Expanded(
+                flex: 1,
+                child: HeaderWidget(
+                  name: person.name,
+                  score: person.score,
+                  previousScore: previousScore,
+                  controller: _controllerScore,
+                )),
+            Expanded(
+              flex: 2,
+              child: Stack(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Hábitos de hoje",
+                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
+                      ),
+                      Expanded(
+                        child: Center(
+                            child:
+                                FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 18.0),
+                        child: RaisedButton(
+                          child: Text("TODOS OS HÁBITOS"),
+                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          elevation: 5.0,
+                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
+                          onPressed: () => _panelController.open(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _habitsForTodayBuild(BuildContext context, AsyncSnapshot snapshot) {
     List<Widget> widgets = new List();
 
     if (!snapshot.hasData) {
@@ -253,7 +304,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
       } else {
         for (Habit habit in habitsForToday) {
-          Widget habitWidget = HabitWidget(habit: habit);
+          Widget habitWidget = HabitWidget(
+            habit: habit,
+            fromAllHabits: false,
+          );
 
           widgets.add(
             Draggable(
@@ -281,71 +335,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SlidingUpPanel(
-        controller: _panelController,
-        minHeight: 0.0,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-        backdropEnabled: true,
-        panel: Center(
-          child: _bottomSheet(),
-        ),
-        body: Column(
-          children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: HeaderWidget(
-                  name: person.name,
-                  score: person.score,
-                  previousScore: previousScore,
-                  controller: _controllerScore,
-                )),
-            Expanded(
-              flex: 2,
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "Hábitos de hoje",
-                        style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
-                      ),
-                      Expanded(
-                        child: Center(
-                            child: FutureBuilder(future: DataControl().getHabitsToday(), builder: habitsForTodayBuild)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 18.0),
-                        child: RaisedButton(
-                          child: Text("TODOS OS HÁBITOS"),
-                          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                          elevation: 5.0,
-                          padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                          onPressed: () => _panelController.open(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _bottomSheet() {
+  Widget _bottomSheetBuild(BuildContext context, AsyncSnapshot snapshot) {
     List<Widget> widgets = new List();
 
-    if (habits.length == 0) {
-      widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+    if (!snapshot.hasData) {
+      widgets.add(Center(child: CircularProgressIndicator()));
     } else {
-      for (Habit habit in habits) {
-        widgets.add(HabitWidget(habit: habit));
+      habitsForToday = snapshot.data;
+      if (habitsForToday.length == 0) {
+        widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+      } else {
+        for (Habit habit in snapshot.data) {
+          widgets.add(HabitWidget(
+            habit: habit,
+            fromAllHabits: true,
+          ));
+        }
       }
     }
 

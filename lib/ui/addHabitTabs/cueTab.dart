@@ -68,7 +68,7 @@ class _CueTabState extends State<CueTab> {
   void validate() {
     String result = Validate.cueTextValidate(widget.controller.text);
 
-    if (result == "") {
+    if (result == null) {
       widget.onTap(true);
     } else {
       Fluttertoast.showToast(

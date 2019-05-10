@@ -69,7 +69,7 @@ class _RewardTabState extends State<RewardTab> {
     _focusNode.unfocus();
     String result = Validate.rewardTextValidate(widget.controller.text);
 
-    if (result == "") {
+    if (result == null) {
       widget.onTap(true);
     } else {
       Fluttertoast.showToast(

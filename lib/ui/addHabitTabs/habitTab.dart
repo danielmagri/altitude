@@ -68,7 +68,7 @@ class _HabitTabState extends State<HabitTab> {
   void _validate() {
     String result = Validate.habitTextValidate(widget.controller.text);
 
-    if (result == "") {
+    if (result == null) {
       widget.onTap(true);
     } else {
       Fluttertoast.showToast(
