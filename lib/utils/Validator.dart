@@ -9,7 +9,7 @@ abstract class Validate {
       return "A meta pode ter no máximo 40 caracteres.";
     }
 
-    return "";
+    return null;
   }
 
   static String habitTextValidate(String text) {
@@ -22,7 +22,7 @@ abstract class Validate {
       return "A meta pode ter no máximo 25 caracteres.";
     }
 
-    return "";
+    return null;
   }
 
   static String rewardTextValidate(String text) {
@@ -35,6 +35,6 @@ abstract class Validate {
       return "A meta pode ter no máximo 40 caracteres.";
     }
 
-    return "";
+    return null;
   }
 }

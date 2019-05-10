@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
@@ -29,11 +30,11 @@ class HeaderBackgroundClip extends CustomClipper<Path> {
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
       {Key key,
-      this.id,
-      this.name,
+      this.habit,
+      this.frequency,
+      this.fromAllHabits,
       this.score,
       this.previousScore,
-      this.color,
       this.done,
       this.setDoneHabit,
       this.controller})
@@ -42,11 +43,11 @@ class HeaderWidget extends StatelessWidget {
         super(key: key);
 
   final AnimationController controller;
-  final int id;
-  final String name;
+  final Habit habit;
+  final bool fromAllHabits;
+  final dynamic frequency;
   final int score;
   final int previousScore;
-  final Color color;
   final bool done;
   final Function setDoneHabit;
   final Animation<int> animation;
@@ -80,7 +81,16 @@ class HeaderWidget extends StatelessWidget {
                   child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton()),
                 ),
                 IconButton(icon: Icon(Icons.check), onPressed: done ? null : setDoneHabit),
-                IconButton(icon: Icon(Icons.edit), onPressed: () {}),
+                IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return EditHabitPage(
+                          habit: habit,
+                          frequency: frequency,
+                        );
+                      }));
+                    }),
               ]),
             ),
             Expanded(
@@ -93,7 +103,7 @@ class HeaderWidget extends StatelessWidget {
                     margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
                     alignment: Alignment(0.0, 0.0),
                     child: Hero(
-                      tag: id,
+                      tag: fromAllHabits ? habit.id + 1000 : habit.id,
                       transitionOnUserGestures: true,
                       child: Icon(
                         Icons.fitness_center,
@@ -102,7 +112,7 @@ class HeaderWidget extends StatelessWidget {
                     ),
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        color: color,
+                        color: CategoryColors.getPrimaryColor(habit.category),
                         boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
                   ),
                   Expanded(
@@ -113,7 +123,7 @@ class HeaderWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            name,
+                            habit.habit,
                             softWrap: true,
                             textAlign: TextAlign.end,
                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
@@ -262,11 +272,12 @@ class CalendarWidget extends StatelessWidget {
 }
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key, this.habit, this.frequency, this.markedDays}) : super(key: key);
+  HabitDetailsPage({Key key, this.habit, this.frequency, this.markedDays, this.fromAllHabits}) : super(key: key);
 
   final Habit habit;
   final dynamic frequency;
   final Map<DateTime, List> markedDays;
+  final bool fromAllHabits;
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
@@ -380,11 +391,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             height: 190.0,
             width: double.maxFinite,
             child: HeaderWidget(
-              id: widget.habit.id,
-              name: widget.habit.habit,
+              habit: widget.habit,
+              frequency: widget.frequency,
+              fromAllHabits: widget.fromAllHabits,
               score: score,
               previousScore: previousScore,
-              color: CategoryColors.getPrimaryColor(widget.habit.category),
               done: hasDoneToday(),
               setDoneHabit: setDoneHabit,
               controller: _controllerScore,
