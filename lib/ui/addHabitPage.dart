@@ -70,7 +70,6 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     if (next) {
       _nextPage(1);
     } else {
-      _backgroundController.reverse();
       _nextTab(-1);
     }
   }
@@ -109,6 +108,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
 
   void _nextTab(int delta) {
     final int newIndex = _tabController.index + delta;
+    if (newIndex == 0) {
+      _backgroundController.reverse();
+    }
     if (newIndex < 0 || newIndex >= _tabController.length) return;
     _tabController.animateTo(newIndex);
   }
@@ -120,59 +122,75 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       _pageController.previousPage(duration: Duration(milliseconds: 2000), curve: Curves.elasticOut);
   }
 
+  Future<bool> _onBackPressed(BuildContext context) async {
+    if (_tabController.index == 0) {
+      return true;
+    }else if (_pageController.page >= 1) {
+      _nextPage(-1);
+      return false;
+    } else if (_tabController.index == 1) {
+      _nextTab(-1);
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _backgroundController,
-      builder: (context, child) {
-        return MaterialApp(
-          theme: Theme.of(context).copyWith(
-              textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
-              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary)),
-          home: Scaffold(
-            resizeToAvoidBottomPadding: false,
-            backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
-            body: TabBarView(
-              controller: _tabController,
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                CategoryTab(
-                  onCategoryTap: categoryTabTap,
-                ),
-                PageView(
-                  controller: _pageController,
-                  scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                  children: <Widget>[
-                    RewardTab(
-                      category: category,
-                      controller: rewardController,
-                      keyboard: _keyboardVisibility,
-                      onTap: rewardTabTap,
-                    ),
-                    HabitTab(
-                      category: category,
-                      controller: habitController,
-                      keyboard: _keyboardVisibility,
-                      onTap: habitTabTap,
-                    ),
-                    FrequencyTab(
-                      category: category,
-                      onTap: frequencyTabTap,
-                    ),
-                    CueTab(
-                      category: category,
-                      controller: cueController,
-                      keyboard: _keyboardVisibility,
-                      onTap: cueTabTap,
-                    )
-                  ],
-                )
-              ],
+    return WillPopScope(
+      onWillPop: () => _onBackPressed(context),
+      child: AnimatedBuilder(
+        animation: _backgroundController,
+        builder: (context, child) {
+          return MaterialApp(
+            theme: Theme.of(context).copyWith(
+                textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
+                buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary)),
+            home: Scaffold(
+              resizeToAvoidBottomPadding: false,
+              backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
+              body: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  CategoryTab(
+                    onCategoryTap: categoryTabTap,
+                  ),
+                  PageView(
+                    controller: _pageController,
+                    scrollDirection: Axis.vertical,
+                    physics: NeverScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                    children: <Widget>[
+                      RewardTab(
+                        category: category,
+                        controller: rewardController,
+                        keyboard: _keyboardVisibility,
+                        onTap: rewardTabTap,
+                      ),
+                      HabitTab(
+                        category: category,
+                        controller: habitController,
+                        keyboard: _keyboardVisibility,
+                        onTap: habitTabTap,
+                      ),
+                      FrequencyTab(
+                        category: category,
+                        onTap: frequencyTabTap,
+                      ),
+                      CueTab(
+                        category: category,
+                        controller: cueController,
+                        keyboard: _keyboardVisibility,
+                        onTap: cueTabTap,
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
