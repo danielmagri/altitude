@@ -6,26 +6,8 @@ import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
-
-class HeaderBackgroundClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-
-    path.lineTo(0.0, size.height - 20);
-    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 10);
-    path.lineTo(size.width, 0.0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
@@ -54,91 +36,73 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        ClipShadowPath(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage('assets/corrida.jpg'), fit: BoxFit.cover),
-            ),
-            child: new BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: new Container(
-                decoration: new BoxDecoration(color: Colors.white.withOpacity(0.4)),
-              ),
-            ),
-          ),
-          clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
-        ),
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBox(
-              height: 75.0,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Expanded(
-                  child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton()),
-                ),
-                IconButton(icon: Icon(Icons.check), onPressed: done ? null : setDoneHabit),
-                IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return EditHabitPage(
-                          habit: habit,
-                          frequency: frequency,
-                        );
-                      }));
-                    }),
-              ]),
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        SizedBox(
+          height: 70.0,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    width: 90.0,
-                    height: 90.0,
-                    margin: EdgeInsets.only(left: 10.0, bottom: 10.0),
-                    alignment: Alignment(0.0, 0.0),
-                    child: Hero(
-                      tag: fromAllHabits ? habit.id + 1000 : habit.id,
-                      transitionOnUserGestures: true,
-                      child: Icon(
-                        Icons.fitness_center,
-                        size: 40.0,
-                      ),
-                    ),
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: CategoryColors.getPrimaryColor(habit.category),
-                        boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            habit.habit,
-                            softWrap: true,
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-                          ),
-                          ScoreWidget(
-                            animation: animation,
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+              child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton(color: Colors.white)),
             ),
-          ],
+            IconButton(icon: Icon(Icons.check, color: Colors.white), onPressed: done ? null : setDoneHabit),
+            IconButton(
+                icon: Icon(Icons.edit, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return EditHabitPage(
+                      habit: habit,
+                      frequency: frequency,
+                    );
+                  }));
+                }),
+          ]),
+        ),
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                width: 90.0,
+                height: 90.0,
+                margin: EdgeInsets.only(left: 15.0),
+                alignment: Alignment(0.0, 0.0),
+                child: Hero(
+                  tag: fromAllHabits ? habit.id + 1000 : habit.id,
+                  transitionOnUserGestures: true,
+                  child: Icon(
+                    Icons.fitness_center,
+                    size: 40.0,
+                    color: Colors.white,
+                  ),
+                ),
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: CategoryColors.getPrimaryColor(habit.category),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 8.0, right: 8.0, top: habit.habit.length < 20 ? 10.0 : 0.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        habit.habit,
+                        softWrap: true,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.w300, height: 0.8),
+                      ),
+                      ScoreWidget(
+                        animation: animation,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -362,33 +326,53 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 150.0),
-            child: ListView(
-              padding: EdgeInsets.only(top: 35.0, bottom: 10.0),
-              physics: BouncingScrollPhysics(),
-              children: <Widget>[
-                Text(
-                  frequencyText(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
-                ),
-                CueRewardWidget(
-                  cue: widget.habit.cue,
-                  reward: widget.habit.reward,
-                ),
-                CoolDataWidget(
-                  initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
-                  daysDone: widget.habit.daysDone,
-                  cycles: widget.habit.cycle,
-                ),
-                CalendarWidget(
-                  markedDays: markedDays,
-                ),
-              ],
+            height: 205.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
+            ),
+            child: new BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: new Container(
+                decoration: new BoxDecoration(color: Colors.black.withOpacity(0.05)),
+              ),
             ),
           ),
           Container(
-            height: 190.0,
+            margin: EdgeInsets.only(top: 180.0),
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              color: Colors.white,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              child: ListView(
+                padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
+                physics: BouncingScrollPhysics(),
+                children: <Widget>[
+                  Text(
+                    frequencyText(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
+                  ),
+                  CueRewardWidget(
+                    cue: widget.habit.cue,
+                    reward: widget.habit.reward,
+                  ),
+                  CoolDataWidget(
+                    initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
+                    daysDone: widget.habit.daysDone,
+                    cycles: widget.habit.cycle,
+                  ),
+                  CalendarWidget(
+                    markedDays: markedDays,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 200.0,
             width: double.maxFinite,
             child: HeaderWidget(
               habit: widget.habit,

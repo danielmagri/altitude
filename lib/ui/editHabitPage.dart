@@ -1,26 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Validator.dart';
-
-class HeaderBackgroundClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-
-    path.lineTo(0.0, size.height);
-    path.quadraticBezierTo(size.width / 2, size.height - 20, size.width, size.height);
-    path.lineTo(size.width, 0.0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key, this.habit, this.frequency}) : super(key: key);
@@ -57,124 +39,138 @@ class _EditHabitPagePageState extends State<EditHabitPage> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              ClipShadowPath(
-                child: Container(
-                  color: CategoryColors.getPrimaryColor(widget.habit.category),
-                  padding: EdgeInsets.only(top: 20.0),
-                  height: 90.0,
-                  width: double.maxFinite,
-                  child: Row(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            color: CategoryColors.getPrimaryColor(widget.habit.category),
+            padding: EdgeInsets.only(top: 20.0, bottom: 25.0),
+            height: 110.0,
+            width: double.maxFinite,
+            child: Row(
+              children: <Widget>[
+                BackButton(color: Colors.white),
+                Text(
+                  "Editar hábito",
+                  style: TextStyle(fontSize: 20.0, color: Colors.white),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                IconButton(
+                    icon: Icon(Icons.delete, color: Colors.white),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: new Text("Deletar"),
+                            content: new Text(
+                                "Você deseja deletar permanentemente o hábito?\n(Todos o progresso dele será perdido)"),
+                            actions: <Widget>[
+                              new FlatButton(
+                                child: new Text("Sim"),
+                                onPressed: () {
+                                  DataControl().deleteHabit(widget.habit.id).then((status) {
+                                    Navigator.of(context).popUntil((route) => route.isFirst);
+                                  });
+                                },
+                              ),
+                              new FlatButton(
+                                child: new Text("Não"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 80.0),
+            height: double.infinity,
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              color: Colors.white,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(top: 16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     children: <Widget>[
-                      BackButton(color: Colors.white),
-                      Text(
-                        "Editar hábito",
-                        style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: rewardController,
+                          validator: Validate.rewardTextValidate,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(fontSize: 16.0),
+                          decoration: InputDecoration(
+                            hintText: "Escreva aqui",
+                            filled: true,
+                            labelText: "Meta",
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      Expanded(
-                        child: Container(),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: habitController,
+                          validator: Validate.habitTextValidate,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(fontSize: 16.0),
+                          decoration: InputDecoration(
+                            hintText: "Escreva aqui",
+                            filled: true,
+                            labelText: "Hábito",
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      IconButton(
-                          icon: Icon(Icons.delete, color: Colors.white),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: new Text("Deletar"),
-                                  content: new Text("Você deseja deletar permanentemente o hábito?\n(Todos o progresso dele será perdido)"),
-                                  actions: <Widget>[
-                                    new FlatButton(
-                                      child: new Text("Sim"),
-                                      onPressed: () {
-                                        DataControl().deleteHabit(widget.habit.id).then((status) {
-                                          Navigator.of(context).popUntil((route) => route.isFirst);
-                                        });
-                                      },
-                                    ),
-                                    new FlatButton(
-                                      child: new Text("Não"),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          controller: cueController,
+                          validator: Validate.cueTextValidate,
+                          textInputAction: TextInputAction.done,
+                          style: TextStyle(fontSize: 16.0),
+                          decoration: InputDecoration(
+                            hintText: "Escreva aqui",
+                            filled: true,
+                            labelText: "Deixa",
+                            border: new OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(30.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                clipper: HeaderBackgroundClip(),
-                shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
               ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: rewardController,
-                  validator: Validate.rewardTextValidate,
-                  textInputAction: TextInputAction.done,
-                  style: TextStyle(fontSize: 16.0),
-                  decoration: InputDecoration(
-                    hintText: "Escreva aqui",
-                    filled: true,
-                    labelText: "Meta",
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: habitController,
-                  validator: Validate.habitTextValidate,
-                  textInputAction: TextInputAction.done,
-                  style: TextStyle(fontSize: 16.0),
-                  decoration: InputDecoration(
-                    hintText: "Escreva aqui",
-                    filled: true,
-                    labelText: "Hábito",
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: cueController,
-                  validator: Validate.cueTextValidate,
-                  textInputAction: TextInputAction.done,
-                  style: TextStyle(fontSize: 16.0),
-                  decoration: InputDecoration(
-                    hintText: "Escreva aqui",
-                    filled: true,
-                    labelText: "Deixa",
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(30.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
             Habit newHabit = new Habit(
@@ -207,8 +203,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> with TickerProviderSt
         },
         tooltip: 'Salvar',
         backgroundColor: CategoryColors.getPrimaryColor(widget.habit.category),
-        icon: Icon(Icons.save),
-        label: Text("Salvar"),
+        child: Icon(Icons.save),
       ),
     );
   }

@@ -60,9 +60,9 @@ class _HabitTabState extends State<HabitTab> {
       }
     }
 
-      setState(() {
-        suggestion = result;
-      });
+    setState(() {
+      suggestion = result;
+    });
   }
 
   void _validate() {
@@ -96,23 +96,22 @@ class _HabitTabState extends State<HabitTab> {
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            decoration: BoxDecoration(
+              color: CategoryColors.getSecundaryColor(widget.category),
+              borderRadius: BorderRadius.circular(30.0),
+              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+            ),
             child: TextField(
               controller: widget.controller,
               focusNode: _focusNode,
               textInputAction: TextInputAction.go,
               onEditingComplete: _validate,
               style: TextStyle(fontSize: 16.0),
-              decoration: InputDecoration(
-                hintText: "Escreva aqui",
-                filled: true,
-                border: new OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(30.0),
-                  ),
-                ),
-              ),
+              decoration: InputDecoration.collapsed(
+                  hintText: "Escreva aqui", hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
             ),
           ),
           Expanded(
@@ -129,7 +128,7 @@ class _HabitTabState extends State<HabitTab> {
                     text = text.replaceFirst('_', '');
 
                     widget.controller.value =
-                    new TextEditingValue(text: text, selection: TextSelection.collapsed(offset: cursor));
+                        new TextEditingValue(text: text, selection: TextSelection.collapsed(offset: cursor));
 
                     if (cursor == -1) {
                       _focusNode.unfocus();

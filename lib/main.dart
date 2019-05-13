@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCard.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/ui/widgets/ClipShadowPath.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
@@ -28,24 +27,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HeaderBackgroundClip extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-
-    path.lineTo(0.0, size.height);
-    path.quadraticBezierTo(size.width / 2, size.height - 45, size.width, size.height - 20);
-    path.lineTo(size.width, 0.0);
-
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
-
 class HeaderWidget extends StatelessWidget {
   HeaderWidget({Key key, this.name, this.score, this.previousScore, this.controller})
       : animation = IntTween(begin: previousScore, end: score)
@@ -62,30 +43,16 @@ class HeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        ClipShadowPath(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage('assets/praia.jpg'), fit: BoxFit.cover),
-            ),
-            child: new BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: new Container(
-                decoration: new BoxDecoration(color: Colors.white.withOpacity(0.4)),
-              ),
-            ),
-          ),
-          clipper: HeaderBackgroundClip(),
-          shadow: Shadow(blurRadius: 5, color: Colors.grey[500], offset: Offset(0.0, 1)),
-        ),
         Container(
-          alignment: Alignment(-0.92, 0.95),
+          alignment: Alignment(-1.0, 1.0),
+          margin: EdgeInsets.only(left: 15.0, bottom: 25.0),
           child: new Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 " " + name,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.w300),
               ),
               ScoreWidget(
                 animation: animation,
@@ -94,8 +61,9 @@ class HeaderWidget extends StatelessWidget {
           ),
         ),
         Align(
-          alignment: Alignment(0.85, 0.85),
+          alignment: Alignment(0.85, 0.9),
           child: FloatingActionButton(
+            isExtended: true,
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
                 return AddHabitPage();
@@ -131,7 +99,7 @@ class DragComplete extends AnimatedWidget {
       bottom: animation.value,
       child: Container(
         height: 90,
-        color: Color.fromARGB(255, 221, 221, 221),
+        color: Color.fromARGB(255, 220, 220, 220),
         child: DragTarget(
           builder: (context, List<int> candidateData, rejectedData) {
             return Center(
@@ -252,52 +220,67 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       onWillPop: _onBackPressed,
       child: Scaffold(
         body: SlidingUpPanel(
+          margin: EdgeInsets.only(left: 10.0, right: 10.0),
+          minHeight: 60.0,
           controller: _panelController,
-          minHeight: 0.0,
           borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
           backdropEnabled: true,
           panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
-          body: Column(
+          body: Stack(
             children: <Widget>[
-              Expanded(
-                  flex: 1,
-                  child: HeaderWidget(
-                    name: person.name,
-                    score: person.score,
-                    previousScore: previousScore,
-                    controller: _controllerScore,
-                  )),
-              Expanded(
-                flex: 2,
-                child: Stack(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text(
-                          "Hábitos de hoje",
-                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, height: 1.3),
-                        ),
-                        Expanded(
-                          child: Center(
-                              child:
-                                  FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 18.0),
-                          child: RaisedButton(
-                            child: Text("TODOS OS HÁBITOS"),
-                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                            elevation: 5.0,
-                            padding: const EdgeInsets.symmetric(horizontal: 64.0, vertical: 16.0),
-                            onPressed: () => _panelController.open(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-                  ],
+              Container(
+                height: 205.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
+                ),
+                child: new BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                  child: new Container(
+                    decoration: new BoxDecoration(color: Colors.black.withOpacity(0.2)),
+                  ),
                 ),
               ),
+              Container(
+                margin: EdgeInsets.only(top: 180.0),
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                  color: Colors.white,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(top: 15.0),
+                        child: Text(
+                          "Hábitos de hoje",
+                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                            child:
+                                FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
+                      ),
+                      SizedBox(
+                        height: 60.0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: 200.0,
+                width: double.maxFinite,
+                child: HeaderWidget(
+                  name: person.name,
+                  score: person.score,
+                  previousScore: previousScore,
+                  controller: _controllerScore,
+                ),
+              ),
+              DragComplete(onAccept: onAccept, animation: _animationDragComplete),
             ],
           ),
         ),
@@ -370,16 +353,37 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Container(
-            width: 35.0,
-            height: 8.0,
-            margin: EdgeInsets.only(top: 8.0),
-            decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
-          ),
-          Text(
-            "Todos os hábitos",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300, height: 1.9),
+          GestureDetector(
+            onTap: () {
+              if (_panelController.isPanelOpen()) {
+                _panelController.close();
+              } else {
+                _panelController.open();
+              }
+            },
+            child: Container(
+              height: 60.0,
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 220, 220, 220),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: 35.0,
+                    height: 8.0,
+                    margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                    decoration: new BoxDecoration(color: Colors.black12, borderRadius: new BorderRadius.circular(10.0)),
+                  ),
+                  Text(
+                    "Todos os hábitos",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                  ),
+                ],
+              ),
+            ),
           ),
           Container(
             margin: EdgeInsets.only(top: 20.0),
