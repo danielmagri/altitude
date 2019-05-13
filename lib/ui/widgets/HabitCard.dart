@@ -48,6 +48,7 @@ class HabitWidget extends StatelessWidget {
                 child: Icon(
                   Icons.fitness_center,
                   size: 32.0,
+                  color: Colors.white,
                 ),
               ),
             ),

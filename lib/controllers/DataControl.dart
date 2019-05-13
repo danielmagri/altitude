@@ -84,6 +84,7 @@ class DataControl {
 
     if (result != null) {
       int score = await ScoreControl().calculateScore(id, freq, result[1]);
+
       print("Pontuação: $score");
       await DatabaseService().updateScore(id, score);
       await DatabaseService().habitDone(id, cycle, result[0]);
