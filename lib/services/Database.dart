@@ -6,6 +6,7 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
+import 'package:habit/objects/Progress.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
@@ -44,6 +45,7 @@ class DatabaseService {
           CREATE TABLE habit (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             category INTEGER NOT NULL,
+            icon INTEGER NOT NULL,
             score INTEGER NOT NULL,
             cycle INTEGER NOT NULL,
             habit_text VARCHAR(45) NOT NULL,
@@ -81,9 +83,21 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE freq_repeating (
             days_time INTEGER NOT NULL,
-            days_cicle INTEGER NOT NULL,
+            days_cycle INTEGER NOT NULL,
             habit_id INTEGER NOT NULL UNIQUE,
             CONSTRAINT fk_freq_repeating_habit_id
+              FOREIGN KEY (habit_id)
+              REFERENCES habit(id)
+              ON DELETE CASCADE
+              ON UPDATE NO ACTION);''');
+
+    await db.execute('''
+          CREATE TABLE progress (
+            type INTEGER NOT NULL,
+            progress INTEGER NOT NULL,
+            goal INTEGER NOT NULL,
+            habit_id INTEGER NOT NULL,
+            CONSTRAINT fk_progress_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
@@ -95,7 +109,7 @@ class DatabaseService {
             cycle INTEGER NOT NULL,
             date_done DATE NOT NULL,
             habit_id INTEGER NOT NULL,
-            CONSTRAINT fk_DiasFeito_habit_id
+            CONSTRAINT fk_day_done_habit_id
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
@@ -126,8 +140,9 @@ class DatabaseService {
   Future<Habit> getHabit(int id) async {
     final db = await database;
 
-    var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
+    var result = await db.rawQuery('SELECT * FROM habit AS h, progress AS p WHERE h.id=$id AND p.habit_id=h.id;');
 
+    print(result);
     if (result.isNotEmpty) {
       return Habit.fromJson(result.first);
     } else {
@@ -253,14 +268,21 @@ class DatabaseService {
     DateTime now = new DateTime.now();
     final db = await database;
     var id = await db.rawInsert(
-        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
+        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, icon, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
                                                                                                                    \'${habit.reward}\',
                                                                                                                    \'${habit.cue}\',
                                                                                                                    ${habit.category.index},
+                                                                                                                   ${habit.icon},
                                                                                                                    0,
                                                                                                                    1,
                                                                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                    0);''');
+
+    await db.rawInsert(
+        '''INSERT INTO progress (type, progress, goal, habit_id) VALUES (${habit.progress.type.index},
+                                                                         ${habit.progress.progress},
+                                                                         ${habit.progress.goal},
+                                                                         $id);''');
 
     if (frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = frequency;
@@ -278,7 +300,7 @@ class DatabaseService {
       await db.rawInsert('INSERT INTO freq_weekly (days_time, habit_id) VALUES (${freq.daysTime}, $id);');
     } else if (frequency.runtimeType == FreqRepeating) {
       FreqRepeating freq = frequency;
-      await db.rawInsert('''INSERT INTO freq_repeating (days_time, days_cicle, habit_id) VALUES (${freq.daysTime},
+      await db.rawInsert('''INSERT INTO freq_repeating (days_time, days_cycle, habit_id) VALUES (${freq.daysTime},
                                                                                                    ${freq.daysCycle},
                                                                                                    $id);''');
     }

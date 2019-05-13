@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Progress.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitTabs/categoryTab.dart';
@@ -29,7 +30,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   final habitController = TextEditingController();
   final cueController = TextEditingController();
 
-  Category category;
+  CategoryEnum category;
   dynamic frequency;
 
   @override
@@ -53,7 +54,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     super.dispose();
   }
 
-  void categoryTabTap(Category selection) {
+  void categoryTabTap(CategoryEnum selection) {
     category = selection;
     Color color;
 
@@ -94,7 +95,12 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
-          category: category, cue: cueController.text, habit: habitController.text, reward: rewardController.text);
+          category: category,
+          icon: 1,
+          cue: cueController.text,
+          habit: habitController.text,
+          reward: rewardController.text,
+          progress: Progress(type: ProgressEnum.DAY, progress: 10, goal: 12));
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
@@ -125,7 +131,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   Future<bool> _onBackPressed(BuildContext context) async {
     if (_tabController.index == 0) {
       return true;
-    }else if (_pageController.page >= 1) {
+    } else if (_pageController.page >= 0.8) {
       _nextPage(-1);
       return false;
     } else if (_tabController.index == 1) {

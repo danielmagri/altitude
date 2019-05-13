@@ -12,7 +12,8 @@ class HabitWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      highlightColor: Colors.transparent,
       onTap: () async {
         Habit data = await DataControl().getHabit(habit.id);
         dynamic frequency = await DataControl().getFrequency(habit.id);

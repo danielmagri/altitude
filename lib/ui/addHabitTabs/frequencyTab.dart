@@ -7,7 +7,7 @@ import 'package:habit/utils/Color.dart';
 class FrequencyTab extends StatefulWidget {
   FrequencyTab({Key key, this.category, this.onTap}) : super(key: key);
 
-  final Category category;
+  final CategoryEnum category;
   final Function onTap;
 
   @override

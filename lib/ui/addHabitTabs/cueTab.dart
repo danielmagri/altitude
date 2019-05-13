@@ -9,7 +9,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 class CueTab extends StatefulWidget {
   CueTab({Key key, this.category, this.controller, this.keyboard, this.onTap}) : super(key: key);
 
-  final Category category;
+  final CategoryEnum category;
   final TextEditingController controller;
   final KeyboardVisibilityNotification keyboard;
   final Function onTap;

@@ -1,8 +1,10 @@
 import 'package:habit/utils/enums.dart';
+import 'package:habit/objects/Progress.dart';
 
 class Habit {
   final int id;
-  final Category category;
+  final CategoryEnum category;
+  final int icon;
   final String cue;
   final String habit;
   final String reward;
@@ -10,21 +12,25 @@ class Habit {
   final int cycle;
   final DateTime initialDate;
   final int daysDone;
+  final Progress progress;
 
   Habit(
       {this.id,
       this.category,
+      this.icon,
       this.cue,
       this.habit,
       this.reward,
       this.score,
       this.cycle,
       this.initialDate,
-      this.daysDone});
+      this.daysDone,
+      this.progress});
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
-      category: Category.values[json["category"]],
+      category: CategoryEnum.values[json["category"]],
+      icon: json["icon"],
       cue: json["cue_text"],
       habit: json["habit_text"],
       reward: json["reward_text"],
@@ -33,11 +39,13 @@ class Habit {
       initialDate: json.containsKey("initial_date") && json["initial_date"] != null
           ? DateTime.parse(json["initial_date"])
           : null,
-      daysDone: json["days_done"]);
+      daysDone: json["days_done"],
+      progress: json.containsKey("progress") ? Progress.fromJson(json) : null);
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "category": category.index,
+        "icon": icon,
         "cue_text": cue,
         "habit_text": habit,
         "reward_text": reward,
