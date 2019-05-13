@@ -25,13 +25,13 @@ abstract class Suggestions {
     "Conhecer um lugar novo",
   ];
 
-  static List getRewards(Category category) {
+  static List getRewards(CategoryEnum category) {
     switch (category) {
-      case Category.PHYSICAL:
+      case CategoryEnum.PHYSICAL:
         return physicalRewards;
-      case Category.MENTAL:
+      case CategoryEnum.MENTAL:
         return mentalRewards;
-      case Category.SOCIAL:
+      case CategoryEnum.SOCIAL:
         return socialRewards;
     }
     return [];
@@ -64,13 +64,13 @@ abstract class Suggestions {
     "teste",
   ];
 
-  static List getHabits(Category category) {
+  static List getHabits(CategoryEnum category) {
     switch (category) {
-      case Category.PHYSICAL:
+      case CategoryEnum.PHYSICAL:
         return physicalHabits;
-      case Category.MENTAL:
+      case CategoryEnum.MENTAL:
         return mentalHabits;
-      case Category.SOCIAL:
+      case CategoryEnum.SOCIAL:
         return socialHabits;
     }
     return [];
@@ -103,13 +103,13 @@ abstract class Suggestions {
     "teste",
   ];
 
-  static List getCues(Category category) {
+  static List getCues(CategoryEnum category) {
     switch (category) {
-      case Category.PHYSICAL:
+      case CategoryEnum.PHYSICAL:
         return physicalCues;
-      case Category.MENTAL:
+      case CategoryEnum.MENTAL:
         return mentalCues;
-      case Category.SOCIAL:
+      case CategoryEnum.SOCIAL:
         return socialCues;
     }
     return [];

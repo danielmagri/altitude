@@ -22,7 +22,7 @@ class CategoryTab extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              onCategoryTap(Category.PHYSICAL);
+              onCategoryTap(CategoryEnum.PHYSICAL);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -58,7 +58,7 @@ class CategoryTab extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              onCategoryTap(Category.MENTAL);
+              onCategoryTap(CategoryEnum.MENTAL);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class CategoryTab extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             onTap: () {
-              onCategoryTap(Category.SOCIAL);
+              onCategoryTap(CategoryEnum.SOCIAL);
             },
             child: Container(
               decoration: BoxDecoration(

@@ -240,7 +240,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Future<bool> _onBackPressed() async {
     if (_panelController.isPanelOpen()) {
       _panelController.close();
+      return false;
     }
+
     return true;
   }
 

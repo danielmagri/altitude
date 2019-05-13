@@ -1,1 +1,3 @@
-enum Category { PHYSICAL, MENTAL, SOCIAL }
+enum CategoryEnum { PHYSICAL, MENTAL, SOCIAL }
+
+enum ProgressEnum { INFINITY, NUMBER, DAY }

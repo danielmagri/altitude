@@ -11,24 +11,24 @@ abstract class CategoryColors {
   static const Color socialPrimary = Color.fromARGB(255, 56, 173, 72);
   static const Color socialSecundary = Color.fromARGB(255, 50, 147, 55);
 
-  static Color getPrimaryColor(Category category) {
+  static Color getPrimaryColor(CategoryEnum category) {
     switch (category) {
-      case Category.PHYSICAL:
+      case CategoryEnum.PHYSICAL:
         return physicalPrimary;
-      case Category.MENTAL:
+      case CategoryEnum.MENTAL:
         return mentalPrimary;
-      case Category.SOCIAL:
+      case CategoryEnum.SOCIAL:
         return socialPrimary;
     }
   }
 
-  static Color getSecundaryColor(Category category) {
+  static Color getSecundaryColor(CategoryEnum category) {
     switch (category) {
-      case Category.PHYSICAL:
+      case CategoryEnum.PHYSICAL:
         return physicalSecundary;
-      case Category.MENTAL:
+      case CategoryEnum.MENTAL:
         return mentalSecundary;
-      case Category.SOCIAL:
+      case CategoryEnum.SOCIAL:
         return socialSecundary;
     }
   }
