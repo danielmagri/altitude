@@ -98,7 +98,10 @@ class DragComplete extends AnimatedWidget {
       bottom: animation.value,
       child: Container(
         height: 90,
-        color: Color.fromARGB(255, 220, 220, 220),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+          color: Color.fromARGB(255, 210, 236, 207),
+        ),
         child: DragTarget(
           builder: (context, List<int> candidateData, rejectedData) {
             return Center(
@@ -217,72 +220,75 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        body: SlidingUpPanel(
-          margin: EdgeInsets.only(left: 10.0, right: 10.0),
-          minHeight: 60.0,
-          controller: _panelController,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-          backdropEnabled: true,
-          panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
           body: Stack(
-            children: <Widget>[
-              Container(
-                height: 205.0,
-                decoration: BoxDecoration(
-                  image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
-                ),
-                child: new BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                  child: new Container(
-                    decoration: new BoxDecoration(color: Colors.black.withOpacity(0.2)),
+        children: <Widget>[
+          SlidingUpPanel(
+            margin: EdgeInsets.only(left: 10.0, right: 10.0),
+            minHeight: 60.0,
+            controller: _panelController,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+            backdropEnabled: true,
+            panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
+            body: Stack(
+              children: <Widget>[
+                Container(
+                  height: 205.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
+                  ),
+                  child: new BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: new Container(
+                      decoration: new BoxDecoration(color: Colors.black.withOpacity(0.2)),
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 180.0),
-                decoration: BoxDecoration(
-                  boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-                  color: Colors.white,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(top: 15.0),
-                        child: Text(
-                          "Hábitos de hoje",
-                          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+                Container(
+                  margin: EdgeInsets.only(top: 180.0),
+                  decoration: BoxDecoration(
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                    color: Colors.white,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 15.0),
+                          child: Text(
+                            "Hábitos de hoje",
+                            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Center(
-                            child:
-                                FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
-                      ),
-                      SizedBox(
-                        height: 60.0,
-                      ),
-                    ],
+                        Expanded(
+                          child: Center(
+                              child:
+                                  FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
+                        ),
+                        SizedBox(
+                          height: 60.0,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                height: 200.0,
-                width: double.maxFinite,
-                child: HeaderWidget(
-                  name: person.name,
-                  score: person.score,
-                  previousScore: previousScore,
-                  controller: _controllerScore,
+                Container(
+                  height: 200.0,
+                  width: double.maxFinite,
+                  child: HeaderWidget(
+                    name: person.name,
+                    score: person.score,
+                    previousScore: previousScore,
+                    controller: _controllerScore,
+                  ),
                 ),
-              ),
-              DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+          DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+        ],
+      )),
     );
   }
 

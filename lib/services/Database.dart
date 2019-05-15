@@ -142,7 +142,6 @@ class DatabaseService {
 
     var result = await db.rawQuery('SELECT * FROM habit AS h, progress AS p WHERE h.id=$id AND p.habit_id=h.id;');
 
-    print(result);
     if (result.isNotEmpty) {
       return Habit.fromJson(result.first);
     } else {
