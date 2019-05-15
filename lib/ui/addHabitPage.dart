@@ -5,6 +5,7 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitTabs/categoryTab.dart';
 import 'package:habit/ui/addHabitTabs/rewardTab.dart';
+import 'package:habit/ui/addHabitTabs/progressTab.dart';
 import 'package:habit/ui/addHabitTabs/cueTab.dart';
 import 'package:habit/ui/addHabitTabs/habitTab.dart';
 import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
@@ -30,8 +31,10 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   final habitController = TextEditingController();
   final cueController = TextEditingController();
 
+  int icon;
   CategoryEnum category;
   dynamic frequency;
+  Progress progress;
 
   @override
   void initState() {
@@ -75,7 +78,17 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void habitTabTap(bool next) {
+  void progressTabTap(bool next, Progress progress) {
+    this.progress = progress;
+    if (next) {
+      _nextPage(1);
+    } else {
+      _nextPage(-1);
+    }
+  }
+
+  void habitTabTap(bool next, int icon) {
+    this.icon = icon;
     if (next) {
       _nextPage(1);
     } else {
@@ -96,17 +109,16 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     if (next) {
       Habit habit = new Habit(
           category: category,
-          icon: 1,
+          icon: icon,
           cue: cueController.text,
           habit: habitController.text,
           reward: rewardController.text,
-          progress: Progress(type: ProgressEnum.DAY, progress: 10, goal: 12));
+          progress: progress);
 
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
       });
 
-      _nextPage(1);
     } else {
       _nextPage(-1);
     }
@@ -172,6 +184,10 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                         controller: rewardController,
                         keyboard: _keyboardVisibility,
                         onTap: rewardTabTap,
+                      ),
+                      ProgressTab(
+                        category: category,
+                        onTap: progressTabTap,
                       ),
                       HabitTab(
                         category: category,

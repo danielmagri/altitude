@@ -46,7 +46,7 @@ class HabitWidget extends StatelessWidget {
                 tag: fromAllHabits ? habit.id + 1000 : habit.id,
                 transitionOnUserGestures: true,
                 child: Icon(
-                  Icons.fitness_center,
+                  IconData(habit.icon, fontFamily: 'MaterialIcons'),
                   size: 32.0,
                   color: Colors.white,
                 ),

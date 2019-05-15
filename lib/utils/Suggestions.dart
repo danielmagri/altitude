@@ -37,31 +37,34 @@ abstract class Suggestions {
     return [];
   }
 
-  static const List physicalHabits = [
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
+  static const List<Map> physicalHabits = [
+    {0: 0xe401, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe401, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
   ];
 
-  static const List mentalHabits = [
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
+  static const List<Map> mentalHabits = [
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
   ];
 
-  static const List socialHabits = [
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
+  static const List<Map> socialHabits = [
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
+    {0: 0xe028, 1: "teste"},
   ];
 
   static List getHabits(CategoryEnum category) {
