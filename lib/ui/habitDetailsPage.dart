@@ -5,9 +5,10 @@ import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
+import 'package:habit/objects/Progress.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:vibration/vibration.dart';
+import 'package:habit/utils/enums.dart';
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
@@ -109,30 +110,77 @@ class HeaderWidget extends StatelessWidget {
   }
 }
 
-class CueRewardWidget extends StatelessWidget {
-  CueRewardWidget({Key key, this.cue, this.reward}) : super(key: key);
+class RewardWidget extends StatelessWidget {
+  RewardWidget({Key key, this.category, this.reward, this.progress}) : super(key: key);
 
-  final String cue;
+  final CategoryEnum category;
   final String reward;
+  final Progress progress;
+
+  String _progressTypeText() {
+    switch (progress.type) {
+      case ProgressEnum.INFINITY:
+        return "Infinito";
+        break;
+      case ProgressEnum.NUMBER:
+        return "Número";
+        break;
+      case ProgressEnum.DAY:
+        return "Dias";
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 12.0),
-      child: Card(
-        elevation: 1.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Deixa e meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
-              Text("Meta: " + reward, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            ],
-          ),
+      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text("Meta: " + reward, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            Text("Tipo: " + _progressTypeText(),
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            progress.type != ProgressEnum.INFINITY
+                ? Text("Progresso: " + progress.progress.toString() + " de " + progress.goal.toString(),
+                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2))
+                : Container(),
+            progress.type != ProgressEnum.INFINITY
+                ? LinearProgressIndicator(
+                    value: progress.progress / progress.goal,
+                    valueColor: AlwaysStoppedAnimation<Color>(CategoryColors.getSecundaryColor(category)),
+                    backgroundColor: CategoryColors.getPrimaryColor(category).withOpacity(0.5),
+                  )
+                : Container(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CueWidget extends StatelessWidget {
+  CueWidget({Key key, this.cue}) : super(key: key);
+
+  final String cue;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Deixa", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+          ],
         ),
       ),
     );
@@ -150,30 +198,26 @@ class CoolDataWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 12.0),
-      child: Card(
-        elevation: 1.0,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Informações Legais", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
-              Text(
-                  "Começou em " +
-                      initialDate.day.toString().padLeft(2, '0') +
-                      "/" +
-                      initialDate.month.toString().padLeft(2, '0') +
-                      "/" +
-                      initialDate.year.toString(),
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              Text("Dias cumpridos: " + daysDone.toString(),
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              Text("Ciclos feitos: " + cycles.toString(),
-                  style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            ],
-          ),
+      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Informações Legais", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text(
+                "Começou em " +
+                    initialDate.day.toString().padLeft(2, '0') +
+                    "/" +
+                    initialDate.month.toString().padLeft(2, '0') +
+                    "/" +
+                    initialDate.year.toString(),
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            Text("Dias cumpridos: " + daysDone.toString(),
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            Text("Ciclos feitos: " + cycles.toString(),
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+          ],
         ),
       ),
     );
@@ -189,12 +233,14 @@ class CalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 12.0),
-      child: Card(
-        elevation: 1.0,
-        child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TableCalendar(
+      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("Dias feito", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            TableCalendar(
               events: markedDays,
               formatAnimation: FormatAnimation.slide,
               startingDayOfWeek: StartingDayOfWeek.sunday,
@@ -229,7 +275,9 @@ class CalendarWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.0),
                 ),
               ),
-            )),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -292,7 +340,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
-      Vibration.vibrate();
       setState(() {
         score += earnedScore;
         markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
@@ -320,6 +367,20 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     }
   }
 
+  AssetImage _getBackgroundImage() {
+    switch (widget.habit.category) {
+      case CategoryEnum.PHYSICAL:
+        return AssetImage('assets/category/fisico.png');
+        break;
+      case CategoryEnum.MENTAL:
+        return AssetImage('assets/category/mental.png');
+        break;
+      case CategoryEnum.SOCIAL:
+        return AssetImage('assets/category/social.png');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -328,7 +389,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
           Container(
             height: 205.0,
             decoration: BoxDecoration(
-              image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
+              image: DecorationImage(image: _getBackgroundImage(), fit: BoxFit.cover),
             ),
             child: new BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
@@ -355,15 +416,22 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
                   ),
-                  CueRewardWidget(
-                    cue: widget.habit.cue,
+                  RewardWidget(
+                    category: widget.habit.category,
                     reward: widget.habit.reward,
+                    progress: widget.habit.progress,
                   ),
+                  Divider(),
+                  CueWidget(
+                    cue: widget.habit.cue,
+                  ),
+                  Divider(),
                   CoolDataWidget(
                     initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
                     daysDone: widget.habit.daysDone,
                     cycles: widget.habit.cycle,
                   ),
+                  Divider(),
                   CalendarWidget(
                     markedDays: markedDays,
                   ),
