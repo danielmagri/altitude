@@ -131,7 +131,7 @@ class DatabaseService {
 
   Future<List> getAllHabits() async {
     final db = await database;
-    var result = await db.rawQuery('SELECT id, category, habit_text FROM habit;');
+    var result = await db.rawQuery('SELECT id, category, habit_text, icon FROM habit;');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
@@ -188,7 +188,7 @@ class DatabaseService {
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT id, category, habit_text, cycle FROM habit WHERE id IN (
+        SELECT id, category, habit_text, cycle, icon FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
 							 UNION ALL
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
@@ -322,7 +322,7 @@ class DatabaseService {
   Future<bool> deleteHabit(int id) async {
     final db = await database;
 
-    await db.rawInsert('''DELETE FROM habit WHERE id=$id''');
+    await db.rawInsert('''DELETE FROM habit WHERE id=$id;''');
 
     return true;
   }

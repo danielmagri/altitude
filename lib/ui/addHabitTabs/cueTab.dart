@@ -76,8 +76,8 @@ class _CueTabState extends State<CueTab> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIos: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 220, 220, 220),
+          textColor: Colors.black,
           fontSize: 16.0);
     }
   }
