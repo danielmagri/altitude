@@ -146,6 +146,7 @@ class _HabitTabState extends State<HabitTab> {
                 return GestureDetector(
                   onTap: () {
                     String text = suggestion[position][1];
+                    int icon = suggestion[position][0];
                     int cursor = text.indexOf('_');
 
                     text = text.replaceFirst('_', '');
@@ -160,7 +161,7 @@ class _HabitTabState extends State<HabitTab> {
                     }
 
                     setState(() {
-                      iconId = suggestion[position][0];
+                      iconId = icon;
                     });
                   },
                   child: Padding(
@@ -354,5 +355,6 @@ class CustomDialog extends StatelessWidget {
     0xe425,
     0xe333,
     0xe16b,
+    0xeb4a,
   ];
 }
