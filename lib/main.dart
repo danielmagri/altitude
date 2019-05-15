@@ -7,7 +7,6 @@ import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:vibration/vibration.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 void main() {
@@ -194,7 +193,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
-          Vibration.vibrate();
           setState(() {
             habitsForToday.removeAt(i);
             person.score += earnedScore;
