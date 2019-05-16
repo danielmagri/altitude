@@ -9,6 +9,7 @@ import 'package:habit/objects/Progress.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/utils/enums.dart';
+import 'package:habit/ui/widgets/doneDialog.dart';
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
@@ -298,6 +299,9 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
 
+  TextEditingController numberController = TextEditingController();
+
+  Progress progress;
   int score;
   int previousScore = 0;
   Map<DateTime, List> markedDays;
@@ -306,6 +310,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   initState() {
     super.initState();
 
+    progress = widget.habit.progress;
     score = widget.habit.score;
     markedDays = widget.markedDays;
 
@@ -340,11 +345,28 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
-      setState(() {
-        score += earnedScore;
-        markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
+      if (widget.habit.progress.type == ProgressEnum.NUMBER)
+        numberController.text = widget.habit.progress.progress.toString();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => CustomDialog(
+          progress: widget.habit.progress,
+          controller: numberController,
+        ),
+      ).then((result) {
+        if (result != null) {
+          progress.progress = result;
+          DataControl().setHabitProgress(widget.habit.id, result);
+        } else if (widget.habit.progress.type == ProgressEnum.DAY) {
+          DataControl().setHabitProgress(widget.habit.id, widget.habit.progress.progress + 1);
+          progress.progress++;
+        }
+        setState(() {
+          score += earnedScore;
+          markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
+        });
+        animateScore();
       });
-      animateScore();
     });
   }
 
@@ -419,7 +441,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                   RewardWidget(
                     category: widget.habit.category,
                     reward: widget.habit.reward,
-                    progress: widget.habit.progress,
+                    progress: progress,
                   ),
                   Divider(),
                   CueWidget(

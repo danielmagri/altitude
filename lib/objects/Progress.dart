@@ -2,7 +2,7 @@ import 'package:habit/utils/enums.dart';
 
 class Progress {
   final ProgressEnum type;
-  final int progress;
+  int progress;
   final int goal;
 
   Progress({this.type, this.progress, this.goal});

@@ -37,4 +37,16 @@ abstract class Validate {
 
     return null;
   }
+
+  static String progressTextValidate(String text) {
+    int number = int.tryParse(text);
+
+    if (number == null) {
+      return "Preencha a quantidade.";
+    } else if (number < 1) {
+      return "O número precisa ser maior que 0.";
+    }
+
+    return null;
+  }
 }
