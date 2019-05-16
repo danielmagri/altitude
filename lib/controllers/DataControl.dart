@@ -51,9 +51,7 @@ class DataControl {
     return await DatabaseService().getFrequency(id);
   }
 
-  Future<bool> updateFrequency(int id, dynamic frequency) async {
-
-  }
+  Future<bool> updateFrequency(int id, dynamic frequency) async {}
 
   // ***** DAYDONE *****
   Future<Map<DateTime, List>> getDaysDone(int id) async {
@@ -71,26 +69,30 @@ class DataControl {
   }
 
   Future<int> setHabitDoneAndScore(int id, int cycle) async {
-    dynamic freq = await getFrequency(id);
-    Map result;
-
-    if (freq.runtimeType == FreqDayWeek) {
-      result = await DaysDoneControl().checkCycleDoneDayWeek(id, cycle);
-    } else if (freq.runtimeType == FreqWeekly) {
-      result = await DaysDoneControl().checkCycleDoneWeekly(id, cycle);
-    } else {
-      result = await DaysDoneControl().checkCycleDoneRepeating(id, cycle, freq);
-    }
-
-    if (result != null) {
-      int score = await ScoreControl().calculateScore(id, freq, result[1]);
-
-      print("Pontuação: $score");
-      await DatabaseService().updateScore(id, score);
-      await DatabaseService().habitDone(id, cycle, result[0]);
-      return score;
-    } else {
+//    dynamic freq = await getFrequency(id);
+//    Map result;
+//
+//    if (freq.runtimeType == FreqDayWeek) {
+//      result = await DaysDoneControl().checkCycleDoneDayWeek(id, cycle);
+//    } else if (freq.runtimeType == FreqWeekly) {
+//      result = await DaysDoneControl().checkCycleDoneWeekly(id, cycle);
+//    } else {
+//      result = await DaysDoneControl().checkCycleDoneRepeating(id, cycle, freq);
+//    }
+//
+//    if (result != null) {
+//      int score = await ScoreControl().calculateScore(id, freq, result[1]);
+//
+//      print("Pontuação: $score");
+//      await DatabaseService().updateScore(id, score);
+//      await DatabaseService().habitDone(id, cycle, result[0]);
+//      return score;
+//    } else {
       return 0;
-    }
+//    }
+  }
+
+  Future<bool> setHabitProgress(int id, int progress) async {
+    return await DatabaseService().updateProgress(id, progress);
   }
 }

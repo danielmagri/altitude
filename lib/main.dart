@@ -8,6 +8,8 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:habit/ui/widgets/doneDialog.dart';
+import 'package:habit/utils/enums.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -140,6 +142,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
   Animation _animationDragComplete;
 
+  TextEditingController numberController = TextEditingController();
+
   List<Habit> habitsForToday = [];
   Person person;
   int previousScore = 0;
@@ -173,6 +177,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void dispose() {
     _controllerDragComplete.dispose();
     _controllerScore.dispose();
+    numberController.dispose();
     super.dispose();
   }
 
@@ -196,11 +201,27 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
-          setState(() {
-            habitsForToday.removeAt(i);
-            person.score += earnedScore;
+          if (habitsForToday[i].progress.type == ProgressEnum.NUMBER)
+            numberController.text = habitsForToday[i].progress.progress.toString();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => CustomDialog(
+                  progress: habitsForToday[i].progress,
+                  controller: numberController,
+                ),
+          ).then((result) {
+            if (result != null) {
+              DataControl().setHabitProgress(id, result);
+            } else if (habitsForToday[i].progress.type == ProgressEnum.DAY) {
+              DataControl().setHabitProgress(id, habitsForToday[i].progress.progress + 1);
+            }
+            setState(() {
+              habitsForToday.removeAt(i);
+              person.score += earnedScore;
+            });
+            animateScore();
           });
-          animateScore();
+          break;
         }
       }
     });
@@ -340,8 +361,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     if (!snapshot.hasData) {
       widgets.add(Center(child: CircularProgressIndicator()));
     } else {
-      habitsForToday = snapshot.data;
-      if (habitsForToday.length == 0) {
+      if (snapshot.data.length == 0) {
         widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
       } else {
         for (Habit habit in snapshot.data) {

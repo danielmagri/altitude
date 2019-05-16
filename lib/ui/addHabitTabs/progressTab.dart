@@ -3,6 +3,7 @@ import 'package:habit/objects/Progress.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/utils/Validator.dart';
 
 class ProgressTab extends StatefulWidget {
   ProgressTab({Key key, this.category, this.onTap}) : super(key: key);
@@ -30,56 +31,39 @@ class _ProgressTabState extends State<ProgressTab> {
 
   void validateData() {
     if (expanded == 0) {
-      int number = int.tryParse(dayController.text);
+      String result = Validate.progressTextValidate(numberController.text);
 
-      if (number == null) {
-        Fluttertoast.showToast(
-            msg: "Preencha a quantidade",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else if (number < 1) {
-        Fluttertoast.showToast(
-            msg: "O número precisa ser maior que 0",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else {
-        Progress progress = new Progress(type: ProgressEnum.NUMBER, goal: number, progress: 0);
+      if (result == null) {
+        Progress progress =
+            new Progress(type: ProgressEnum.NUMBER, goal: int.tryParse(numberController.text), progress: 0);
 
         widget.onTap(true, progress);
+      } else {
+        Fluttertoast.showToast(
+            msg: result,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Color.fromARGB(255, 220, 220, 220),
+            textColor: Colors.black,
+            fontSize: 16.0);
       }
     } else if (expanded == 1) {
-      int number = int.tryParse(dayController.text);
+      String result = Validate.progressTextValidate(dayController.text);
 
-      if (number == null) {
-        Fluttertoast.showToast(
-            msg: "Preencha a quantidade de dias",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else if (number < 1) {
-        Fluttertoast.showToast(
-            msg: "O número de dias precisa ser maior que 0",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else {
-        Progress progress = new Progress(type: ProgressEnum.DAY, goal: number, progress: 0);
+      if (result == null) {
+        Progress progress = new Progress(type: ProgressEnum.DAY, goal: int.tryParse(dayController.text), progress: 0);
 
         widget.onTap(true, progress);
+      } else {
+        Fluttertoast.showToast(
+            msg: result,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Color.fromARGB(255, 220, 220, 220),
+            textColor: Colors.black,
+            fontSize: 16.0);
       }
     } else if (expanded == 2) {
       Progress progress = new Progress(type: ProgressEnum.INFINITY, goal: 0, progress: 0);
@@ -148,7 +132,7 @@ class _ProgressTabState extends State<ProgressTab> {
                         Container(
                           width: 30,
                           child: TextField(
-                            controller: dayController,
+                            controller: numberController,
                             keyboardType: TextInputType.number,
                             maxLength: 4,
                             textInputAction: TextInputAction.go,
