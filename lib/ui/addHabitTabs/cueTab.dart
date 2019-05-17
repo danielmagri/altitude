@@ -5,6 +5,8 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:habit/ui/widgets/TutorialDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CueTab extends StatefulWidget {
   CueTab({Key key, this.category, this.controller, this.keyboard, this.onTap}) : super(key: key);
@@ -40,6 +42,14 @@ class _CueTabState extends State<CueTab> {
     );
 
     widget.controller.addListener(_onTextChanged);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool("cueTutorial") == null) {
+        await showTutorial();
+        prefs.setBool("cueTutorial", true);
+      }
+    });
   }
 
   @override
@@ -48,6 +58,21 @@ class _CueTabState extends State<CueTab> {
     widget.keyboard.removeListener(_keyboardVisibilitySubscriberId);
     widget.controller.removeListener(_onTextChanged);
     super.dispose();
+  }
+
+  Future showTutorial() async {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => new TutorialDialog(
+            title: "Qual será sua deixa?",
+            texts: [
+              "Pesquisas nos mostram que temos mais fácilidade em criar hábitos se nós sempre executarmos uma mesma ação que os inicia.",
+              "Seja ela amarrar o tênis antes de sair para correr, estralar os dedos antes de digitar, colocar o livro na cabiceira...",
+              "Uma deixa para começar sua ativdade vai facilitar completamente a adesão do hábito. Isso é incrível!",
+              "Nos defina qual será sua deixa! Temos mais alguns exemplos que te ajudará a criar-lá."
+            ],
+          ),
+    );
   }
 
   void _onTextChanged() {
@@ -91,11 +116,17 @@ class _CueTabState extends State<CueTab> {
           Container(
             margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
             width: double.maxFinite,
-            child: Text(
-              "Qual será sua deixa?",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-          ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "Qual será sua deixa?",
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
+              ],
+            )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),

@@ -5,6 +5,8 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:habit/ui/widgets/TutorialDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HabitTab extends StatefulWidget {
   HabitTab({Key key, this.category, this.controller, this.keyboard, this.onTap}) : super(key: key);
@@ -41,6 +43,14 @@ class _HabitTabState extends State<HabitTab> {
     );
 
     widget.controller.addListener(_onTextChanged);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool("habitTutorial") == null) {
+        await showTutorial();
+        prefs.setBool("habitTutorial", true);
+      }
+    });
   }
 
   @override
@@ -49,6 +59,20 @@ class _HabitTabState extends State<HabitTab> {
     widget.keyboard.removeListener(_keyboardVisibilitySubscriberId);
     widget.controller.removeListener(_onTextChanged);
     super.dispose();
+  }
+
+  Future showTutorial() async {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => new TutorialDialog(
+            title: "Qual será seu hábito?",
+            texts: [
+              "Para alcançarmos nossa meta temos que realizar uma tarefa diversas vezes.",
+              "Uma tarefa realizada várias vezes passa a ser um hábito, assim fica fácil chegarmos até nosso objetivo bem facinho!",
+              "Nos defina uma tarefa que você deseja finalizar constantemente."
+            ],
+          ),
+    );
   }
 
   void _onTextChanged() {
@@ -93,11 +117,17 @@ class _HabitTabState extends State<HabitTab> {
           Container(
             margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
             width: double.maxFinite,
-            child: Text(
-              "Qual será seu hábito?",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-          ),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "Qual será seu hábito?",
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
+              ],
+            )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -244,11 +274,11 @@ class CustomDialog extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
               itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
+                return IconButton(
+                  icon: Icon(IconData(icons[index], fontFamily: 'MaterialIcons'), size: 64),
+                  onPressed: () {
                     Navigator.of(context).pop(icons[index]);
                   },
-                  child: Icon(IconData(icons[index], fontFamily: 'MaterialIcons'), size: 64),
                 );
               },
             ),

@@ -8,7 +8,7 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:habit/ui/widgets/doneDialog.dart';
+import 'package:habit/ui/widgets/DoneDialog.dart';
 import 'package:habit/utils/enums.dart';
 
 void main() {
@@ -205,7 +205,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             numberController.text = habitsForToday[i].progress.progress.toString();
           showDialog(
             context: context,
-            builder: (BuildContext context) => CustomDialog(
+            builder: (BuildContext context) => DoneDialog(
                   progress: habitsForToday[i].progress,
                   controller: numberController,
                 ),
@@ -267,7 +267,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 Container(
                   margin: EdgeInsets.only(top: 180.0),
                   decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.5))],
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
                     color: Colors.white,
                   ),

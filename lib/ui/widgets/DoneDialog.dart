@@ -3,11 +3,11 @@ import 'package:habit/objects/Progress.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class CustomDialog extends StatelessWidget {
+class DoneDialog extends StatelessWidget {
   final Progress progress;
   final TextEditingController controller;
 
-  CustomDialog({
+  DoneDialog({
     @required this.progress,
     @required this.controller,
   });
