@@ -41,6 +41,7 @@ class HabitWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
                 color: CategoryColors.getPrimaryColor(habit.category),
+                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
               ),
               child: Hero(
                 tag: fromAllHabits ? habit.id + 1000 : habit.id,

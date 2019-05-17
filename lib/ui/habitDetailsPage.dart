@@ -9,7 +9,7 @@ import 'package:habit/objects/Progress.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/utils/enums.dart';
-import 'package:habit/ui/widgets/doneDialog.dart';
+import 'package:habit/ui/widgets/DoneDialog.dart';
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
@@ -349,7 +349,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         numberController.text = widget.habit.progress.progress.toString();
       showDialog(
         context: context,
-        builder: (BuildContext context) => CustomDialog(
+        builder: (BuildContext context) => DoneDialog(
           progress: widget.habit.progress,
           controller: numberController,
         ),
@@ -423,7 +423,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
           Container(
             margin: EdgeInsets.only(top: 180.0),
             decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.5))],
               borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
               color: Colors.white,
             ),

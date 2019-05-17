@@ -5,6 +5,8 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:habit/ui/widgets/TutorialDialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RewardTab extends StatefulWidget {
   RewardTab({Key key, this.category, this.controller, this.keyboard, this.onTap}) : super(key: key);
@@ -40,6 +42,14 @@ class _RewardTabState extends State<RewardTab> {
     );
 
     widget.controller.addListener(_onTextChanged);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (prefs.getBool("rewardTutorial") == null) {
+        await showTutorial();
+        prefs.setBool("rewardTutorial", true);
+      }
+    });
   }
 
   @override
@@ -48,6 +58,20 @@ class _RewardTabState extends State<RewardTab> {
     widget.keyboard.removeListener(_keyboardVisibilitySubscriberId);
     widget.controller.removeListener(_onTextChanged);
     super.dispose();
+  }
+
+  Future showTutorial() async {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => new TutorialDialog(
+            title: "Qual sua meta?",
+            texts: [
+              "Em poucas palavras nos defina qual será sua meta principal com esse hábito.",
+              "Com isso nós verificamos seu progresso em direção ao objetivo! Não é demais?!",
+              "Se estiver com dúvidas temos alguns exemplos das atividades mais realizadas."
+            ],
+          ),
+    );
   }
 
   void _onTextChanged() {
@@ -90,13 +114,19 @@ class _RewardTabState extends State<RewardTab> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
-            width: double.maxFinite,
-            child: Text(
-              "Qual é sua meta?",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-            ),
-          ),
+              margin: EdgeInsets.only(top: 64.0, left: 32.0),
+              width: double.maxFinite,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Qual é sua meta?",
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
+                ],
+              )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),

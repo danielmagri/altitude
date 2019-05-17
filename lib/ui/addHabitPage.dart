@@ -135,9 +135,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
 
   void _nextPage(int delta) {
     if (delta == 1)
-      _pageController.nextPage(duration: Duration(milliseconds: 2000), curve: Curves.elasticOut);
+      _pageController.nextPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
     else if (delta == -1)
-      _pageController.previousPage(duration: Duration(milliseconds: 2000), curve: Curves.elasticOut);
+      _pageController.previousPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
   }
 
   Future<bool> _onBackPressed(BuildContext context) async {
