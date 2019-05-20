@@ -3,6 +3,7 @@ import 'package:habit/objects/Frequency.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class FrequencyTab extends StatefulWidget {
   FrequencyTab({Key key, this.category, this.onTap}) : super(key: key);
@@ -15,125 +16,47 @@ class FrequencyTab extends StatefulWidget {
 }
 
 class _FrequencyTabState extends State<FrequencyTab> {
-  final weeklyController = TextEditingController();
-  final repeating1Controller = TextEditingController();
-  final repeating2Controller = TextEditingController();
+  int chosen = -1;
 
-  List<bool> expandList = [true, false, false];
-  int expanded = 0;
-
-  final List<String> _days = [
-    "Segunda-feira",
-    "Terça-feira",
-    "Quarta-feira",
-    "Quinta-feira",
-    "Sexta-feira",
-    "Sábado",
-    "Domingo"
-  ];
-  List<String> _filters = <String>[];
+  List<bool> days;
+  int weeklyInt;
+  int repeatingInt1;
+  int repeatingInt2;
 
   @override
-  void dispose() {
-    weeklyController.dispose();
-    repeating1Controller.dispose();
-    repeating2Controller.dispose();
-    super.dispose();
+  initState() {
+    super.initState();
+
+    initValues();
+  }
+
+  void initValues() {
+    days = [false, false, false, false, false, false, false];
+    weeklyInt = 3;
+    repeatingInt1 = 5;
+    repeatingInt2 = 15;
   }
 
   void validateData() {
-    if (expanded == 0) {
-      bool hasOne = false;
-      for (int i = 0; i < 7; i++) {
-        if (_filters.contains(_days[i])) {
-          hasOne = true;
-          break;
-        }
-      }
+    if (chosen == 0) {
+      FreqDayWeek dayWeek = new FreqDayWeek(
+          monday: days[1] ? 1 : 0,
+          tuesday: days[2] ? 1 : 0,
+          wednesday: days[3] ? 1 : 0,
+          thursday: days[4] ? 1 : 0,
+          friday: days[5] ? 1 : 0,
+          saturday: days[6] ? 1 : 0,
+          sunday: days[0] ? 1 : 0);
 
-      if (!hasOne) {
-        Fluttertoast.showToast(
-            msg: "Selecione pelo menos um dia da semana",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else {
-        FreqDayWeek dayWeek = new FreqDayWeek(
-            monday: _filters.contains(_days[0]) ? 1 : 0,
-            tuesday: _filters.contains(_days[1]) ? 1 : 0,
-            wednesday: _filters.contains(_days[2]) ? 1 : 0,
-            thursday: _filters.contains(_days[3]) ? 1 : 0,
-            friday: _filters.contains(_days[4]) ? 1 : 0,
-            saturday: _filters.contains(_days[5]) ? 1 : 0,
-            sunday: _filters.contains(_days[6]) ? 1 : 0);
+      widget.onTap(true, dayWeek);
+    } else if (chosen == 1) {
+      FreqWeekly weekly = new FreqWeekly(daysTime: weeklyInt);
 
-        widget.onTap(true, dayWeek);
-      }
-    } else if (expanded == 1) {
-      int number = int.tryParse(weeklyController.text);
+      widget.onTap(true, weekly);
+    } else if (chosen == 2) {
+      FreqRepeating repeating = new FreqRepeating(daysTime: repeatingInt1, daysCycle: repeatingInt2);
 
-      if (number == null) {
-        Fluttertoast.showToast(
-            msg: "Preencha a quantidade de dias na semana que deseja fazer",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else if (number < 1 || number > 7) {
-        Fluttertoast.showToast(
-            msg: "Preencha a quantidade de dias entre 1 e 7",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else {
-        FreqWeekly weekly = new FreqWeekly(daysTime: number);
-
-        widget.onTap(true, weekly);
-      }
-    } else if (expanded == 2) {
-      int number1 = int.tryParse(repeating1Controller.text);
-      int number2 = int.tryParse(repeating2Controller.text);
-
-      if (number1 == null || number2 == null) {
-        Fluttertoast.showToast(
-            msg: "Preencha a quantidade de dias que deseja fazer",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else if (number1 > number2) {
-        Fluttertoast.showToast(
-            msg: "O número de repetições deve ser menor que o do ciclo",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else if (number1 < 1 || number1 > 30 || number2 < 1 || number2 > 30) {
-        Fluttertoast.showToast(
-            msg: "Os valores precisam ser maiores que 0 e menores que 30",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
-      } else {
-        FreqRepeating repeating = new FreqRepeating(daysTime: number1, daysCycle: number2);
-
-        widget.onTap(true, repeating);
-      }
+      widget.onTap(true, repeating);
     } else {
       Fluttertoast.showToast(
           msg: "Por favor, escolha alguma das opções",
@@ -146,216 +69,628 @@ class _FrequencyTabState extends State<FrequencyTab> {
     }
   }
 
-  Iterable<Widget> get dayWeekWidgets sync* {
-    for (String day in _days) {
-      yield Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: FilterChip(
-          label: Text(day),
-          selected: _filters.contains(day),
-          onSelected: (bool value) {
-            setState(() {
-              if (value) {
-                _filters.add(day);
-              } else {
-                _filters.removeWhere((String name) {
-                  return name == day;
-                });
-              }
-            });
-          },
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 60.0, left: 8.0),
+          child: Text(
+            "Qual a frequência do hábito?",
+            style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w300),
+          ),
         ),
-      );
+        Expanded(
+          flex: 4,
+          child: Container(
+            alignment: Alignment(0.0, 1.0),
+            margin: EdgeInsets.only(bottom: 12.0),
+            child: Text(
+              "Escolha uma opção:",
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 6,
+          child: Align(
+            alignment: Alignment(0.0, -1.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Card(
+                      color: CategoryColors.getSecundaryColor(widget.category),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => DailyDialog(
+                                  days: days,
+                                  category: widget.category,
+                                ),
+                          ).then((result) {
+                            print(result);
+                            if (result != null) {
+                              initValues();
+                              setState(() {
+                                chosen = 0;
+                                days = result;
+                              });
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              border: chosen == 0
+                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
+                                  : null,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: BoxContent(
+                            title: "Diariamente",
+                            example: "Ex. Segunda, Quarta e Sexta",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Card(
+                      color: CategoryColors.getSecundaryColor(widget.category),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => WeeklyDialog(
+                                  weeklyInt: weeklyInt,
+                                  category: widget.category,
+                                ),
+                          ).then((result) {
+                            print(result);
+                            if (result != null) {
+                              initValues();
+                              setState(() {
+                                chosen = 1;
+                                weeklyInt = result;
+                              });
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              border: chosen == 1
+                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
+                                  : null,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: BoxContent(
+                            title: "Semanalmente",
+                            example: "Ex. 3 vezes por semana",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Card(
+                      color: CategoryColors.getSecundaryColor(widget.category),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => RepeatingDialog(
+                                  repeatingInt1: repeatingInt1,
+                                  repeatingInt2: repeatingInt2,
+                                  category: widget.category,
+                                ),
+                          ).then((result) {
+                            print(result);
+                            if (result != null) {
+                              initValues();
+                              setState(() {
+                                chosen = 2;
+                                repeatingInt1 = result[0];
+                                repeatingInt2 = result[1];
+                              });
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              border: chosen == 2
+                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
+                                  : null,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: BoxContent(
+                            title: "Intervalo",
+                            example: "Ex. 5 vezes a cada 15 dias",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              RaisedButton(
+                color: CategoryColors.getSecundaryColor(widget.category),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                elevation: 5.0,
+                onPressed: () {
+                  widget.onTap(false, null);
+                },
+                child: const Text("VOLTAR"),
+              ),
+              RaisedButton(
+                color: CategoryColors.getSecundaryColor(widget.category),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                elevation: 5.0,
+                onPressed: validateData,
+                child: const Text("AVANÇAR"),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class BoxContent extends StatelessWidget {
+  final String title;
+  final String example;
+
+  BoxContent({
+    @required this.title,
+    @required this.example,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+            child: Text(
+          title,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        )),
+        Expanded(
+            child: Text(
+          example,
+          style: TextStyle(fontWeight: FontWeight.w300),
+        )),
+      ],
+    );
+  }
+}
+
+class DailyDialog extends StatefulWidget {
+  DailyDialog({Key key, this.days, this.category}) : super(key: key);
+
+  final List<bool> days;
+  final CategoryEnum category;
+
+  @override
+  _DailyDialogState createState() => new _DailyDialogState();
+}
+
+class _DailyDialogState extends State<DailyDialog> {
+  List<bool> days;
+
+  @override
+  initState() {
+    super.initState();
+
+    days = widget.days;
+  }
+
+  void _validate() {
+    if (days.contains(true)) {
+      Navigator.of(context).pop(days);
+    } else {
+      Fluttertoast.showToast(
+          msg: "Selecione pelo menos um dia da semana",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Color.fromARGB(255, 220, 220, 220),
+          textColor: Colors.black,
+          fontSize: 16.0);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 50.0),
-            child: new ExpansionPanelList(
-              expansionCallback: (int index, bool isExpanded) {
-                if (!isExpanded) {
-                  if (expanded != -1) expandList[expanded] = false;
-                  expanded = index;
-                } else {
-                  if (expanded != -1) expandList[expanded] = false;
-                  expanded = -1;
-                }
-
-                setState(() {
-                  expandList[index] = !isExpanded;
-                });
-              },
-              children: <ExpansionPanel>[
-                new ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: const Text(
-                        "Dias da semana",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      subtitle: const Text(
-                        "Segunda, Terça, Quarta ...",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
-                  },
-                  isExpanded: expandList[0],
-                  body: new Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          children: dayWeekWidgets.toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                new ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: const Text(
-                        "Semanalmente",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      subtitle: const Text(
-                        "X dias na semana",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
-                  },
-                  isExpanded: expandList[1],
-                  body: new Container(
-                    height: 70.0,
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 30,
-                          child: TextField(
-                            controller: weeklyController,
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            textInputAction: TextInputAction.go,
-                            onEditingComplete: validateData,
-                            decoration: InputDecoration(
-                              counterText: "",
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "dias por semana",
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                new ExpansionPanel(
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return ListTile(
-                      title: const Text(
-                        "Recorrente",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      subtitle: const Text(
-                        "X vezes em Y dias",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
-                  },
-                  isExpanded: expandList[2],
-                  body: new Container(
-                    height: 70.0,
-                    child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 30,
-                          child: TextField(
-                            controller: repeating1Controller,
-                            keyboardType: TextInputType.number,
-                            maxLength: 2,
-                            textInputAction: TextInputAction.go,
-                            decoration: InputDecoration(
-                              counterText: "",
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          " vezes em ",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        Container(
-                          width: 30,
-                          child: TextField(
-                            controller: repeating2Controller,
-                            keyboardType: TextInputType.number,
-                            maxLength: 2,
-                            textInputAction: TextInputAction.go,
-                            onEditingComplete: validateData,
-                            decoration: InputDecoration(
-                              counterText: "",
-                            ),
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          "dias",
-                          style: TextStyle(color: Colors.black),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      elevation: 5.0,
+      backgroundColor: Colors.white,
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          children: <Widget>[
+            Text(
+              "Diariamente",
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            SizedBox(height: 16.0),
+            Text("Escolha quais dias da semana você irá realizar o hábito:"),
+            SizedBox(height: 16.0),
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: 8.0,
+              runSpacing: 8.0,
               children: <Widget>[
-                RaisedButton(
-                  color: CategoryColors.getSecundaryColor(widget.category),
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                  elevation: 5.0,
-                  onPressed: () {
-                    widget.onTap(false, null);
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[1] = !days[1];
+                    });
                   },
-                  child: const Text("VOLTAR"),
+                  child: DayWidget(
+                    text: "Segunda-feira",
+                    status: days[1],
+                    category: widget.category,
+                  ),
                 ),
-                RaisedButton(
-                  color: CategoryColors.getSecundaryColor(widget.category),
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                  elevation: 5.0,
-                  onPressed: validateData,
-                  child: const Text("AVANÇAR"),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[2] = !days[2];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Terça-feira",
+                    status: days[2],
+                    category: widget.category,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[3] = !days[3];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Quarta-feira",
+                    status: days[3],
+                    category: widget.category,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[4] = !days[4];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Quinta-feira",
+                    status: days[4],
+                    category: widget.category,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[5] = !days[5];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Sexta-feira",
+                    status: days[5],
+                    category: widget.category,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[6] = !days[6];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Sábado",
+                    status: days[6],
+                    category: widget.category,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      days[0] = !days[0];
+                    });
+                  },
+                  child: DayWidget(
+                    text: "Domingo",
+                    status: days[0],
+                    category: widget.category,
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 24.0),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancelar"),
+                    ),
+                    FlatButton(
+                      onPressed: _validate,
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DayWidget extends StatelessWidget {
+  final String text;
+  final bool status;
+  final CategoryEnum category;
+
+  DayWidget({
+    @required this.text,
+    @required this.status,
+    @required this.category,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+      decoration: BoxDecoration(
+        color: status ? CategoryColors.getSecundaryColor(category) : Color.fromARGB(255, 220, 220, 220),
+        borderRadius: BorderRadius.circular(20.0),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: status ? Colors.white : Colors.black),
+      ),
+    );
+  }
+}
+
+class WeeklyDialog extends StatefulWidget {
+  WeeklyDialog({Key key, this.weeklyInt, this.category}) : super(key: key);
+
+  final int weeklyInt;
+  final CategoryEnum category;
+
+  @override
+  _WeeklyDialogState createState() => new _WeeklyDialogState();
+}
+
+class _WeeklyDialogState extends State<WeeklyDialog> {
+  int _currentValue;
+
+  @override
+  initState() {
+    super.initState();
+
+    _currentValue = widget.weeklyInt;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      elevation: 5.0,
+      backgroundColor: Colors.white,
+      child: Theme(
+        data: Theme.of(context).copyWith(accentColor: CategoryColors.getSecundaryColor(widget.category)),
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // To make the card compact
+            children: <Widget>[
+              Text(
+                "Semanalmente",
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Text("Escolha quantos vezes por semana você irá realizar o hábito:"),
+              SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new NumberPicker.integer(
+                    initialValue: _currentValue,
+                    minValue: 1,
+                    maxValue: 7,
+                    listViewWidth: 45.0,
+                    onChanged: (newValue) => setState(() => _currentValue = newValue),
+                  ),
+                  Text(
+                    "vezes por semana.",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              SizedBox(height: 24.0),
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancelar"),
+                      ),
+                      FlatButton(
+                        onPressed: () => Navigator.of(context).pop(_currentValue),
+                        child: Text(
+                          "Ok",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class RepeatingDialog extends StatefulWidget {
+  RepeatingDialog({Key key, this.repeatingInt1, this.repeatingInt2, this.category}) : super(key: key);
+
+  final int repeatingInt1;
+  final int repeatingInt2;
+  final CategoryEnum category;
+
+  @override
+  _RepeatingDialogState createState() => new _RepeatingDialogState();
+}
+
+class _RepeatingDialogState extends State<RepeatingDialog> {
+  int _currentValue1;
+  int _currentValue2;
+
+  @override
+  initState() {
+    super.initState();
+
+    _currentValue1 = widget.repeatingInt1;
+    _currentValue2 = widget.repeatingInt2;
+  }
+
+  void _validate() {
+    if (_currentValue1 > _currentValue2) {
+      Fluttertoast.showToast(
+          msg: "O número de repetições deve ser menor que o do intervalo.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Color.fromARGB(255, 220, 220, 220),
+          textColor: Colors.black,
+          fontSize: 16.0);
+    } else {
+      Navigator.of(context).pop({0: _currentValue1, 1: _currentValue2});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      elevation: 5.0,
+      backgroundColor: Colors.white,
+      child: Theme(
+        data: Theme.of(context).copyWith(accentColor: CategoryColors.getSecundaryColor(widget.category)),
+        child: Container(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // To make the card compact
+            children: <Widget>[
+              Text(
+                "Intervalo",
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Text("Escolha quantos vezes irá realizar o hábito e o intervalo de tempo para isso:"),
+              SizedBox(height: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new NumberPicker.integer(
+                    initialValue: _currentValue1,
+                    minValue: 1,
+                    maxValue: 30,
+                    listViewWidth: 45.0,
+                    onChanged: (newValue) => setState(() => _currentValue1 = newValue),
+                  ),
+                  Text(
+                    "vezes em",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  new NumberPicker.integer(
+                    initialValue: _currentValue2,
+                    minValue: 1,
+                    maxValue: 30,
+                    listViewWidth: 45.0,
+                    onChanged: (newValue) => setState(() => _currentValue2 = newValue),
+                  ),
+                  Text(
+                    "dias.",
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
+              ),
+              SizedBox(height: 24.0),
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancelar"),
+                      ),
+                      FlatButton(
+                        onPressed: _validate,
+                        child: Text(
+                          "Ok",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ),
       ),
     );
   }
