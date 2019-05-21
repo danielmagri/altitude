@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Progress.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitTabs/categoryTab.dart';
@@ -11,6 +10,7 @@ import 'package:habit/ui/addHabitTabs/habitTab.dart';
 import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:habit/datas/dataHabitCreation.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -31,10 +31,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   final habitController = TextEditingController();
   final cueController = TextEditingController();
 
-  int icon;
   CategoryEnum category;
-  dynamic frequency;
-  Progress progress;
 
   @override
   void initState() {
@@ -44,6 +41,8 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
+
+    DataHabitCreation().emptyData();
   }
 
   @override
@@ -70,7 +69,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     _nextTab(1);
   }
 
-  void rewardTabTap(bool next) {
+  void onTap(bool next) {
     if (next) {
       _nextPage(1);
     } else {
@@ -78,44 +77,17 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void progressTabTap(bool next, Progress progress) {
-    this.progress = progress;
-    if (next) {
-      _nextPage(1);
-    } else {
-      _nextPage(-1);
-    }
-  }
-
-  void habitTabTap(bool next, int icon) {
-    this.icon = icon;
-    if (next) {
-      _nextPage(1);
-    } else {
-      _nextPage(-1);
-    }
-  }
-
-  void frequencyTabTap(bool next, dynamic frequency) {
-    this.frequency = frequency;
-    if (next) {
-      _nextPage(1);
-    } else {
-      _nextPage(-1);
-    }
-  }
-
   void cueTabTap(bool next) {
     if (next) {
       Habit habit = new Habit(
           category: category,
-          icon: icon,
+          icon: DataHabitCreation().icon,
           cue: cueController.text,
           habit: habitController.text,
           reward: rewardController.text,
-          progress: progress);
+          progress: DataHabitCreation().progress);
 
-      DataControl().addHabit(habit, frequency).then((result) {
+      DataControl().addHabit(habit, DataHabitCreation().frequency).then((result) {
         Navigator.pop(context);
       });
     } else {
@@ -182,21 +154,21 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                         category: category,
                         controller: rewardController,
                         keyboard: _keyboardVisibility,
-                        onTap: rewardTabTap,
+                        onTap: onTap,
                       ),
                       ProgressTab(
                         category: category,
-                        onTap: progressTabTap,
+                        onTap: onTap,
                       ),
                       HabitTab(
                         category: category,
                         controller: habitController,
                         keyboard: _keyboardVisibility,
-                        onTap: habitTabTap,
+                        onTap: onTap,
                       ),
                       FrequencyTab(
                         category: category,
-                        onTap: frequencyTabTap,
+                        onTap: onTap,
                       ),
                       CueTab(
                         category: category,

@@ -7,6 +7,7 @@ import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/TutorialDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habit/datas/dataHabitCreation.dart';
 
 class HabitTab extends StatefulWidget {
   HabitTab({Key key, this.category, this.controller, this.keyboard, this.onTap}) : super(key: key);
@@ -22,10 +23,9 @@ class HabitTab extends StatefulWidget {
 
 class _HabitTabState extends State<HabitTab> {
   FocusNode _focusNode;
-  int iconId = 0xe028;
   List suggestion;
-
   int _keyboardVisibilitySubscriberId;
+  double _iconHelpOpacity = 0.0;
 
   @override
   initState() {
@@ -80,6 +80,12 @@ class _HabitTabState extends State<HabitTab> {
     List data = Suggestions.getHabits(widget.category);
     String reward = widget.controller.text.toLowerCase();
 
+    if(reward.length == 1 && _iconHelpOpacity != 1) {
+      setState(() {
+        _iconHelpOpacity = 1;
+      });
+    }
+
     for (int i = 0; i < data.length; i++) {
       if (data[i][1].toLowerCase().contains(reward)) {
         result.add(data[i]);
@@ -95,7 +101,7 @@ class _HabitTabState extends State<HabitTab> {
     String result = Validate.habitTextValidate(widget.controller.text);
 
     if (result == null) {
-      widget.onTap(true, iconId);
+      widget.onTap(true);
     } else {
       Fluttertoast.showToast(
           msg: result,
@@ -115,19 +121,24 @@ class _HabitTabState extends State<HabitTab> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
-            width: double.maxFinite,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "Qual será seu hábito?",
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
+              width: double.maxFinite,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Qual será seu hábito?",
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
-              ],
-            )),
+                  IconButton(
+                      icon: Icon(
+                        Icons.help_outline,
+                        color: Colors.white,
+                      ),
+                      onPressed: showTutorial),
+                ],
+              )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -136,35 +147,64 @@ class _HabitTabState extends State<HabitTab> {
               borderRadius: BorderRadius.circular(30.0),
               boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
             ),
-            child: TextField(
-              controller: widget.controller,
-              focusNode: _focusNode,
-              textInputAction: TextInputAction.go,
-              onEditingComplete: _validate,
-              style: TextStyle(fontSize: 16.0),
-              decoration: InputDecoration(
-                icon: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => CustomDialog(),
-                    ).then((result) {
-                      if (result != -1) {
+            child: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                TextField(
+                  controller: widget.controller,
+                  focusNode: _focusNode,
+                  textInputAction: TextInputAction.go,
+                  onEditingComplete: _validate,
+                  style: TextStyle(fontSize: 16.0),
+                  decoration: InputDecoration(
+                    icon: GestureDetector(
+                      onTap: () {
                         setState(() {
-                          iconId = result;
+                          _iconHelpOpacity = 0.0;
                         });
-                      }
-                    });
-                  },
-                  child: Icon(
-                    IconData(iconId, fontFamily: 'MaterialIcons'),
-                    color: Colors.white,
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => CustomDialog(),
+                        ).then((result) {
+                          if (result != -1) {
+                            setState(() {
+                              DataHabitCreation().icon = result;
+                            });
+                          }
+                        });
+                      },
+                      child: Icon(
+                        IconData(DataHabitCreation().icon, fontFamily: 'MaterialIcons'),
+                        color: Colors.white,
+                      ),
+                    ),
+                    hintText: "Escreva aqui",
+                    hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
+                    border: InputBorder.none,
                   ),
                 ),
-                hintText: "Escreva aqui",
-                hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
-                border: InputBorder.none,
-              ),
+                Positioned(
+                  top: -29,
+                  left: 16,
+                  child: AnimatedOpacity(
+                    opacity: _iconHelpOpacity,
+                    duration: Duration(milliseconds: 500),
+                    child: Container(
+                      padding: EdgeInsets.all(6.0),
+                      child: Text(
+                        "Clique aqui para alterar o ícone",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10.0),
+                              topLeft: Radius.circular(10.0),
+                              bottomRight: Radius.circular(10.0))),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
           Expanded(
@@ -191,14 +231,21 @@ class _HabitTabState extends State<HabitTab> {
                     }
 
                     setState(() {
-                      iconId = icon;
+                      DataHabitCreation().icon = icon;
                     });
                   },
                   child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Row(
+                        mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Icon(IconData(suggestion[position][0], fontFamily: 'MaterialIcons')),
+                          Icon(
+                            IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
                           Text(
                             suggestion[position][1],
                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
@@ -220,7 +267,7 @@ class _HabitTabState extends State<HabitTab> {
                   padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                   elevation: 5.0,
                   onPressed: () {
-                    widget.onTap(false, null);
+                    widget.onTap(false);
                   },
                   child: const Text("VOLTAR"),
                 ),

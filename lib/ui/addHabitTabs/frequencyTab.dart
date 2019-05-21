@@ -4,6 +4,7 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:habit/datas/dataHabitCreation.dart';
 
 class FrequencyTab extends StatefulWidget {
   FrequencyTab({Key key, this.category, this.onTap}) : super(key: key);
@@ -18,46 +19,27 @@ class FrequencyTab extends StatefulWidget {
 class _FrequencyTabState extends State<FrequencyTab> {
   int chosen = -1;
 
-  List<bool> days;
-  int weeklyInt;
-  int repeatingInt1;
-  int repeatingInt2;
-
   @override
   initState() {
     super.initState();
 
-    initValues();
-  }
-
-  void initValues() {
-    days = [false, false, false, false, false, false, false];
-    weeklyInt = 3;
-    repeatingInt1 = 5;
-    repeatingInt2 = 15;
+    if (DataHabitCreation().frequency != null) {
+      switch (DataHabitCreation().frequency.runtimeType) {
+        case FreqDayWeek:
+          chosen = 0;
+          break;
+        case FreqWeekly:
+          chosen = 1;
+          break;
+        case FreqRepeating:
+          chosen = 2;
+          break;
+      }
+    }
   }
 
   void validateData() {
-    if (chosen == 0) {
-      FreqDayWeek dayWeek = new FreqDayWeek(
-          monday: days[1] ? 1 : 0,
-          tuesday: days[2] ? 1 : 0,
-          wednesday: days[3] ? 1 : 0,
-          thursday: days[4] ? 1 : 0,
-          friday: days[5] ? 1 : 0,
-          saturday: days[6] ? 1 : 0,
-          sunday: days[0] ? 1 : 0);
-
-      widget.onTap(true, dayWeek);
-    } else if (chosen == 1) {
-      FreqWeekly weekly = new FreqWeekly(daysTime: weeklyInt);
-
-      widget.onTap(true, weekly);
-    } else if (chosen == 2) {
-      FreqRepeating repeating = new FreqRepeating(daysTime: repeatingInt1, daysCycle: repeatingInt2);
-
-      widget.onTap(true, repeating);
-    } else {
+    if (chosen == -1) {
       Fluttertoast.showToast(
           msg: "Por favor, escolha alguma das opções",
           toastLength: Toast.LENGTH_SHORT,
@@ -66,6 +48,8 @@ class _FrequencyTabState extends State<FrequencyTab> {
           backgroundColor: Color.fromARGB(255, 220, 220, 220),
           textColor: Colors.black,
           fontSize: 16.0);
+    } else {
+      widget.onTap(true);
     }
   }
 
@@ -108,15 +92,12 @@ class _FrequencyTabState extends State<FrequencyTab> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => DailyDialog(
-                                  days: days,
                                   category: widget.category,
                                 ),
                           ).then((result) {
                             if (result != null) {
-                              initValues();
                               setState(() {
                                 chosen = 0;
-                                days = result;
                               });
                             }
                           });
@@ -147,15 +128,12 @@ class _FrequencyTabState extends State<FrequencyTab> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => WeeklyDialog(
-                                  weeklyInt: weeklyInt,
                                   category: widget.category,
                                 ),
                           ).then((result) {
                             if (result != null) {
-                              initValues();
                               setState(() {
                                 chosen = 1;
-                                weeklyInt = result;
                               });
                             }
                           });
@@ -186,17 +164,12 @@ class _FrequencyTabState extends State<FrequencyTab> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => RepeatingDialog(
-                                  repeatingInt1: repeatingInt1,
-                                  repeatingInt2: repeatingInt2,
                                   category: widget.category,
                                 ),
                           ).then((result) {
                             if (result != null) {
-                              initValues();
                               setState(() {
                                 chosen = 2;
-                                repeatingInt1 = result[0];
-                                repeatingInt2 = result[1];
                               });
                             }
                           });
@@ -232,7 +205,7 @@ class _FrequencyTabState extends State<FrequencyTab> {
                 padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 elevation: 5.0,
                 onPressed: () {
-                  widget.onTap(false, null);
+                  widget.onTap(false);
                 },
                 child: const Text("VOLTAR"),
               ),
@@ -287,9 +260,8 @@ class BoxContent extends StatelessWidget {
 }
 
 class DailyDialog extends StatefulWidget {
-  DailyDialog({Key key, this.days, this.category}) : super(key: key);
+  DailyDialog({Key key, this.category}) : super(key: key);
 
-  final List<bool> days;
   final CategoryEnum category;
 
   @override
@@ -297,18 +269,40 @@ class DailyDialog extends StatefulWidget {
 }
 
 class _DailyDialogState extends State<DailyDialog> {
-  List<bool> days;
+  List<bool> days = [false, false, false, false, false, false, false];
 
   @override
   initState() {
     super.initState();
 
-    days = widget.days;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqDayWeek) {
+      FreqDayWeek dayWeek = DataHabitCreation().frequency;
+
+      days = [
+        dayWeek.sunday == 1 ? true : false,
+        dayWeek.monday == 1 ? true : false,
+        dayWeek.tuesday == 1 ? true : false,
+        dayWeek.wednesday == 1 ? true : false,
+        dayWeek.thursday == 1 ? true : false,
+        dayWeek.friday == 1 ? true : false,
+        dayWeek.saturday == 1 ? true : false,
+      ];
+    }
   }
 
   void _validate() {
     if (days.contains(true)) {
-      Navigator.of(context).pop(days);
+      FreqDayWeek dayWeek = new FreqDayWeek(
+          monday: days[1] ? 1 : 0,
+          tuesday: days[2] ? 1 : 0,
+          wednesday: days[3] ? 1 : 0,
+          thursday: days[4] ? 1 : 0,
+          friday: days[5] ? 1 : 0,
+          saturday: days[6] ? 1 : 0,
+          sunday: days[0] ? 1 : 0);
+
+      DataHabitCreation().frequency = dayWeek;
+      Navigator.of(context).pop(true);
     } else {
       Fluttertoast.showToast(
           msg: "Selecione pelo menos um dia da semana",
@@ -491,9 +485,8 @@ class DayWidget extends StatelessWidget {
 }
 
 class WeeklyDialog extends StatefulWidget {
-  WeeklyDialog({Key key, this.weeklyInt, this.category}) : super(key: key);
+  WeeklyDialog({Key key, this.category}) : super(key: key);
 
-  final int weeklyInt;
   final CategoryEnum category;
 
   @override
@@ -507,7 +500,18 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
   initState() {
     super.initState();
 
-    _currentValue = widget.weeklyInt;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqWeekly) {
+      FreqWeekly weekly = DataHabitCreation().frequency;
+      _currentValue = weekly.daysTime;
+    } else {
+      _currentValue = 3;
+    }
+  }
+
+  void _validate() {
+    DataHabitCreation().frequency = new FreqWeekly(daysTime: _currentValue);
+
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -564,7 +568,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
                         child: Text("Cancelar"),
                       ),
                       FlatButton(
-                        onPressed: () => Navigator.of(context).pop(_currentValue),
+                        onPressed: _validate,
                         child: Text(
                           "Ok",
                           style: TextStyle(fontWeight: FontWeight.bold),
@@ -581,10 +585,8 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
 }
 
 class RepeatingDialog extends StatefulWidget {
-  RepeatingDialog({Key key, this.repeatingInt1, this.repeatingInt2, this.category}) : super(key: key);
+  RepeatingDialog({Key key, this.category}) : super(key: key);
 
-  final int repeatingInt1;
-  final int repeatingInt2;
   final CategoryEnum category;
 
   @override
@@ -599,8 +601,14 @@ class _RepeatingDialogState extends State<RepeatingDialog> {
   initState() {
     super.initState();
 
-    _currentValue1 = widget.repeatingInt1;
-    _currentValue2 = widget.repeatingInt2;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqRepeating) {
+      FreqRepeating repeating = DataHabitCreation().frequency;
+      _currentValue1 = repeating.daysTime;
+      _currentValue2 = repeating.daysCycle;
+    } else {
+      _currentValue1 = 5;
+      _currentValue2 = 15;
+    }
   }
 
   void _validate() {
@@ -614,7 +622,8 @@ class _RepeatingDialogState extends State<RepeatingDialog> {
           textColor: Colors.black,
           fontSize: 16.0);
     } else {
-      Navigator.of(context).pop({0: _currentValue1, 1: _currentValue2});
+      DataHabitCreation().frequency = new FreqRepeating(daysTime: _currentValue1, daysCycle: _currentValue2);
+      Navigator.of(context).pop(true);
     }
   }
 

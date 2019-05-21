@@ -10,6 +10,7 @@ import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/ui/widgets/DoneDialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget(
@@ -36,6 +37,21 @@ class HeaderWidget extends StatelessWidget {
   final Function setDoneHabit;
   final Animation<int> animation;
 
+  void _doneIconTap() {
+    if (done) {
+      Fluttertoast.showToast(
+          msg: "Você já completou esse hábito hoje",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: CategoryColors.getPrimaryColor(habit.category),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }else{
+      setDoneHabit();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -47,7 +63,7 @@ class HeaderWidget extends StatelessWidget {
             Expanded(
               child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton(color: Colors.white)),
             ),
-            IconButton(icon: Icon(Icons.check, color: Colors.white), onPressed: done ? null : setDoneHabit),
+            IconButton(icon: Icon(Icons.check, color: Colors.white), onPressed: _doneIconTap),
             IconButton(
                 icon: Icon(Icons.edit, color: Colors.white),
                 onPressed: () {
