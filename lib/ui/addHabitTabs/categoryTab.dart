@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:habit/utils/enums.dart';
-import 'package:habit/utils/Color.dart';
 
 class CategoryTab extends StatelessWidget {
   CategoryTab({Key key, this.onCategoryTap}) : super(key: key);

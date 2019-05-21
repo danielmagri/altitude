@@ -4,6 +4,7 @@ import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/utils/Validator.dart';
+import 'package:habit/datas/dataHabitCreation.dart';
 
 class ProgressTab extends StatefulWidget {
   ProgressTab({Key key, this.category, this.onTap}) : super(key: key);
@@ -18,24 +19,20 @@ class ProgressTab extends StatefulWidget {
 class _ProgressTabState extends State<ProgressTab> {
   int _chosen = 2;
 
-  int _numeric;
-  String _unit;
+  @override
+  initState() {
+    super.initState();
 
-  int _days;
-
-  void _validate() {
-    if (_chosen == 0) {
-      Progress progress = new Progress(type: ProgressEnum.NUMBER, goal: _numeric, progress: 0);
-
-      widget.onTap(true, progress);
-    } else if (_chosen == 1) {
-      Progress progress = new Progress(type: ProgressEnum.DAY, goal: _days, progress: 0);
-
-      widget.onTap(true, progress);
-    } else if (_chosen == 2) {
-      Progress progress = new Progress(type: ProgressEnum.INFINITY, goal: 0, progress: 0);
-
-      widget.onTap(true, progress);
+    switch (DataHabitCreation().progress.type) {
+      case ProgressEnum.NUMBER:
+        _chosen = 0;
+        break;
+      case ProgressEnum.DAY:
+        _chosen = 1;
+        break;
+      case ProgressEnum.INFINITY:
+        _chosen = 2;
+        break;
     }
   }
 
@@ -79,15 +76,11 @@ class _ProgressTabState extends State<ProgressTab> {
                             context: context,
                             builder: (BuildContext context) => NumericDialog(
                                   category: widget.category,
-                                  numeric: _numeric,
-                                  unit: _unit,
                                 ),
                           ).then((result) {
                             if (result != null) {
                               setState(() {
                                 _chosen = 0;
-                                _numeric = result[0];
-                                _unit = result[1];
                               });
                             }
                           });
@@ -119,13 +112,11 @@ class _ProgressTabState extends State<ProgressTab> {
                             context: context,
                             builder: (BuildContext context) => DayDialog(
                                   category: widget.category,
-                                  days: _days,
                                 ),
                           ).then((result) {
                             if (result != null) {
                               setState(() {
                                 _chosen = 1;
-                                _days = result;
                               });
                             }
                           });
@@ -187,9 +178,7 @@ class _ProgressTabState extends State<ProgressTab> {
                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                 padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 elevation: 5.0,
-                onPressed: () {
-                  widget.onTap(false, null);
-                },
+                onPressed: () => widget.onTap(false),
                 child: const Text("VOLTAR"),
               ),
               RaisedButton(
@@ -197,7 +186,7 @@ class _ProgressTabState extends State<ProgressTab> {
                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                 padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                 elevation: 5.0,
-                onPressed: _validate,
+                onPressed: () => widget.onTap(true),
                 child: const Text("AVANÇAR"),
               ),
             ],
@@ -248,10 +237,8 @@ class BoxContent extends StatelessWidget {
 }
 
 class NumericDialog extends StatefulWidget {
-  NumericDialog({Key key, this.numeric, this.unit, this.category}) : super(key: key);
+  NumericDialog({Key key, this.category}) : super(key: key);
 
-  final int numeric;
-  final String unit;
   final CategoryEnum category;
 
   @override
@@ -272,9 +259,9 @@ class _NumericDialogState extends State<NumericDialog> {
     super.initState();
 
     _dropDownMenuItems = getDropDownMenuItems();
-    _currentUnit = widget.unit != null ? widget.unit : _dropDownMenuItems[0].value;
-    if (widget.numeric != null) {
-      _numberController.text = widget.numeric.toString();
+    if (DataHabitCreation().progress.type == ProgressEnum.NUMBER) {
+      //_currentUnit = widget.unit != null ? widget.unit : _dropDownMenuItems[0].value;
+      _numberController.text = DataHabitCreation().progress.goal.toString();
     }
   }
 
@@ -296,7 +283,9 @@ class _NumericDialogState extends State<NumericDialog> {
     String result = Validate.progressNumericTextValidate(_numberController.text);
 
     if (result == null) {
-      Navigator.of(context).pop({0: int.tryParse(_numberController.text), 1: _currentUnit});
+      DataHabitCreation().progress =
+          new Progress(type: ProgressEnum.NUMBER, goal: int.tryParse(_numberController.text), progress: 0);
+      Navigator.of(context).pop(true);
     } else {
       Fluttertoast.showToast(
           msg: result,
@@ -403,8 +392,8 @@ class _DayDialogState extends State<DayDialog> {
   initState() {
     super.initState();
 
-    if (widget.days != null) {
-      _numberController.text = widget.days.toString();
+    if (DataHabitCreation().progress.type == ProgressEnum.DAY) {
+      _numberController.text = DataHabitCreation().progress.goal.toString();
     }
   }
 
@@ -418,7 +407,9 @@ class _DayDialogState extends State<DayDialog> {
     String result = Validate.progressDayTextValidate(_numberController.text);
 
     if (result == null) {
-      Navigator.of(context).pop(int.tryParse(_numberController.text));
+      DataHabitCreation().progress =
+          new Progress(type: ProgressEnum.DAY, goal: int.tryParse(_numberController.text), progress: 0);
+      Navigator.of(context).pop(true);
     } else {
       Fluttertoast.showToast(
           msg: result,

@@ -6,7 +6,6 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
-import 'package:habit/objects/Progress.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
