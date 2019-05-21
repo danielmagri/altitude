@@ -11,6 +11,7 @@ import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -73,7 +74,11 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     if (next) {
       _nextPage(1);
     } else {
-      _nextTab(-1);
+      if (_pageController.page >= 0.8) {
+        _nextPage(-1);
+      } else {
+        _nextTab(-1);
+      }
     }
   }
 
@@ -89,6 +94,14 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
 
       DataControl().addHabit(habit, DataHabitCreation().frequency).then((result) {
         Navigator.pop(context);
+        Fluttertoast.showToast(
+            msg: "O hábito foi criado com sucesso!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Color.fromARGB(255, 220, 220, 220),
+            textColor: Colors.black,
+            fontSize: 16.0);
       });
     } else {
       _nextPage(-1);
