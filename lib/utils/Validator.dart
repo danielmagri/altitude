@@ -38,10 +38,26 @@ abstract class Validate {
     return null;
   }
 
-  static String progressTextValidate(String text) {
+  static String progressNumericTextValidate(String text) {
+    double number = double.tryParse(text);
+
+    if (text.contains(",") || text.contains(".")) {
+      return "O número do dia não pode conter virgula ou ponto.";
+    } else if (number == null) {
+      return "Preencha a quantidade.";
+    } else if (number < 1) {
+      return "O número precisa ser maior que 0.";
+    }
+
+    return null;
+  }
+
+  static String progressDayTextValidate(String text) {
     int number = int.tryParse(text);
 
-    if (number == null) {
+    if (text.contains(",") || text.contains(".")) {
+      return "O número do dia não pode conter virgula ou ponto.";
+    } else if (number == null) {
       return "Preencha a quantidade.";
     } else if (number < 1) {
       return "O número precisa ser maior que 0.";

@@ -112,7 +112,6 @@ class _FrequencyTabState extends State<FrequencyTab> {
                                   category: widget.category,
                                 ),
                           ).then((result) {
-                            print(result);
                             if (result != null) {
                               initValues();
                               setState(() {
@@ -152,7 +151,6 @@ class _FrequencyTabState extends State<FrequencyTab> {
                                   category: widget.category,
                                 ),
                           ).then((result) {
-                            print(result);
                             if (result != null) {
                               initValues();
                               setState(() {
@@ -193,7 +191,6 @@ class _FrequencyTabState extends State<FrequencyTab> {
                                   category: widget.category,
                                 ),
                           ).then((result) {
-                            print(result);
                             if (result != null) {
                               initValues();
                               setState(() {
@@ -269,15 +266,21 @@ class BoxContent extends StatelessWidget {
     return Column(
       children: <Widget>[
         Expanded(
+          child: Center(
             child: Text(
-          title,
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-        )),
+              title,
+              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
         Expanded(
+          child: Center(
             child: Text(
-          example,
-          style: TextStyle(fontWeight: FontWeight.w300),
-        )),
+              example,
+              style: TextStyle(fontWeight: FontWeight.w300),
+            ),
+          ),
+        ),
       ],
     );
   }
