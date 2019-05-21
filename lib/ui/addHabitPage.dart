@@ -118,7 +118,6 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
       DataControl().addHabit(habit, frequency).then((result) {
         Navigator.pop(context);
       });
-
     } else {
       _nextPage(-1);
     }
@@ -136,8 +135,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   void _nextPage(int delta) {
     if (delta == 1)
       _pageController.nextPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
-    else if (delta == -1)
-      _pageController.previousPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
+    else if (delta == -1) _pageController.previousPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
   }
 
   Future<bool> _onBackPressed(BuildContext context) async {
@@ -162,8 +160,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
         builder: (context, child) {
           return MaterialApp(
             theme: Theme.of(context).copyWith(
-                textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
-                buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary)),
+              textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
+              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            ),
             home: Scaffold(
               resizeToAvoidBottomPadding: false,
               backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,

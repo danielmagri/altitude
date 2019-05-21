@@ -64,7 +64,6 @@ class HeaderWidget extends StatelessWidget {
         Align(
           alignment: Alignment(0.85, 0.9),
           child: FloatingActionButton(
-            isExtended: true,
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
                 return AddHabitPage();
