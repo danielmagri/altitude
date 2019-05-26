@@ -41,8 +41,8 @@ abstract class Validate {
   static String progressNumericTextValidate(String text) {
     double number = double.tryParse(text);
 
-    if (text.contains(",") || text.contains(".")) {
-      return "O número do dia não pode conter virgula ou ponto.";
+    if (text.contains(",")) {
+      return "O número do dia não pode conter vírgula.";
     } else if (number == null) {
       return "Preencha a quantidade.";
     } else if (number < 1) {
@@ -56,7 +56,7 @@ abstract class Validate {
     int number = int.tryParse(text);
 
     if (text.contains(",") || text.contains(".")) {
-      return "O número do dia não pode conter virgula ou ponto.";
+      return "O número do dia não pode conter vírgula ou ponto.";
     } else if (number == null) {
       return "Preencha a quantidade.";
     } else if (number < 1) {
