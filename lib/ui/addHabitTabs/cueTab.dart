@@ -114,19 +114,24 @@ class _CueTabState extends State<CueTab> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
-            width: double.maxFinite,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    "Qual será sua deixa?",
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
+              width: double.maxFinite,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      "Qual será sua deixa?",
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
-              ],
-            )),
+                  IconButton(
+                      icon: Icon(
+                        Icons.help_outline,
+                        color: Colors.white,
+                      ),
+                      onPressed: showTutorial),
+                ],
+              )),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -149,7 +154,9 @@ class _CueTabState extends State<CueTab> {
             flex: 8,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
-              itemCount: suggestion.length,
+              padding: EdgeInsets.only(left: 36.0, right: 36.0, top: 16.0),
+              itemExtent: 45.0,
+              itemCount: suggestion.length < 5 ? suggestion.length : 5,
               itemBuilder: (context, position) {
                 return GestureDetector(
                   onTap: () {
@@ -167,12 +174,9 @@ class _CueTabState extends State<CueTab> {
                       FocusScope.of(context).requestFocus(_focusNode);
                     }
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      suggestion[position],
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-                    ),
+                  child: Text(
+                    suggestion[position],
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
                   ),
                 );
               },

@@ -80,7 +80,7 @@ class _HabitTabState extends State<HabitTab> {
     List data = Suggestions.getHabits(widget.category);
     String reward = widget.controller.text.toLowerCase();
 
-    if(reward.length == 1 && _iconHelpOpacity != 1) {
+    if (reward.length == 1 && _iconHelpOpacity != 1) {
       setState(() {
         _iconHelpOpacity = 1;
       });
@@ -211,7 +211,9 @@ class _HabitTabState extends State<HabitTab> {
             flex: 8,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
-              itemCount: suggestion.length,
+              padding: EdgeInsets.only(left: 36.0, right: 36.0, top: 16.0),
+              itemExtent: 45.0,
+              itemCount: suggestion.length < 5 ? suggestion.length : 5,
               itemBuilder: (context, position) {
                 return GestureDetector(
                   onTap: () {
@@ -234,24 +236,22 @@ class _HabitTabState extends State<HabitTab> {
                       DataHabitCreation().icon = icon;
                     });
                   },
-                  child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Icon(
-                            IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            suggestion[position][1],
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      )),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Icon(
+                        IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: 8.0,
+                      ),
+                      Text(
+                        suggestion[position][1],
+                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
