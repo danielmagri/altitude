@@ -5,9 +5,20 @@ class ScoreWidget extends AnimatedWidget {
 
   Widget build(BuildContext context) {
     final Animation<int> animation = listenable;
-    return Text(
-      animation.value.toString(),
-      style: TextStyle(fontSize: 55.0, color: Colors.white, fontWeight: FontWeight.bold),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: <Widget>[
+        Text(
+          animation.value.toString(),
+          style: TextStyle(fontSize: 55.0, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          "pts",
+          style: TextStyle(color: Colors.white),
+        )
+      ],
     );
   }
 }
