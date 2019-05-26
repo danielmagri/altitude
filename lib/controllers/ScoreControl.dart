@@ -4,7 +4,7 @@ import 'package:habit/objects/Frequency.dart';
 class ScoreControl {
   static final ScoreControl _singleton = new ScoreControl._internal();
 
-  final int fullDayPoint = 2;
+  final int fullDayPoint = 1;
   final int fullWeekPoint = 10;
 
   factory ScoreControl() {

@@ -260,8 +260,10 @@ class _NumericDialogState extends State<NumericDialog> {
 
     _dropDownMenuItems = getDropDownMenuItems();
     if (DataHabitCreation().progress.type == ProgressEnum.NUMBER) {
-      //_currentUnit = widget.unit != null ? widget.unit : _dropDownMenuItems[0].value;
+      _currentUnit = DataHabitCreation().progress.unit;
       _numberController.text = DataHabitCreation().progress.goal.toString();
+    } else {
+      _currentUnit = _units[0];
     }
   }
 
@@ -283,8 +285,8 @@ class _NumericDialogState extends State<NumericDialog> {
     String result = Validate.progressNumericTextValidate(_numberController.text);
 
     if (result == null) {
-      DataHabitCreation().progress =
-          new Progress(type: ProgressEnum.NUMBER, goal: int.tryParse(_numberController.text), progress: 0);
+      DataHabitCreation().progress = new Progress(
+          type: ProgressEnum.NUMBER, goal: int.tryParse(_numberController.text), progress: 0, unit: _currentUnit);
       Navigator.of(context).pop(true);
     } else {
       Fluttertoast.showToast(

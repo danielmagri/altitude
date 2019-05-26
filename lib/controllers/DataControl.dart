@@ -92,7 +92,7 @@ class DataControl {
     }
   }
 
-  Future<bool> setHabitProgress(int id, int progress) async {
+  Future<bool> setHabitProgress(int id, double progress) async {
     return await DatabaseService().updateProgress(id, progress);
   }
 }

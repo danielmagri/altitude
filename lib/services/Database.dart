@@ -93,8 +93,9 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE progress (
             type INTEGER NOT NULL,
-            progress INTEGER NOT NULL,
-            goal INTEGER NOT NULL,
+            progress REAL,
+            unit VARCHAR(45),
+            goal INTEGER,
             habit_id INTEGER NOT NULL,
             CONSTRAINT fk_progress_habit_id
               FOREIGN KEY (habit_id)
@@ -262,7 +263,7 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> updateProgress(int id, int progress) async {
+  Future<bool> updateProgress(int id, double progress) async {
     final db = await database;
 
     await db.rawInsert('UPDATE progress SET progress=$progress WHERE habit_id=$id;');
@@ -284,8 +285,9 @@ class DatabaseService {
                                                                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                    0);''');
 
-    await db.rawInsert('''INSERT INTO progress (type, progress, goal, habit_id) VALUES (${habit.progress.type.index},
+    await db.rawInsert('''INSERT INTO progress (type, progress, unit, goal, habit_id) VALUES (${habit.progress.type.index},
                                                                          ${habit.progress.progress},
+                                                                         \'${habit.progress.unit}\',
                                                                          ${habit.progress.goal},
                                                                          $id);''');
 

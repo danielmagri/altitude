@@ -81,7 +81,7 @@ class DoneDialog extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Qual é seu progresso? ",
+                            "  ",
                             style: TextStyle(color: Colors.black),
                           ),
                           Container(
