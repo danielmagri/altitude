@@ -124,7 +124,12 @@ class _RewardTabState extends State<RewardTab> {
                       style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  IconButton(icon: Icon(Icons.help_outline, color: Colors.white,), onPressed: showTutorial),
+                  IconButton(
+                      icon: Icon(
+                        Icons.help_outline,
+                        color: Colors.white,
+                      ),
+                      onPressed: showTutorial),
                 ],
               )),
           Container(
@@ -149,7 +154,9 @@ class _RewardTabState extends State<RewardTab> {
             flex: 8,
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
-              itemCount: suggestion.length,
+              padding: EdgeInsets.only(left: 36.0, right: 36.0, top: 16.0),
+              itemExtent: 45.0,
+              itemCount: suggestion.length < 5 ? suggestion.length : 5,
               itemBuilder: (context, position) {
                 return GestureDetector(
                   onTap: () {
@@ -167,12 +174,9 @@ class _RewardTabState extends State<RewardTab> {
                       FocusScope.of(context).requestFocus(_focusNode);
                     }
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(
-                      suggestion[position],
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-                    ),
+                  child: Text(
+                    suggestion[position],
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
                   ),
                 );
               },
