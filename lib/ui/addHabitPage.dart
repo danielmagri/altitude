@@ -3,8 +3,6 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitTabs/categoryTab.dart';
-import 'package:habit/ui/addHabitTabs/rewardTab.dart';
-import 'package:habit/ui/addHabitTabs/progressTab.dart';
 import 'package:habit/ui/addHabitTabs/cueTab.dart';
 import 'package:habit/ui/addHabitTabs/habitTab.dart';
 import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
@@ -82,15 +80,14 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
     }
   }
 
-  void cueTabTap(bool next) {
+  void endTap(bool next) {
     if (next) {
       Habit habit = new Habit(
           category: category,
           icon: DataHabitCreation().icon,
           cue: cueController.text,
           habit: habitController.text,
-          reward: rewardController.text,
-          progress: DataHabitCreation().progress);
+          reward: rewardController.text);
 
       DataControl().addHabit(habit, DataHabitCreation().frequency).then((result) {
         Navigator.pop(context);
@@ -119,8 +116,9 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
 
   void _nextPage(int delta) {
     if (delta == 1)
-      _pageController.nextPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
-    else if (delta == -1) _pageController.previousPage(duration: Duration(milliseconds: 1000), curve: Curves.bounceOut);
+      _pageController.nextPage(duration: Duration(milliseconds: 800), curve: Curves.easeInOutQuart);
+    else if (delta == -1)
+      _pageController.previousPage(duration: Duration(milliseconds: 800), curve: Curves.easeInOutQuart);
   }
 
   Future<bool> _onBackPressed(BuildContext context) async {
@@ -163,16 +161,6 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                     scrollDirection: Axis.vertical,
                     physics: NeverScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                     children: <Widget>[
-                      RewardTab(
-                        category: category,
-                        controller: rewardController,
-                        keyboard: _keyboardVisibility,
-                        onTap: onTap,
-                      ),
-                      ProgressTab(
-                        category: category,
-                        onTap: onTap,
-                      ),
                       HabitTab(
                         category: category,
                         controller: habitController,
@@ -187,7 +175,7 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
                         category: category,
                         controller: cueController,
                         keyboard: _keyboardVisibility,
-                        onTap: cueTabTap,
+                        onTap: endTap,
                       )
                     ],
                   )

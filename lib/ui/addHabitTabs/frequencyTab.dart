@@ -59,7 +59,7 @@ class _FrequencyTabState extends State<FrequencyTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 60.0, left: 8.0),
+          margin: EdgeInsets.only(top: 60.0, left: 16.0, right: 16.0),
           child: Text(
             "Qual a frequência do hábito?",
             style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w300),

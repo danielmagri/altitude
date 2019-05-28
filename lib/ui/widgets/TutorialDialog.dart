@@ -1,85 +1,81 @@
 import 'package:flutter/material.dart';
 
 class TutorialDialog extends StatelessWidget {
-  final String title;
-  final List<String> texts;
+  final List<TextSpan> texts;
 
   TutorialDialog({
-    @required this.title,
     @required this.texts,
   });
 
-  List<Widget> textWidget() {
-    List<Widget> widgets = new List();
-
-    for (String text in texts) {
-      widgets.add(
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 3.0),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 16.0, height: 1.2),
-          ),
-        ),
-      );
-    }
-
-    return widgets;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 0.0,
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      child: Container(
-        padding: EdgeInsets.all(16.0),
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(16.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10.0,
-              offset: const Offset(0.0, 10.0),
+      body: Stack(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              color: Colors.black.withOpacity(0.2),
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // To make the card compact
-          children: <Widget>[
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.w700,
+          ),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: const Offset(0.0, 10.0),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment(0.0, 0.0),
+                    height: 50,
+                    child: new Hero(
+                      tag: "help",
+                      child: Icon(
+                        Icons.help_outline,
+                        size: 42,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24.0),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: RichText(
+                        textAlign: TextAlign.justify,
+                        text: TextSpan(children: texts),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(fontSize: 18.0, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 16.0),
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: textWidget(),
-                ),
-              ),
-            ),
-            SizedBox(height: 24.0),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("Ok"),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

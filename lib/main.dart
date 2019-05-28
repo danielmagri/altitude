@@ -8,7 +8,6 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:habit/ui/widgets/DoneDialog.dart';
 import 'package:habit/utils/enums.dart';
 
 void main() {
@@ -141,8 +140,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
   Animation _animationDragComplete;
 
-  TextEditingController numberController = TextEditingController();
-
   List<Habit> habitsForToday = [];
   Person person;
   int previousScore = 0;
@@ -176,7 +173,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void dispose() {
     _controllerDragComplete.dispose();
     _controllerScore.dispose();
-    numberController.dispose();
     super.dispose();
   }
 
@@ -200,26 +196,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       for (int i = 0; i < habitsForToday.length; i++) {
         if (habitsForToday[i].id == id) {
-          if (habitsForToday[i].progress.type == ProgressEnum.NUMBER)
-            numberController.text = habitsForToday[i].progress.progress.toString();
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => DoneDialog(
-                  progress: habitsForToday[i].progress,
-                  controller: numberController,
-                ),
-          ).then((result) {
-            if (result != null) {
-              DataControl().setHabitProgress(id, result);
-            } else if (habitsForToday[i].progress.type == ProgressEnum.DAY) {
-              DataControl().setHabitProgress(id, habitsForToday[i].progress.progress + 1);
-            }
-            setState(() {
-              habitsForToday.removeAt(i);
-              person.score += earnedScore;
-            });
-            animateScore();
+          setState(() {
+            habitsForToday.removeAt(i);
+            person.score += earnedScore;
           });
+          animateScore();
           break;
         }
       }

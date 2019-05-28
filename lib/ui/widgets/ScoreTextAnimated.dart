@@ -16,7 +16,7 @@ class ScoreWidget extends AnimatedWidget {
         ),
         Text(
           "pts",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
         )
       ],
     );
