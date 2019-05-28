@@ -313,19 +313,51 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   String frequencyText() {
     if (widget.frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = widget.frequency;
-      return (freq.monday == 1 ? "Segunda, " : "") +
-          (freq.tuesday == 1 ? "Terça, " : "") +
-          (freq.wednesday == 1 ? "Quarta, " : "") +
-          (freq.thursday == 1 ? "Quinta, " : "") +
-          (freq.friday == 1 ? "Sexta, " : "") +
-          (freq.saturday == 1 ? "Sábado, " : "") +
-          (freq.sunday == 1 ? "Domingo, " : "");
+      String text = "";
+      bool hasOne = false;
+
+      if (freq.monday == 1) {
+        text += "Segunda";
+        hasOne = true;
+      }
+      if (freq.tuesday == 1) {
+        if (hasOne) text += ", ";
+        text += "Terça";
+        hasOne = true;
+      }
+      if (freq.wednesday == 1) {
+        if (hasOne) text += ", ";
+        text += "Quarta";
+        hasOne = true;
+      }
+      if (freq.thursday == 1) {
+        if (hasOne) text += ", ";
+        text += "Quinta";
+        hasOne = true;
+      }
+      if (freq.friday == 1) {
+        if (hasOne) text += ", ";
+        text += "Sexta";
+        hasOne = true;
+      }
+      if (freq.saturday == 1) {
+        if (hasOne) text += ", ";
+        text += "Sábado";
+        hasOne = true;
+      }
+      if (freq.sunday == 1) {
+        if (hasOne) text += ", ";
+        text += "Domingo";
+      }
+      return text;
     } else if (widget.frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = widget.frequency;
       return freq.daysTime.toString() + " vezes por semana";
     } else if (widget.frequency.runtimeType == FreqRepeating) {
       FreqRepeating freq = widget.frequency;
       return freq.daysTime.toString() + " vezes em " + freq.daysCycle.toString() + " dias";
+    } else {
+      return "";
     }
   }
 
