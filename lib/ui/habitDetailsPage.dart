@@ -5,11 +5,9 @@ import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
-import 'package:habit/objects/Progress.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/utils/enums.dart';
-import 'package:habit/ui/widgets/DoneDialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -47,7 +45,7 @@ class HeaderWidget extends StatelessWidget {
           backgroundColor: CategoryColors.getPrimaryColor(habit.category),
           textColor: Colors.white,
           fontSize: 16.0);
-    }else{
+    } else {
       setDoneHabit();
     }
   }
@@ -123,59 +121,6 @@ class HeaderWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class RewardWidget extends StatelessWidget {
-  RewardWidget({Key key, this.category, this.reward, this.progress}) : super(key: key);
-
-  final CategoryEnum category;
-  final String reward;
-  final Progress progress;
-
-  String _progressTypeText() {
-    switch (progress.type) {
-      case ProgressEnum.INFINITY:
-        return "Infinito";
-        break;
-      case ProgressEnum.NUMBER:
-        return "Número";
-        break;
-      case ProgressEnum.DAY:
-        return "Dias";
-        break;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Meta", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
-            Text("Meta: " + reward, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            Text("Tipo: " + _progressTypeText(),
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            progress.type != ProgressEnum.INFINITY
-                ? Text("Progresso: " + progress.progress.toString() + " de " + progress.goal.toString(),
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2))
-                : Container(),
-            progress.type != ProgressEnum.INFINITY
-                ? LinearProgressIndicator(
-                    value: progress.progress / progress.goal,
-                    valueColor: AlwaysStoppedAnimation<Color>(CategoryColors.getSecundaryColor(category)),
-                    backgroundColor: CategoryColors.getPrimaryColor(category).withOpacity(0.5),
-                  )
-                : Container(),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -315,9 +260,6 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
 
-  TextEditingController numberController = TextEditingController();
-
-  Progress progress;
   int score;
   int previousScore = 0;
   Map<DateTime, List> markedDays;
@@ -326,7 +268,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   initState() {
     super.initState();
 
-    progress = widget.habit.progress;
     score = widget.habit.score;
     markedDays = widget.markedDays;
 
@@ -361,28 +302,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
-      if (widget.habit.progress.type == ProgressEnum.NUMBER)
-        numberController.text = widget.habit.progress.progress.toString();
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => DoneDialog(
-          progress: widget.habit.progress,
-          controller: numberController,
-        ),
-      ).then((result) {
-        if (result != null) {
-          progress.progress = result;
-          DataControl().setHabitProgress(widget.habit.id, result);
-        } else if (widget.habit.progress.type == ProgressEnum.DAY) {
-          DataControl().setHabitProgress(widget.habit.id, widget.habit.progress.progress + 1);
-          progress.progress++;
-        }
-        setState(() {
-          score += earnedScore;
-          markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
-        });
-        animateScore();
+      setState(() {
+        score += earnedScore;
+        markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
       });
+      animateScore();
     });
   }
 
@@ -454,12 +378,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
                   ),
-                  RewardWidget(
-                    category: widget.habit.category,
-                    reward: widget.habit.reward,
-                    progress: progress,
-                  ),
-                  Divider(),
                   CueWidget(
                     cue: widget.habit.cue,
                   ),

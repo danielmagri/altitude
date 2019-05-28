@@ -1,5 +1,4 @@
 import 'package:habit/utils/enums.dart';
-import 'package:habit/objects/Progress.dart';
 
 class Habit {
   final int id;
@@ -12,7 +11,6 @@ class Habit {
   final int cycle;
   final DateTime initialDate;
   final int daysDone;
-  final Progress progress;
 
   Habit(
       {this.id,
@@ -24,8 +22,7 @@ class Habit {
       this.score,
       this.cycle,
       this.initialDate,
-      this.daysDone,
-      this.progress});
+      this.daysDone});
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
@@ -39,8 +36,7 @@ class Habit {
       initialDate: json.containsKey("initial_date") && json["initial_date"] != null
           ? DateTime.parse(json["initial_date"])
           : null,
-      daysDone: json["days_done"],
-      progress: json.containsKey("progress") ? Progress.fromJson(json) : null);
+      daysDone: json["days_done"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,

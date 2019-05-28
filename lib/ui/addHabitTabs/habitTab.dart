@@ -32,7 +32,7 @@ class _HabitTabState extends State<HabitTab> {
     super.initState();
 
     _focusNode = FocusNode();
-    suggestion = Suggestions.getHabits(widget.category);
+    suggestion = getSuggestions();
 
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
@@ -62,38 +62,58 @@ class _HabitTabState extends State<HabitTab> {
   }
 
   Future showTutorial() async {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => new TutorialDialog(
-            title: "Qual será seu hábito?",
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        transitionDuration: Duration(milliseconds: 300),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                Widget child) =>
+            new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+        pageBuilder: (BuildContext context, _, __) {
+          return TutorialDialog(
             texts: [
-              "Para alcançarmos nossa meta temos que realizar uma tarefa diversas vezes.",
-              "Uma tarefa realizada várias vezes passa a ser um hábito, assim fica fácil chegarmos até nosso objetivo bem facinho!",
-              "Nos defina uma tarefa que você deseja finalizar constantemente."
+              TextSpan(
+                text:
+                    "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano e depois com que frequência deseja realizá-lo.",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+              ),
+              TextSpan(
+                text: "\n\n  O segredo para conseguir construir um hábito é ",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+              ),
+              TextSpan(
+                text: "criar um ritual e sempre fazer a mesma coisa.",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+              ),
             ],
-          ),
-    );
+          );
+        }));
+  }
+
+  List getSuggestions() {
+    List result = new List();
+    List data = Suggestions.getHabits(widget.category);
+    String habit = widget.controller.text.toLowerCase();
+
+    for (int i = 0; i < data.length; i++) {
+      if (data[i][1].toLowerCase().contains(habit) && data[i][1].toLowerCase() != habit) {
+        result.add(data[i]);
+      }
+    }
+
+    return result;
   }
 
   void _onTextChanged() {
-    List result = new List();
-    List data = Suggestions.getHabits(widget.category);
-    String reward = widget.controller.text.toLowerCase();
+    String habit = widget.controller.text.toLowerCase();
 
-    if (reward.length == 1 && _iconHelpOpacity != 1) {
+    if (habit.length == 1 && _iconHelpOpacity != 1) {
       setState(() {
         _iconHelpOpacity = 1;
       });
     }
 
-    for (int i = 0; i < data.length; i++) {
-      if (data[i][1].toLowerCase().contains(reward)) {
-        result.add(data[i]);
-      }
-    }
-
     setState(() {
-      suggestion = result;
+      suggestion = getSuggestions();
     });
   }
 
@@ -116,174 +136,177 @@ class _HabitTabState extends State<HabitTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
-      child: Column(
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
-              width: double.maxFinite,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      "Qual será seu hábito?",
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                    ),
+    return Column(
+      children: <Widget>[
+        Container(
+            margin: EdgeInsets.only(top: 60.0, left: 16.0, bottom: 60.0),
+            width: double.maxFinite,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    "Qual será seu hábito?",
+                    style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w300),
                   ),
-                  IconButton(
-                      icon: Icon(
+                ),
+                IconButton(
+                    icon: new Hero(
+                      tag: "help",
+                      child: Icon(
                         Icons.help_outline,
                         color: Colors.white,
                       ),
-                      onPressed: showTutorial),
-                ],
-              )),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
-            margin: const EdgeInsets.symmetric(horizontal: 20.0),
-            decoration: BoxDecoration(
-              color: CategoryColors.getSecundaryColor(widget.category),
-              borderRadius: BorderRadius.circular(30.0),
-              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
-            ),
-            child: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                TextField(
-                  controller: widget.controller,
-                  focusNode: _focusNode,
-                  textInputAction: TextInputAction.go,
-                  onEditingComplete: _validate,
-                  style: TextStyle(fontSize: 16.0),
-                  decoration: InputDecoration(
-                    icon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _iconHelpOpacity = 0.0;
-                        });
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => CustomDialog(),
-                        ).then((result) {
-                          if (result != -1) {
-                            setState(() {
-                              DataHabitCreation().icon = result;
-                            });
-                          }
-                        });
-                      },
-                      child: Icon(
-                        IconData(DataHabitCreation().icon, fontFamily: 'MaterialIcons'),
-                        color: Colors.white,
-                      ),
+                      placeholderBuilder: (context, widget) => widget,
                     ),
-                    hintText: "Escreva aqui",
-                    hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
-                    border: InputBorder.none,
-                  ),
-                ),
-                Positioned(
-                  top: -29,
-                  left: 16,
-                  child: AnimatedOpacity(
-                    opacity: _iconHelpOpacity,
-                    duration: Duration(milliseconds: 500),
-                    child: Container(
-                      padding: EdgeInsets.all(6.0),
-                      child: Text(
-                        "Clique aqui para alterar o ícone",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10.0),
-                              topLeft: Radius.circular(10.0),
-                              bottomRight: Radius.circular(10.0))),
+                    onPressed: showTutorial),
+              ],
+            )),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+          margin: const EdgeInsets.symmetric(horizontal: 20.0),
+          decoration: BoxDecoration(
+            color: CategoryColors.getSecundaryColor(widget.category),
+            borderRadius: BorderRadius.circular(30.0),
+            boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
+          ),
+          child: Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              TextField(
+                controller: widget.controller,
+                focusNode: _focusNode,
+                textInputAction: TextInputAction.go,
+                onEditingComplete: _validate,
+                style: TextStyle(fontSize: 16.0),
+                decoration: InputDecoration(
+                  icon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _iconHelpOpacity = 0.0;
+                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => CustomDialog(),
+                      ).then((result) {
+                        if (result != -1) {
+                          setState(() {
+                            DataHabitCreation().icon = result;
+                          });
+                        }
+                      });
+                    },
+                    child: Icon(
+                      IconData(DataHabitCreation().icon, fontFamily: 'MaterialIcons'),
+                      color: Colors.white,
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 8,
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.only(left: 36.0, right: 36.0, top: 16.0),
-              itemExtent: 45.0,
-              itemCount: suggestion.length < 5 ? suggestion.length : 5,
-              itemBuilder: (context, position) {
-                return GestureDetector(
-                  onTap: () {
-                    String text = suggestion[position][1];
-                    int icon = suggestion[position][0];
-                    int cursor = text.indexOf('_');
-
-                    text = text.replaceFirst('_', '');
-
-                    widget.controller.value =
-                        new TextEditingValue(text: text, selection: TextSelection.collapsed(offset: cursor));
-
-                    if (cursor == -1) {
-                      _focusNode.unfocus();
-                    } else {
-                      FocusScope.of(context).requestFocus(_focusNode);
-                    }
-
-                    setState(() {
-                      DataHabitCreation().icon = icon;
-                    });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Icon(
-                        IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
+                  hintText: "Escreva seu hábito aqui",
+                  hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
+                  border: InputBorder.none,
+                ),
+              ),
+              Positioned(
+                top: -29,
+                left: 16,
+                child: AnimatedOpacity(
+                  opacity: _iconHelpOpacity,
+                  duration: Duration(milliseconds: 500),
+                  child: Container(
+                    padding: EdgeInsets.all(6.0),
+                    child: Text(
+                      "Clique aqui para alterar o ícone",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    decoration: BoxDecoration(
                         color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
-                      Text(
-                        suggestion[position][1],
-                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-                      ),
-                    ],
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10.0),
+                            topLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0))),
                   ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                RaisedButton(
-                  color: CategoryColors.getSecundaryColor(widget.category),
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                  elevation: 5.0,
-                  onPressed: () {
-                    widget.onTap(false);
-                  },
-                  child: const Text("VOLTAR"),
                 ),
-                RaisedButton(
-                  color: CategoryColors.getSecundaryColor(widget.category),
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                  elevation: 5.0,
-                  onPressed: _validate,
-                  child: const Text("AVANÇAR"),
-                ),
-              ],
-            ),
+              )
+            ],
           ),
-        ],
-      ),
+        ),
+        Expanded(
+          flex: 8,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.only(left: 36.0, right: 36.0, top: 16.0),
+            itemExtent: 45.0,
+            itemCount: suggestion.length < 5 ? suggestion.length : 5,
+            itemBuilder: (context, position) {
+              return GestureDetector(
+                onTap: () {
+                  String text = suggestion[position][1];
+                  int icon = suggestion[position][0];
+                  int cursor = text.indexOf('_');
+
+                  text = text.replaceFirst('_', '');
+
+                  widget.controller.value =
+                      new TextEditingValue(text: text, selection: TextSelection.collapsed(offset: cursor));
+
+                  if (cursor == -1) {
+                    _focusNode.unfocus();
+                  } else {
+                    FocusScope.of(context).requestFocus(_focusNode);
+                  }
+
+                  setState(() {
+                    DataHabitCreation().icon = icon;
+                    _iconHelpOpacity = 0.0;
+                  });
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Icon(
+                      IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 8.0,
+                    ),
+                    Text(
+                      suggestion[position][1],
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              RaisedButton(
+                color: CategoryColors.getSecundaryColor(widget.category),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                elevation: 5.0,
+                onPressed: () {
+                  widget.onTap(false);
+                },
+                child: const Text("VOLTAR"),
+              ),
+              RaisedButton(
+                color: CategoryColors.getSecundaryColor(widget.category),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                elevation: 5.0,
+                onPressed: _validate,
+                child: const Text("AVANÇAR"),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

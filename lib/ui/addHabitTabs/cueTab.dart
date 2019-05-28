@@ -31,7 +31,7 @@ class _CueTabState extends State<CueTab> {
     super.initState();
 
     _focusNode = FocusNode();
-    suggestion = Suggestions.getCues(widget.category);
+    suggestion = getSuggestion();
 
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
@@ -61,32 +61,64 @@ class _CueTabState extends State<CueTab> {
   }
 
   Future showTutorial() async {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => new TutorialDialog(
-            title: "Qual será sua deixa?",
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        transitionDuration: Duration(milliseconds: 300),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+            Widget child) =>
+        new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+        pageBuilder: (BuildContext context, _, __) {
+          return TutorialDialog(
             texts: [
-              "Pesquisas nos mostram que temos mais fácilidade em criar hábitos se nós sempre executarmos uma mesma ação que os inicia.",
-              "Seja ela amarrar o tênis antes de sair para correr, estralar os dedos antes de digitar, colocar o livro na cabiceira...",
-              "Uma deixa para começar sua ativdade vai facilitar completamente a adesão do hábito. Isso é incrível!",
-              "Nos defina qual será sua deixa! Temos mais alguns exemplos que te ajudará a criar-lá."
+              TextSpan(
+                text:
+                "  Todo hábito precisa de uma \"deixa\" para que ele se inicie.. mas o que seria essa deixa?",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+              ),
+              TextSpan(text: "\n  A deixa é uma ação que estímula seu cérebro a realizar alguma ação (um hábito).",
+              style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),),
+              TextSpan(
+                text: " Por exemplo ao deixar sua roupa de corrida do lado da cama pode uma ótima forma de iniciar seu hábito de correr de manhã.",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+              ),
+              TextSpan(
+                text: "\n\n  Qual seria uma deixa (ação) a ser tomada para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
+                style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+              ),
             ],
-          ),
-    );
+          );
+        }));
+//    showDialog<String>(
+//      context: context,
+//      builder: (BuildContext context) => new TutorialDialog(
+//            title: "Qual será sua deixa?",
+//            texts: [
+//              "Pesquisas nos mostram que temos mais fácilidade em criar hábitos se nós sempre executarmos uma mesma ação que os inicia.",
+//              "Seja ela amarrar o tênis antes de sair para correr, estralar os dedos antes de digitar, colocar o livro na cabiceira...",
+//              "Uma deixa para começar sua ativdade vai facilitar completamente a adesão do hábito. Isso é incrível!",
+//              "Nos defina qual será sua deixa! Temos mais alguns exemplos que te ajudará a criar-lá."
+//            ],
+//          ),
+//    );
   }
 
-  void _onTextChanged() {
+  List getSuggestion() {
     List result = new List();
-    String reward = widget.controller.text.toLowerCase();
+    String cue = widget.controller.text.toLowerCase();
 
     for (String text in Suggestions.getCues(widget.category)) {
-      if (text.toLowerCase().contains(reward)) {
+      if (text.toLowerCase().contains(cue) && text.toLowerCase() != cue) {
         result.add(text);
       }
     }
 
+    return result;
+  }
+
+  void _onTextChanged() {
     setState(() {
-      suggestion = result;
+      suggestion = getSuggestion();
     });
   }
 
@@ -114,20 +146,24 @@ class _CueTabState extends State<CueTab> {
       child: Column(
         children: <Widget>[
           Container(
-              margin: EdgeInsets.only(top: 64.0, left: 32.0, bottom: 12.0),
+              margin: EdgeInsets.only(top: 60.0, left: 16.0, bottom: 60.0),
               width: double.maxFinite,
               child: Row(
                 children: <Widget>[
                   Expanded(
                     child: Text(
                       "Qual será sua deixa?",
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w300),
                     ),
                   ),
                   IconButton(
-                      icon: Icon(
-                        Icons.help_outline,
-                        color: Colors.white,
+                      icon: new Hero(
+                        tag: "help",
+                        child: Icon(
+                          Icons.help_outline,
+                          color: Colors.white,
+                        ),
+                        placeholderBuilder: (context, widget) => widget,
                       ),
                       onPressed: showTutorial),
                 ],
@@ -147,7 +183,7 @@ class _CueTabState extends State<CueTab> {
               onEditingComplete: validate,
               style: TextStyle(fontSize: 16.0),
               decoration: InputDecoration.collapsed(
-                  hintText: "Escreva aqui", hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
+                  hintText: "Escreva aqui sua deixa", hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
             ),
           ),
           Expanded(
@@ -200,10 +236,10 @@ class _CueTabState extends State<CueTab> {
                 RaisedButton(
                   color: CategoryColors.getSecundaryColor(widget.category),
                   shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 42.0, vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                   elevation: 5.0,
                   onPressed: validate,
-                  child: const Text("CRIAR"),
+                  child: const Text("AVANÇAR"),
                 ),
               ],
             ),

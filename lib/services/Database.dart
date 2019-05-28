@@ -91,19 +91,6 @@ class DatabaseService {
               ON UPDATE NO ACTION);''');
 
     await db.execute('''
-          CREATE TABLE progress (
-            type INTEGER NOT NULL,
-            progress REAL,
-            unit VARCHAR(45),
-            goal INTEGER,
-            habit_id INTEGER NOT NULL,
-            CONSTRAINT fk_progress_habit_id
-              FOREIGN KEY (habit_id)
-              REFERENCES habit(id)
-              ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
-
-    await db.execute('''
           CREATE TABLE day_done (
             done TINYINT NOT NULL,
             cycle INTEGER NOT NULL,
@@ -140,7 +127,7 @@ class DatabaseService {
   Future<Habit> getHabit(int id) async {
     final db = await database;
 
-    var result = await db.rawQuery('SELECT * FROM habit AS h, progress AS p WHERE h.id=$id AND p.habit_id=h.id;');
+    var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
 
     if (result.isNotEmpty) {
       return Habit.fromJson(result.first);
@@ -187,7 +174,7 @@ class DatabaseService {
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT h.id, h.category, h.habit_text, h.cycle, h.icon, p.* FROM habit AS h, progress AS p WHERE p.habit_id=h.id AND h.id IN (
+        SELECT id, category, habit_text, cycle, icon FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
 							 UNION ALL
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
@@ -263,14 +250,6 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> updateProgress(int id, double progress) async {
-    final db = await database;
-
-    await db.rawInsert('UPDATE progress SET progress=$progress WHERE habit_id=$id;');
-
-    return true;
-  }
-
   Future<bool> addHabit(Habit habit, dynamic frequency) async {
     DateTime now = new DateTime.now();
     final db = await database;
@@ -284,12 +263,6 @@ class DatabaseService {
                                                                                                                    1,
                                                                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                    0);''');
-
-    await db.rawInsert('''INSERT INTO progress (type, progress, unit, goal, habit_id) VALUES (${habit.progress.type.index},
-                                                                         ${habit.progress.progress},
-                                                                         \'${habit.progress.unit}\',
-                                                                         ${habit.progress.goal},
-                                                                         $id);''');
 
     if (frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = frequency;
