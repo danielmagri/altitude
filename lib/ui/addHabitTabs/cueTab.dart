@@ -89,18 +89,6 @@ class _CueTabState extends State<CueTab> {
             ],
           );
         }));
-//    showDialog<String>(
-//      context: context,
-//      builder: (BuildContext context) => new TutorialDialog(
-//            title: "Qual será sua deixa?",
-//            texts: [
-//              "Pesquisas nos mostram que temos mais fácilidade em criar hábitos se nós sempre executarmos uma mesma ação que os inicia.",
-//              "Seja ela amarrar o tênis antes de sair para correr, estralar os dedos antes de digitar, colocar o livro na cabiceira...",
-//              "Uma deixa para começar sua ativdade vai facilitar completamente a adesão do hábito. Isso é incrível!",
-//              "Nos defina qual será sua deixa! Temos mais alguns exemplos que te ajudará a criar-lá."
-//            ],
-//          ),
-//    );
   }
 
   List getSuggestion() {

@@ -8,20 +8,32 @@ import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habit/ui/tutorialPage.dart';
 
-void main() {
+void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool showTutorial = false;
+  if (prefs.getBool("appTutorial") == null) showTutorial = true;
+  runApp(MyApp(
+    showTutorial: showTutorial,
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  final bool showTutorial;
+
+  MyApp({
+    @required this.showTutorial,
+  });
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Habitos',
       theme: ThemeData(fontFamily: 'Montserrat'),
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: showTutorial ? TutorialPage() : MainPage(),
     );
   }
 }
@@ -50,7 +62,7 @@ class HeaderWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                " " + name,
+                name,
                 style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.w300),
               ),
               ScoreWidget(
@@ -220,75 +232,76 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-          body: Stack(
-        children: <Widget>[
-          SlidingUpPanel(
-            margin: EdgeInsets.only(left: 10.0, right: 10.0),
-            minHeight: 60.0,
-            controller: _panelController,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-            backdropEnabled: true,
-            panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
-            body: Stack(
-              children: <Widget>[
-                Container(
-                  height: 205.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
-                  ),
-                  child: new BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                    child: new Container(
-                      decoration: new BoxDecoration(color: Colors.black.withOpacity(0.2)),
+        body: Stack(
+          children: <Widget>[
+            SlidingUpPanel(
+              margin: EdgeInsets.only(left: 10.0, right: 10.0),
+              minHeight: 60.0,
+              controller: _panelController,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+              backdropEnabled: true,
+              panel: FutureBuilder(future: DataControl().getAllHabits(), builder: _bottomSheetBuild),
+              body: Stack(
+                children: <Widget>[
+                  Container(
+                    height: 205.0,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(image: AssetImage('assets/category/fisico.png'), fit: BoxFit.cover),
+                    ),
+                    child: new BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: new Container(
+                        decoration: new BoxDecoration(color: Colors.black.withOpacity(0.2)),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 180.0),
-                  decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.5))],
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-                    color: Colors.white,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(top: 15.0),
-                          child: Text(
-                            "Hábitos de hoje",
-                            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+                  Container(
+                    margin: EdgeInsets.only(top: 180.0),
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.5))],
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                      color: Colors.white,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(top: 15.0),
+                            child: Text(
+                              "Hábitos de hoje",
+                              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Center(
-                              child:
-                                  FutureBuilder(future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
-                        ),
-                        SizedBox(
-                          height: 60.0,
-                        ),
-                      ],
+                          Expanded(
+                            child: Center(
+                                child: FutureBuilder(
+                                    future: DataControl().getHabitsToday(), builder: _habitsForTodayBuild)),
+                          ),
+                          SizedBox(
+                            height: 60.0,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 200.0,
-                  width: double.maxFinite,
-                  child: HeaderWidget(
-                    name: person.name,
-                    score: person.score,
-                    previousScore: previousScore,
-                    controller: _controllerScore,
+                  Container(
+                    height: 200.0,
+                    width: double.maxFinite,
+                    child: HeaderWidget(
+                      name: person.name,
+                      score: person.score,
+                      previousScore: previousScore,
+                      controller: _controllerScore,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          DragComplete(onAccept: onAccept, animation: _animationDragComplete),
-        ],
-      )),
+            DragComplete(onAccept: onAccept, animation: _animationDragComplete),
+          ],
+        ),
+      ),
     );
   }
 
@@ -300,7 +313,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     } else {
       habitsForToday = snapshot.data;
       if (habitsForToday.length == 0) {
-        widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+        widgets.add(
+          Center(
+            child: Text(
+              "Não tem hábitos para serem feitos hoje",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+            ),
+          ),
+        );
       } else {
         for (Habit habit in habitsForToday) {
           Widget habitWidget = HabitWidget(
@@ -341,7 +362,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       widgets.add(Center(child: CircularProgressIndicator()));
     } else {
       if (snapshot.data.length == 0) {
-        widgets.add(Center(child: Text("Já foram feitos todos os hábitos de hoje :)")));
+        widgets.add(
+          Center(
+            child: Text(
+              "Crie um novo hábito pelo botão \"+\"",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+            ),
+          ),
+        );
       } else {
         for (Habit habit in snapshot.data) {
           widgets.add(HabitWidget(

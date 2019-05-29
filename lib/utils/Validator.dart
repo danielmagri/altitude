@@ -1,4 +1,17 @@
 abstract class Validate {
+  static String nameTextValidate(String text) {
+    String treatedText = text.trim();
+    if (treatedText.isEmpty) {
+      return "Por favor preencha o campo.";
+    } else if (treatedText.length < 3) {
+      return "O nome ser maior que 3 letras.";
+    } else if (treatedText.length > 20) {
+      return "O nome pode ter no máximo 20 caracteres.";
+    }
+
+    return null;
+  }
+
   static String cueTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {

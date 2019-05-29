@@ -109,11 +109,18 @@ class DatabaseService {
     var result = await db.rawQuery('SELECT * FROM person;');
 
     if (result.isNotEmpty) {
-      return Person.fromJson(result.first);
+      return Person.fromJson(result.last);
     } else {
-      await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'Teste\', 0);');
-      return Person(name: "Teste", score: 0);
+      return Person(name: "", score: 0);
     }
+  }
+
+  Future<bool> setPerson(String name) async {
+    final db = await database;
+
+    await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'$name\', 0);');
+
+    return true;
   }
 
   Future<List> getAllHabits() async {
