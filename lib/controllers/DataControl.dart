@@ -21,6 +21,10 @@ class DataControl {
     return await DatabaseService().getPerson();
   }
 
+  Future<bool> setPerson(String name) async {
+    return await DatabaseService().setPerson(name);
+  }
+
   // ***** HABIT *****
   Future<List<Habit>> getAllHabits() async {
     return await DatabaseService().getAllHabits();
