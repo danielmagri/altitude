@@ -339,14 +339,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               cue: widget.habit.cue,
               color: CategoryColors.getSecundaryColor(widget.habit.category),
             ),
-            Divider(color: Colors.grey),
             CoolDataWidget(
               initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
               daysDone: widget.habit.daysDone,
               cycles: widget.habit.cycle,
               color: CategoryColors.getSecundaryColor(widget.habit.category),
             ),
-            Divider(color: Colors.grey),
             CalendarWidget(
               markedDays: markedDays,
               color: CategoryColors.getSecundaryColor(widget.habit.category),
