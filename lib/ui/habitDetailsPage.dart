@@ -7,128 +7,13 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:habit/utils/enums.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class HeaderWidget extends StatelessWidget {
-  HeaderWidget(
-      {Key key,
-      this.habit,
-      this.frequency,
-      this.fromAllHabits,
-      this.score,
-      this.previousScore,
-      this.done,
-      this.setDoneHabit,
-      this.controller})
-      : animation = IntTween(begin: previousScore, end: score)
-            .animate(CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn)),
-        super(key: key);
-
-  final AnimationController controller;
-  final Habit habit;
-  final bool fromAllHabits;
-  final dynamic frequency;
-  final int score;
-  final int previousScore;
-  final bool done;
-  final Function setDoneHabit;
-  final Animation<int> animation;
-
-  void _doneIconTap() {
-    if (done) {
-      Fluttertoast.showToast(
-          msg: "Você já completou esse hábito hoje",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: CategoryColors.getPrimaryColor(habit.category),
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else {
-      setDoneHabit();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        SizedBox(
-          height: 70.0,
-          child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Expanded(
-              child: Align(alignment: Alignment(-1.0, 1.0), child: BackButton(color: Colors.white)),
-            ),
-            IconButton(icon: Icon(Icons.check, color: Colors.white), onPressed: _doneIconTap),
-            IconButton(
-                icon: Icon(Icons.edit, color: Colors.white),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return EditHabitPage(
-                      habit: habit,
-                      frequency: frequency,
-                    );
-                  }));
-                }),
-          ]),
-        ),
-        Expanded(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                width: 90.0,
-                height: 90.0,
-                margin: EdgeInsets.only(left: 15.0),
-                alignment: Alignment(0.0, 0.0),
-                child: Hero(
-                  tag: fromAllHabits ? habit.id + 1000 : habit.id,
-                  transitionOnUserGestures: true,
-                  child: Icon(
-                    IconData(habit.icon, fontFamily: 'MaterialIcons'),
-                    size: 40.0,
-                    color: Colors.white,
-                  ),
-                ),
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: CategoryColors.getPrimaryColor(habit.category),
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 8.0, right: 8.0, top: habit.habit.length < 20 ? 10.0 : 0.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        habit.habit,
-                        softWrap: true,
-                        textAlign: TextAlign.end,
-                        style: TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.w300, height: 0.8),
-                      ),
-                      ScoreWidget(
-                        animation: animation,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class CueWidget extends StatelessWidget {
-  CueWidget({Key key, this.cue}) : super(key: key);
+  CueWidget({Key key, this.cue, this.color}) : super(key: key);
 
   final String cue;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +25,9 @@ class CueWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Deixa", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text("Deixa",
+                style: TextStyle(
+                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
           ],
         ),
@@ -150,11 +37,12 @@ class CueWidget extends StatelessWidget {
 }
 
 class CoolDataWidget extends StatelessWidget {
-  CoolDataWidget({Key key, this.initialDate, this.daysDone, this.cycles}) : super(key: key);
+  CoolDataWidget({Key key, this.initialDate, this.daysDone, this.cycles, this.color}) : super(key: key);
 
   final DateTime initialDate;
   final int daysDone;
   final int cycles;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +54,9 @@ class CoolDataWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Informações Legais", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text("Informações Legais",
+                style: TextStyle(
+                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             Text(
                 "Começou em " +
                     initialDate.day.toString().padLeft(2, '0') +
@@ -187,9 +77,10 @@ class CoolDataWidget extends StatelessWidget {
 }
 
 class CalendarWidget extends StatelessWidget {
-  CalendarWidget({Key key, @required this.markedDays}) : super(key: key);
+  CalendarWidget({Key key, @required this.markedDays, this.color}) : super(key: key);
 
   final Map<DateTime, List> markedDays;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -201,20 +92,16 @@ class CalendarWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Dias feito", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4)),
+            Text("Dias feito",
+                style: TextStyle(
+                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             TableCalendar(
               events: markedDays,
               formatAnimation: FormatAnimation.slide,
               startingDayOfWeek: StartingDayOfWeek.sunday,
               availableGestures: AvailableGestures.horizontalSwipe,
               forcedCalendarFormat: CalendarFormat.month,
-              calendarStyle: CalendarStyle(
-                selectedColor: Colors.deepOrange[400],
-                todayColor: Colors.deepOrange[200],
-                markersPositionBottom: 15,
-                markersMaxAmount: 1,
-                markersColor: Colors.brown[700],
-              ),
+              rowHeight: 40,
               builders: CalendarBuilders(markersBuilder: (context, date, event, list) {
                 return <Widget>[
                   Container(
@@ -223,17 +110,36 @@ class CalendarWidget extends StatelessWidget {
                         style: TextStyle(color: Colors.white),
                       ),
                       alignment: Alignment(0.0, 0.0),
-                      margin: EdgeInsets.all(5.0),
+                      margin: EdgeInsets.only(top: 5, bottom: 5, left: event[0] ? 0 : 5, right: event[1] ? 0 : 5),
                       decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.green,
+                        borderRadius: BorderRadius.horizontal(
+                            left: event[0] ? Radius.circular(0) : Radius.circular(20),
+                            right: event[1] ? Radius.circular(0) : Radius.circular(20)),
+                        color: color,
                       ))
                 ];
+              }, selectedDayBuilder: (context, date, list) {
+                return Container(
+                  child: Text(
+                    date.day.toString(),
+                  ),
+                  alignment: Alignment(0.0, 0.0),
+                );
+              }, todayDayBuilder: (context, date, list) {
+                return Container(
+                  child: Text(
+                    date.day.toString(),
+                  ),
+                  alignment: Alignment(0.0, 0.0),
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, border: Border.all(color: color, width: 2)),
+                );
               }),
               headerStyle: HeaderStyle(
                 formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
                 formatButtonDecoration: BoxDecoration(
-                  color: Colors.deepOrange[400],
+                  color: color,
                   borderRadius: BorderRadius.circular(16.0),
                 ),
               ),
@@ -301,13 +207,33 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   void setDoneHabit() {
-    DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
-      setState(() {
-        score += earnedScore;
-        markedDays.putIfAbsent(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), () => ['']);
+    if (hasDoneToday()) {
+      Fluttertoast.showToast(
+          msg: "Você já completou esse hábito hoje",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: CategoryColors.getPrimaryColor(widget.habit.category),
+          textColor: Colors.white,
+          fontSize: 16.0);
+    } else {
+      DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
+        DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+        bool before;
+        if (markedDays.length - 1 >= 0 && markedDays.containsKey(now.subtract(Duration(days: 1)))) {
+          markedDays[now.subtract(Duration(days: 1))] = [markedDays[now.subtract(Duration(days: 1))][0], true];
+          before = true;
+        } else {
+          before = false;
+        }
+
+        setState(() {
+          score += earnedScore;
+          markedDays.putIfAbsent(now, () => [before, false]);
+        });
+        animateScore();
       });
-      animateScore();
-    });
+    }
   }
 
   String frequencyText() {
@@ -361,85 +287,134 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     }
   }
 
-  AssetImage _getBackgroundImage() {
-    switch (widget.habit.category) {
-      case CategoryEnum.PHYSICAL:
-        return AssetImage('assets/category/fisico.png');
-        break;
-      case CategoryEnum.MENTAL:
-        return AssetImage('assets/category/mental.png');
-        break;
-      case CategoryEnum.SOCIAL:
-        return AssetImage('assets/category/social.png');
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: 205.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(image: _getBackgroundImage(), fit: BoxFit.cover),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 70.0,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                BackButton(color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                Spacer(),
+                IconButton(
+                    icon: Icon(Icons.check, size: 34, color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                    onPressed: setDoneHabit),
+                SizedBox(
+                  width: 8,
+                ),
+                IconButton(
+                    icon: Icon(Icons.edit, size: 30, color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return EditHabitPage(
+                          habit: widget.habit,
+                          frequency: widget.frequency,
+                        );
+                      }));
+                    }),
+              ]),
             ),
-            child: new BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: new Container(
-                decoration: new BoxDecoration(color: Colors.black.withOpacity(0.05)),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 180.0),
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.5))],
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-              color: Colors.white,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0)),
-              child: ListView(
-                padding: EdgeInsets.only(top: 20.0, bottom: 10.0),
-                physics: BouncingScrollPhysics(),
-                children: <Widget>[
-                  Text(
-                    frequencyText(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
-                  ),
-                  CueWidget(
-                    cue: widget.habit.cue,
-                  ),
-                  Divider(),
-                  CoolDataWidget(
-                    initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
-                    daysDone: widget.habit.daysDone,
-                    cycles: widget.habit.cycle,
-                  ),
-                  Divider(),
-                  CalendarWidget(
-                    markedDays: markedDays,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            height: 200.0,
-            width: double.maxFinite,
-            child: HeaderWidget(
-              habit: widget.habit,
-              frequency: widget.frequency,
-              fromAllHabits: widget.fromAllHabits,
+            HeaderWidget(
+              name: widget.habit.habit,
               score: score,
               previousScore: previousScore,
-              done: hasDoneToday(),
-              setDoneHabit: setDoneHabit,
-              controller: _controllerScore,
+              color: CategoryColors.getSecundaryColor(widget.habit.category),
+              controllerScore: _controllerScore,
             ),
+            Container(
+              height: 1,
+              color: Colors.grey,
+              width: double.maxFinite,
+              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            ),
+            Text(
+              frequencyText(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
+            ),
+            CueWidget(
+              cue: widget.habit.cue,
+              color: CategoryColors.getSecundaryColor(widget.habit.category),
+            ),
+            Divider(color: Colors.grey),
+            CoolDataWidget(
+              initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
+              daysDone: widget.habit.daysDone,
+              cycles: widget.habit.cycle,
+              color: CategoryColors.getSecundaryColor(widget.habit.category),
+            ),
+            Divider(color: Colors.grey),
+            CalendarWidget(
+              markedDays: markedDays,
+              color: CategoryColors.getSecundaryColor(widget.habit.category),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HeaderWidget extends StatelessWidget {
+  HeaderWidget({Key key, this.name, this.score, this.previousScore, this.color, this.controllerScore}) : super(key: key);
+
+  final String name;
+  final int score;
+  final int previousScore;
+  final Color color;
+  final controllerScore;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 130,
+      alignment: Alignment(0.0, 0.5),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 100.0,
+            height: 90.0,
+            alignment: Alignment(-0.1, 0.0),
+            child: Hero(
+              tag: 12,
+              transitionOnUserGestures: true,
+              child: Icon(
+                Icons.person,
+                size: 40.0,
+                color: Colors.white,
+              ),
+            ),
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.only(bottomRight: Radius.circular(50), topRight: Radius.circular(50)),
+                color: color,
+                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
+          ),
+          Spacer(
+            flex: 2,
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                name,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+              ),
+              SizedBox(
+                height: 65,
+              ),
+              ScoreWidget(
+                color: color,
+                animation: IntTween(begin: previousScore, end: score)
+                    .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
+              ),
+            ],
+          ),
+          Spacer(
+            flex: 1,
           ),
         ],
       ),
