@@ -318,10 +318,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               ]),
             ),
             HeaderWidget(
+              id: widget.habit.id,
               name: widget.habit.habit,
               score: score,
               previousScore: previousScore,
               color: CategoryColors.getSecundaryColor(widget.habit.category),
+              icon: widget.habit.icon,
+              fromAllHabits: widget.fromAllHabits,
               controllerScore: _controllerScore,
             ),
             Container(
@@ -357,12 +360,15 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score, this.previousScore, this.color, this.controllerScore}) : super(key: key);
+  HeaderWidget({Key key, this.id, this.name, this.score, this.previousScore, this.color, this.icon, this.fromAllHabits, this.controllerScore}) : super(key: key);
 
+  final int id;
   final String name;
   final int score;
   final int previousScore;
   final Color color;
+  final int icon;
+  final bool fromAllHabits;
   final controllerScore;
 
   @override
@@ -377,10 +383,10 @@ class HeaderWidget extends StatelessWidget {
             height: 90.0,
             alignment: Alignment(-0.1, 0.0),
             child: Hero(
-              tag: 12,
+              tag: fromAllHabits ? id + 1000 : id,
               transitionOnUserGestures: true,
               child: Icon(
-                Icons.person,
+                IconData(icon, fontFamily: 'MaterialIcons'),
                 size: 40.0,
                 color: Colors.white,
               ),

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:habit/ui/widgets/HabitListItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/addHabitPage.dart';
+import 'package:habit/ui/settingsPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -64,13 +65,17 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   initState() {
     super.initState();
 
-    DataPreferences().getName().then((name) => person.name = name);
-
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
   }
 
   @override
   void didChangeDependencies() {
+    DataPreferences().getName().then((name) {
+      setState(() {
+        person.name = name;
+      });
+    });
+
     DataPreferences().getScore().then((score) {
       setState(() {
         person.score = score;
@@ -251,7 +256,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   color: Colors.white,
                   size: 28,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return SettingsPage();
+                  }));
+                },
               ),
             ),
           ],

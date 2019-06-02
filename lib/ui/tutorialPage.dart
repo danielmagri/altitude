@@ -3,7 +3,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/widgets/DotsIndicator.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/main.dart';
-import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 
 class TutorialPage extends StatefulWidget {
