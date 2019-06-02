@@ -1,42 +1,6 @@
 import 'package:habit/utils/enums.dart';
 
 abstract class Suggestions {
-  static const List physicalRewards = [
-    "Emagrecer _kg",
-    "Ganhar _kg",
-    "Atingir _km a pé",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-    "teste",
-  ];
-
-  static const List mentalRewards = [
-    "Ler _ livros no ano",
-    "Encontar a paz na meditação",
-    "Aprender outro idioma",
-  ];
-
-  static const List socialRewards = [
-    "Conversar com alguém novo todos os dias",
-    "Sair com alguém diferente toda semana",
-    "Conhecer um lugar novo",
-  ];
-
-  static List getRewards(CategoryEnum category) {
-    switch (category) {
-      case CategoryEnum.PHYSICAL:
-        return physicalRewards;
-      case CategoryEnum.MENTAL:
-        return mentalRewards;
-      case CategoryEnum.SOCIAL:
-        return socialRewards;
-    }
-    return [];
-  }
-
   static const List<Map> physicalHabits = [
     {0: 0xeb43, 1: "Ir na academia"},
     {0: 0xe92c, 1: "Fazer alongamento"},

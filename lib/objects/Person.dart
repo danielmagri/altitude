@@ -1,5 +1,5 @@
 class Person {
-  final String name;
+  String name;
   int score;
 
   Person({this.name, this.score});

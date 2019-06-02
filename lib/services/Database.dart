@@ -36,11 +36,6 @@ class DatabaseService {
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE person (
-            full_name VARCHAR(45) NOT NULL,
-            score INTEGER NOT NULL);''');
-
-    await db.execute('''
           CREATE TABLE habit (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             category INTEGER NOT NULL,
@@ -103,26 +98,6 @@ class DatabaseService {
               ON UPDATE NO ACTION);''');
   }
 
-  Future<Person> getPerson() async {
-    final db = await database;
-
-    var result = await db.rawQuery('SELECT * FROM person;');
-
-    if (result.isNotEmpty) {
-      return Person.fromJson(result.last);
-    } else {
-      return Person(name: "", score: 0);
-    }
-  }
-
-  Future<bool> setPerson(String name) async {
-    final db = await database;
-
-    await db.rawInsert('INSERT INTO person (full_name, score) VALUES (\'$name\', 0);');
-
-    return true;
-  }
-
   Future<List> getAllHabits() async {
     final db = await database;
     var result = await db.rawQuery('SELECT id, category, habit_text, icon FROM habit;');
@@ -182,13 +157,11 @@ class DatabaseService {
 
     var result = await db.rawQuery('''
         SELECT id, category, habit_text, cycle, icon FROM habit WHERE id IN (
-							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 AND habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
+							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
 							 UNION ALL
-               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time
-							                            														 UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
+               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
                UNION ALL
-               SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') GROUP BY habit_id HAVING COUNT(*) >= days_time
-							                              															UNION ALL SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\')
+               SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') GROUP BY habit_id HAVING COUNT(*) >= days_time)
         );''');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
@@ -215,10 +188,20 @@ class DatabaseService {
     }
   }
 
+  Future<List> getHabitsDoneToday() async {
+    DateTime now = new DateTime.now();
+
+    final db = await database;
+    var result = await db.rawQuery('SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
+
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    return list;
+  }
+
   Future<List> getDaysDone(int id) async {
     final db = await database;
 
-    var result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id;');
+    var result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
     return list;
@@ -252,7 +235,6 @@ class DatabaseService {
     final db = await database;
 
     await db.rawInsert('UPDATE habit SET score = score+$score WHERE id=$id;');
-    await db.rawInsert('UPDATE person SET score = score+$score;');
 
     return true;
   }

@@ -4,7 +4,7 @@ import 'package:habit/ui/widgets/DotsIndicator.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/main.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:habit/controllers/DataPreferences.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key key}) : super(key: key);
@@ -30,10 +30,7 @@ class _TutorialPageState extends State<TutorialPage> {
       String result = Validate.nameTextValidate(_nameTextController.text);
 
       if (result == null) {
-        await DataControl().setPerson(_nameTextController.text);
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setBool("appTutorial", true);
+        await DataPreferences().setName(_nameTextController.text);
 
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
             return MainPage();

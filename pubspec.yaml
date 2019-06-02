@@ -22,7 +22,6 @@ dependencies:
   table_calendar: ^1.2.0
   fluttertoast: ^3.0.3
   keyboard_visibility: ^0.5.2
-  sliding_up_panel: ^0.3.4
   shared_preferences: ^0.5.2
   numberpicker: ^1.0.0
 

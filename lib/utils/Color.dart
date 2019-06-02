@@ -20,6 +20,7 @@ abstract class CategoryColors {
       case CategoryEnum.SOCIAL:
         return socialPrimary;
     }
+    return Color.fromARGB(255, 24, 24, 24);
   }
 
   static Color getSecundaryColor(CategoryEnum category) {
@@ -31,5 +32,6 @@ abstract class CategoryColors {
       case CategoryEnum.SOCIAL:
         return socialSecundary;
     }
+    return Color.fromARGB(255, 24, 24, 24);
   }
 }
