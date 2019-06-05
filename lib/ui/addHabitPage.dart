@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/utils/enums.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/addHabitTabs/categoryTab.dart';
-import 'package:habit/ui/addHabitTabs/cueTab.dart';
-import 'package:habit/ui/addHabitTabs/habitTab.dart';
-import 'package:habit/ui/addHabitTabs/frequencyTab.dart';
+import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
+import 'package:habit/ui/addHabitWidgets/cueWidget.dart';
+import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
+import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
+import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/utils/Validator.dart';
+import 'package:habit/ui/widgets/Toast.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -19,118 +20,56 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMixin {
-  TabController _tabController;
-  PageController _pageController = PageController();
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
-  AnimationController _backgroundController;
-  Animation _backgroundAnimation;
 
-  final Color _startColor = Colors.white;
-  final rewardController = TextEditingController();
   final habitController = TextEditingController();
   final cueController = TextEditingController();
 
-  CategoryEnum category;
+  List<bool> validation = [false, false, false, false];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
-    _backgroundController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
 
     DataHabitCreation().emptyData();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _pageController.dispose();
-    _backgroundController.dispose();
-    rewardController.dispose();
     habitController.dispose();
     cueController.dispose();
     super.dispose();
   }
 
-  void categoryTabTap(CategoryEnum selection) {
-    category = selection;
-    Color color;
-
-    color = CategoryColors.getPrimaryColor(category);
-
-    _backgroundAnimation = ColorTween(begin: _startColor, end: color)
-        .animate(CurvedAnimation(parent: _backgroundController, curve: Curves.linear));
-
-    _backgroundController.forward();
-    _nextTab(1);
+  void changeColor(int index) {
+    setState(() {
+      DataHabitCreation().indexColor = index;
+    });
   }
 
-  void onTap(bool next) {
-    if (next) {
-      _nextPage(1);
+  void _createHabitTap() {
+    if (Validate.habitTextValidate(habitController.text) != null) {
+      showToast("O hábito precisa ser preenchido.");
+    } else if (Validate.cueTextValidate(cueController.text) != null) {
+      showToast("A deixa precisa ser preenchido.");
+    } else if (DataHabitCreation().frequency == null) {
+      showToast("Escolha qual será a frequência.");
     } else {
-      if (_pageController.page >= 0.8) {
-        _nextPage(-1);
-      } else {
-        _nextTab(-1);
-      }
-    }
-  }
-
-  void endTap(bool next) {
-    if (next) {
       Habit habit = new Habit(
-          category: category,
-          icon: DataHabitCreation().icon,
-          cue: cueController.text,
-          habit: habitController.text,
-          reward: rewardController.text);
+        color: DataHabitCreation().indexColor,
+        icon: DataHabitCreation().icon,
+        cue: cueController.text,
+        habit: habitController.text,
+      );
 
-      DataControl().addHabit(habit, DataHabitCreation().frequency).then((result) {
+      DataControl().addHabit(habit, DataHabitCreation().frequency, DataHabitCreation().reminders).then((result) {
         Navigator.pop(context);
-        Fluttertoast.showToast(
-            msg: "O hábito foi criado com sucesso!",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
+        showToast("O hábito foi criado com sucesso!");
       });
-    } else {
-      _nextPage(-1);
     }
-  }
-
-  void _nextTab(int delta) {
-    final int newIndex = _tabController.index + delta;
-    if (newIndex == 0) {
-      _backgroundController.reverse();
-    }
-    if (newIndex < 0 || newIndex >= _tabController.length) return;
-    _tabController.animateTo(newIndex);
-  }
-
-  void _nextPage(int delta) {
-    if (delta == 1)
-      _pageController.nextPage(duration: Duration(milliseconds: 800), curve: Curves.easeInOutQuart);
-    else if (delta == -1)
-      _pageController.previousPage(duration: Duration(milliseconds: 800), curve: Curves.easeInOutQuart);
   }
 
   Future<bool> _onBackPressed(BuildContext context) async {
-    if (_tabController.index == 0) {
-      return true;
-    } else if (_pageController.page >= 0.8) {
-      _nextPage(-1);
-      return false;
-    } else if (_tabController.index == 1) {
-      _nextTab(-1);
-      return false;
-    }
     return true;
   }
 
@@ -138,52 +77,69 @@ class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onBackPressed(context),
-      child: AnimatedBuilder(
-        animation: _backgroundController,
-        builder: (context, child) {
-          return MaterialApp(
-            theme: Theme.of(context).copyWith(
-              textTheme: TextTheme(body1: TextStyle(color: Colors.white)),
-              buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
-            ),
-            home: Scaffold(
-              resizeToAvoidBottomPadding: false,
-              backgroundColor: _backgroundAnimation == null ? _startColor : _backgroundAnimation.value,
-              body: TabBarView(
-                controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
-                children: <Widget>[
-                  CategoryTab(
-                    onCategoryTap: categoryTabTap,
+      child: MaterialApp(
+        theme: Theme.of(context).copyWith(
+          buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+        ),
+        home: Scaffold(
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 60.0),
+                  child: Text(
+                    "NOVO HÁBITO",
+                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
-                  PageView(
-                    controller: _pageController,
-                    scrollDirection: Axis.vertical,
-                    physics: NeverScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                    children: <Widget>[
-                      HabitTab(
-                        category: category,
-                        controller: habitController,
-                        keyboard: _keyboardVisibility,
-                        onTap: onTap,
-                      ),
-                      FrequencyTab(
-                        category: category,
-                        onTap: onTap,
-                      ),
-                      CueTab(
-                        category: category,
-                        controller: cueController,
-                        keyboard: _keyboardVisibility,
-                        onTap: endTap,
-                      )
-                    ],
-                  )
-                ],
-              ),
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.grey,
+                  width: double.maxFinite,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+                ),
+                ColorWidget(
+                  currentColor: DataHabitCreation().indexColor,
+                  changeColor: changeColor,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                HabitWidget(
+                  color: HabitColors.colors[DataHabitCreation().indexColor],
+                  controller: habitController,
+                  keyboard: _keyboardVisibility,
+                ),
+                FrequencyWidget(
+                  color: HabitColors.colors[DataHabitCreation().indexColor],
+                ),
+                CueWidget(
+                  color: HabitColors.colors[DataHabitCreation().indexColor],
+                  controller: cueController,
+                  keyboard: _keyboardVisibility,
+                ),
+                AlarmWidget(
+                  color: HabitColors.colors[DataHabitCreation().indexColor],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 20, bottom: 28),
+                  child: RaisedButton(
+                    color: HabitColors.colors[DataHabitCreation().indexColor],
+                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
+                    elevation: 5.0,
+                    onPressed: _createHabitTap,
+                    child: const Text(
+                      "CRIAR",
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

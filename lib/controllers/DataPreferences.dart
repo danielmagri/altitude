@@ -18,8 +18,8 @@ class DataPreferences {
     return _prefs;
   }
 
-  static String NAME = "USER_NAME";
-  static String SCORE = "USER_SCORE";
+  static const String NAME = "USER_NAME";
+  static const String SCORE = "USER_SCORE";
 
   Future<bool> setName(String name) async {
     SharedPreferences sf = await prefs;

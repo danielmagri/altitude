@@ -5,6 +5,7 @@ import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Frequency.dart';
+import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 
 class DataControl {
@@ -32,8 +33,8 @@ class DataControl {
     return {0: habits, 1: daysDone};
   }
 
-  Future<bool> addHabit(Habit habit, dynamic frequency) async {
-    return await DatabaseService().addHabit(habit, frequency);
+  Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
+    return await DatabaseService().addHabit(habit, frequency, reminders);
   }
 
   Future<bool> updateHabit(Habit habit) async {

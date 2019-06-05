@@ -44,7 +44,7 @@ class HabitListItem extends StatelessWidget {
                 width: width - 40,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                  color: CategoryColors.getPrimaryColor(habit.category),
+                  color: HabitColors.colors[habit.color],
                   boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                 ),
                 child: InkWell(

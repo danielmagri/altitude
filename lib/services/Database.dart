@@ -2,10 +2,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'dart:io';
-import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
+import 'package:habit/objects/Reminder.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
@@ -38,12 +38,11 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE habit (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            category INTEGER NOT NULL,
+            color INTEGER NOT NULL,
             icon INTEGER NOT NULL,
             score INTEGER NOT NULL,
             cycle INTEGER NOT NULL,
             habit_text VARCHAR(45) NOT NULL,
-            reward_text VARCHAR(45) NOT NULL,
             cue_text VARCHAR(45) NOT NULL,
             initial_date DATE NOT NULL,
             days_done INTEGER NOT NULL);''');
@@ -96,11 +95,24 @@ class DatabaseService {
               REFERENCES habit(id)
               ON DELETE CASCADE
               ON UPDATE NO ACTION);''');
+
+    await db.execute('''
+          CREATE TABLE reminder (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            hour INTEGER NOT NULL,
+            minute INTEGER NOT NULL,
+            weekday INTEGER NOT NULL,
+            habit_id INTEGER NOT NULL,
+            CONSTRAINT fk_reminder_habit_id
+              FOREIGN KEY (habit_id)
+              REFERENCES habit(id)
+              ON DELETE CASCADE
+              ON UPDATE NO ACTION);''');
   }
 
   Future<List> getAllHabits() async {
     final db = await database;
-    var result = await db.rawQuery('SELECT id, category, habit_text, icon FROM habit;');
+    var result = await db.rawQuery('SELECT id, color, habit_text, icon FROM habit;');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
@@ -156,7 +168,7 @@ class DatabaseService {
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT id, category, habit_text, cycle, icon FROM habit WHERE id IN (
+        SELECT id, color, habit_text, cycle, icon FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
 							 UNION ALL
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
@@ -192,7 +204,8 @@ class DatabaseService {
     DateTime now = new DateTime.now();
 
     final db = await database;
-    var result = await db.rawQuery('SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
+    var result = await db.rawQuery(
+        'SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
     return list;
@@ -239,20 +252,20 @@ class DatabaseService {
     return true;
   }
 
-  Future<bool> addHabit(Habit habit, dynamic frequency) async {
+  Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     DateTime now = new DateTime.now();
     final db = await database;
+    // Inserção dos dados do hábito
     var id = await db.rawInsert(
-        '''INSERT INTO habit (habit_text, reward_text, cue_text, category, icon, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
-                                                                                                                   \'${habit.reward}\',
-                                                                                                                   \'${habit.cue}\',
-                                                                                                                   ${habit.category.index},
-                                                                                                                   ${habit.icon},
-                                                                                                                   0,
-                                                                                                                   1,
-                                                                                                                   \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
-                                                                                                                   0);''');
-
+        '''INSERT INTO habit (habit_text, cue_text, color, icon, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
+                                                                                                                \'${habit.cue}\',
+                                                                                                                ${habit.color},
+                                                                                                                ${habit.icon},
+                                                                                                                0,
+                                                                                                                1,
+                                                                                                                \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
+                                                                                                                0);''');
+    // Inserção dos dados da frequência
     if (frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = frequency;
       await db.rawInsert(
@@ -263,15 +276,23 @@ class DatabaseService {
                                                                                                                           ${freq.friday},
                                                                                                                           ${freq.saturday},
                                                                                                                           ${freq.sunday},
-                                                                                                                            $id);''');
+                                                                                                                          $id);''');
     } else if (frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = frequency;
       await db.rawInsert('INSERT INTO freq_weekly (days_time, habit_id) VALUES (${freq.daysTime}, $id);');
     } else if (frequency.runtimeType == FreqRepeating) {
       FreqRepeating freq = frequency;
       await db.rawInsert('''INSERT INTO freq_repeating (days_time, days_cycle, habit_id) VALUES (${freq.daysTime},
-                                                                                                   ${freq.daysCycle},
-                                                                                                   $id);''');
+                                                                                                 ${freq.daysCycle},
+                                                                                                 $id);''');
+    }
+
+    // Inserção dos dados dos alarmes
+    for (Reminder reminder in reminders) {
+      await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, habit_id) VALUES (${reminder.hour},
+                                                                                           ${reminder.minute},
+                                                                                           ${reminder.weekday},
+                                                                                           $id);''');
     }
 
     return true;
@@ -281,9 +302,8 @@ class DatabaseService {
     final db = await database;
 
     await db.rawInsert('''UPDATE habit SET habit_text=\'${habit.habit}\',
-                                           reward_text=\'${habit.reward}\',
                                            cue_text=\'${habit.cue}\',
-                                           category=${habit.category.index}  WHERE id=${habit.id};''');
+                                           color=${habit.color}  WHERE id=${habit.id};''');
 
     return true;
   }

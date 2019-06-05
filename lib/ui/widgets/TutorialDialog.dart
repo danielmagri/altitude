@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TutorialDialog extends StatelessWidget {
+  final String hero;
   final List<TextSpan> texts;
 
   TutorialDialog({
     @required this.texts,
+    @required this.hero,
   });
 
   @override
@@ -41,7 +43,7 @@ class TutorialDialog extends StatelessWidget {
                     alignment: Alignment(0.0, 0.0),
                     height: 50,
                     child: new Hero(
-                      tag: "help",
+                      tag: hero,
                       child: Icon(
                         Icons.help_outline,
                         size: 42,
