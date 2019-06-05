@@ -1,268 +1,182 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Frequency.dart';
-import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/ui/widgets/Toast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 
-class FrequencyTab extends StatefulWidget {
-  FrequencyTab({Key key, this.category, this.onTap}) : super(key: key);
+class FrequencyWidget extends StatefulWidget {
+  FrequencyWidget({Key key, this.color}) : super(key: key);
 
-  final CategoryEnum category;
-  final Function onTap;
+  final Color color;
 
   @override
-  _FrequencyTabState createState() => new _FrequencyTabState();
+  _FrequencyWidgetState createState() => new _FrequencyWidgetState();
 }
 
-class _FrequencyTabState extends State<FrequencyTab> {
+class _FrequencyWidgetState extends State<FrequencyWidget> {
   int chosen = -1;
 
   @override
-  initState() {
-    super.initState();
-
-    if (DataHabitCreation().frequency != null) {
-      switch (DataHabitCreation().frequency.runtimeType) {
-        case FreqDayWeek:
-          chosen = 0;
-          break;
-        case FreqWeekly:
-          chosen = 1;
-          break;
-        case FreqRepeating:
-          chosen = 2;
-          break;
-      }
-    }
-  }
-
-  void validateData() {
-    if (chosen == -1) {
-      Fluttertoast.showToast(
-          msg: "Por favor, escolha alguma das opções",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Color.fromARGB(255, 220, 220, 220),
-          textColor: Colors.black,
-          fontSize: 16.0);
-    } else {
-      widget.onTap(true);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 60.0, left: 16.0, right: 16.0),
-          child: Text(
-            "Qual a frequência do hábito?",
-            style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w300),
-          ),
-        ),
-        Expanded(
-          flex: 4,
-          child: Container(
-            alignment: Alignment(0.0, 1.0),
-            margin: EdgeInsets.only(bottom: 12.0),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 32.0, left: 40),
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: double.maxFinite,
+            margin: const EdgeInsets.only(left: 16, bottom: 6),
             child: Text(
-              "Escolha uma opção:",
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              "Qual a frequência do hábito?",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
             ),
           ),
-        ),
-        Expanded(
-          flex: 6,
-          child: Align(
-            alignment: Alignment(0.0, -1.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Card(
-                      color: CategoryColors.getSecundaryColor(widget.category),
-                      child: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => DailyDialog(
-                                  category: widget.category,
-                                ),
-                          ).then((result) {
-                            if (result != null) {
-                              setState(() {
-                                chosen = 0;
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              border: chosen == 0
-                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
-                                  : null,
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: BoxContent(
-                            title: "Diariamente",
-                            example: "Ex. Segunda, Quarta e Sexta",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Card(
-                      color: CategoryColors.getSecundaryColor(widget.category),
-                      child: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => WeeklyDialog(
-                                  category: widget.category,
-                                ),
-                          ).then((result) {
-                            if (result != null) {
-                              setState(() {
-                                chosen = 1;
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              border: chosen == 1
-                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
-                                  : null,
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: BoxContent(
-                            title: "Semanalmente",
-                            example: "Ex. 3 vezes por semana",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Card(
-                      color: CategoryColors.getSecundaryColor(widget.category),
-                      child: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => RepeatingDialog(
-                                  category: widget.category,
-                                ),
-                          ).then((result) {
-                            if (result != null) {
-                              setState(() {
-                                chosen = 2;
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(4.0),
-                          decoration: BoxDecoration(
-                              border: chosen == 2
-                                  ? Border.all(color: Colors.white, width: 2.0, style: BorderStyle.solid)
-                                  : null,
-                              borderRadius: BorderRadius.circular(5.0)),
-                          child: BoxContent(
-                            title: "Intervalo",
-                            example: "Ex. 5 vezes a cada 15 dias",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 10.0, top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Column(
             children: <Widget>[
-              RaisedButton(
-                color: CategoryColors.getSecundaryColor(widget.category),
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                elevation: 5.0,
-                onPressed: () {
-                  widget.onTap(false);
+              InkWell(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => DailyDialog(
+                          color: widget.color,
+                        ),
+                  ).then((result) {
+                    if (result != null) {
+                      setState(() {
+                        chosen = 0;
+                      });
+                    }
+                  });
                 },
-                child: const Text("VOLTAR"),
+                child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                    color: chosen != 0 ? HabitColors.disableHabitCreation : widget.color,
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Diariamente",
+                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        "Ex. Segunda, Quarta e Sexta",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200),
+                      )
+                    ],
+                  ),
+                ),
               ),
-              RaisedButton(
-                color: CategoryColors.getSecundaryColor(widget.category),
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                elevation: 5.0,
-                onPressed: validateData,
-                child: const Text("AVANÇAR"),
+              SizedBox(
+                height: 4,
+              ),
+              InkWell(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => WeeklyDialog(
+                          color: widget.color,
+                        ),
+                  ).then((result) {
+                    if (result != null) {
+                      setState(() {
+                        chosen = 1;
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                    color: chosen != 1 ? HabitColors.disableHabitCreation : widget.color,
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Semanalmente",
+                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        "Ex. 3 vezes por semana",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              InkWell(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => RepeatingDialog(
+                          color: widget.color,
+                        ),
+                  ).then((result) {
+                    if (result != null) {
+                      setState(() {
+                        chosen = 2;
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                    color: chosen != 2 ? HabitColors.disableHabitCreation : widget.color,
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Intervalo",
+                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        "Ex. 5 vezes em 15 dias",
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class BoxContent extends StatelessWidget {
-  final String title;
-  final String example;
-
-  BoxContent({
-    @required this.title,
-    @required this.example,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Center(
-            child: Text(
-              example,
-              style: TextStyle(fontWeight: FontWeight.w300),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
 class DailyDialog extends StatefulWidget {
-  DailyDialog({Key key, this.category}) : super(key: key);
+  DailyDialog({Key key, this.color}) : super(key: key);
 
-  final CategoryEnum category;
+  final Color color;
 
   @override
   _DailyDialogState createState() => new _DailyDialogState();
@@ -304,14 +218,7 @@ class _DailyDialogState extends State<DailyDialog> {
       DataHabitCreation().frequency = dayWeek;
       Navigator.of(context).pop(true);
     } else {
-      Fluttertoast.showToast(
-          msg: "Selecione pelo menos um dia da semana",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Color.fromARGB(255, 220, 220, 220),
-          textColor: Colors.black,
-          fontSize: 16.0);
+      showToast("Selecione pelo menos um dia da semana");
     }
   }
 
@@ -352,7 +259,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Segunda-feira",
                     status: days[1],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -364,7 +271,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Terça-feira",
                     status: days[2],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -376,7 +283,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Quarta-feira",
                     status: days[3],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -388,7 +295,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Quinta-feira",
                     status: days[4],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -400,7 +307,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Sexta-feira",
                     status: days[5],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -412,7 +319,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Sábado",
                     status: days[6],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
                 InkWell(
@@ -424,7 +331,7 @@ class _DailyDialogState extends State<DailyDialog> {
                   child: DayWidget(
                     text: "Domingo",
                     status: days[0],
-                    category: widget.category,
+                    color: widget.color,
                   ),
                 ),
               ],
@@ -460,12 +367,12 @@ class _DailyDialogState extends State<DailyDialog> {
 class DayWidget extends StatelessWidget {
   final String text;
   final bool status;
-  final CategoryEnum category;
+  final Color color;
 
   DayWidget({
     @required this.text,
     @required this.status,
-    @required this.category,
+    @required this.color,
   });
 
   @override
@@ -473,7 +380,7 @@ class DayWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
       decoration: BoxDecoration(
-        color: status ? CategoryColors.getSecundaryColor(category) : Color.fromARGB(255, 220, 220, 220),
+        color: status ? color : Color.fromARGB(255, 220, 220, 220),
         borderRadius: BorderRadius.circular(20.0),
       ),
       child: Text(
@@ -485,9 +392,9 @@ class DayWidget extends StatelessWidget {
 }
 
 class WeeklyDialog extends StatefulWidget {
-  WeeklyDialog({Key key, this.category}) : super(key: key);
+  WeeklyDialog({Key key, this.color}) : super(key: key);
 
-  final CategoryEnum category;
+  final Color color;
 
   @override
   _WeeklyDialogState createState() => new _WeeklyDialogState();
@@ -523,7 +430,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
       elevation: 5.0,
       backgroundColor: Colors.white,
       child: Theme(
-        data: Theme.of(context).copyWith(accentColor: CategoryColors.getSecundaryColor(widget.category)),
+        data: Theme.of(context).copyWith(accentColor: widget.color),
         child: Container(
           padding: EdgeInsets.all(16.0),
           child: Column(
@@ -585,9 +492,9 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
 }
 
 class RepeatingDialog extends StatefulWidget {
-  RepeatingDialog({Key key, this.category}) : super(key: key);
+  RepeatingDialog({Key key, this.color}) : super(key: key);
 
-  final CategoryEnum category;
+  final Color color;
 
   @override
   _RepeatingDialogState createState() => new _RepeatingDialogState();
@@ -613,14 +520,7 @@ class _RepeatingDialogState extends State<RepeatingDialog> {
 
   void _validate() {
     if (_currentValue1 > _currentValue2) {
-      Fluttertoast.showToast(
-          msg: "O número de repetições deve ser menor que o do intervalo.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Color.fromARGB(255, 220, 220, 220),
-          textColor: Colors.black,
-          fontSize: 16.0);
+      showToast("O número de repetições deve ser menor que o do intervalo.");
     } else {
       DataHabitCreation().frequency = new FreqRepeating(daysTime: _currentValue1, daysCycle: _currentValue2);
       Navigator.of(context).pop(true);
@@ -636,7 +536,7 @@ class _RepeatingDialogState extends State<RepeatingDialog> {
       elevation: 5.0,
       backgroundColor: Colors.white,
       child: Theme(
-        data: Theme.of(context).copyWith(accentColor: CategoryColors.getSecundaryColor(widget.category)),
+        data: Theme.of(context).copyWith(accentColor: widget.color),
         child: Container(
           padding: EdgeInsets.all(16.0),
           child: Column(

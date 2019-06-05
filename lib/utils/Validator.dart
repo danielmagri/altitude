@@ -17,9 +17,9 @@ abstract class Validate {
     if (treatedText.isEmpty) {
       return "Por favor preencha o campo.";
     } else if (treatedText.length < 3) {
-      return "A meta precisa ser maior que 3 letras.";
+      return "A deixa precisa ser maior que 3 letras.";
     } else if (treatedText.length > 40) {
-      return "A meta pode ter no máximo 40 caracteres.";
+      return "A deixa pode ter no máximo 40 caracteres.";
     }
 
     return null;
@@ -30,9 +30,9 @@ abstract class Validate {
     if (treatedText.isEmpty) {
       return "Por favor preencha o campo.";
     } else if (treatedText.length < 3) {
-      return "A meta precisa ser maior que 3 letras.";
+      return "O hábito precisa ser maior que 3 letras.";
     } else if (treatedText.length > 30) {
-      return "A meta pode ter no máximo 30 caracteres.";
+      return "O hábito pode ter no máximo 30 caracteres.";
     }
 
     return null;

@@ -7,7 +7,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/ui/widgets/Toast.dart';
 
 class CueWidget extends StatelessWidget {
   CueWidget({Key key, this.cue, this.color}) : super(key: key);
@@ -25,9 +25,7 @@ class CueWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Deixa",
-                style: TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
+            Text("Deixa", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
           ],
         ),
@@ -55,8 +53,7 @@ class CoolDataWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text("Informações Legais",
-                style: TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             Text(
                 "Começou em " +
                     initialDate.day.toString().padLeft(2, '0') +
@@ -93,8 +90,7 @@ class CalendarWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text("Dias feito",
-                style: TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
             TableCalendar(
               events: markedDays,
               formatAnimation: FormatAnimation.slide,
@@ -132,8 +128,7 @@ class CalendarWidget extends StatelessWidget {
                   ),
                   alignment: Alignment(0.0, 0.0),
                   margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, border: Border.all(color: color, width: 2)),
+                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: color, width: 2)),
                 );
               }),
               headerStyle: HeaderStyle(
@@ -208,14 +203,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   void setDoneHabit() {
     if (hasDoneToday()) {
-      Fluttertoast.showToast(
-          msg: "Você já completou esse hábito hoje",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: CategoryColors.getPrimaryColor(widget.habit.category),
-          textColor: Colors.white,
-          fontSize: 16.0);
+      showToast("Você já completou esse hábito hoje!");
     } else {
       DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
         DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -297,16 +285,16 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             SizedBox(
               height: 70.0,
               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                BackButton(color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                BackButton(color: HabitColors.colors[widget.habit.color]),
                 Spacer(),
                 IconButton(
-                    icon: Icon(Icons.check, size: 34, color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                    icon: Icon(Icons.check, size: 34, color: HabitColors.colors[widget.habit.color]),
                     onPressed: setDoneHabit),
                 SizedBox(
                   width: 8,
                 ),
                 IconButton(
-                    icon: Icon(Icons.edit, size: 30, color: CategoryColors.getSecundaryColor(widget.habit.category)),
+                    icon: Icon(Icons.edit, size: 30, color: HabitColors.colors[widget.habit.color]),
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return EditHabitPage(
@@ -322,7 +310,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               name: widget.habit.habit,
               score: score,
               previousScore: previousScore,
-              color: CategoryColors.getSecundaryColor(widget.habit.category),
+              color: HabitColors.colors[widget.habit.color],
               icon: widget.habit.icon,
               fromAllHabits: widget.fromAllHabits,
               controllerScore: _controllerScore,
@@ -340,17 +328,17 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             ),
             CueWidget(
               cue: widget.habit.cue,
-              color: CategoryColors.getSecundaryColor(widget.habit.category),
+              color: HabitColors.colors[widget.habit.color],
             ),
             CoolDataWidget(
               initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
               daysDone: widget.habit.daysDone,
               cycles: widget.habit.cycle,
-              color: CategoryColors.getSecundaryColor(widget.habit.category),
+              color: HabitColors.colors[widget.habit.color],
             ),
             CalendarWidget(
               markedDays: markedDays,
-              color: CategoryColors.getSecundaryColor(widget.habit.category),
+              color: HabitColors.colors[widget.habit.color],
             ),
           ],
         ),
@@ -360,7 +348,17 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.id, this.name, this.score, this.previousScore, this.color, this.icon, this.fromAllHabits, this.controllerScore}) : super(key: key);
+  HeaderWidget(
+      {Key key,
+      this.id,
+      this.name,
+      this.score,
+      this.previousScore,
+      this.color,
+      this.icon,
+      this.fromAllHabits,
+      this.controllerScore})
+      : super(key: key);
 
   final int id;
   final String name;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Validator.dart';
 
 class EditHabitPage extends StatefulWidget {
@@ -23,7 +22,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-    rewardController.text = widget.habit.reward;
+//    rewardController.text = widget.habit.reward;
     habitController.text = widget.habit.habit;
     cueController.text = widget.habit.cue;
   }
@@ -42,7 +41,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> with TickerProviderSt
       body: Stack(
         children: <Widget>[
           Container(
-            color: CategoryColors.getPrimaryColor(widget.habit.category),
+            color:  Colors.yellow,
             padding: EdgeInsets.only(top: 20.0, bottom: 25.0),
             height: 110.0,
             width: double.maxFinite,
@@ -173,36 +172,36 @@ class _EditHabitPagePageState extends State<EditHabitPage> with TickerProviderSt
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            Habit newHabit = new Habit(
-                id: widget.habit.id,
-                cue: cueController.text,
-                habit: habitController.text,
-                reward: rewardController.text,
-                category: widget.habit.category);
+//            Habit newHabit = new Habit(
+//                id: widget.habit.id,
+//                cue: cueController.text,
+//                habit: habitController.text,
+//                reward: rewardController.text,
+//                category: widget.habit.category);
 
-            DataControl().updateHabit(newHabit).then((status) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: new Text("Sucesso"),
-                    content: new Text("A edição foi realizada!"),
-                    actions: <Widget>[
-                      new FlatButton(
-                        child: new Text("OK"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ).then((res) => Navigator.of(context).pop());
-            });
+//            DataControl().updateHabit(newHabit).then((status) {
+//              showDialog(
+//                context: context,
+//                builder: (BuildContext context) {
+//                  return AlertDialog(
+//                    title: new Text("Sucesso"),
+//                    content: new Text("A edição foi realizada!"),
+//                    actions: <Widget>[
+//                      new FlatButton(
+//                        child: new Text("OK"),
+//                        onPressed: () {
+//                          Navigator.pop(context);
+//                        },
+//                      ),
+//                    ],
+//                  );
+//                },
+//              ).then((res) => Navigator.of(context).pop());
+//            });
           }
         },
         tooltip: 'Salvar',
-        backgroundColor: CategoryColors.getPrimaryColor(widget.habit.category),
+        backgroundColor:  Colors.yellow,
         child: Icon(Icons.save),
       ),
     );
