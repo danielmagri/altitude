@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:habit/controllers/DaysDoneControl.dart';
 import 'package:habit/controllers/ScoreControl.dart';
+import 'package:habit/controllers/NotificationControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -34,7 +35,13 @@ class DataControl {
   }
 
   Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
-    return await DatabaseService().addHabit(habit, frequency, reminders);
+    Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+    for (Reminder reminder in response[1]) {
+      await NotificationControl()
+          .addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
+    }
+
+    return true;
   }
 
   Future<bool> updateHabit(Habit habit) async {

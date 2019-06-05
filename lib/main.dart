@@ -16,7 +16,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Color.fromARGB(255, 24, 24, 24)));
 
   bool showTutorial = false;
@@ -231,7 +231,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   color: Colors.white,
                   size: 28,
                 ),
-                onPressed: () {},
+                onPressed: () {
+
+                },
               ),
             ),
             FloatingActionButton(
