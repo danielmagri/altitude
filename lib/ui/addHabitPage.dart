@@ -19,7 +19,7 @@ class AddHabitPage extends StatefulWidget {
   _AddHabitPageState createState() => _AddHabitPageState();
 }
 
-class _AddHabitPageState extends State<AddHabitPage> with TickerProviderStateMixin {
+class _AddHabitPageState extends State<AddHabitPage> {
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();

@@ -5,6 +5,7 @@ import 'package:habit/ui/widgets/HabitListItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
+import 'package:habit/ui/allHabitsPage.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -232,7 +233,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   size: 28,
                 ),
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return AlHabitsPage();
+                  }));
                 },
               ),
             ),

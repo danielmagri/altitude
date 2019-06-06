@@ -15,7 +15,7 @@ class HabitListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 70,
       width: width,
       child: Stack(
         overflow: Overflow.visible,
@@ -43,7 +43,7 @@ class HabitListItem extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 16.0),
                 width: width - 40,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
                   color: HabitColors.colors[habit.color],
                   boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                 ),
@@ -68,7 +68,7 @@ class HabitListItem extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Container(
-                        width: 55.0,
+                        width: 60.0,
                         height: 50.0,
                         child: Hero(
                           tag: habit.id,
@@ -80,12 +80,13 @@ class HabitListItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        habit.habit,
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 14, color: Colors.white),
+                      Expanded(
+                        child: Text(
+                          habit.habit,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -94,58 +95,6 @@ class HabitListItem extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class SlideMenu extends StatefulWidget {
-  final Widget child;
-
-  SlideMenu({this.child});
-
-  @override
-  _SlideMenuState createState() => new _SlideMenuState();
-}
-
-class _SlideMenuState extends State<SlideMenu> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-
-  @override
-  initState() {
-    super.initState();
-    _controller = new AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-  }
-
-  @override
-  dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final animation =
-        new Tween<double>(begin: 0, end: 100).animate(new CurveTween(curve: Curves.decelerate).animate(_controller));
-
-    return new GestureDetector(
-      onHorizontalDragUpdate: (data) {
-        print(data.primaryDelta);
-        setState(() {
-          _controller.value = data.primaryDelta / 100;
-        });
-      },
-      onHorizontalDragEnd: (data) {
-//        if (_controller.value >= .5 || data.primaryVelocity > 1500)
-//          _controller.animateTo(1.0); //close menu on fast swipe in the right direction
-//        else if (data.primaryVelocity < -1500) // fully open if dragged a lot to left or on fast swipe to left
-//          _controller.animateTo(0.0);
-//        else // close if none of above
-//          _controller.animateTo(.0);
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: animation.value),
-        child: widget.child,
       ),
     );
   }

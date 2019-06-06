@@ -14,7 +14,7 @@ class NotificationControl {
   NotificationControl._internal() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    var initializationSettingsAndroid = AndroidInitializationSettings('icon');
     var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
