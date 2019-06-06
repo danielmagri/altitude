@@ -26,7 +26,7 @@ class CueWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text("Deixa", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
-            Text("Deixa: " + cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
+            Text(cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
           ],
         ),
       ),
