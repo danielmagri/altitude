@@ -21,6 +21,26 @@ class _AlarmWidgetState extends State<AlarmWidget> {
   TimeOfDay _temporaryTime;
   List<bool> _daysSelected = [false, true, true, true, true, true, false];
 
+  @override
+  initState() {
+    super.initState();
+
+    if (DataHabitCreation().reminders.length != 0) {
+      _temporaryTime =
+          new TimeOfDay(hour: DataHabitCreation().reminders[0].hour, minute: DataHabitCreation().reminders[0].minute);
+
+      if (DataHabitCreation().reminders.length == 7) {
+        _chosen = 0;
+      } else {
+        _chosen = 1;
+        _daysSelected = [false, false, false, false, false, false, false];
+        for (Reminder reminder in DataHabitCreation().reminders) {
+          _daysSelected[reminder.weekday - 1] = true;
+        }
+      }
+    }
+  }
+
   void _emptyData() {
     _chosen = -1;
     DataHabitCreation().reminders = new List();

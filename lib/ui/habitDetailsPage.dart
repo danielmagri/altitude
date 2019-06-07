@@ -4,6 +4,7 @@ import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Reminder.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -147,9 +148,10 @@ class CalendarWidget extends StatelessWidget {
 }
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key, this.habit, this.frequency, this.markedDays, this.fromAllHabits}) : super(key: key);
+  HabitDetailsPage({Key key, this.habit, this.reminders, this.frequency, this.markedDays, this.fromAllHabits}) : super(key: key);
 
   final Habit habit;
+  final List<Reminder> reminders;
   final dynamic frequency;
   final Map<DateTime, List> markedDays;
   final bool fromAllHabits;
@@ -161,15 +163,19 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
 
-  int score;
   int previousScore = 0;
+  Habit habit;
+  List<Reminder> reminders;
+  dynamic frequency;
   Map<DateTime, List> markedDays;
 
   @override
   initState() {
     super.initState();
 
-    score = widget.habit.score;
+    habit = widget.habit;
+    reminders = widget.reminders;
+    frequency = widget.frequency;
     markedDays = widget.markedDays;
 
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
@@ -184,17 +190,17 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   void animateScore() {
-    if (previousScore != score) {
+    if (previousScore != habit.score) {
       _controllerScore.reset();
       _controllerScore.forward().then((e) {
-        previousScore = score;
+        previousScore = habit.score;
       });
     }
   }
 
   bool hasDoneToday() {
     DateTime now = DateTime.now();
-    if (widget.markedDays.containsKey(DateTime(now.year, now.month, now.day))) {
+    if (markedDays.containsKey(DateTime(now.year, now.month, now.day))) {
       return true;
     } else {
       return false;
@@ -205,7 +211,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     if (hasDoneToday()) {
       showToast("Você já completou esse hábito hoje!");
     } else {
-      DataControl().setHabitDoneAndScore(widget.habit.id, widget.habit.cycle).then((earnedScore) {
+      DataControl().setHabitDoneAndScore(habit.id, habit.cycle).then((earnedScore) {
         DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
         bool before;
         if (markedDays.length - 1 >= 0 && markedDays.containsKey(now.subtract(Duration(days: 1)))) {
@@ -216,8 +222,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         }
 
         setState(() {
-          score += earnedScore;
+          habit.score += earnedScore;
           markedDays.putIfAbsent(now, () => [before, false]);
+          habit.daysDone++;
         });
         animateScore();
       });
@@ -225,8 +232,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   String frequencyText() {
-    if (widget.frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freq = widget.frequency;
+    if (frequency.runtimeType == FreqDayWeek) {
+      FreqDayWeek freq = frequency;
       String text = "";
       bool hasOne = false;
 
@@ -264,11 +271,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         text += "Domingo";
       }
       return text;
-    } else if (widget.frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freq = widget.frequency;
+    } else if (frequency.runtimeType == FreqWeekly) {
+      FreqWeekly freq = frequency;
       return freq.daysTime.toString() + " vezes por semana";
-    } else if (widget.frequency.runtimeType == FreqRepeating) {
-      FreqRepeating freq = widget.frequency;
+    } else if (frequency.runtimeType == FreqRepeating) {
+      FreqRepeating freq = frequency;
       return freq.daysTime.toString() + " vezes em " + freq.daysCycle.toString() + " dias";
     } else {
       return "";
@@ -285,33 +292,42 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             SizedBox(
               height: 70.0,
               child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                BackButton(color: HabitColors.colors[widget.habit.color]),
+                BackButton(color: HabitColors.colors[habit.color]),
                 Spacer(),
                 IconButton(
-                    icon: Icon(Icons.check, size: 34, color: HabitColors.colors[widget.habit.color]),
+                    icon: Icon(Icons.check, size: 34, color: HabitColors.colors[habit.color]),
                     onPressed: setDoneHabit),
                 SizedBox(
                   width: 8,
                 ),
                 IconButton(
-                    icon: Icon(Icons.edit, size: 30, color: HabitColors.colors[widget.habit.color]),
+                    icon: Icon(Icons.edit, size: 30, color: HabitColors.colors[habit.color]),
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return EditHabitPage(
-                          habit: widget.habit,
-                          frequency: widget.frequency,
+                          habit: habit,
+                          reminders: reminders,
+                          frequency: frequency,
                         );
-                      }));
+                      })).then((editedData) {
+                        if (editedData != null) {
+                          setState(() {
+                            habit = editedData[0];
+                            frequency = editedData[1];
+                            reminders = editedData[2];
+                          });
+                        }
+                      });
                     }),
               ]),
             ),
             HeaderWidget(
-              id: widget.habit.id,
-              name: widget.habit.habit,
-              score: score,
+              id: habit.id,
+              name: habit.habit,
+              score: habit.score,
               previousScore: previousScore,
-              color: HabitColors.colors[widget.habit.color],
-              icon: widget.habit.icon,
+              color: HabitColors.colors[habit.color],
+              icon: habit.icon,
               fromAllHabits: widget.fromAllHabits,
               controllerScore: _controllerScore,
             ),
@@ -327,18 +343,18 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
             ),
             CueWidget(
-              cue: widget.habit.cue,
-              color: HabitColors.colors[widget.habit.color],
+              cue: habit.cue,
+              color: HabitColors.colors[habit.color],
             ),
             CoolDataWidget(
-              initialDate: widget.habit.initialDate != null ? widget.habit.initialDate : DateTime.now(),
-              daysDone: widget.habit.daysDone,
-              cycles: widget.habit.cycle,
-              color: HabitColors.colors[widget.habit.color],
+              initialDate: habit.initialDate != null ? habit.initialDate : DateTime.now(),
+              daysDone: habit.daysDone,
+              cycles: habit.cycle,
+              color: HabitColors.colors[habit.color],
             ),
             CalendarWidget(
               markedDays: markedDays,
-              color: HabitColors.colors[widget.habit.color],
+              color: HabitColors.colors[habit.color],
             ),
           ],
         ),

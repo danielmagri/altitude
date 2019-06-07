@@ -14,7 +14,9 @@ class DataHabitCreation {
     return _singleton;
   }
 
-  DataHabitCreation._internal();
+  DataHabitCreation._internal() {
+    emptyData();
+  }
 
   void emptyData() {
     indexColor = Random().nextInt(HabitColors.colors.length);

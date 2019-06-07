@@ -18,6 +18,25 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
   int chosen = -1;
 
   @override
+  initState() {
+    super.initState();
+
+    if (DataHabitCreation().frequency != null) {
+      switch (DataHabitCreation().frequency.runtimeType) {
+        case FreqDayWeek:
+          chosen = 0;
+          break;
+        case FreqWeekly:
+          chosen = 1;
+          break;
+        case FreqRepeating:
+          chosen = 2;
+          break;
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 32.0, left: 40),
