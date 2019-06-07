@@ -165,17 +165,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   Widget _doneIconBackgroundWidget() {
-    if (habitsForToday != null && habitsDone != null && habitsForToday.length == habitsDone.length) {
-      return Center(
-        child: Icon(
-          Icons.done,
-          size: 350,
-          color: Colors.grey.withOpacity(0.1),
-        ),
-      );
-    } else {
-      return Container();
-    }
+//    if (habitsForToday != null && habitsDone != null && habitsDone.length > 0) {
+//      for (Habit habit in habitsForToday) {
+//        if (habitsDone.firstWhere((done) => done.habitId == habit.id, orElse: () => null).habitId == null) {
+//          return Container();
+//        }
+//      }
+//
+//      return Center(
+//        child: Icon(
+//          Icons.done,
+//          size: 350,
+//          color: Colors.grey.withOpacity(0.1),
+//        ),
+//      );
+//    }
+    return Container();
   }
 
   Widget _habitsForTodayBuild(BuildContext context, BoxConstraints constrant) {

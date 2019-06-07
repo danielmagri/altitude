@@ -37,7 +37,6 @@ class _HabitWidgetState extends State<HabitWidget> {
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
         if (!visible && _focusNode.hasFocus) {
-          print("HABIT KEYBORAD");
           _focusNode.unfocus();
           _validate();
         }
@@ -53,6 +52,9 @@ class _HabitWidgetState extends State<HabitWidget> {
 //        prefs.setBool("habitTutorial", true);
 //      }
 //    });
+
+
+    _validate();
   }
 
   @override

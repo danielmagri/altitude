@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Color.dart';
 
@@ -51,13 +52,15 @@ class HabitListItem extends StatelessWidget {
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
                   onTap: () async {
                     Habit data = await DataControl().getHabit(habit.id);
+                    List<Reminder> reminders = await DataControl().getReminders(habit.id);
                     dynamic frequency = await DataControl().getFrequency(habit.id);
                     Map<DateTime, List> daysDone = await DataControl().getDaysDone(habit.id);
 
-                    if (data != null && data.id != null && frequency != null) {
+                    if (data != null && data.id != null && frequency != null && reminders != null) {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return HabitDetailsPage(
                           habit: data,
+                          reminders: reminders,
                           frequency: frequency,
                           markedDays: daysDone,
                           fromAllHabits: false,

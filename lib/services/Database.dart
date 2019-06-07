@@ -180,6 +180,27 @@ class DatabaseService {
     return list;
   }
 
+  Future<List> getHabitsDoneToday() async {
+    DateTime now = new DateTime.now();
+
+    final db = await database;
+    var result = await db.rawQuery(
+        'SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
+
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    return list;
+  }
+
+  Future<List<Reminder>> getReminders(int id) async {
+    final db = await database;
+
+    var result = await db.rawQuery('SELECT * FROM reminder WHERE habit_id=$id;');
+
+    List<Reminder> list = result.isNotEmpty ? result.map((c) => Reminder.fromJson(c)).toList() : [];
+
+    return list;
+  }
+
   Future<dynamic> getFrequency(int id) async {
     final db = await database;
 
@@ -198,17 +219,6 @@ class DatabaseService {
     } else {
       return null;
     }
-  }
-
-  Future<List> getHabitsDoneToday() async {
-    DateTime now = new DateTime.now();
-
-    final db = await database;
-    var result = await db.rawQuery(
-        'SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
-
-    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
-    return list;
   }
 
   Future<List> getDaysDone(int id) async {
@@ -255,6 +265,7 @@ class DatabaseService {
   Future<Map> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     DateTime now = new DateTime.now();
     final db = await database;
+
     // Inserção dos dados do hábito
     var id = await db.rawInsert(
         '''INSERT INTO habit (habit_text, cue_text, color, icon, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
@@ -266,6 +277,34 @@ class DatabaseService {
                                                                                                                 \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
                                                                                                                 0);''');
     // Inserção dos dados da frequência
+    await addFrequency(id, frequency);
+
+    // Inserção dos dados dos alarmes
+    List<Reminder> remindersAdded = await addReminders(id, reminders);
+
+    return {0: id, 1: remindersAdded};
+  }
+
+  Future<List<Reminder>> addReminders(int habitId, List<Reminder> reminders) async {
+    final db = await database;
+    List<Reminder> remindersAdded = new List();
+
+    for (Reminder reminder in reminders) {
+      int reminderId =
+          await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, habit_id) VALUES (${reminder.hour},
+                                                                                           ${reminder.minute},
+                                                                                           ${reminder.weekday},
+                                                                                           $habitId);''');
+      remindersAdded
+          .add(new Reminder(id: reminderId, hour: reminder.hour, minute: reminder.minute, weekday: reminder.weekday));
+    }
+
+    return remindersAdded;
+  }
+
+  Future<bool> addFrequency(int id, dynamic frequency) async {
+    final db = await database;
+
     if (frequency.runtimeType == FreqDayWeek) {
       FreqDayWeek freq = frequency;
       await db.rawInsert(
@@ -287,27 +326,60 @@ class DatabaseService {
                                                                                                  $id);''');
     }
 
-    List<Reminder> remidersAdded = new List();
-    // Inserção dos dados dos alarmes
-    for (Reminder reminder in reminders) {
-      int remiderId =
-          await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, habit_id) VALUES (${reminder.hour},
-                                                                                           ${reminder.minute},
-                                                                                           ${reminder.weekday},
-                                                                                           $id);''');
-      remidersAdded
-          .add(new Reminder(id: remiderId, hour: reminder.hour, minute: reminder.minute, weekday: reminder.weekday));
-    }
-
-    return {0: id, 1: remidersAdded};
+    return true;
   }
 
   Future<bool> updateHabit(Habit habit) async {
     final db = await database;
 
-    await db.rawInsert('''UPDATE habit SET habit_text=\'${habit.habit}\',
+    await db.rawUpdate('''UPDATE habit SET habit_text=\'${habit.habit}\',
                                            cue_text=\'${habit.cue}\',
-                                           color=${habit.color}  WHERE id=${habit.id};''');
+                                           color=${habit.color},
+                                           icon=${habit.icon}  WHERE id=${habit.id};''');
+
+    return true;
+  }
+
+  Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
+    final db = await database;
+
+    if (frequency.runtimeType == typeOldFreq) {
+      switch (frequency.runtimeType) {
+        case FreqDayWeek:
+          FreqDayWeek freq = frequency;
+          await db.rawUpdate('''UPDATE freq_day_week SET monday=${freq.monday},
+                                                       tuesday=${freq.tuesday},
+                                                       wednesday=${freq.wednesday},
+                                                       thursday=${freq.thursday},
+                                                       friday=${freq.friday},
+                                                       saturday=${freq.saturday},
+                                                       sunday=${freq.sunday} WHERE habit_id=$id;''');
+          break;
+        case FreqWeekly:
+          FreqWeekly freq = frequency;
+          await db.rawUpdate('''UPDATE freq_weekly SET days_time=${freq.daysTime} WHERE habit_id=$id;''');
+          break;
+        case FreqRepeating:
+          FreqRepeating freq = frequency;
+          await db.rawUpdate('''UPDATE freq_repeating SET days_time=${freq.daysTime}, 
+                                                        days_cycle=${freq.daysCycle} WHERE habit_id=$id;''');
+          break;
+      }
+    } else {
+      switch (typeOldFreq) {
+        case FreqDayWeek:
+          await db.rawDelete('''DELETE FROM freq_day_week WHERE habit_id=$id;''');
+          break;
+        case FreqWeekly:
+          await db.rawDelete('''DELETE FROM freq_weekly WHERE habit_id=$id;''');
+          break;
+        case FreqRepeating:
+          await db.rawDelete('''DELETE FROM freq_repeating WHERE habit_id=$id;''');
+          break;
+      }
+
+      await addFrequency(id, frequency);
+    }
 
     return true;
   }
@@ -315,7 +387,15 @@ class DatabaseService {
   Future<bool> deleteHabit(int id) async {
     final db = await database;
 
-    await db.rawInsert('''DELETE FROM habit WHERE id=$id;''');
+    await db.rawDelete('''DELETE FROM habit WHERE id=$id;''');
+
+    return true;
+  }
+
+  Future<bool> deleteAllReminders(int habitId) async {
+    final db = await database;
+
+    await db.rawDelete('''DELETE FROM reminder WHERE habit_id=$habitId;''');
 
     return true;
   }

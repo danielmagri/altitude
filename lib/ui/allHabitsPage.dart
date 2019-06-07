@@ -14,14 +14,14 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
   List<Habit> habits;
 
   @override
-  initState() {
-    super.initState();
-
+  void didChangeDependencies() {
     DataControl().getAllHabits().then((data) {
       setState(() {
         habits = data;
       });
     });
+
+    super.didChangeDependencies();
   }
 
   @override

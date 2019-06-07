@@ -35,7 +35,6 @@ class _CueWidgetState extends State<CueWidget> {
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
         if (!visible && _focusNode.hasFocus) {
-          print("CUE KEYBORAD");
           _focusNode.unfocus();
           _validate();
         }
@@ -51,6 +50,8 @@ class _CueWidgetState extends State<CueWidget> {
 //        prefs.setBool("cueTutorial", true);
 //      }
 //    });
+
+    _validate();
   }
 
   @override

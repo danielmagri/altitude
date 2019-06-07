@@ -1,13 +1,13 @@
 class Habit {
+  int score;
+  int daysDone;
   final int id;
   final int color;
   final int icon;
   final String cue;
   final String habit;
-  final int score;
   final int cycle;
   final DateTime initialDate;
-  final int daysDone;
 
   Habit(
       {this.id, this.color, this.icon, this.cue, this.habit, this.score, this.cycle, this.initialDate, this.daysDone});

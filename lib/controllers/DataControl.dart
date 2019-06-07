@@ -37,8 +37,7 @@ class DataControl {
   Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     Map response = await DatabaseService().addHabit(habit, frequency, reminders);
     for (Reminder reminder in response[1]) {
-      await NotificationControl()
-          .addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
+      await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
     }
 
     return true;
@@ -52,13 +51,35 @@ class DataControl {
     return await DatabaseService().deleteHabit(id);
   }
 
+  // ***** REMINDER *****
+  Future<List<Reminder>> getReminders(int id) async {
+    return await DatabaseService().getReminders(id);
+  }
+
+  Future<bool> addReminders(Habit habit, List<Reminder> reminders) async {
+    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
+
+    for (Reminder reminder in remindersAdded) {
+      await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
+    }
+
+    return true;
+  }
+
+  Future<bool> deleteReminders(int habitId, List<Reminder> reminders) async {
+    for (Reminder reminder in reminders) {
+      await NotificationControl().removeNotification(reminder.id);
+    }
+    return await DatabaseService().deleteAllReminders(habitId);
+  }
+
   // ***** FREQUENCY *****
   Future<dynamic> getFrequency(int id) async {
     return await DatabaseService().getFrequency(id);
   }
 
-  Future<bool> updateFrequency(int id, dynamic frequency) async {
-    return true;
+  Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
+    return await DatabaseService().updateFrequency(id, frequency, typeOldFreq);
   }
 
   // ***** DAYDONE *****
