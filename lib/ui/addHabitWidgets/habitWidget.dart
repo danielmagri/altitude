@@ -53,8 +53,9 @@ class _HabitWidgetState extends State<HabitWidget> {
 //      }
 //    });
 
-
-    _validate();
+    if (widget.controller.text.isNotEmpty) {
+      _validate();
+    }
   }
 
   @override
@@ -196,7 +197,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                               context: context,
                               builder: (BuildContext context) => IconsDialog(),
                             ).then((result) {
-                              if (result != -1) {
+                              if (result != null && result != -1) {
                                 setState(() {
                                   DataHabitCreation().icon = result;
                                 });

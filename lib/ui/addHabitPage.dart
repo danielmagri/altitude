@@ -75,10 +75,23 @@ class _AddHabitPageState extends State<AddHabitPage> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 60.0),
-              child: Text(
-                "NOVO HÁBITO",
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+              margin: EdgeInsets.only(top: 50.0),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 50,
+                    child: BackButton(),
+                  ),
+                  Spacer(),
+                  Text(
+                    "NOVO HÁBITO",
+                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                  ),
+                  Spacer(),
+                  SizedBox(
+                    width: 50,
+                  ),
+                ],
               ),
             ),
             Container(

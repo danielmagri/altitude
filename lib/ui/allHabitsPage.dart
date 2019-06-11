@@ -73,7 +73,7 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
       widgets.add(
         Center(
           child: Text(
-            "Não tem hábitos para serem feitos hoje",
+            "Crie um novo hábito pelo botão \"+\" na tela principal.",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
           ),
