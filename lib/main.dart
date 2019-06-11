@@ -12,6 +12,7 @@ import 'package:habit/objects/DayDone.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:vibration/vibration.dart';
 
 void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -118,6 +119,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
     int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
 
+    Vibration.hasVibrator().then((resp) {
+      if (resp != null && resp == true) {
+        Vibration.vibrate(duration: 100);
+      }
+    });
+
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
       setState(() {
         person.score += earnedScore;
@@ -152,6 +159,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           ),
           Expanded(
             child: Stack(
+              alignment: Alignment.center,
               children: <Widget>[
                 _doneIconBackgroundWidget(),
                 LayoutBuilder(builder: _habitsForTodayBuild),
@@ -208,10 +216,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       }
     }
 
-    return Center(
-      child: ListView(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Column(
         children: widgets,
       ),
     );

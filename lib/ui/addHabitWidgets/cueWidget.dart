@@ -51,7 +51,9 @@ class _CueWidgetState extends State<CueWidget> {
 //      }
 //    });
 
-    _validate();
+    if (widget.controller.text.isNotEmpty) {
+      _validate();
+    }
   }
 
   @override

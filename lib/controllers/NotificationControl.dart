@@ -30,9 +30,9 @@ class NotificationControl {
     Time time = Time(hour, minute);
     Day day = Day(weekday);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      id.toString(), // channel id
-      habit.cue, // channel name
-      habit.habit, // channel description
+      "1", // channel id
+      "Aviso do hábito", // channel name
+      "Aviso para não esquecer sobre a deixa do hábito", // channel description
       importance: Importance.Max,
       priority: Priority.High,
       ticker: 'ticker',
