@@ -73,9 +73,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     DataPreferences().getName().then((name) {
-      setState(() {
-        person.name = name;
-      });
+      if (name != null) {
+        setState(() {
+          person.name = name;
+        });
+      }
     });
 
     DataPreferences().getScore().then((score) {

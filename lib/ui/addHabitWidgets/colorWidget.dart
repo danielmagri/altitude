@@ -13,13 +13,14 @@ class ColorWidget extends StatelessWidget {
     for (int i = 0; i < HabitColors.colors.length; i++) {
       widgets.add(InkWell(
         onTap: () => changeColor(i),
-        child: Container(
-          width: 30,
-          height: 30,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          width: i == currentColor ? 45 : 30,
+          height: i == currentColor ? 45 : 30,
           decoration: BoxDecoration(
             color: HabitColors.colors[i],
             shape: BoxShape.circle,
-            border: i == currentColor ? Border.all(color: Colors.black, width: 2) : null,
+            border: i == currentColor ? Border.all(color: Colors.white, width: 2) : null,
             boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
           ),
         ),
@@ -31,10 +32,15 @@ class ColorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      runSpacing: 12,
-      spacing: 12,
-      children: _colorsWidgets(),
+    return SizedBox(
+      height: 45,
+      child: Wrap(
+        runSpacing: 12,
+        spacing: 12,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runAlignment: WrapAlignment.center,
+        children: _colorsWidgets(),
+      ),
     );
   }
 }

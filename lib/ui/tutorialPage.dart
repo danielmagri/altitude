@@ -31,9 +31,9 @@ class _TutorialPageState extends State<TutorialPage> {
       if (result == null) {
         await DataPreferences().setName(_nameTextController.text);
 
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-            return MainPage();
-          }));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+          return MainPage();
+        }));
       } else {
         Fluttertoast.showToast(
             msg: result,
@@ -44,7 +44,6 @@ class _TutorialPageState extends State<TutorialPage> {
             textColor: Colors.black,
             fontSize: 16.0);
       }
-
     }
   }
 
@@ -57,46 +56,198 @@ class _TutorialPageState extends State<TutorialPage> {
             controller: _controller,
             children: <Widget>[
               Container(
-                color: Color.fromARGB(255, 190, 60, 60),
-                child: Text("Adicionar hábito"),
-              ),
-              Container(
-                color: Color.fromARGB(255, 55, 55, 175),
-                child: Text("Finalizar Hábito"),
-              ),
-              Container(
-                color: Color.fromARGB(255, 56, 173, 72),
-                child: Text("Pontuação"),
-              ),
-              Container(
-                color: Color.fromARGB(255, 200, 200, 200),
+                color: Colors.red,
                 child: Column(
                   children: <Widget>[
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          "Qual é seu nome?",
-                          style: TextStyle(fontSize: 28, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 64),
+                      child: Text(
+                        "ADICIONAR HÁBITO",
+                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
+                    Container(
+                      height: 1,
+                      color: Colors.white,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            height: 225,
+                            width: 225,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: new AssetImage('assets/addButton.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                                ]),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              "Crie um novo hábito clicando no botão \"+\".",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                color: Colors.blue,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(top: 64),
+                      child: Text(
+                        "FINALIZAR HÁBITO",
+                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.white,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            height: 225,
+                            width: 225,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: new AssetImage('assets/doneHabit.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                                ]),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              "Finalize o hábito do dia arrastando-o para a direita!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                color: Colors.green,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(top: 64),
+                      child: Text(
+                        "PONTUAÇÃO",
+                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.white,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            height: 225,
+                            width: 225,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: new AssetImage('assets/score.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                                ]),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              "Ganhe pontos ao finalizar um hábito e um bônus ao completar o ciclo inteiro!",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                color: Colors.orange,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(top: 64),
+                      child: Text(
+                        "Como podemos te chamar?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                    Container(
+                      height: 1,
+                      color: Colors.white,
+                      width: double.maxFinite,
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    ),
                     Flexible(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 180, 180, 180),
-                          borderRadius: BorderRadius.circular(30.0),
-                          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
-                        ),
-                        child: TextField(
-                          controller: _nameTextController,
-                          textInputAction: TextInputAction.done,
-                          textCapitalization: TextCapitalization.words,
-                          onEditingComplete: _nextTap,
-                          style: TextStyle(fontSize: 16.0),
-                          decoration: InputDecoration.collapsed(
-                              hintText: "Seu nome", hintStyle: TextStyle(color: Colors.white.withOpacity(0.6))),
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                          margin: const EdgeInsets.only(left: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                            boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
+                          ),
+                          child: TextField(
+                            controller: _nameTextController,
+                            textInputAction: TextInputAction.done,
+                            textCapitalization: TextCapitalization.words,
+                            onEditingComplete: _nextTap,
+                            style: TextStyle(fontSize: 18.0),
+                            decoration: InputDecoration.collapsed(hintText: "Seu nome"),
+                          ),
                         ),
                       ),
                     ),
@@ -114,9 +265,6 @@ class _TutorialPageState extends State<TutorialPage> {
             right: 0,
             child: new Container(
               height: 60,
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.black26, width: 1)),
-              ),
               child: Stack(
                 children: <Widget>[
                   new Center(

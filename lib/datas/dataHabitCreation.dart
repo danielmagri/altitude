@@ -10,6 +10,8 @@ class DataHabitCreation {
   dynamic frequency;
   List<Reminder> reminders;
 
+  int lastTextEdited = 0; //0 Habit, 1 Cue
+
   factory DataHabitCreation() {
     return _singleton;
   }

@@ -41,7 +41,7 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
                   ),
                   Spacer(),
                   Text(
-                    "TODOS OS HÁBITO",
+                    "TODOS OS HÁBITOS",
                     style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
