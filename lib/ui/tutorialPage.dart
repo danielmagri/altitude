@@ -93,7 +93,7 @@ class _TutorialPageState extends State<TutorialPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                              "Crie um novo hábito clicando no botão \"+\".",
+                              "Crie um novo hábito clicando no botão \"+\"",
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
                             ),
