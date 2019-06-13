@@ -6,6 +6,7 @@ import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/TutorialDialog.dart';
 import 'package:habit/utils/enums.dart';
+import 'package:habit/datas/dataHabitCreation.dart';
 
 class CueWidget extends StatefulWidget {
   CueWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);
@@ -34,12 +35,18 @@ class _CueWidgetState extends State<CueWidget> {
 
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
-        if (!visible && _focusNode.hasFocus) {
+        if (!visible && DataHabitCreation().lastTextEdited == 1) {
           _focusNode.unfocus();
           _validate();
         }
       },
     );
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        DataHabitCreation().lastTextEdited = 1;
+      }
+    });
 
     widget.controller.addListener(_onTextChanged);
 
@@ -164,7 +171,8 @@ class _CueWidgetState extends State<CueWidget> {
               ],
             ),
           ),
-          Container(
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),

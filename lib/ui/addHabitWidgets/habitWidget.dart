@@ -36,12 +36,18 @@ class _HabitWidgetState extends State<HabitWidget> {
 
     _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
       onChange: (bool visible) {
-        if (!visible && _focusNode.hasFocus) {
+        if (!visible && DataHabitCreation().lastTextEdited == 0) {
           _focusNode.unfocus();
           _validate();
         }
       },
     );
+
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        DataHabitCreation().lastTextEdited = 0;
+      }
+    });
 
     widget.controller.addListener(_onTextChanged);
 
@@ -169,7 +175,8 @@ class _HabitWidgetState extends State<HabitWidget> {
               ],
             ),
           ),
-          Container(
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
@@ -223,7 +230,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                         child: Container(
                           padding: EdgeInsets.all(6.0),
                           child: Text(
-                            "Clique aqui para alterar o ícone",
+                            "Clique no ícone para alterá-lo",
                             style: TextStyle(color: Colors.black),
                           ),
                           decoration: BoxDecoration(

@@ -68,7 +68,8 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                     }
                   });
                 },
-                child: Container(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
                   width: double.maxFinite,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
@@ -113,7 +114,8 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                     }
                   });
                 },
-                child: Container(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
                   width: double.maxFinite,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
@@ -158,7 +160,8 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                     }
                   });
                 },
-                child: Container(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
                   width: double.maxFinite,
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
