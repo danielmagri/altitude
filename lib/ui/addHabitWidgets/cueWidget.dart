@@ -5,7 +5,6 @@ import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/TutorialDialog.dart';
-import 'package:habit/utils/enums.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 
 class CueWidget extends StatefulWidget {
@@ -110,7 +109,7 @@ class _CueWidgetState extends State<CueWidget> {
     List result = new List();
     String cue = widget.controller.text.toLowerCase();
 
-    for (String text in Suggestions.getCues(CategoryEnum.PHYSICAL)) {
+    for (String text in Suggestions.getCues()) {
       if (text.toLowerCase().contains(cue) && text.toLowerCase() != cue) {
         result.add(text);
       }
@@ -203,7 +202,6 @@ class _CueWidgetState extends State<CueWidget> {
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
                   padding: suggestion.length != 0 ? EdgeInsets.only(top: 12, bottom: 8) : EdgeInsets.all(0),
-                  itemExtent: 40,
                   itemCount: suggestion.length < 5 ? suggestion.length : 5,
                   itemBuilder: (context, position) {
                     return GestureDetector(
@@ -214,9 +212,12 @@ class _CueWidgetState extends State<CueWidget> {
 
                         _validate();
                       },
-                      child: Text(
-                        suggestion[position],
-                        style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w300),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Text(
+                          suggestion[position],
+                          style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w300),
+                        ),
                       ),
                     );
                   },
