@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/ui/widgets/Toast.dart';
 import 'package:habit/utils/Validator.dart';
-import 'package:habit/utils/enums.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -103,7 +102,7 @@ class _HabitWidgetState extends State<HabitWidget> {
 
   List getSuggestions() {
     List result = new List();
-    List data = Suggestions.getHabits(CategoryEnum.PHYSICAL);
+    List data = Suggestions.getHabits();
     String habit = widget.controller.text.toLowerCase();
 
     for (int i = 0; i < data.length; i++) {
@@ -255,7 +254,6 @@ class _HabitWidgetState extends State<HabitWidget> {
                 ListView.builder(
                   shrinkWrap: true,
                   padding: suggestion.length != 0 ? EdgeInsets.only(top: 12, bottom: 8) : EdgeInsets.all(0),
-                  itemExtent: 40,
                   physics: BouncingScrollPhysics(),
                   itemCount: suggestion.length < 5 ? suggestion.length : 5,
                   itemBuilder: (context, position) {
@@ -273,21 +271,24 @@ class _HabitWidgetState extends State<HabitWidget> {
 
                         _validate();
                       },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Icon(
-                            IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            suggestion[position][1],
-                            style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w300),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Icon(
+                              IconData(suggestion[position][0], fontFamily: 'MaterialIcons'),
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              suggestion[position][1],
+                              style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w300),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
