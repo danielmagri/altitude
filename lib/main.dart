@@ -11,6 +11,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
+import 'package:habit/ui/widgets/Loading.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -122,13 +123,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
     int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
 
-    Vibration.hasVibrator().then((resp) {
-      if (resp != null && resp == true) {
-        Vibration.vibrate(duration: 100);
-      }
-    });
+    showLoading(context);
 
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
+      closeLoading(context);
+      Vibration.hasVibrator().then((resp) {
+        if (resp != null && resp == true) {
+          Vibration.vibrate(duration: 100);
+        }
+      });
+
       setState(() {
         person.score += earnedScore;
       });

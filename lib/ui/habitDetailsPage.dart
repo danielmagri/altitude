@@ -10,6 +10,7 @@ import 'package:habit/controllers/DataControl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/ui/widgets/Toast.dart';
 import 'package:vibration/vibration.dart';
+import 'package:habit/ui/widgets/Loading.dart';
 
 class CueWidget extends StatelessWidget {
   CueWidget({Key key, this.cue, this.color}) : super(key: key);
@@ -212,13 +213,17 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     if (hasDoneToday()) {
       showToast("Você já completou esse hábito hoje!");
     } else {
-      Vibration.hasVibrator().then((resp) {
-        if (resp != null && resp == true) {
-          Vibration.vibrate(duration: 100);
-        }
-      });
+
+      showLoading(context);
 
       DataControl().setHabitDoneAndScore(habit.id, habit.cycle).then((earnedScore) {
+        closeLoading(context);
+        Vibration.hasVibrator().then((resp) {
+          if (resp != null && resp == true) {
+            Vibration.vibrate(duration: 100);
+          }
+        });
+
         DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
         bool before;
         if (markedDays.length - 1 >= 0 && markedDays.containsKey(now.subtract(Duration(days: 1)))) {

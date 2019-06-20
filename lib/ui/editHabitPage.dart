@@ -13,6 +13,7 @@ import 'package:habit/utils/Color.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/Loading.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key, this.habit, this.reminders, this.frequency}) : super(key: key);
@@ -77,6 +78,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         initialDate: widget.habit.initialDate
       );
 
+      showLoading(context);
+
       if (editedHabit.icon != widget.habit.icon ||
           editedHabit.color != widget.habit.color ||
           editedHabit.cue.compareTo(widget.habit.cue) == 0 ||
@@ -93,6 +96,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         await DataControl().deleteReminders(widget.habit.id, widget.reminders);
         await DataControl().addReminders(editedHabit, DataHabitCreation().reminders);
       }
+
+      closeLoading(context);
 
       Navigator.pop(context, {0:editedHabit, 1: DataHabitCreation().frequency, 2: DataHabitCreation().reminders});
       showToast("O hábito foi editado!");

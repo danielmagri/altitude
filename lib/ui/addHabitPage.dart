@@ -11,6 +11,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/Loading.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -60,7 +61,11 @@ class _AddHabitPageState extends State<AddHabitPage> {
         habit: habitController.text,
       );
 
+      showLoading(context);
+
       DataControl().addHabit(habit, DataHabitCreation().frequency, DataHabitCreation().reminders).then((result) {
+        closeLoading(context);
+
         Navigator.pop(context);
         showToast("O hábito foi criado com sucesso!");
       });
