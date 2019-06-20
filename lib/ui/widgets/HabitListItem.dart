@@ -4,6 +4,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/ui/widgets/Loading.dart';
 
 class HabitListItem extends StatelessWidget {
   HabitListItem({Key key, this.habit, this.done, this.setHabitDone, this.width}) : super(key: key);
@@ -51,11 +52,14 @@ class HabitListItem extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
                   onTap: () async {
+                    showLoading(context);
+
                     Habit data = await DataControl().getHabit(habit.id);
                     List<Reminder> reminders = await DataControl().getReminders(habit.id);
                     dynamic frequency = await DataControl().getFrequency(habit.id);
                     Map<DateTime, List> daysDone = await DataControl().getDaysDone(habit.id);
 
+                    closeLoading(context);
                     if (data != null && data.id != null && frequency != null && reminders != null) {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return HabitDetailsPage(
