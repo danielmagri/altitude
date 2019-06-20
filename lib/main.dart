@@ -23,6 +23,7 @@ void main() async {
 
   bool showTutorial = false;
   if (await DataPreferences().getName() == null) showTutorial = true;
+
   runApp(MyApp(
     showTutorial: showTutorial,
   ));
