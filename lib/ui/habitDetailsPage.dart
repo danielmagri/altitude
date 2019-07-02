@@ -68,10 +68,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     if (hasDoneToday()) {
       showToast("Você já completou esse hábito hoje!");
     } else {
-      showLoading(context);
+      Loading.showLoading(context);
 
       DataControl().setHabitDoneAndScore(data.habit.id, data.habit.cycle).then((earnedScore) {
-        closeLoading(context);
+        Loading.closeLoading(context);
         Vibration.hasVibrator().then((resp) {
           if (resp != null && resp == true) {
             Vibration.vibrate(duration: 100);

@@ -36,6 +36,7 @@ class DataControl {
 
   Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+    habit.id = response[0];
     for (Reminder reminder in response[1]) {
       await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
     }

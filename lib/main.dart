@@ -123,10 +123,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
     int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
 
-    showLoading(context);
+    Loading.showLoading(context);
 
     DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
-      closeLoading(context);
+      Loading.closeLoading(context);
       Vibration.hasVibrator().then((resp) {
         if (resp != null && resp == true) {
           Vibration.vibrate(duration: 100);
