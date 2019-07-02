@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
-import 'package:habit/ui/addHabitWidgets/cueWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
 import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
 import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
@@ -24,7 +23,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
-  final cueController = TextEditingController();
 
   @override
   void initState() {
@@ -36,7 +34,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
   @override
   void dispose() {
     habitController.dispose();
-    cueController.dispose();
     super.dispose();
   }
 
@@ -49,15 +46,12 @@ class _AddHabitPageState extends State<AddHabitPage> {
   void _createHabitTap() {
     if (Validate.habitTextValidate(habitController.text) != null) {
       showToast("O hábito precisa ser preenchido.");
-    } else if (Validate.cueTextValidate(cueController.text) != null) {
-      showToast("A deixa precisa ser preenchido.");
     } else if (DataHabitCreation().frequency == null) {
       showToast("Escolha qual será a frequência.");
     } else {
       Habit habit = new Habit(
         color: DataHabitCreation().indexColor,
         icon: DataHabitCreation().icon,
-        cue: cueController.text,
         habit: habitController.text,
       );
 
@@ -119,11 +113,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
             ),
             FrequencyWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],
-            ),
-            CueWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
-              controller: cueController,
-              keyboard: _keyboardVisibility,
             ),
             AlarmWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],

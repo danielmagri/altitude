@@ -47,6 +47,10 @@ class DataControl {
     return await DatabaseService().updateHabit(habit);
   }
 
+  Future<bool> updateCue(int id, String cue) async {
+    return await DatabaseService().updateCue(id, cue);
+  }
+
   Future<bool> deleteHabit(int id) async {
     return await DatabaseService().deleteHabit(id);
   }

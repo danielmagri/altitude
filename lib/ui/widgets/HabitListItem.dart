@@ -5,6 +5,7 @@ import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/datas/dataHabitDetail.dart';
 
 class HabitListItem extends StatelessWidget {
   HabitListItem({Key key, this.habit, this.done, this.setHabitDone, this.width}) : super(key: key);
@@ -38,7 +39,7 @@ class HabitListItem extends StatelessWidget {
               key: Key(habit.id.toString()),
               confirmDismiss: (direction) async {
                 if (!done && direction == DismissDirection.startToEnd) setHabitDone(habit.id);
-                Future.value(false);
+                return Future.value(false);
               },
               direction: done ? DismissDirection.endToStart : DismissDirection.startToEnd,
               child: Container(
@@ -61,12 +62,13 @@ class HabitListItem extends StatelessWidget {
 
                     closeLoading(context);
                     if (data != null && data.id != null && frequency != null && reminders != null) {
+                      DataHabitDetail().habit = data;
+                      DataHabitDetail().reminders = reminders;
+                      DataHabitDetail().frequency = frequency;
+                      DataHabitDetail().daysDone = daysDone;
+
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
                         return HabitDetailsPage(
-                          habit: data,
-                          reminders: reminders,
-                          frequency: frequency,
-                          markedDays: daysDone,
                           fromAllHabits: false,
                         );
                       }));

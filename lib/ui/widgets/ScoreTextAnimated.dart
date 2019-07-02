@@ -12,11 +12,11 @@ class ScoreWidget extends AnimatedWidget {
         Text(
           animation.value.toString(),
           style: TextStyle(
-              fontSize: 70.0, fontWeight: FontWeight.bold, height: 0, color: color == null ? Colors.black : color),
+              fontSize: 70, fontWeight: FontWeight.bold, height: 0, color: color == null ? Colors.black : color),
         ),
         Text(
-          "PONTOS",
-          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w300),
+          "FORÇA DE VONTADE",
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
         ),
       ],
     );
