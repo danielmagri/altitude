@@ -5,6 +5,7 @@ import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/datas/dataHabitDetail.dart';
 
 class HabitCardItem extends StatelessWidget {
   HabitCardItem({Key key, this.habit}) : super(key: key);
@@ -24,12 +25,13 @@ class HabitCardItem extends StatelessWidget {
 
         closeLoading(context);
         if (data != null && data.id != null && frequency != null && reminders != null) {
+          DataHabitDetail().habit = data;
+          DataHabitDetail().reminders = reminders;
+          DataHabitDetail().frequency = frequency;
+          DataHabitDetail().daysDone = daysDone;
+
           Navigator.push(context, MaterialPageRoute(builder: (_) {
             return HabitDetailsPage(
-              habit: data,
-              reminders: reminders,
-              frequency: frequency,
-              markedDays: daysDone,
               fromAllHabits: true,
             );
           }));

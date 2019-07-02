@@ -1,7 +1,5 @@
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'dart:io';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -11,7 +9,7 @@ class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
 
   static final _databaseName = "habitus.db";
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
 
   static Database _database;
 
@@ -29,9 +27,31 @@ class DatabaseService {
   }
 
   _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
+    String path = join(await getDatabasesPath(), _databaseName);
+    return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) {
+    if (oldVersion < 2) {
+      db.transaction((txn) async {
+        await txn.execute('ALTER TABLE habit RENAME TO _habit_old;');
+        await txn.execute('''
+          CREATE TABLE habit (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            color INTEGER NOT NULL,
+            icon INTEGER NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            cycle INTEGER NOT NULL DEFAULT 1,
+            habit_text VARCHAR(30) NOT NULL,
+            cue_text VARCHAR(45),
+            initial_date DATE NOT NULL,
+            days_done INTEGER NOT NULL DEFAULT 0);''');
+
+        await txn.rawInsert('''INSERT INTO habit(id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done)
+                               SELECT id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done
+                               FROM _habit_old;''');
+      });
+    }
   }
 
   Future _onCreate(Database db, int version) async {
@@ -40,12 +60,12 @@ class DatabaseService {
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             color INTEGER NOT NULL,
             icon INTEGER NOT NULL,
-            score INTEGER NOT NULL,
-            cycle INTEGER NOT NULL,
-            habit_text VARCHAR(45) NOT NULL,
-            cue_text VARCHAR(45) NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            cycle INTEGER NOT NULL DEFAULT 1,
+            habit_text VARCHAR(30) NOT NULL,
+            cue_text VARCHAR(45),
             initial_date DATE NOT NULL,
-            days_done INTEGER NOT NULL);''');
+            days_done INTEGER NOT NULL DEFAULT 0);''');
 
     await db.execute('''
           CREATE TABLE freq_day_week (
@@ -61,7 +81,7 @@ class DatabaseService {
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
+              ON UPDATE CASCADE);''');
 
     await db.execute('''
           CREATE TABLE freq_weekly (
@@ -71,7 +91,7 @@ class DatabaseService {
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
+              ON UPDATE CASCADE);''');
 
     await db.execute('''
           CREATE TABLE freq_repeating (
@@ -82,7 +102,7 @@ class DatabaseService {
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
+              ON UPDATE CASCADE);''');
 
     await db.execute('''
           CREATE TABLE day_done (
@@ -94,7 +114,7 @@ class DatabaseService {
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
+              ON UPDATE CASCADE);''');
 
     await db.execute('''
           CREATE TABLE reminder (
@@ -107,7 +127,7 @@ class DatabaseService {
               FOREIGN KEY (habit_id)
               REFERENCES habit(id)
               ON DELETE CASCADE
-              ON UPDATE NO ACTION);''');
+              ON UPDATE CASCADE);''');
   }
 
   Future<List> getAllHabits() async {
@@ -267,15 +287,11 @@ class DatabaseService {
     final db = await database;
 
     // Inserção dos dados do hábito
-    var id = await db.rawInsert(
-        '''INSERT INTO habit (habit_text, cue_text, color, icon, score, cycle, initial_date, days_done) VALUES (\'${habit.habit}\',
-                                                                                                                \'${habit.cue}\',
-                                                                                                                ${habit.color},
-                                                                                                                ${habit.icon},
-                                                                                                                0,
-                                                                                                                1,
-                                                                                                                \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
-                                                                                                                0);''');
+    var id = await db
+        .rawInsert('''INSERT INTO habit (habit_text, color, icon, initial_date) VALUES (\'${habit.habit}\',
+                                                                                        ${habit.color},
+                                                                                        ${habit.icon},
+                                                                                        \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
     // Inserção dos dados da frequência
     await addFrequency(id, frequency);
 
@@ -333,9 +349,22 @@ class DatabaseService {
     final db = await database;
 
     await db.rawUpdate('''UPDATE habit SET habit_text=\'${habit.habit}\',
-                                           cue_text=\'${habit.cue}\',
                                            color=${habit.color},
                                            icon=${habit.icon}  WHERE id=${habit.id};''');
+
+    return true;
+  }
+
+  Future<bool> updateCue(int id, String cue) async {
+    final db = await database;
+    String cueText;
+
+    if (cue != null) {
+      cueText = "\'$cue\'";
+    }
+
+    await db.rawUpdate('''UPDATE habit SET cue_text=$cueText
+                                           WHERE id=$id;''');
 
     return true;
   }

@@ -4,7 +4,7 @@ import 'package:habit/utils/Validator.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/widgets/TutorialDialog.dart';
+import 'package:habit/ui/dialogs/TutorialDialog.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 
 class HabitWidget extends StatefulWidget {
