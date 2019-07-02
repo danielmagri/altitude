@@ -11,6 +11,7 @@ import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/widgets/Toast.dart';
 import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/utils/Util.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -55,12 +56,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
         habit: habitController.text,
       );
 
-      showLoading(context);
+      Loading.showLoading(context);
 
       DataControl().addHabit(habit, DataHabitCreation().frequency, DataHabitCreation().reminders).then((result) {
-        closeLoading(context);
-
-        Navigator.pop(context);
+        Util.goDetailsPage(context, habit.id, pushReplacement: true);
         showToast("O hábito foi criado com sucesso!");
       });
     }

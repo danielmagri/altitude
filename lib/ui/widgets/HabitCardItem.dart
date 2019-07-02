@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/utils/Util.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/Loading.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
 
 class HabitCardItem extends StatelessWidget {
   HabitCardItem({Key key, this.habit}) : super(key: key);
@@ -15,28 +11,7 @@ class HabitCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       highlightColor: Colors.transparent,
-      onTap: () async {
-        showLoading(context);
-
-        Habit data = await DataControl().getHabit(habit.id);
-        List<Reminder> reminders = await DataControl().getReminders(habit.id);
-        dynamic frequency = await DataControl().getFrequency(habit.id);
-        Map<DateTime, List> daysDone = await DataControl().getDaysDone(habit.id);
-
-        closeLoading(context);
-        if (data != null && data.id != null && frequency != null && reminders != null) {
-          DataHabitDetail().habit = data;
-          DataHabitDetail().reminders = reminders;
-          DataHabitDetail().frequency = frequency;
-          DataHabitDetail().daysDone = daysDone;
-
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return HabitDetailsPage(
-              fromAllHabits: true,
-            );
-          }));
-        }
-      },
+      onTap: () => Util.goDetailsPage(context, habit.id, fromAllHabitsPage: true),
       child: SizedBox(
         height: 90.0,
         width: 110.0,

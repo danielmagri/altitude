@@ -69,7 +69,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         initialDate: DataHabitDetail().habit.initialDate
       );
 
-      showLoading(context);
+      Loading.showLoading(context);
 
       if (editedHabit.icon != DataHabitDetail().habit.icon ||
           editedHabit.color != DataHabitDetail().habit.color ||
@@ -87,7 +87,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         await DataControl().addReminders(editedHabit, DataHabitCreation().reminders);
       }
 
-      closeLoading(context);
+      Loading.closeLoading(context);
 
       DataHabitDetail().habit = editedHabit;
       DataHabitDetail().frequency = DataHabitCreation().frequency;
