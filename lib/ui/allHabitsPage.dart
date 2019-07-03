@@ -32,7 +32,7 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 50.0),
+              margin: EdgeInsets.only(top: 40),
               child: Row(
                 children: <Widget>[
                   SizedBox(
@@ -42,7 +42,7 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
                   Spacer(),
                   Text(
                     "TODOS OS HÁBITOS",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   SizedBox(
@@ -55,7 +55,7 @@ class _AlHabitsPageState extends State<AlHabitsPage> {
               height: 1,
               color: Colors.grey,
               width: double.maxFinite,
-              margin: const EdgeInsets.only(right: 40, left: 40, top: 25, bottom: 40),
+              margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
             ),
             _habitsForTodayBuild(context),
           ],
