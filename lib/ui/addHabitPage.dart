@@ -73,7 +73,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 50.0),
+              margin: EdgeInsets.only(top: 40),
               child: Row(
                 children: <Widget>[
                   SizedBox(
@@ -96,7 +96,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               height: 1,
               color: Colors.grey,
               width: double.maxFinite,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+              margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
             ),
             ColorWidget(
               currentColor: DataHabitCreation().indexColor,

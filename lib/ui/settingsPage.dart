@@ -90,32 +90,46 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 20),
-          child: Row(
-            children: <Widget>[
-              BackButton(),
-              Text(
-                "Configurações",
-                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
-              ),
-            ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 40),
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 50,
+                  child: BackButton(),
+                ),
+                Spacer(),
+                Text(
+                  "CONFIGURAÇÕES",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 50,
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 64,
-        ),
-        ListTile(
-          title: Text("Seu nome"),
-          trailing: Text(
-            name,
-            style: TextStyle(color: Colors.grey),
+          Container(
+            height: 1,
+            color: Colors.grey,
+            width: double.maxFinite,
+            margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
           ),
-          onTap: () => _showNameDialog(context),
-        ),
-        Divider(),
-      ]),
+          ListTile(
+            title: Text("Seu nome"),
+            trailing: Text(
+              name,
+              style: TextStyle(color: Colors.grey),
+            ),
+            onTap: () => _showNameDialog(context),
+          ),
+          Divider(),
+        ]),
+      ),
     );
   }
 }
