@@ -6,6 +6,7 @@ import 'package:habit/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/dialogs/TutorialDialog.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
+import 'package:habit/controllers/DataPreferences.dart';
 
 class HabitWidget extends StatefulWidget {
   HabitWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);
@@ -50,13 +51,13 @@ class _HabitWidgetState extends State<HabitWidget> {
 
     widget.controller.addListener(_onTextChanged);
 
-//    WidgetsBinding.instance.addPostFrameCallback((_) async {
-//      SharedPreferences prefs = await SharedPreferences.getInstance();
-//      if (prefs.getBool("habitTutorial") == null) {
-//        await showTutorial();
-//        prefs.setBool("habitTutorial", true);
-//      }
-//    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+      if (!await DataPreferences().getHabitTutorial()) {
+        await showTutorial();
+        await DataPreferences().setHabitTutorial(true);
+      }
+    });
 
     if (widget.controller.text.isNotEmpty) {
       _validate();

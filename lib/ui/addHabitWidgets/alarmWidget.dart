@@ -258,7 +258,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
             width: double.maxFinite,
             margin: const EdgeInsets.only(left: 16, bottom: 6),
             child: Text(
-              "Quando deseja ser lembrado da deixa?",
+              "Deseja ser lembrado do hábito?",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
             ),
           ),

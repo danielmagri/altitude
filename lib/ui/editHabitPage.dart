@@ -58,16 +58,15 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
       showToast("Escolha qual será a frequência.");
     } else {
       Habit editedHabit = new Habit(
-        id: DataHabitDetail().habit.id,
-        color: DataHabitCreation().indexColor,
-        icon: DataHabitCreation().icon,
-        habit: habitController.text,
-        cue: DataHabitDetail().habit.cue,
-        score: DataHabitDetail().habit.score,
-        cycle: DataHabitDetail().habit.cycle,
-        daysDone: DataHabitDetail().habit.daysDone,
-        initialDate: DataHabitDetail().habit.initialDate
-      );
+          id: DataHabitDetail().habit.id,
+          color: DataHabitCreation().indexColor,
+          icon: DataHabitCreation().icon,
+          habit: habitController.text,
+          cue: DataHabitDetail().habit.cue,
+          score: DataHabitDetail().habit.score,
+          cycle: DataHabitDetail().habit.cycle,
+          daysDone: DataHabitDetail().habit.daysDone,
+          initialDate: DataHabitDetail().habit.initialDate);
 
       Loading.showLoading(context);
 
