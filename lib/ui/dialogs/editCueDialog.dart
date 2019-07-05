@@ -107,11 +107,11 @@ class _EditCueDialogState extends State<EditCueDialog> {
     if (showAll) {
       return [
         TextSpan(
-          text: "  Todo hábito precisa de uma \"deixa\" para que ele se inicie. Mas o que seria essa deixa?",
+          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
           style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
-          text: "\n  A deixa é uma ação que estímula seu cérebro a realizar alguma ação (um hábito).",
+          text: "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
           style: TextStyle(color: Colors.black, fontSize: 17.0, height: 1.2),
         ),
         TextSpan(
@@ -121,14 +121,14 @@ class _EditCueDialogState extends State<EditCueDialog> {
         ),
         TextSpan(
           text:
-          "\n\n  Qual seria uma deixa (ação) a ser tomada para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
+          "\n\n  Qual seria um gatilho (ação) a ser tomado para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
           style: TextStyle(color: Colors.black, fontSize: 17.0),
         ),
       ];
     }else {
       return [
         TextSpan(
-          text: "Todo hábito precisa de uma \"deixa\" para que ele se inicie. Mas o que seria essa deixa? ",
+          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria essa gatilho? ",
           style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
