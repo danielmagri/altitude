@@ -50,6 +50,8 @@ class DatabaseService {
         await txn.rawInsert('''INSERT INTO habit(id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done)
                                SELECT id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done
                                FROM _habit_old;''');
+
+        await txn.execute('DROP TABLE _habit_old;');
       });
     }
   }
