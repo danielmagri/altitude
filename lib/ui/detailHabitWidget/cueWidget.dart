@@ -9,7 +9,7 @@ class CueWidget extends StatelessWidget {
   Widget _setCueWidget() {
     if (DataHabitDetail().habit.cue == null) {
       return Text(
-          "Se você quer ter sucesso no hábito então você precisa ter uma deixa! Adicione agora!",
+          "Se você quer ter sucesso no hábito então você precisa ter um gatilho inicial!",
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 16));
     } else {
@@ -40,7 +40,7 @@ class CueWidget extends StatelessWidget {
                       color: DataHabitDetail().getColor(),
                       boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
                   child:
-                      Text("Deixa", style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text("Gatilho", style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
                 SizedBox(width: 6),
                 InkWell(
