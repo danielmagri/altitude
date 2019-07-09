@@ -23,22 +23,37 @@ class CoolDataWidget extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                    "Começou em " +
-                        DataHabitDetail().habit.initialDate.day.toString().padLeft(2, '0') +
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    height: 1.2,
+                    fontFamily: "Montserrat"),
+                children: <TextSpan>[
+                  TextSpan(text: "Começou em "),
+                  TextSpan(
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                    text: DataHabitDetail().habit.initialDate.day.toString().padLeft(2, '0') +
                         "/" +
                         DataHabitDetail().habit.initialDate.month.toString().padLeft(2, '0') +
                         "/" +
-                        DataHabitDetail().habit.initialDate.year.toString(),
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-                Text("Dias cumpridos: " + DataHabitDetail().habit.daysDone.toString(),
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-                Text("Ciclos feitos: " + DataHabitDetail().habit.cycle.toString(),
-                    style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-              ],
+                        DataHabitDetail().habit.initialDate.year.toString() +
+                        "\n",
+                  ),
+                  TextSpan(
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                    text: DataHabitDetail().habit.daysDone.toString(),
+                  ),
+                  TextSpan(text: " dias cumpridos em "),
+                  TextSpan(
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                    text: DataHabitDetail().habit.cycle.toString(),
+                  ),
+                  TextSpan(text: " ciclos"),
+                ],
+              ),
             ),
           ),
         ],
