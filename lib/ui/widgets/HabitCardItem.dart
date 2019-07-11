@@ -11,7 +11,7 @@ class HabitCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       highlightColor: Colors.transparent,
-      onTap: () => Util.goDetailsPage(context, habit.id, fromAllHabitsPage: true),
+      onTap: () => Util.goDetailsPage(context, habit.id),
       child: SizedBox(
         height: 90.0,
         width: 110.0,
@@ -25,14 +25,10 @@ class HabitCardItem extends StatelessWidget {
                 color: HabitColors.colors[habit.color],
                 boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))],
               ),
-              child: Hero(
-                tag: habit.id + 1000,
-                transitionOnUserGestures: true,
-                child: Icon(
-                  IconData(habit.icon, fontFamily: 'MaterialIcons'),
-                  size: 32.0,
-                  color: Colors.white,
-                ),
+              child: Icon(
+                IconData(habit.icon, fontFamily: 'MaterialIcons'),
+                size: 32.0,
+                color: Colors.white,
               ),
             ),
             Padding(

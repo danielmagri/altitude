@@ -7,8 +7,7 @@ import 'package:habit/ui/widgets/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id,
-      {bool pushReplacement = false, bool fromAllHabitsPage = false}) async {
+  static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
     Loading.showLoading(context);
 
     Habit data = await DataControl().getHabit(id);
@@ -25,15 +24,11 @@ abstract class Util {
 
       if (pushReplacement) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-          return HabitDetailsPage(
-            fromAllHabits: fromAllHabitsPage,
-          );
+          return HabitDetailsPage();
         }));
       } else {
         Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return HabitDetailsPage(
-            fromAllHabits: fromAllHabitsPage,
-          );
+          return HabitDetailsPage();
         }));
       }
     }

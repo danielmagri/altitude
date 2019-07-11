@@ -9,6 +9,9 @@ class ScoreWidget extends AnimatedWidget {
     final Animation<int> animation = listenable;
     return Column(
       children: <Widget>[
+        SizedBox(
+          height: 55,
+        ),
         Text(
           animation.value.toString(),
           style: TextStyle(

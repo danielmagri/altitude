@@ -13,11 +13,10 @@ import 'package:habit/ui/detailHabitWidget/calendarWidget.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/dialogs/editCueDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:habit/ui/widgets/RocketScene.dart';
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key, this.fromAllHabits}) : super(key: key);
-
-  final bool fromAllHabits;
+  HabitDetailsPage({Key key}) : super(key: key);
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
@@ -26,6 +25,7 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
   PanelController _panelController = new PanelController();
   AnimationController _controllerScore;
+
   DataHabitDetail data = DataHabitDetail();
 
   int _panelIndex = -1;
@@ -221,7 +221,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                 ),
                 HeaderWidget(
                   previousScore: previousScore,
-                  fromAllHabits: widget.fromAllHabits,
                   controllerScore: _controllerScore,
                 ),
                 Container(
@@ -253,57 +252,45 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.previousScore, this.fromAllHabits, this.controllerScore}) : super(key: key);
+  HeaderWidget({Key key, this.previousScore, this.controllerScore}) : super(key: key);
 
   final int previousScore;
-  final bool fromAllHabits;
   final controllerScore;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 130,
-      alignment: Alignment(0.0, 0.5),
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Container(
-            width: 100.0,
-            height: 90.0,
-            alignment: Alignment(-0.1, 0.0),
-            child: Hero(
-              tag: fromAllHabits ? DataHabitDetail().habit.id + 1000 : DataHabitDetail().habit.id,
-              transitionOnUserGestures: true,
-              child: Icon(
-                IconData(DataHabitDetail().habit.icon, fontFamily: 'MaterialIcons'),
-                size: 40.0,
-                color: Colors.white,
-              ),
+          Expanded(
+            child: RocketScene(
+              color: DataHabitDetail().getColor(),
+              force: 1,
             ),
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(50), topRight: Radius.circular(50)),
-                color: DataHabitDetail().getColor(),
-                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
           ),
-          Spacer(),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                DataHabitDetail().habit.habit,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-              ),
-              SizedBox(
-                height: 65,
-              ),
-              ScoreWidget(
-                color: DataHabitDetail().getColor(),
-                animation: IntTween(begin: previousScore, end: DataHabitDetail().habit.score)
-                    .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  DataHabitDetail().habit.habit,
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 19),
+                ),
+                ScoreWidget(
+                  color: DataHabitDetail().getColor(),
+                  animation: IntTween(begin: previousScore, end: DataHabitDetail().habit.score)
+                      .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
+                ),
+              ],
+            ),
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 16),
         ],
       ),
     );
