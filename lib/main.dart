@@ -316,9 +316,6 @@ class HeaderWidget extends StatelessWidget {
             name,
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300),
           ),
-          SizedBox(
-            height: 65,
-          ),
           ScoreWidget(
             animation: IntTween(begin: previousScore, end: score)
                 .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),

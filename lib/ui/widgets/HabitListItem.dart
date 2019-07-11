@@ -54,14 +54,10 @@ class HabitListItem extends StatelessWidget {
                       Container(
                         width: 60.0,
                         height: 50.0,
-                        child: Hero(
-                          tag: habit.id,
-                          transitionOnUserGestures: true,
-                          child: Icon(
-                            IconData(habit.icon, fontFamily: 'MaterialIcons'),
-                            size: 32.0,
-                            color: Colors.white,
-                          ),
+                        child: Icon(
+                          IconData(habit.icon, fontFamily: 'MaterialIcons'),
+                          size: 32.0,
+                          color: Colors.white,
                         ),
                       ),
                       Expanded(

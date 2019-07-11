@@ -35,9 +35,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-      - assets/addButton.png
-      - assets/doneHabit.png
-      - assets/score.png
+    - assets/c1.png
+    - assets/c2.png
+    - assets/addButton.png
+    - assets/doneHabit.png
+    - assets/score.png
 
   fonts:
       - family: Montserrat
