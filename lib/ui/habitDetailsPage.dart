@@ -14,6 +14,7 @@ import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/dialogs/editCueDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:habit/ui/widgets/RocketScene.dart';
+import 'package:habit/utils/Util.dart';
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage({Key key}) : super(key: key);
@@ -246,7 +247,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black54),
                   ),
                 ),
-                CueWidget(openBottomSheet: openBottomSheet,),
+                CueWidget(
+                  openBottomSheet: openBottomSheet,
+                ),
                 CalendarWidget(),
                 CoolDataWidget(),
                 SizedBox(
@@ -267,6 +270,21 @@ class HeaderWidget extends StatelessWidget {
   final int previousScore;
   final controllerScore;
 
+  double _setRocketForce() {
+    double force;
+    int cycleDays = Util.getDaysCycle(DataHabitDetail().frequency);
+    int timesDays = Util.getTimesDays(DataHabitDetail().frequency);
+    List<DateTime> dates = DataHabitDetail().daysDone.keys.toList();
+
+    int daysDoneLastCycle =
+        dates.where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1)))).length;
+
+    force = daysDoneLastCycle / timesDays;
+
+    if (force > 1.3) force = 1.3;
+    return force;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -277,7 +295,7 @@ class HeaderWidget extends StatelessWidget {
           Expanded(
             child: RocketScene(
               color: DataHabitDetail().getColor(),
-              force: 1,
+              force: _setRocketForce(),
             ),
           ),
           Expanded(
