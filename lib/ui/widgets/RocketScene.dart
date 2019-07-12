@@ -91,7 +91,7 @@ class RocketPainter extends CustomPainter {
 
 class RocketScene extends StatelessWidget {
   RocketScene({Key key, @required this.color, this.force = 0})
-      : duration = 3000 - (1500 * force).toInt(),
+      : duration = 3000 - (1750 * force).toInt(),
         super(key: key);
 
   final Color color;
@@ -177,6 +177,16 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+
+  @override
+  void didUpdateWidget(Cloud oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.duration != oldWidget.duration) {
+      _controller.duration = Duration(milliseconds: widget.duration);
+    }
   }
 
   double _setOpacity() {
