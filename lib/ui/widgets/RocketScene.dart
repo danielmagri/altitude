@@ -91,7 +91,7 @@ class RocketPainter extends CustomPainter {
 
 class RocketScene extends StatelessWidget {
   RocketScene({Key key, @required this.color, this.force = 0})
-      : duration = 3000 - (1750 * force).toInt(),
+      : duration = 2000 - (961 * force).toInt(),
         super(key: key);
 
   final Color color;
@@ -100,100 +100,171 @@ class RocketScene extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return CustomPaint(
-      child: Stack(
-        fit: StackFit.expand,
-        overflow: Overflow.visible,
-        children: <Widget>[
-          Cloud(
-            duration: duration,
-            imagePath: "assets/c1.png",
-          ),
-          Cloud(
-            duration: duration,
-            delay: (duration * (2 / 4)).toInt(),
-            imagePath: "assets/c2.png",
-            fromRight: true,
-          ),
-          Cloud(
-            duration: duration,
-            delay: (duration * (3 / 4)).toInt(),
-            imagePath: "assets/c2.png",
-          ),
-          Cloud(
-            duration: duration,
-            delay: duration,
-            imagePath: "assets/c1.png",
-            fromRight: true,
-          ),
-        ],
+      child: Sky(
+        duration: duration,
       ),
       foregroundPainter: RocketPainter(color, force),
     );
   }
 }
 
-class Cloud extends StatefulWidget {
-  Cloud({this.duration, this.delay = 0, @required this.imagePath, this.fromRight = false});
+class Sky extends StatefulWidget {
+  Sky({
+    @required this.duration,
+  });
 
   final int duration;
-  final int delay;
-  final String imagePath;
-  final bool fromRight;
 
   @override
-  _CloudState createState() => _CloudState();
+  _SkyState createState() => _SkyState();
 }
 
-class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+class _SkyState extends State<Sky> with TickerProviderStateMixin {
+  AnimationController _controller1;
+  AnimationController _controller2;
+  AnimationController _controller3;
+  AnimationController _controller4;
 
   Random rnd = new Random();
-  double x = 0;
+
+  static const int range = 40;
+  List<double> positionsX = [0, 0, 0, 0];
+  List<bool> update = [true, true, true, true];
 
   @override
   void initState() {
     super.initState();
 
-    x = rnd.nextInt(20).toDouble();
+    positionsX[0] = rnd.nextInt(range).toDouble();
+    positionsX[1] = rnd.nextInt(range).toDouble();
+    positionsX[2] = rnd.nextInt(range).toDouble();
+    positionsX[3] = rnd.nextInt(range).toDouble();
 
-    _controller = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
-    _controller.addListener(() {
-      setState(() {});
+    _controller1 = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
+    _controller2 = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
+    _controller3 = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
+    _controller4 = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
+
+    _controller1.addListener(() {
+      if (_controller1.value > 0.94 && update[0]) {
+        update[0] = false;
+        positionsX[0] = rnd.nextInt(range).toDouble();
+        setState(() {});
+      } else if (_controller1.value < 0.06 && !update[0]) {
+        update[0] = true;
+      }
     });
-
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        x = rnd.nextInt(30).toDouble();
-        _controller.forward(from: 0.0);
+    _controller2.addListener(() {
+      if (_controller2.value > 0.94 && update[1]) {
+        update[1] = false;
+        positionsX[1] = rnd.nextInt(range).toDouble();
+        setState(() {});
+      } else if (_controller2.value < 0.06 && !update[1]) {
+        update[1] = true;
+      }
+    });
+    _controller3.addListener(() {
+      if (_controller3.value > 0.94 && update[2]) {
+        update[2] = false;
+        positionsX[2] = rnd.nextInt(range).toDouble();
+        setState(() {});
+      } else if (_controller3.value < 0.06 && !update[2]) {
+        update[2] = true;
+      }
+    });
+    _controller4.addListener(() {
+      if (_controller4.value > 0.94 && update[3]) {
+        update[3] = false;
+        positionsX[3] = rnd.nextInt(range).toDouble();
+        setState(() {});
+      } else if (_controller4.value < 0.06 && !update[3]) {
+        update[3] = true;
       }
     });
 
-    Future.delayed(Duration(milliseconds: widget.delay), () {
-      _controller.forward();
-    });
+    _controller1.value = 1 / 4;
+    _controller1.repeat();
+    _controller2.value = 2 / 4;
+    _controller2.repeat();
+    _controller3.value = 3 / 4;
+    _controller3.repeat();
+    _controller4.value = 4 / 4;
+    _controller4.repeat();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller1.dispose();
+    _controller2.dispose();
+    _controller3.dispose();
+    _controller4.dispose();
     super.dispose();
   }
 
-
   @override
-  void didUpdateWidget(Cloud oldWidget) {
+  void didUpdateWidget(Sky oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.duration != oldWidget.duration) {
-      _controller.duration = Duration(milliseconds: widget.duration);
+      _controller1.duration = Duration(milliseconds: widget.duration);
+      _controller2.duration = Duration(milliseconds: widget.duration);
+      _controller3.duration = Duration(milliseconds: widget.duration);
+      _controller4.duration = Duration(milliseconds: widget.duration);
     }
   }
 
-  double _setOpacity() {
-    if (_controller.value > 0.8) {
-      return 5.0 - (5*_controller.value);
-    } else if (_controller.value < 0.2) {
-      return 5.0 * _controller.value;
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      overflow: Overflow.visible,
+      children: <Widget>[
+        Cloud(
+          animation: _controller1,
+          positionX: positionsX[0],
+          imagePath: "assets/c1.png",
+        ),
+        Cloud(
+          animation: _controller2,
+          positionX: positionsX[1],
+          imagePath: "assets/c2.png",
+          fromRight: true,
+        ),
+        Cloud(
+          animation: _controller3,
+          positionX: positionsX[2],
+          imagePath: "assets/c2.png",
+        ),
+        Cloud(
+          animation: _controller4,
+          positionX: positionsX[3],
+          imagePath: "assets/c1.png",
+          fromRight: true,
+        ),
+      ],
+    );
+  }
+}
+
+class Cloud extends AnimatedWidget {
+  Cloud(
+      {Key key,
+      @required this.positionX,
+      @required this.imagePath,
+      this.fromRight = false,
+      Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  final double positionX;
+  final String imagePath;
+  final bool fromRight;
+
+  double _setOpacity(double value) {
+    if (value > 0.8) {
+      double res = (47 - (50 * value)) / 7;
+      return res > 0 ? res : 0;
+    } else if (value < 0.2) {
+      return 5.0 * value;
     } else {
       return 1.0;
     }
@@ -201,16 +272,17 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final Animation<double> animation = listenable;
     return Positioned(
-      top: -30 + (170 * _controller.value),
-      left: !widget.fromRight ? x : 0,
-      right: widget.fromRight ? x : 0,
+      top: -30 + (170 * animation.value),
+      left: !fromRight ? positionX : 0,
+      right: fromRight ? positionX : 0,
       height: 20,
       child: Opacity(
-        opacity: _setOpacity(),
+        opacity: _setOpacity(animation.value),
         child: Image.asset(
-          widget.imagePath,
-          alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
+          imagePath,
+          alignment: !fromRight ? Alignment.centerLeft : Alignment.centerRight,
           fit: BoxFit.contain,
         ),
       ),
