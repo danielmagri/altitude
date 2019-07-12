@@ -100,9 +100,9 @@ class RocketScene extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size(130, 130),
       child: Stack(
         fit: StackFit.expand,
+        overflow: Overflow.visible,
         children: <Widget>[
           Cloud(
             duration: duration,
@@ -179,17 +179,30 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  double _setOpacity() {
+    if (_controller.value > 0.8) {
+      return 5.0 - (5*_controller.value);
+    } else if (_controller.value < 0.2) {
+      return 5.0 * _controller.value;
+    } else {
+      return 1.0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: -20 + (150 * _controller.value),
+      top: -30 + (170 * _controller.value),
       left: !widget.fromRight ? x : 0,
       right: widget.fromRight ? x : 0,
       height: 20,
-      child: Image.asset(
-        widget.imagePath,
-        alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
-        fit: BoxFit.contain,
+      child: Opacity(
+        opacity: _setOpacity(),
+        child: Image.asset(
+          widget.imagePath,
+          alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

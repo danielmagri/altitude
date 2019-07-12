@@ -202,11 +202,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 70.0,
+                  height: 75,
                   child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                     BackButton(color: data.getColor()),
                     Spacer(),
-                    IconButton(icon: Icon(Icons.check, size: 34, color: data.getColor()), onPressed: setDoneHabit),
                     SizedBox(
                       width: 8,
                     ),
@@ -224,19 +223,30 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                   controllerScore: _controllerScore,
                 ),
                 Container(
-                  height: 1,
-                  color: Colors.grey,
+                  margin: const EdgeInsets.only(top: 28, bottom: 8, left: 20, right: 20),
                   width: double.maxFinite,
-                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  child: RaisedButton(
+                    color: hasDoneToday() ? data.getColor() : Colors.white,
+                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    elevation: 5.0,
+                    onPressed: setDoneHabit,
+                    child: Text(
+                      "COMPLETAR HÁBITO DE HOJE",
+                      style: TextStyle(
+                          color: hasDoneToday() ? Colors.white : data.getColor(), fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-                Text(
-                  frequencyText(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black54),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    frequencyText(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black54),
+                  ),
                 ),
-                CueWidget(
-                  openBottomSheet: openBottomSheet,
-                ),
+                CueWidget(openBottomSheet: openBottomSheet,),
                 CalendarWidget(),
                 CoolDataWidget(),
                 SizedBox(
@@ -260,7 +270,7 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
+      height: 140,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
@@ -273,11 +283,12 @@ class HeaderWidget extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
                   DataHabitDetail().habit.habit,
                   textAlign: TextAlign.right,
+                  softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(fontSize: 19),

@@ -13,16 +13,12 @@ class CoolDataWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding: const EdgeInsets.only(top: 6, bottom: 6, left: 16, right: 12),
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(50), topRight: Radius.circular(50)),
-                color: DataHabitDetail().getColor(),
-                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
+            padding: const EdgeInsets.only(top: 6, bottom: 6, left: 8),
             child: Text("Informações Legais",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white)),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: DataHabitDetail().getColor())),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: RichText(
               text: TextSpan(
                 style: TextStyle(
