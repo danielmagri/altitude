@@ -132,6 +132,7 @@ class DatabaseService {
               ON UPDATE CASCADE);''');
   }
 
+  /// Retorna todos os hábitos registrados.
   Future<List> getAllHabits() async {
     final db = await database;
     var result = await db.rawQuery('SELECT id, color, habit_text, icon FROM habit;');
@@ -140,18 +141,16 @@ class DatabaseService {
     return list;
   }
 
+  /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     final db = await database;
 
     var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
 
-    if (result.isNotEmpty) {
-      return Habit.fromJson(result.first);
-    } else {
-      return null;
-    }
+    return result.isNotEmpty ? Habit.fromJson(result.first) : null;
   }
 
+  /// Retorna os hábitos para serem feitos hoje.
   Future<List> getHabitsToday() async {
     DateTime now = new DateTime.now();
     DateTime startWeek;
@@ -193,15 +192,16 @@ class DatabaseService {
         SELECT id, color, habit_text, cycle, icon FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
 							 UNION ALL
-               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
+               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
                UNION ALL
-               SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') GROUP BY habit_id HAVING COUNT(*) >= days_time)
+               SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
         );''');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
   }
 
+  /// Retorna os hábitos feitos hoje.
   Future<List> getHabitsDoneToday() async {
     DateTime now = new DateTime.now();
 
@@ -213,16 +213,17 @@ class DatabaseService {
     return list;
   }
 
+  /// Retorna a lista de alarmes do hábito.
   Future<List<Reminder>> getReminders(int id) async {
     final db = await database;
 
     var result = await db.rawQuery('SELECT * FROM reminder WHERE habit_id=$id;');
 
     List<Reminder> list = result.isNotEmpty ? result.map((c) => Reminder.fromJson(c)).toList() : [];
-
     return list;
   }
 
+  /// Retorna a frequência do hábito.
   Future<dynamic> getFrequency(int id) async {
     final db = await database;
 
@@ -243,6 +244,7 @@ class DatabaseService {
     }
   }
 
+  /// Retorna uma lista com os dias feitos do hábito.
   Future<List> getDaysDone(int id) async {
     final db = await database;
 
@@ -252,6 +254,7 @@ class DatabaseService {
     return list;
   }
 
+  /// Retorna os dias feitos do hábito de um ciclo específico.
   Future<List> getCycleDaysDone(int id, int cycle) async {
     final db = await database;
 
@@ -261,6 +264,7 @@ class DatabaseService {
     return list;
   }
 
+  /// Registra o dia feito do hábito.
   Future<bool> habitDone(int id, int cycle, bool changeCycle) async {
     DateTime now = new DateTime.now();
     int numCycle = changeCycle ? cycle + 1 : cycle;
@@ -276,6 +280,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Atualiza a pontuação do hábito.
   Future<bool> updateScore(int id, int score) async {
     final db = await database;
 
@@ -284,6 +289,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Adiciona um novo hábito com sua frequência e alarmes.
   Future<Map> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     DateTime now = new DateTime.now();
     final db = await database;
@@ -303,6 +309,7 @@ class DatabaseService {
     return {0: id, 1: remindersAdded};
   }
 
+  /// Adiciona os alarmes do hábito.
   Future<List<Reminder>> addReminders(int habitId, List<Reminder> reminders) async {
     final db = await database;
     List<Reminder> remindersAdded = new List();
@@ -310,9 +317,9 @@ class DatabaseService {
     for (Reminder reminder in reminders) {
       int reminderId =
           await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, habit_id) VALUES (${reminder.hour},
-                                                                                           ${reminder.minute},
-                                                                                           ${reminder.weekday},
-                                                                                           $habitId);''');
+                                                                                               ${reminder.minute},
+                                                                                               ${reminder.weekday},
+                                                                                               $habitId);''');
       remindersAdded
           .add(new Reminder(id: reminderId, hour: reminder.hour, minute: reminder.minute, weekday: reminder.weekday));
     }
@@ -320,6 +327,7 @@ class DatabaseService {
     return remindersAdded;
   }
 
+  /// Adiciona a frequência do hábito.
   Future<bool> addFrequency(int id, dynamic frequency) async {
     final db = await database;
 
@@ -347,6 +355,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit) async {
     final db = await database;
 
@@ -357,6 +366,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Atualiza o gatilho do hábito.
   Future<bool> updateCue(int id, String cue) async {
     final db = await database;
     String cueText;
@@ -371,6 +381,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Atualiza a frequência do hábito.
   Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
     final db = await database;
 
@@ -415,6 +426,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Deleta o hábito.
   Future<bool> deleteHabit(int id) async {
     final db = await database;
 
@@ -423,6 +435,7 @@ class DatabaseService {
     return true;
   }
 
+  /// Deleta os alarmes do hábito.
   Future<bool> deleteAllReminders(int habitId) async {
     final db = await database;
 
