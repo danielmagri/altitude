@@ -108,10 +108,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void animateScore() {
     if (previousScore != person.score) {
       _controllerScore.reset();
-      _controllerScore.forward().orCancel.then((e) {
-        previousScore = person.score;
-      }).catchError((error) {
-        print(error.toString());
+      _controllerScore.forward().whenComplete(() {
         previousScore = person.score;
       });
     }

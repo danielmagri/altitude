@@ -157,7 +157,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
             margin: const EdgeInsets.only(top: 12, bottom: 4),
             height: 30,
             child: Text(
-              "Deixa",
+              "Gatilho",
               style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: DataHabitDetail().getColor()),
             ),
           ),
@@ -182,7 +182,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
                   cursorColor: DataHabitDetail().getColor(),
                   decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: DataHabitDetail().getColor())),
-                      hintText: "Escreva aqui sua deixa",
+                      hintText: "Escreva aqui seu gatilho",
                       hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                 ),
                 _suggestion.length != 0

@@ -18,15 +18,18 @@ class DataControl {
 
   DataControl._internal();
 
-  // ***** HABIT *****
+  /// Retorna todos os hábitos registrados.
   Future<List<Habit>> getAllHabits() async {
     return await DatabaseService().getAllHabits();
   }
 
+  /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     return await DatabaseService().getHabit(id);
   }
 
+  /// Retorna todos os hábitos para serem feitos hoje e os já feitos hoje.
+  /// Ex: {0: hábitos_de_hoje(Habit), 1: hábitos_feitos_hoje(DayDone)}
   Future<Map<int, List>> getHabitsToday() async {
     List daysDone = await DatabaseService().getHabitsDoneToday();
     List habits = await DatabaseService().getHabitsToday();
@@ -34,6 +37,7 @@ class DataControl {
     return {0: habits, 1: daysDone};
   }
 
+  /// Adiciona um novo hábito com sua frequência e alarmes.
   Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     Map response = await DatabaseService().addHabit(habit, frequency, reminders);
     habit.id = response[0];
@@ -44,23 +48,27 @@ class DataControl {
     return true;
   }
 
+  /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit) async {
     return await DatabaseService().updateHabit(habit);
   }
 
+  /// Atualiza o gatilho do hábito.
   Future<bool> updateCue(int id, String cue) async {
     return await DatabaseService().updateCue(id, cue);
   }
 
+  /// Deleta o hábito.
   Future<bool> deleteHabit(int id) async {
     return await DatabaseService().deleteHabit(id);
   }
 
-  // ***** REMINDER *****
+  /// Retorna a lista de alarmes do hábito.
   Future<List<Reminder>> getReminders(int id) async {
     return await DatabaseService().getReminders(id);
   }
 
+  /// Adiciona os alarmes do hábito.
   Future<bool> addReminders(Habit habit, List<Reminder> reminders) async {
     List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
 
@@ -71,6 +79,7 @@ class DataControl {
     return true;
   }
 
+  /// Deleta os alarmes do hábito.
   Future<bool> deleteReminders(int habitId, List<Reminder> reminders) async {
     for (Reminder reminder in reminders) {
       await NotificationControl().removeNotification(reminder.id);
@@ -78,16 +87,17 @@ class DataControl {
     return await DatabaseService().deleteAllReminders(habitId);
   }
 
-  // ***** FREQUENCY *****
+  /// Retorna a frequência do hábito.
   Future<dynamic> getFrequency(int id) async {
     return await DatabaseService().getFrequency(id);
   }
 
+  /// Atualiza a frequência do hábito.
   Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
     return await DatabaseService().updateFrequency(id, frequency, typeOldFreq);
   }
 
-  // ***** DAYDONE *****
+  /// Retorna um map com os dias feitos do hábito.
   Future<Map<DateTime, List>> getDaysDone(int id) async {
     Map<DateTime, List> map = new Map();
     List<DayDone> list = await DatabaseService().getDaysDone(id);
@@ -112,32 +122,29 @@ class DataControl {
     return map;
   }
 
+  /// Retorna uma lista de dias feitos do hábito de um ciclo específico.
   Future<List<DayDone>> getCycleDaysDone(int id, int cycle) async {
     return await DatabaseService().getCycleDaysDone(id, cycle);
   }
 
+  /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
   Future<int> setHabitDoneAndScore(int id, int cycle) async {
     dynamic freq = await getFrequency(id);
-    Map result;
+    List<DayDone> days = await DataControl().getCycleDaysDone(id, cycle);
+    bool newCycle = DaysDoneControl().checkIsNewCycle(id, cycle, freq, days);
+    int score;
 
-    if (freq.runtimeType == FreqDayWeek) {
-      result = await DaysDoneControl().checkCycleDoneDayWeek(id, cycle);
-    } else if (freq.runtimeType == FreqWeekly) {
-      result = await DaysDoneControl().checkCycleDoneWeekly(id, cycle);
-    } else {
-      result = await DaysDoneControl().checkCycleDoneRepeating(id, cycle, freq);
+    if (newCycle) {
+      score = await ScoreControl().calculateScore(id, freq, 0);
+    }else {
+      score = await ScoreControl().calculateScore(id, freq, days.length);
     }
 
-    if (result != null) {
-      int score = await ScoreControl().calculateScore(id, freq, result[1]);
-
-      print("Pontuação: $score");
-      await DataPreferences().setScore(score);
-      await DatabaseService().updateScore(id, score);
-      await DatabaseService().habitDone(id, cycle, result[0]);
-      return score;
-    } else {
-      return 0;
-    }
+    print("Novo ciclo: $newCycle");
+    print("Pontuação: $score");
+    await DataPreferences().setScore(score);
+    await DatabaseService().updateScore(id, score);
+    await DatabaseService().habitDone(id, cycle, newCycle);
+    return score;
   }
 }

@@ -12,49 +12,23 @@ class DaysDoneControl {
 
   DaysDoneControl._internal();
 
-  Future<Map> checkCycleDoneDayWeek(int id, int cycle) async {
-    List<DayDone> days = await DataControl().getCycleDaysDone(id, cycle);
-
-    int weekDay = DateTime.now().weekday;
-    // Verifica se está em uma nova semana
-    if (weekDay == 7) {
-      if (days.any((dayDone) => dayDone.dateDone.isBefore(DateTime.now()))) {
-        return {0: true, 1: 0};
+  bool checkIsNewCycle(int id, int cycle, dynamic frequency, List<DayDone> daysDone) {
+    DateTime now = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    if (frequency.runtimeType == FreqDayWeek || frequency.runtimeType == FreqWeekly) {
+      int weekDay = now.weekday;
+      if (weekDay == 7) {
+        return true;
+      } else {
+        if (daysDone.any((dayDone) => dayDone.dateDone.isBefore(now.subtract(Duration(days: weekDay))))) {
+          return true;
+        }
       }
     } else {
-      if (days.any((dayDone) => dayDone.dateDone.isBefore(DateTime.now().subtract(Duration(days: weekDay))))) {
-        return {0: true, 1: 0};
+      if (daysDone.any((dayDone) => dayDone.dateDone.isBefore(now.subtract(Duration(days: frequency.daysCycle - 1))))) {
+        return true;
       }
     }
 
-    return {0: false, 1: days.length};
-  }
-
-  Future<Map> checkCycleDoneWeekly(int id, int cycle) async {
-    List<DayDone> days = await DataControl().getCycleDaysDone(id, cycle);
-
-    int weekDay = DateTime.now().weekday;
-    // Verifica se está em uma nova semana
-    if (weekDay == 7) {
-      if (days.any((dayDone) => dayDone.dateDone.isBefore(DateTime.now()))) {
-        return {0: true, 1: 0};
-      }
-    } else {
-      if (days.any((dayDone) => dayDone.dateDone.isBefore(DateTime.now().subtract(Duration(days: weekDay))))) {
-        return {0: true, 1: 0};
-      }
-    }
-
-    return {0: false, 1: days.length};
-  }
-
-  Future<Map> checkCycleDoneRepeating(int id, int cycle, FreqRepeating freq) async {
-    List<DayDone> days = await DataControl().getCycleDaysDone(id, cycle);
-
-    if (days.any((dayDone) => dayDone.dateDone.isBefore(DateTime.now().subtract(Duration(days: freq.daysCycle))))) {
-      return {0: true, 1: 0};
-    } else {
-      return {0: false, 1: days.length};
-    }
+    return false;
   }
 }
