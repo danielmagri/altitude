@@ -48,19 +48,3 @@ class FreqWeekly {
         "days_time": daysTime,
       };
 }
-
-class FreqRepeating {
-  int habitId;
-  int daysTime, daysCycle;
-
-  FreqRepeating({this.habitId, this.daysTime, this.daysCycle});
-
-  factory FreqRepeating.fromJson(Map<String, dynamic> json) =>
-      new FreqRepeating(habitId: json["habit_id"], daysTime: json["days_time"], daysCycle: json["days_cycle"]);
-
-  Map<String, dynamic> toJson() => {
-        "habit_id": habitId,
-        "days_time": daysTime,
-        "days_cycle": daysCycle,
-      };
-}

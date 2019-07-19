@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:habit/controllers/DaysDoneControl.dart';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
-import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 
@@ -59,7 +57,8 @@ class DataControl {
   }
 
   /// Deleta o hábito.
-  Future<bool> deleteHabit(int id) async {
+  Future<bool> deleteHabit(int id, int score) async {
+    await DataPreferences().setScore(-score);
     return await DatabaseService().deleteHabit(id);
   }
 
@@ -122,29 +121,29 @@ class DataControl {
     return map;
   }
 
-  /// Retorna uma lista de dias feitos do hábito de um ciclo específico.
-  Future<List<DayDone>> getCycleDaysDone(int id, int cycle) async {
-    return await DatabaseService().getCycleDaysDone(id, cycle);
-  }
-
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(int id, int cycle) async {
-    dynamic freq = await getFrequency(id);
-    List<DayDone> days = await DataControl().getCycleDaysDone(id, cycle);
-    bool newCycle = DaysDoneControl().checkIsNewCycle(id, cycle, freq, days);
+  Future<int> setHabitDoneAndScore(DateTime date, int id, {dynamic freq, bool add = true}) async {
+    dynamic frequency = freq != null ? freq : await getFrequency(id);
+    int weekDay = date.weekday == 7 ? 0 : date.weekday;
+    DateTime startDate = date.subtract(Duration(days: weekDay));
+    DateTime endDate = date.add(Duration(days: 6 - weekDay));
     int score;
 
-    if (newCycle) {
-      score = await ScoreControl().calculateScore(id, freq, 0);
-    }else {
-      score = await ScoreControl().calculateScore(id, freq, days.length);
-    }
+    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
-    print("Novo ciclo: $newCycle");
-    print("Pontuação: $score");
-    await DataPreferences().setScore(score);
-    await DatabaseService().updateScore(id, score);
-    await DatabaseService().habitDone(id, cycle, newCycle);
+    if (add) {
+      score = await ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
+      await DataPreferences().setScore(score);
+      await DatabaseService().updateScore(id, score);
+      await DatabaseService().setDayDone(id, date);
+    }else {
+      print(daysDone.length);
+      score = -await ScoreControl().calculateScore(id, frequency, daysDone.length);
+      await DataPreferences().setScore(score);
+      await DatabaseService().updateScore(id, score);
+      await DatabaseService().deleteDayDone(id, date);
+    }
+    print(score);
     return score;
   }
 }

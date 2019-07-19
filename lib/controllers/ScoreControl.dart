@@ -14,18 +14,10 @@ class ScoreControl {
   ScoreControl._internal();
 
   Future<int> calculateScore(int id, dynamic freq, int daysDone) async {
-    if (checkCycleDone(freq, daysDone)) {
+    if (Util.getTimesDays(freq) == daysDone) {
       return fullDayPoint + fullWeekPoint;
     } else {
       return fullDayPoint;
-    }
-  }
-
-  bool checkCycleDone(dynamic freq, int daysDone) {
-    if (Util.getTimesDays(freq) == 1 + daysDone) {
-      return true;
-    } else {
-      return false;
     }
   }
 }

@@ -56,6 +56,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     }
   }
 
+  void updateScreen() {
+    setState(() {});
+    animateScore();
+  }
+
   bool hasDoneToday() {
     DateTime now = DateTime.now();
     if (data.daysDone.containsKey(DateTime(now.year, now.month, now.day))) {
@@ -70,8 +75,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       showToast("Você já completou esse hábito hoje!");
     } else {
       Loading.showLoading(context);
+      DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-      DataControl().setHabitDoneAndScore(data.habit.id, data.habit.cycle).then((earnedScore) {
+      DataControl().setHabitDoneAndScore(today, data.habit.id).then((earnedScore) {
         Loading.closeLoading(context);
         Vibration.hasVibrator().then((resp) {
           if (resp != null && resp == true) {
@@ -79,10 +85,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
           }
         });
 
-        DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
         bool before;
-        if (data.daysDone.length - 1 >= 0 && data.daysDone.containsKey(now.subtract(Duration(days: 1)))) {
-          data.daysDone[now.subtract(Duration(days: 1))] = [data.daysDone[now.subtract(Duration(days: 1))][0], true];
+        if (data.daysDone.length - 1 >= 0 && data.daysDone.containsKey(today.subtract(Duration(days: 1)))) {
+          data.daysDone.update(today.subtract(Duration(days: 1)), (old) => [old[0], true]);
           before = true;
         } else {
           before = false;
@@ -90,7 +95,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
         setState(() {
           data.habit.score += earnedScore;
-          data.daysDone.putIfAbsent(now, () => [before, false]);
+          data.daysDone.putIfAbsent(today, () => [before, false]);
           data.habit.daysDone++;
         });
         animateScore();
@@ -178,9 +183,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     } else if (data.frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = data.frequency;
       return freq.daysTime.toString() + " vezes por semana";
-    } else if (data.frequency.runtimeType == FreqRepeating) {
-      FreqRepeating freq = data.frequency;
-      return freq.daysTime.toString() + " vezes em " + freq.daysCycle.toString() + " dias";
     } else {
       return "";
     }
@@ -250,7 +252,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                 CueWidget(
                   openBottomSheet: openBottomSheet,
                 ),
-                CalendarWidget(),
+                CalendarWidget(updateScreen: updateScreen,),
                 CoolDataWidget(),
                 SizedBox(
                   height: 20,

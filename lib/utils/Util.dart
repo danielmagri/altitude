@@ -54,22 +54,12 @@ abstract class Util {
 
       return freqWeekly.daysTime;
     } else {
-      FreqRepeating freqRepeating = frequency;
-
-      return freqRepeating.daysTime;
+      return 0;
     }
   }
 
   /// Coleta o tamanho do ciclo em dias.
   static int getDaysCycle(dynamic frequency) {
-    if (frequency.runtimeType == FreqDayWeek) {
-      return 7;
-    } else if (frequency.runtimeType == FreqWeekly) {
-      return 7;
-    } else {
-      FreqRepeating freqRepeating = frequency;
-
-      return freqRepeating.daysCycle;
-    }
+    return 7;
   }
 }

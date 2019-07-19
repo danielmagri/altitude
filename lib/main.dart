@@ -116,13 +116,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   void setHabitDone(id) {
     setState(() {
-      habitsDone.add(new DayDone(done: 1, habitId: id));
+      habitsDone.add(new DayDone(habitId: id));
     });
-    int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
 
     Loading.showLoading(context);
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-    DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
+    DataControl().setHabitDoneAndScore(today, id).then((earnedScore) {
       Loading.closeLoading(context);
       Vibration.hasVibrator().then((resp) {
         if (resp != null && resp == true) {
