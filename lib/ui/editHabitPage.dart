@@ -64,7 +64,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
           habit: habitController.text,
           cue: DataHabitDetail().habit.cue,
           score: DataHabitDetail().habit.score,
-          cycle: DataHabitDetail().habit.cycle,
           daysDone: DataHabitDetail().habit.daysDone,
           initialDate: DataHabitDetail().habit.initialDate);
 
@@ -116,13 +115,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
           FreqWeekly weekly1 = f1;
           FreqWeekly weekly2 = f2;
           if (weekly1.daysTime == weekly2.daysTime) {
-            return true;
-          }
-          return false;
-        case FreqRepeating:
-          FreqRepeating repeating1 = f1;
-          FreqRepeating repeating2 = f2;
-          if (repeating1.daysTime == repeating2.daysTime && repeating1.daysCycle == repeating2.daysCycle) {
             return true;
           }
           return false;
@@ -183,7 +175,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                                   new FlatButton(
                                     child: new Text("Sim"),
                                     onPressed: () {
-                                      DataControl().deleteHabit(DataHabitDetail().habit.id).then((status) {
+                                      DataControl().deleteHabit(DataHabitDetail().habit.id, DataHabitDetail().habit.score).then((status) {
                                         Navigator.of(context).popUntil((route) => route.isFirst);
                                       });
                                     },

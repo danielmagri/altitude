@@ -9,7 +9,7 @@ class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
 
   static final _databaseName = "habitus.db";
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 1;
 
   static Database _database;
 
@@ -32,28 +32,7 @@ class DatabaseService {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    if (oldVersion < 2) {
-      db.transaction((txn) async {
-        await txn.execute('ALTER TABLE habit RENAME TO _habit_old;');
-        await txn.execute('''
-          CREATE TABLE habit (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            color INTEGER NOT NULL,
-            icon INTEGER NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            cycle INTEGER NOT NULL DEFAULT 1,
-            habit_text VARCHAR(30) NOT NULL,
-            cue_text VARCHAR(45),
-            initial_date DATE NOT NULL,
-            days_done INTEGER NOT NULL DEFAULT 0);''');
 
-        await txn.rawInsert('''INSERT INTO habit(id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done)
-                               SELECT id, color, icon, score, cycle, habit_text, cue_text, initial_date, days_done
-                               FROM _habit_old;''');
-
-        await txn.execute('DROP TABLE _habit_old;');
-      });
-    }
   }
 
   Future _onCreate(Database db, int version) async {
@@ -63,7 +42,6 @@ class DatabaseService {
             color INTEGER NOT NULL,
             icon INTEGER NOT NULL,
             score INTEGER NOT NULL DEFAULT 0,
-            cycle INTEGER NOT NULL DEFAULT 1,
             habit_text VARCHAR(30) NOT NULL,
             cue_text VARCHAR(45),
             initial_date DATE NOT NULL,
@@ -96,20 +74,7 @@ class DatabaseService {
               ON UPDATE CASCADE);''');
 
     await db.execute('''
-          CREATE TABLE freq_repeating (
-            days_time INTEGER NOT NULL,
-            days_cycle INTEGER NOT NULL,
-            habit_id INTEGER NOT NULL UNIQUE,
-            CONSTRAINT fk_freq_repeating_habit_id
-              FOREIGN KEY (habit_id)
-              REFERENCES habit(id)
-              ON DELETE CASCADE
-              ON UPDATE CASCADE);''');
-
-    await db.execute('''
           CREATE TABLE day_done (
-            done TINYINT NOT NULL,
-            cycle INTEGER NOT NULL,
             date_done DATE NOT NULL,
             habit_id INTEGER NOT NULL,
             CONSTRAINT fk_day_done_habit_id
@@ -189,13 +154,11 @@ class DatabaseService {
     final db = await database;
 
     var result = await db.rawQuery('''
-        SELECT id, color, habit_text, cycle, icon FROM habit WHERE id IN (
+        SELECT id, color, habit_text, icon FROM habit WHERE id IN (
 							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
 							 UNION ALL
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
-               UNION ALL
-               SELECT habit_id FROM freq_repeating WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>DATE('now', '-days_cicle day') AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
-        );''');
+               );''');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
@@ -207,7 +170,7 @@ class DatabaseService {
 
     final db = await database;
     var result = await db.rawQuery(
-        'SELECT done, habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
+        'SELECT habit_id FROM day_done WHERE date_done=\'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\';');
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
     return list;
@@ -231,51 +194,48 @@ class DatabaseService {
 
     var resultWeekly = await db.rawQuery('SELECT * FROM freq_weekly WHERE habit_id=$id;');
 
-    var resultRepeating = await db.rawQuery('SELECT * FROM freq_repeating WHERE habit_id=$id;');
-
     if (resultDayWeek.isNotEmpty) {
       return FreqDayWeek.fromJson(resultDayWeek.first);
     } else if (resultWeekly.isNotEmpty) {
       return FreqWeekly.fromJson(resultWeekly.first);
-    } else if (resultRepeating.isNotEmpty) {
-      return FreqRepeating.fromJson(resultRepeating.first);
     } else {
       return null;
     }
   }
 
   /// Retorna uma lista com os dias feitos do hábito.
-  Future<List> getDaysDone(int id) async {
+  Future<List<DayDone>> getDaysDone(int id, {DateTime startDate, DateTime endDate}) async {
     final db = await database;
+    List<dynamic> result;
 
-    var result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
-
-    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
-    return list;
-  }
-
-  /// Retorna os dias feitos do hábito de um ciclo específico.
-  Future<List> getCycleDaysDone(int id, int cycle) async {
-    final db = await database;
-
-    var result = await db.rawQuery('''SELECT date_done FROM day_done WHERE habit_id=$id AND cycle=$cycle;''');
+    if (startDate != null && endDate != null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+                                                                 AND date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+                                                                 AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else if (startDate != null && endDate == null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+                                                                 AND date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else if (startDate == null && endDate != null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+                                                                 AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else {
+      result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
+    }
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
     return list;
   }
 
   /// Registra o dia feito do hábito.
-  Future<bool> habitDone(int id, int cycle, bool changeCycle) async {
-    DateTime now = new DateTime.now();
-    int numCycle = changeCycle ? cycle + 1 : cycle;
-
+  Future<bool> setDayDone(int id, DateTime date) async {
     final db = await database;
-    await db.rawInsert('''INSERT INTO day_done (done, cycle, date_done, habit_id) VALUES (1,
-                                                                           $numCycle,
-                                                                           \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
-                                                                           $id);''');
+    await db.rawInsert('''INSERT INTO day_done (date_done, habit_id) VALUES (\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\',
+                                                                                   $id);''');
 
-    await db.rawInsert('UPDATE habit SET days_done=days_done+1, cycle=$numCycle WHERE id=$id;');
+    await db.rawInsert('UPDATE habit SET days_done=days_done+1 WHERE id=$id;');
 
     return true;
   }
@@ -295,8 +255,7 @@ class DatabaseService {
     final db = await database;
 
     // Inserção dos dados do hábito
-    var id = await db
-        .rawInsert('''INSERT INTO habit (habit_text, color, icon, initial_date) VALUES (\'${habit.habit}\',
+    var id = await db.rawInsert('''INSERT INTO habit (habit_text, color, icon, initial_date) VALUES (\'${habit.habit}\',
                                                                                         ${habit.color},
                                                                                         ${habit.icon},
                                                                                         \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
@@ -345,11 +304,6 @@ class DatabaseService {
     } else if (frequency.runtimeType == FreqWeekly) {
       FreqWeekly freq = frequency;
       await db.rawInsert('INSERT INTO freq_weekly (days_time, habit_id) VALUES (${freq.daysTime}, $id);');
-    } else if (frequency.runtimeType == FreqRepeating) {
-      FreqRepeating freq = frequency;
-      await db.rawInsert('''INSERT INTO freq_repeating (days_time, days_cycle, habit_id) VALUES (${freq.daysTime},
-                                                                                                 ${freq.daysCycle},
-                                                                                                 $id);''');
     }
 
     return true;
@@ -401,11 +355,6 @@ class DatabaseService {
           FreqWeekly freq = frequency;
           await db.rawUpdate('''UPDATE freq_weekly SET days_time=${freq.daysTime} WHERE habit_id=$id;''');
           break;
-        case FreqRepeating:
-          FreqRepeating freq = frequency;
-          await db.rawUpdate('''UPDATE freq_repeating SET days_time=${freq.daysTime}, 
-                                                        days_cycle=${freq.daysCycle} WHERE habit_id=$id;''');
-          break;
       }
     } else {
       switch (typeOldFreq) {
@@ -414,9 +363,6 @@ class DatabaseService {
           break;
         case FreqWeekly:
           await db.rawDelete('''DELETE FROM freq_weekly WHERE habit_id=$id;''');
-          break;
-        case FreqRepeating:
-          await db.rawDelete('''DELETE FROM freq_repeating WHERE habit_id=$id;''');
           break;
       }
 
@@ -440,6 +386,16 @@ class DatabaseService {
     final db = await database;
 
     await db.rawDelete('''DELETE FROM reminder WHERE habit_id=$habitId;''');
+
+    return true;
+  }
+
+  /// Deleta o dia feito do hábito.
+  Future<bool> deleteDayDone(int id, DateTime date) async {
+    final db = await database;
+
+    await db.rawDelete('''DELETE FROM day_done WHERE date_done=\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\'
+                                                     AND habit_id=$id;''');
 
     return true;
   }
