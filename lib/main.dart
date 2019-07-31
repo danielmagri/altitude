@@ -5,8 +5,6 @@ import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
-import 'package:habit/ui/allHabitsPage.dart';
-import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/controllers/DataControl.dart';
@@ -61,9 +59,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
   AnimationController _controllerDragTarget;
 
-  List<Habit> habitsForToday;
-  List<DayDone> habitsDone;
-  Person person = new Person(name: "");
+  PageController _pageController = new PageController();
+  int pageIndex = 0;
+
+  int score;
   int previousScore = 0;
 
   @override
@@ -76,26 +75,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void didChangeDependencies() {
-    DataPreferences().getName().then((name) {
-      if (name != null) {
-        setState(() {
-          person.name = name;
-        });
-      }
-    });
-
     DataPreferences().getScore().then((score) {
       setState(() {
-        person.score = score;
+        this.score = score;
       });
       updateScore();
-    });
-
-    DataControl().getHabitsToday().then((data) {
-      setState(() {
-        habitsForToday = data[0];
-        habitsDone = data[1];
-      });
     });
 
     super.didChangeDependencies();
@@ -104,14 +88,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controllerScore.dispose();
+    _controllerDragTarget.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   void updateScore() {
-    if (previousScore != person.score) {
+    if (previousScore != score) {
       _controllerScore.reset();
       _controllerScore.forward().whenComplete(() {
-        previousScore = person.score;
+        previousScore = score;
       });
     }
   }
@@ -125,10 +111,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void setHabitDone(id) {
-    setState(() {
-      habitsDone.add(new DayDone(habitId: id));
-    });
-
     Loading.showLoading(context);
     DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
@@ -141,13 +123,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       });
 
       setState(() {
-        person.score += earnedScore;
+        score += earnedScore;
       });
       updateScore();
     });
   }
 
-  bool accepted = false;
+  void pageScroll(int index) {
+    setState(() {
+      pageIndex = index;
+      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,63 +143,28 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         children: <Widget>[
           Column(
             children: <Widget>[
-              Container(
-                width: double.maxFinite,
-                height: 75,
-                margin: const EdgeInsets.only(top: 12, left: 12),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    RichText(
-                      text: TextSpan(children: <TextSpan>[
-                        TextSpan(
-                          text: "Olá, ",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                        TextSpan(
-                          text: person.name,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ]),
-                    ),
-                    Spacer(),
-                    IconButton(
-                      tooltip: "Configurações",
-                      icon: Icon(
-                        Icons.settings,
-                      ),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return SettingsPage();
-                        }));
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _AppBar(),
               ScoreWidget(
-                animation: IntTween(begin: previousScore, end: person.score)
+                animation: IntTween(begin: previousScore, end: score)
                     .animate(CurvedAnimation(parent: _controllerScore, curve: Curves.fastOutSlowIn)),
               ),
-              Container(
-                margin: EdgeInsets.only(top: 36),
-                child: Text(
-                  "HÁBITOS DE HOJE",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
-                ),
-              ),
               Expanded(
-                child: Center(
-                  child: _habitsForTodayBuild(),
+                child: PageView(
+                  controller: _pageController,
+                  physics: BouncingScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      pageIndex = index;
+                    });
+                  },
+                  children: <Widget>[
+                    _TodayHabitsPage(
+                      showDragTarget: showDragTarget,
+                    ),
+                    _AllHabitsPage(
+                      showDragTarget: showDragTarget,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -223,56 +175,142 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           ),
         ],
       ),
-      bottomNavigationBar: _BottomNavigationBar(),
+      bottomNavigationBar: _BottomNavigationBar(index: pageIndex, onTap: pageScroll),
     );
   }
+}
 
-  Widget _habitsForTodayBuild() {
-    List<Widget> widgets = new List();
+class _TodayHabitsPage extends StatelessWidget {
+  _TodayHabitsPage({Key key, @required this.showDragTarget}) : super(key: key);
 
-    if (habitsForToday == null) {
-      widgets.add(Center(child: CircularProgressIndicator()));
-    } else if (habitsForToday.length == 0) {
-      widgets.add(
-        Center(
+  final Function showDragTarget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 36),
           child: Text(
-            "Não tem hábitos para serem feitos hoje",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+            "HÁBITOS DE HOJE",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
           ),
         ),
-      );
-    } else {
-      for (Habit habit in habitsForToday) {
-        DayDone done = habitsDone.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
-        Widget habitWidget = HabitCardItem(
-          habit: habit,
-          showDragTarget: showDragTarget,
-          done: done == null ? false : true,
-        );
+        Expanded(
+          child: Center(
+            child: FutureBuilder(
+              future: DataControl().getHabitsToday(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<Habit> habits = snapshot.data[0];
+                  List<DayDone> dones = snapshot.data[1];
+                  if (habits.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "Não tem hábitos para serem feitos hoje",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                      ),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: habits.map((habit) {
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
+                          return HabitCardItem(
+                            habit: habit,
+                            showDragTarget: showDragTarget,
+                            done: done == null ? false : true,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
 
-        widgets.add(habitWidget);
-      }
-    }
+class _AllHabitsPage extends StatelessWidget {
+  _AllHabitsPage({Key key, @required this.showDragTarget}) : super(key: key);
 
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        children: widgets,
-      ),
+  final Function showDragTarget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 36),
+          child: Text(
+            "TODOS OS HÁBITOS",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: FutureBuilder(
+              future: DataControl().getAllHabits(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<Habit> habits = snapshot.data[0];
+                  List<DayDone> dones = snapshot.data[1];
+                  if (habits.isEmpty) {
+                    return Text(
+                      "Crie um novo hábito pelo botão \"+\" na tela principal.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: habits.map((habit) {
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
+                          return HabitCardItem(
+                            habit: habit,
+                            showDragTarget: showDragTarget,
+                            done: done == null ? false : true,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          ),
+        )
+      ],
     );
   }
 }
 
 class _BottomNavigationBar extends StatelessWidget {
+  _BottomNavigationBar({Key key, this.index, @required this.onTap}) : super(key: key);
+
+  final int index;
+  final Function(int index) onTap;
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       color: Colors.transparent,
       elevation: 0.0,
       child: Container(
-        height: 60,
+        height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
         decoration: BoxDecoration(
           color: Theme.of(context).accentColor,
@@ -283,18 +321,29 @@ class _BottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-              tooltip: "Todos os hábitos",
-              icon: Icon(
-                Icons.apps,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return AlHabitsPage();
-                }));
-              },
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 200),
+                  opacity: index == 1 ? 1 : 0,
+                  child: Container(
+                    height: 4,
+                    width: 25,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                IconButton(
+                  tooltip: "Todos os hábitos",
+                  icon: Icon(
+                    Icons.apps,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () => onTap(1),
+                ),
+              ],
             ),
             InkWell(
               onTap: () {
@@ -308,21 +357,97 @@ class _BottomNavigationBar extends StatelessWidget {
                 child: Icon(
                   Icons.add,
                   color: Colors.black,
-                  size: 32,
+                  size: 28,
                 ),
               ),
             ),
-            IconButton(
-              tooltip: "Configurações",
-              icon: Icon(
-                Icons.today,
-                color: Colors.white,
-                size: 28,
-              ),
-              onPressed: () {},
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 200),
+                  opacity: index == 0 ? 1 : 0,
+                  child: Container(
+                    height: 4,
+                    width: 25,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                IconButton(
+                  tooltip: "Configurações",
+                  icon: Icon(
+                    Icons.today,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () => onTap(0),
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.maxFinite,
+      height: 75,
+      margin: const EdgeInsets.only(top: 12, left: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          FutureBuilder(
+            future: DataPreferences().getName(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                      text: "Olá, ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w300,
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                    TextSpan(
+                      text: snapshot.data,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                  ]),
+                );
+              } else {
+                return Text(
+                  "Bem-vindo...",
+                  style: TextStyle(color: Colors.black, fontSize: 18.0),
+                );
+              }
+            },
+          ),
+          Spacer(),
+          IconButton(
+            tooltip: "Configurações",
+            icon: Icon(
+              Icons.settings,
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return SettingsPage();
+              }));
+            },
+          ),
+        ],
       ),
     );
   }
@@ -409,7 +534,6 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   colors: [Color.fromARGB(255, 118, 213, 216), Theme.of(context).canvasColor])),
           child: DragTarget<int>(
             builder: (context, List<int> candidateData, rejectedData) {
-              print(candidateData);
               return Stack(
                 children: <Widget>[
                   Align(
