@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
-import 'package:habit/ui/widgets/HabitListItem.dart';
+import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
@@ -11,7 +11,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
-import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        accentColor: Color.fromARGB(255, 24, 24, 24),
+        accentColor: Color.fromARGB(255, 34, 34, 34),
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
@@ -59,6 +59,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
+  AnimationController _controllerDragTarget;
 
   List<Habit> habitsForToday;
   List<DayDone> habitsDone;
@@ -70,6 +71,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.initState();
 
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    _controllerDragTarget = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
   }
 
   @override
@@ -86,7 +88,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       setState(() {
         person.score = score;
       });
-      animateScore();
+      updateScore();
     });
 
     DataControl().getHabitsToday().then((data) {
@@ -105,12 +107,20 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void animateScore() {
+  void updateScore() {
     if (previousScore != person.score) {
       _controllerScore.reset();
       _controllerScore.forward().whenComplete(() {
         previousScore = person.score;
       });
+    }
+  }
+
+  void showDragTarget(bool show) {
+    if (show) {
+      _controllerDragTarget.forward();
+    } else {
+      _controllerDragTarget.reverse();
     }
   }
 
@@ -133,49 +143,91 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       setState(() {
         person.score += earnedScore;
       });
-      animateScore();
+      updateScore();
     });
   }
+
+  bool accepted = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          HeaderWidget(
-            name: person.name,
-            score: person.score,
-            previousScore: previousScore,
-            controllerScore: _controllerScore,
+          Column(
+            children: <Widget>[
+              Container(
+                width: double.maxFinite,
+                height: 75,
+                margin: const EdgeInsets.only(top: 12, left: 12),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: "Olá, ",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w300,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        TextSpan(
+                          text: person.name,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      tooltip: "Configurações",
+                      icon: Icon(
+                        Icons.settings,
+                      ),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return SettingsPage();
+                        }));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              ScoreWidget(
+                animation: IntTween(begin: previousScore, end: person.score)
+                    .animate(CurvedAnimation(parent: _controllerScore, curve: Curves.fastOutSlowIn)),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 36),
+                child: Text(
+                  "HÁBITOS DE HOJE",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: _habitsForTodayBuild(),
+                ),
+              ),
+            ],
           ),
-          Container(
-            height: 1,
-            color: Colors.grey,
-            width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 12.0),
-            child: Text(
-              "HÁBITOS DE HOJE",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-            ),
-          ),
-          Expanded(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                LayoutBuilder(builder: _habitsForTodayBuild),
-              ],
-            ),
+          _DragTargetDoneHabit(
+            controller: _controllerDragTarget,
+            setHabitDone: setHabitDone,
           ),
         ],
       ),
-      bottomNavigationBar: _bottomNavigationBarWidget(),
+      bottomNavigationBar: _BottomNavigationBar(),
     );
   }
 
-  Widget _habitsForTodayBuild(BuildContext context, BoxConstraints constrant) {
+  Widget _habitsForTodayBuild() {
     List<Widget> widgets = new List();
 
     if (habitsForToday == null) {
@@ -193,8 +245,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     } else {
       for (Habit habit in habitsForToday) {
         DayDone done = habitsDone.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
-        Widget habitWidget = HabitListItem(
-            habit: habit, done: done == null ? false : true, setHabitDone: setHabitDone, width: constrant.maxWidth);
+        Widget habitWidget = HabitCardItem(
+          habit: habit,
+          showDragTarget: showDragTarget,
+          done: done == null ? false : true,
+        );
 
         widgets.add(habitWidget);
       }
@@ -202,103 +257,215 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
-      child: Column(
+      child: Wrap(
+        alignment: WrapAlignment.center,
         children: widgets,
       ),
     );
   }
+}
 
-  Widget _bottomNavigationBarWidget() {
+class _BottomNavigationBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return BottomAppBar(
+      color: Colors.transparent,
+      elevation: 0.0,
       child: Container(
-        height: 65,
+        height: 60,
+        margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
         decoration: BoxDecoration(
           color: Theme.of(context).accentColor,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
+          borderRadius: BorderRadius.circular(40),
           boxShadow: <BoxShadow>[BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Expanded(
-              child: IconButton(
-                tooltip: "Todos os hábitos",
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return AlHabitsPage();
-                  }));
-                },
+            IconButton(
+              tooltip: "Todos os hábitos",
+              icon: Icon(
+                Icons.apps,
+                color: Colors.white,
+                size: 28,
               ),
-            ),
-            FloatingActionButton(
               onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return AlHabitsPage();
+                }));
+              },
+            ),
+            InkWell(
+              onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
                   return AddHabitPage();
                 }));
               },
-              tooltip: 'Adicionar',
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 32,
-              ),
-              backgroundColor: Colors.white,
-            ),
-            Expanded(
-              child: IconButton(
-                tooltip: "Configurações",
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 28,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                  size: 32,
                 ),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return SettingsPage();
-                  }));
-                },
               ),
+            ),
+            IconButton(
+              tooltip: "Configurações",
+              icon: Icon(
+                Icons.today,
+                color: Colors.white,
+                size: 28,
+              ),
+              onPressed: () {},
             ),
           ],
         ),
       ),
-      color: Colors.transparent,
-      elevation: 0.0,
     );
   }
 }
 
-class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score, this.previousScore, this.controllerScore}) : super(key: key);
+// ignore: must_be_immutable
+class _DragTargetDoneHabit extends StatelessWidget {
+  _DragTargetDoneHabit({Key key, @required this.controller, @required this.setHabitDone})
+      : opacity = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.0,
+              0.8,
+              curve: Curves.easeInOutSine,
+            ),
+          ),
+        ),
+        offsetSky = Tween<double>(
+          begin: -1.0,
+          end: 0.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.0,
+              0.6,
+              curve: Curves.easeOutSine,
+            ),
+          ),
+        ),
+        offsetCloud = Tween<double>(
+          begin: -1.0,
+          end: 0.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.3,
+              1.0,
+              curve: Curves.easeOutSine,
+            ),
+          ),
+        ),
+        opacityText = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.5,
+              1.0,
+              curve: Curves.easeInOutCubic,
+            ),
+          ),
+        ),
+        super(key: key);
 
-  final String name;
-  final int score;
-  final int previousScore;
-  final controllerScore;
+  final Function(int id) setHabitDone;
+  final Animation<double> controller;
+  final Animation<double> opacity;
+  final Animation<double> offsetSky;
+  final Animation<double> offsetCloud;
+  final Animation<double> opacityText;
+
+  bool hover = false;
+
+  Widget _buildAnimation(BuildContext context, Widget child) {
+    return FractionalTranslation(
+      translation: Offset(0, offsetSky.value),
+      child: Opacity(
+        opacity: opacity.value,
+        child: Container(
+          height: 175,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.7, 1],
+                  colors: [Color.fromARGB(255, 118, 213, 216), Theme.of(context).canvasColor])),
+          child: DragTarget<int>(
+            builder: (context, List<int> candidateData, rejectedData) {
+              print(candidateData);
+              return Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment(-1.1, -0.9 + offsetCloud.value),
+                    child: Image.asset(
+                      "assets/c1white.png",
+                      fit: BoxFit.contain,
+                      height: 60,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(1.2, 0 + offsetCloud.value),
+                    child: Image.asset(
+                      "assets/c2white.png",
+                      fit: BoxFit.contain,
+                      height: 45,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(0, 0.6),
+                    child: Opacity(
+                      opacity: opacityText.value,
+                      child: Text(
+                        "ARRASTE AQUI PARA COMPLETAR",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: hover ? Color.fromARGB(255, 78, 173, 176) : Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            onWillAccept: (data) {
+              hover = true;
+              return true;
+            },
+            onAccept: (data) {
+              hover = false;
+              setHabitDone(data);
+            },
+            onLeave: (data) {
+              hover = false;
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 160,
-      alignment: Alignment(0.0, 0.5),
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            name,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300),
-          ),
-          ScoreWidget(
-            animation: IntTween(begin: previousScore, end: score)
-                .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
-          )
-        ],
-      ),
+    return AnimatedBuilder(
+      builder: _buildAnimation,
+      animation: controller,
     );
   }
 }

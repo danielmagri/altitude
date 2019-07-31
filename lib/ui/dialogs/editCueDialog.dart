@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/utils/Suggestions.dart';
 import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';

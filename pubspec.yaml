@@ -37,6 +37,8 @@ flutter:
   assets:
     - assets/c1.png
     - assets/c2.png
+    - assets/c1white.png
+    - assets/c2white.png
     - assets/addButton.png
     - assets/doneHabit.png
     - assets/score.png

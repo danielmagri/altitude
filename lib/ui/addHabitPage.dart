@@ -9,8 +9,8 @@ import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/widgets/Toast.dart';
-import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/utils/Util.dart';
 
 class AddHabitPage extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit/ui/widgets/DotsIndicator.dart';
+import 'package:habit/ui/widgets/generic/DotsIndicator.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/main.dart';
 import 'package:habit/controllers/DataPreferences.dart';

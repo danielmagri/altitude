@@ -11,8 +11,8 @@ import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/widgets/Toast.dart';
-import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 
 class EditHabitPage extends StatefulWidget {

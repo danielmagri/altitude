@@ -1,109 +1,30 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:habit/ui/widgets/generic/Rocket.dart';
 
-class RocketPainter extends CustomPainter {
-  RocketPainter(this.color, this.fireSize);
-
-  final Color color;
-  final double fireSize;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    Path path = Path();
-    Paint paint = Paint();
-
-    num degToRad(num deg) => deg * (pi / 180.0);
-
-    path.moveTo(size.width * 0.49, size.height * 0.05);
-    path.quadraticBezierTo(size.width * 0.44, size.height * 0.1, size.width * 0.41, size.height * 0.2);
-    path.lineTo(size.width * 0.59, size.height * 0.2);
-    path.quadraticBezierTo(size.width * 0.56, size.height * 0.1, size.width * 0.51, size.height * 0.05);
-    path.close();
-
-    paint.color = color;
-    canvas.drawPath(path, paint);
-
-    path = Path();
-    path.moveTo(size.width * 0.41, size.height * 0.4);
-    path.lineTo(size.width * 0.28, size.height * 0.5);
-    path.lineTo(size.width * 0.26, size.height * 0.58);
-    path.quadraticBezierTo(size.width * 0.31, size.height * 0.54, size.width * 0.41, size.height * 0.53);
-    path.close();
-
-    paint.color = color;
-    canvas.drawShadow(path, Colors.black, 3, true);
-    canvas.drawPath(path, paint);
-
-    path = Path();
-    path.moveTo(size.width * 0.59, size.height * 0.4);
-    path.lineTo(size.width * 0.72, size.height * 0.5);
-    path.lineTo(size.width * 0.74, size.height * 0.58);
-    path.quadraticBezierTo(size.width * 0.67, size.height * 0.54, size.width * 0.59, size.height * 0.53);
-    path.close();
-
-    paint.color = color;
-    canvas.drawShadow(path, Colors.black, 3, true);
-    canvas.drawPath(path, paint);
-
-    path = Path();
-    path.moveTo(size.width * 0.41, size.height * 0.2);
-    path.quadraticBezierTo(size.width * 0.38, size.height * 0.4, size.width * 0.41, size.height * 0.6);
-    path.lineTo(size.width * 0.59, size.height * 0.6);
-    path.quadraticBezierTo(size.width * 0.62, size.height * 0.4, size.width * 0.59, size.height * 0.2);
-    path.close();
-
-    paint.color = Colors.black;
-    canvas.drawShadow(path, Colors.black, 3, true);
-    canvas.drawPath(path, paint);
-
-    paint.color = color;
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.4), size.width * 0.06, paint);
-
-    path = Path();
-    path.arcTo(
-        Rect.fromLTWH(size.width * (0.45 - (fireSize / 20.0)), size.height * 0.6,
-            size.width * (0.1 + (fireSize / 10.0)), size.height * (0.2 + (fireSize / 20.0))),
-        degToRad(30),
-        degToRad(-240),
-        true);
-    path.lineTo(size.width * 0.5, size.height * (0.85 + (fireSize / 10.0)));
-    paint.color = Colors.orange;
-    canvas.drawShadow(path, Colors.black, 3, true);
-    canvas.drawPath(path, paint);
-
-    path = Path();
-    path.arcTo(
-        Rect.fromLTWH(size.width * (0.475 - (fireSize / 40.0)), size.height * 0.6,
-            size.width * (0.05 + (fireSize / 20.0)), size.height * (0.1 + (fireSize / 20.0))),
-        degToRad(30),
-        degToRad(-240),
-        true);
-    path.lineTo(size.width * 0.5, size.height * (0.75 + (fireSize / 20.0)));
-    paint.color = Colors.deepOrange;
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return oldDelegate != this;
-  }
-}
-
-class RocketScene extends StatelessWidget {
-  RocketScene({Key key, @required this.color, this.force = 0})
+class SkyScene extends StatelessWidget {
+  SkyScene({Key key, this.size, @required this.color, this.force = 0})
       : duration = 2000 - (961 * force).toInt(),
         super(key: key);
 
+  final Size size;
   final Color color;
   final double force;
   final int duration;
 
   Widget build(BuildContext context) {
-    return CustomPaint(
-      child: Sky(
-        duration: duration,
-      ),
-      foregroundPainter: RocketPainter(color, force),
+    return Stack(
+      children: <Widget>[
+        Sky(
+          duration: duration,
+        ),
+        Rocket(
+          size: size,
+          color: color,
+          fireForce: force,
+          state: RocketState.ON_FIRE,
+        )
+      ],
     );
   }
 }

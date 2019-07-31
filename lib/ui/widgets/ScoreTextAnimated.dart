@@ -9,16 +9,14 @@ class ScoreWidget extends AnimatedWidget {
     final Animation<int> animation = listenable;
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 55,
-        ),
+        SizedBox(height: 40,),
         Text(
           animation.value.toString(),
           style: TextStyle(
-              fontSize: 70, fontWeight: FontWeight.bold, height: 0, color: color == null ? Colors.black : color),
+              fontSize: 70, fontWeight: FontWeight.bold, height: 0.2, color: color == null ? Colors.black : color),
         ),
         Text(
-          "FORÇA DE VONTADE",
+          "QUILÔMETROS",
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
         ),
       ],
