@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 

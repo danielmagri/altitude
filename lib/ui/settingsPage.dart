@@ -94,7 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
         physics: BouncingScrollPhysics(),
         child: Column(children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 40),
+            margin: EdgeInsets.only(top: 40, bottom: 16),
             child: Row(
               children: <Widget>[
                 SizedBox(
@@ -112,12 +112,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-          ),
-          Container(
-            height: 1,
-            color: Colors.grey,
-            width: double.maxFinite,
-            margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
           ),
           ListTile(
             title: Text("Seu nome"),

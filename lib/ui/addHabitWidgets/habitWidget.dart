@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';

@@ -3,7 +3,7 @@ import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/objects/Frequency.dart';
 

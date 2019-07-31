@@ -4,16 +4,16 @@ import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:vibration/vibration.dart';
-import 'package:habit/ui/widgets/Loading.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/detailHabitWidget/cueWidget.dart';
 import 'package:habit/ui/detailHabitWidget/coolDataWidget.dart';
 import 'package:habit/ui/detailHabitWidget/calendarWidget.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/dialogs/editCueDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:habit/ui/widgets/RocketScene.dart';
+import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
 
 class HabitDetailsPage extends StatefulWidget {
@@ -295,14 +295,15 @@ class HeaderWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            child: RocketScene(
+            child: SkyScene(
+              size: const Size(140, 140),
               color: DataHabitDetail().getColor(),
               force: _setRocketForce(),
             ),
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
