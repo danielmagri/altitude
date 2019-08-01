@@ -4,6 +4,8 @@ import 'package:habit/ui/widgets/generic/DotsIndicator.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/main.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/utils/Color.dart';
+import 'package:habit/ui/widgets/generic/Rocket.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key key}) : super(key: key);
@@ -23,7 +25,7 @@ class _TutorialPageState extends State<TutorialPage> {
   }
 
   void _nextTap() async {
-    if (_controller.page < 2.9) {
+    if (_controller.page < 3.9) {
       _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
     } else {
       String result = Validate.nameTextValidate(_nameTextController.text);
@@ -55,164 +57,12 @@ class _TutorialPageState extends State<TutorialPage> {
           PageView(
             controller: _controller,
             children: <Widget>[
+              Initial(),
+              CreateHabit(),
+              CompleteHabit(),
+              Score(),
               Container(
-                color: Colors.red,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 64),
-                      child: Text(
-                        "ADICIONAR HÁBITO",
-                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.white,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: 225,
-                            width: 225,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: new AssetImage('assets/addButton.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              "Crie um novo hábito clicando no botão \"+\"",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.blue,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 64),
-                      child: Text(
-                        "FINALIZAR HÁBITO",
-                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.white,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: 225,
-                            width: 225,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: new AssetImage('assets/doneHabit.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              "Finalize o hábito do dia arrastando-o para a direita!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.green,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 64),
-                      child: Text(
-                        "PONTUAÇÃO",
-                        style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.white,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Container(
-                            height: 225,
-                            width: 225,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: new AssetImage('assets/score.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                                ]),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              "Ganhe pontos ao finalizar um hábito e um bônus ao completar o ciclo inteiro!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.orange,
+                color: HabitColors.colors[5],
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -222,12 +72,6 @@ class _TutorialPageState extends State<TutorialPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
-                    ),
-                    Container(
-                      height: 1,
-                      color: Colors.white,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                     ),
                     Flexible(
                       child: Center(
@@ -270,7 +114,7 @@ class _TutorialPageState extends State<TutorialPage> {
                   new Center(
                     child: new DotsIndicator(
                       controller: _controller,
-                      itemCount: 4,
+                      itemCount: 5,
                     ),
                   ),
                   Positioned(
@@ -288,6 +132,405 @@ class _TutorialPageState extends State<TutorialPage> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class Initial extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: HabitColors.colors[0],
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 24),
+            height: 100,
+            alignment: Alignment.center,
+            child: Text(
+              "HÁBITOS",
+              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Container(
+                height: 250,
+                width: 250,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 250, 250, 250),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                child: SizedBox(
+                  width: 200,
+                  height: 190,
+                  child: Transform.rotate(
+                    angle: 0.8,
+                    child: Rocket(
+                      size: const Size(200, 190),
+                      color: HabitColors.colors[0],
+                      state: RocketState.ON_FIRE,
+                      fireForce: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Deseja mudar sua vida? Comece mudando seus hábitos!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 21),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CreateHabit extends StatefulWidget {
+  @override
+  _CreateHabitState createState() => _CreateHabitState();
+}
+
+class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 5);
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.repeat(reverse: true);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: HabitColors.colors[1],
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 24),
+            height: 100,
+            alignment: Alignment.center,
+            child: Text(
+              "CRIAR UM HÁBITO",
+              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: new AssetImage('assets/createHabit.png'),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                ),
+                Positioned(
+                  bottom: -25 + _controller.value,
+                  right: 5 + _controller.value,
+                  child: Transform.rotate(
+                    angle: -1,
+                    child: Image.asset(
+                      "assets/finger.png",
+                      fit: BoxFit.contain,
+                      height: 150,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Crie um novo hábito clicando no botão +",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 21),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class CompleteHabit extends StatefulWidget {
+  @override
+  _CompleteHabitState createState() => _CompleteHabitState();
+}
+
+class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> positionYAnimation;
+  Animation<double> positionXAnimation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(duration: const Duration(milliseconds: 3000), vsync: this);
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+
+    positionYAnimation = Tween<double>(
+      begin: 0,
+      end: 140,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.0,
+          0.5,
+          curve: Curves.ease,
+        ),
+      ),
+    );
+
+    positionXAnimation = Tween<double>(
+      begin: 0,
+      end: 30,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.0,
+          0.5,
+          curve: Curves.easeInOutCubic,
+        ),
+      ),
+    );
+    _controller.repeat();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: HabitColors.colors[3],
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 24),
+            height: 100,
+            alignment: Alignment.center,
+            child: Text(
+              "COMPLETAR O HÁBITO",
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: new AssetImage('assets/completeHabit.png'),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                ),
+                Positioned(
+                  bottom: 25 + positionYAnimation.value,
+                  right: 43 + positionXAnimation.value,
+                  child: Rocket(
+                    size: const Size(80, 70),
+                    color: HabitColors.colors[3],
+                    state: RocketState.ON_FIRE,
+                    fireForce: 1,
+                  ),
+                ),
+                Positioned(
+                  bottom: -25 + positionYAnimation.value,
+                  right: -30 + positionXAnimation.value,
+                  child: Transform.rotate(
+                    angle: -1,
+                    child: Image.asset(
+                      "assets/finger.png",
+                      fit: BoxFit.contain,
+                      height: 150,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16, left: 16),
+                child: Text(
+                  "Para completar o hábito basta arrastar o foguete até o céu!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 21),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class Score extends StatefulWidget {
+  @override
+  _ScoreState createState() => _ScoreState();
+}
+
+class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> scoreAnimation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(duration: const Duration(milliseconds: 4000), vsync: this);
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+
+    scoreAnimation = Tween<double>(
+      begin: 0,
+      end: 122,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.0,
+          0.5,
+          curve: Curves.fastOutSlowIn,
+        ),
+      ),
+    );
+    _controller.repeat();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: HabitColors.colors[4],
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(top: 24),
+            height: 100,
+            alignment: Alignment.center,
+            child: Text(
+              "EVOLUÇÃO DO HÁBITO",
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: new AssetImage('assets/score.png'),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                ),
+                Positioned(
+                  top: 80,
+                  right: 0,
+                  left: 0,
+                  child: Text(
+                    scoreAnimation.value.toInt().toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16, left: 16),
+                child: Text(
+                  "A cada vez que você completar um hábito o seu foguete elevará de altitude, o espaço é o limite!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 21),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 80,
+          )
         ],
       ),
     );
