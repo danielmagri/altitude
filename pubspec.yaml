@@ -39,8 +39,9 @@ flutter:
     - assets/c2.png
     - assets/c1white.png
     - assets/c2white.png
-    - assets/addButton.png
-    - assets/doneHabit.png
+    - assets/finger.png
+    - assets/createHabit.png
+    - assets/completeHabit.png
     - assets/score.png
 
   fonts:
