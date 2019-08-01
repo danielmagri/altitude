@@ -8,7 +8,9 @@ import 'package:habit/utils/Color.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 
 class TutorialPage extends StatefulWidget {
-  TutorialPage({Key key}) : super(key: key);
+  TutorialPage({Key key, this.showNameTab = true}) : super(key: key);
+
+  final bool showNameTab;
 
   @override
   _TutorialPageState createState() => _TutorialPageState();
@@ -18,6 +20,8 @@ class _TutorialPageState extends State<TutorialPage> {
   final _controller = new PageController();
   final _nameTextController = TextEditingController();
 
+  int pageIndex = 0;
+
   @override
   void dispose() {
     _nameTextController.dispose();
@@ -25,14 +29,11 @@ class _TutorialPageState extends State<TutorialPage> {
   }
 
   void _nextTap() async {
-    if (_controller.page < 3.9) {
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
-    } else {
+    if (pageIndex == 4) {
       String result = Validate.nameTextValidate(_nameTextController.text);
 
       if (result == null) {
         await DataPreferences().setName(_nameTextController.text);
-
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
           return MainPage();
         }));
@@ -46,7 +47,61 @@ class _TutorialPageState extends State<TutorialPage> {
             textColor: Colors.black,
             fontSize: 16.0);
       }
+    } else if (pageIndex == 3 && !widget.showNameTab) {
+      Navigator.pop(context);
+    } else {
+      pageIndex++;
+      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
     }
+  }
+
+  List<Widget> _pageList() {
+    List<Widget> widgets = [Initial(), CreateHabit(), CompleteHabit(), Score()];
+    if (widget.showNameTab) {
+      widgets.add(
+        Container(
+          color: HabitColors.colors[5],
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 64),
+                child: Text(
+                  "Como podemos te chamar?",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+              Flexible(
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                    margin: const EdgeInsets.only(left: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
+                    ),
+                    child: TextField(
+                      controller: _nameTextController,
+                      textInputAction: TextInputAction.done,
+                      textCapitalization: TextCapitalization.words,
+                      onEditingComplete: _nextTap,
+                      style: TextStyle(fontSize: 18.0),
+                      decoration: InputDecoration.collapsed(hintText: "Seu nome"),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 60,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return widgets;
   }
 
   @override
@@ -56,52 +111,8 @@ class _TutorialPageState extends State<TutorialPage> {
         children: <Widget>[
           PageView(
             controller: _controller,
-            children: <Widget>[
-              Initial(),
-              CreateHabit(),
-              CompleteHabit(),
-              Score(),
-              Container(
-                color: HabitColors.colors[5],
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 64),
-                      child: Text(
-                        "Como podemos te chamar?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-                    Flexible(
-                      child: Center(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                          margin: const EdgeInsets.only(left: 20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                            boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
-                          ),
-                          child: TextField(
-                            controller: _nameTextController,
-                            textInputAction: TextInputAction.done,
-                            textCapitalization: TextCapitalization.words,
-                            onEditingComplete: _nextTap,
-                            style: TextStyle(fontSize: 18.0),
-                            decoration: InputDecoration.collapsed(hintText: "Seu nome"),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 60,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            onPageChanged: (index) => pageIndex = index,
+            children: _pageList(),
           ),
           new Positioned(
             bottom: 0,
@@ -114,7 +125,7 @@ class _TutorialPageState extends State<TutorialPage> {
                   new Center(
                     child: new DotsIndicator(
                       controller: _controller,
-                      itemCount: 5,
+                      itemCount: widget.showNameTab ? 5 : 4,
                     ),
                   ),
                   Positioned(
