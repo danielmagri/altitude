@@ -14,6 +14,7 @@ class SkyScene extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.center,
       children: <Widget>[
         Sky(
           duration: duration,

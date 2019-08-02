@@ -224,7 +224,7 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
   @override
   void initState() {
     _controller =
-        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 5);
+        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 0.03);
     _controller.addListener(() {
       setState(() {});
     });
@@ -271,9 +271,8 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 ),
-                Positioned(
-                  bottom: -25 + _controller.value,
-                  right: 5 + _controller.value,
+                Align(
+                  alignment: Alignment(0.55 - _controller.value, 1.3 - _controller.value),
                   child: Transform.rotate(
                     angle: -1,
                     child: Image.asset(
@@ -314,46 +313,73 @@ class CompleteHabit extends StatefulWidget {
 
 class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  Animation<double> positionYAnimation;
-  Animation<double> positionXAnimation;
+  Animation<double> positionYRocketAnimation;
+  Animation<double> positionXRocketAnimation;
+  Animation<double> positionYFingerAnimation;
+  Animation<double> positionXFingerAnimation;
 
   @override
   void initState() {
-    _controller = AnimationController(duration: const Duration(milliseconds: 3000), vsync: this);
+    _controller = AnimationController(duration: const Duration(milliseconds: 3500), vsync: this);
 
     _controller.addListener(() {
       setState(() {});
     });
 
-    positionYAnimation = Tween<double>(
-      begin: 0,
-      end: 140,
+    positionYRocketAnimation = Tween<double>(
+      begin: 0.8,
+      end: -0.5,
     ).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Interval(
-          0.0,
-          0.5,
+          0.142,
+          0.833,
           curve: Curves.ease,
         ),
       ),
     );
-
-    positionXAnimation = Tween<double>(
-      begin: 0,
-      end: 30,
+    positionXRocketAnimation = Tween<double>(
+      begin: 0.3,
+      end: 0.1,
     ).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Interval(
-          0.0,
-          0.5,
+          0.142,
+          0.833,
           curve: Curves.easeInOutCubic,
         ),
       ),
     );
-    _controller.repeat();
+    positionYFingerAnimation = Tween<double>(
+      begin: 1.4,
+      end: -0.63,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.142,
+          0.833,
+          curve: Curves.ease,
+        ),
+      ),
+    );
+    positionXFingerAnimation = Tween<double>(
+      begin: 0.85,
+      end: 0.65,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(
+          0.142,
+          0.833,
+          curve: Curves.easeInOutCubic,
+        ),
+      ),
+    );
 
+    _controller.repeat();
     super.initState();
   }
 
@@ -395,19 +421,21 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 ),
-                Positioned(
-                  bottom: 25 + positionYAnimation.value,
-                  right: 43 + positionXAnimation.value,
-                  child: Rocket(
-                    size: const Size(80, 70),
-                    color: HabitColors.colors[3],
-                    state: RocketState.ON_FIRE,
-                    fireForce: 1,
+                Align(
+                  alignment: Alignment(positionXRocketAnimation.value, positionYRocketAnimation.value),
+                  child: SizedBox(
+                    height: 70,
+                    width: 80,
+                    child: Rocket(
+                      size: const Size(80, 70),
+                      color: HabitColors.colors[3],
+                      state: RocketState.ON_FIRE,
+                      fireForce: 1,
+                    ),
                   ),
                 ),
-                Positioned(
-                  bottom: -25 + positionYAnimation.value,
-                  right: -30 + positionXAnimation.value,
+                Align(
+                  alignment: Alignment(positionXFingerAnimation.value, positionYFingerAnimation.value),
                   child: Transform.rotate(
                     angle: -1,
                     child: Image.asset(
@@ -514,10 +542,8 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
                       borderRadius: BorderRadius.circular(50),
                       boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 ),
-                Positioned(
-                  top: 80,
-                  right: 0,
-                  left: 0,
+                Align(
+                  alignment: Alignment(0, -0.4),
                   child: Text(
                     scoreAnimation.value.toInt().toString(),
                     textAlign: TextAlign.center,
