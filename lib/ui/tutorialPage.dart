@@ -256,37 +256,32 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
           ),
           Expanded(
             flex: 2,
-            child: Stack(
-              alignment: Alignment.center,
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: new AssetImage('assets/createHabit.png'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
-                ),
-                Align(
-                  alignment: Alignment(0.55 - _controller.value, 1.3 - _controller.value),
-                  child: Transform.rotate(
-                    angle: -1,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: new AssetImage('assets/createHabit.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                child: LayoutBuilder(builder: (context, constraint) {
+                  return Align(
+                    alignment: Alignment(1.15 + _controller.value, 1.55 + _controller.value),
                     child: Image.asset(
                       "assets/finger.png",
                       fit: BoxFit.contain,
-                      height: 150,
+                      width: constraint.biggest.width * 0.55,
                     ),
-                  ),
-                ),
-              ],
+                  );
+                }),
+              ),
             ),
           ),
           Expanded(
-            child: Center(
+            child: Align(
+              alignment: Alignment(0, 0.5),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -327,8 +322,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
     });
 
     positionYRocketAnimation = Tween<double>(
-      begin: 0.8,
-      end: -0.5,
+      begin: 1,
+      end: -0.55,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -340,8 +335,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
       ),
     );
     positionXRocketAnimation = Tween<double>(
-      begin: 0.3,
-      end: 0.1,
+      begin: 0.5,
+      end: 0.2,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -353,8 +348,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
       ),
     );
     positionYFingerAnimation = Tween<double>(
-      begin: 1.4,
-      end: -0.63,
+      begin: 1.7,
+      end: -0.15,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -366,8 +361,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
       ),
     );
     positionXFingerAnimation = Tween<double>(
-      begin: 0.85,
-      end: 0.65,
+      begin: 1.9,
+      end: 1.45,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -406,50 +401,51 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
           ),
           Expanded(
             flex: 2,
-            child: Stack(
-              alignment: Alignment.center,
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: new AssetImage('assets/completeHabit.png'),
-                        fit: BoxFit.cover,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: new AssetImage('assets/completeHabit.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                child: LayoutBuilder(builder: (context, constraint) {
+                  final sizeRocket = 0.29;
+                  return Stack(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment(positionXRocketAnimation.value, positionYRocketAnimation.value),
+                        child: SizedBox(
+                          height: constraint.biggest.width * sizeRocket,
+                          width: (constraint.biggest.width * sizeRocket) + 10,
+                          child: Rocket(
+                            size: Size(
+                                (constraint.biggest.width * sizeRocket) + 10, constraint.biggest.width * sizeRocket),
+                            color: HabitColors.colors[3],
+                            state: RocketState.ON_FIRE,
+                            fireForce: 1,
+                          ),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
-                ),
-                Align(
-                  alignment: Alignment(positionXRocketAnimation.value, positionYRocketAnimation.value),
-                  child: SizedBox(
-                    height: 70,
-                    width: 80,
-                    child: Rocket(
-                      size: const Size(80, 70),
-                      color: HabitColors.colors[3],
-                      state: RocketState.ON_FIRE,
-                      fireForce: 1,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment(positionXFingerAnimation.value, positionYFingerAnimation.value),
-                  child: Transform.rotate(
-                    angle: -1,
-                    child: Image.asset(
-                      "assets/finger.png",
-                      fit: BoxFit.contain,
-                      height: 150,
-                    ),
-                  ),
-                ),
-              ],
+                      Align(
+                        alignment: Alignment(positionXFingerAnimation.value, positionYFingerAnimation.value),
+                        child: Image.asset(
+                          "assets/finger.png",
+                          fit: BoxFit.contain,
+                          width: constraint.biggest.width * 0.55,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
             ),
           ),
           Expanded(
-            child: Center(
+            child: Align(
+              alignment: Alignment(0, 0.5),
               child: Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16),
                 child: Text(
@@ -527,34 +523,30 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
           ),
           Expanded(
             flex: 2,
-            child: Stack(
-              alignment: Alignment.center,
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Container(
-                  height: 250,
-                  width: 250,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: new AssetImage('assets/score.png'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
-                ),
-                Align(
-                  alignment: Alignment(0, -0.4),
-                  child: Text(
-                    scoreAnimation.value.toInt().toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: new AssetImage('assets/score.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                child: Align(
+                    alignment: Alignment(0, -0.48),
+                    child: Text(
+                      scoreAnimation.value.toInt().toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
+                    ),
                   ),
-                ),
-              ],
+              ),
             ),
           ),
           Expanded(
-            child: Center(
+            child: Align(
+              alignment: Alignment(0, 0.5),
               child: Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16),
                 child: Text(
