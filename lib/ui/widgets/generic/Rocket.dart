@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-enum RocketState { ON_FIRE, STOPPED, DISABLED }
+enum RocketState { ON_FIRE, STOPPED }
 
 class _RocketPainter extends CustomPainter {
-  _RocketPainter(this.color, this.disabled);
+  _RocketPainter(this.color);
 
-  final bool disabled;
   final Color color;
 
   @override
@@ -20,7 +19,7 @@ class _RocketPainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.56, size.height * 0.1, size.width * 0.51, 0);
     path.close();
 
-    paint.color = disabled ? Colors.grey[400] : color;
+    paint.color = color;
     canvas.drawPath(path, paint);
 
     path = Path();
@@ -29,8 +28,8 @@ class _RocketPainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.32, size.height * 0.85, size.width * 0.4, size.height * 0.88);
     path.close();
 
-    paint.color = disabled ? Colors.grey[400] : color;
-    if (!disabled) canvas.drawShadow(path, Colors.black, 5, true);
+    paint.color = color;
+    canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
 
     path = Path();
@@ -39,8 +38,8 @@ class _RocketPainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.67, size.height * 0.85, size.width * 0.59, size.height * 0.88);
     path.close();
 
-    paint.color = disabled ? Colors.grey[400] : color;
-    if (!disabled) canvas.drawShadow(path, Colors.black, 5, true);
+    paint.color = color;
+    canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
 
     path = Path();
@@ -50,14 +49,12 @@ class _RocketPainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.66, size.height * 0.5, size.width * 0.59, size.height * 0.2);
     path.close();
 
-    paint.color = disabled ? Colors.grey[300] : Colors.black;
-    if (!disabled) canvas.drawShadow(path, Colors.black, 5, true);
+    paint.color = Colors.black;
+    canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
 
-    paint.color = disabled ? Colors.grey[400] : color;
+    paint.color = color;
     canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.45), size.width * 0.05, paint);
-
-
   }
 
   @override
@@ -130,12 +127,12 @@ class Rocket extends StatelessWidget {
     if (isExtend && state != RocketState.ON_FIRE) {
       widgets.add(CustomPaint(
         size: size,
-        foregroundPainter: _RocketPainter(color, state == RocketState.DISABLED ? true : false),
+        foregroundPainter: _RocketPainter(color),
       ));
     } else {
       widgets.add(CustomPaint(
         size: Size(size.width, size.height * 0.6),
-        foregroundPainter: _RocketPainter(color, state == RocketState.DISABLED ? true : false),
+        foregroundPainter: _RocketPainter(color),
       ));
 
       if (state == RocketState.ON_FIRE) {
