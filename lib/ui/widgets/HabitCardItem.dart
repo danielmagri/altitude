@@ -23,11 +23,30 @@ class HabitCardItem extends StatelessWidget {
               color: Colors.transparent,
               child: Column(
                 children: <Widget>[
-                  Rocket(
-                    size: const Size(110, 60),
-                    color: HabitColors.colors[habit.color],
-                    state: RocketState.DISABLED,
-                    isExtend: true,
+                  Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      Rocket(
+                        size: const Size(110, 60),
+                        color: HabitColors.colors[habit.color],
+                        isExtend: true,
+                      ),
+                      Transform.rotate(
+                        angle: -0.2,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.black, width: 0.5),
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Text(
+                            "Feito!",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: Center(
@@ -65,7 +84,11 @@ class HabitCardItem extends StatelessWidget {
                 color: Colors.transparent,
                 child: Column(
                   children: <Widget>[
-                    Rocket(size: const Size(110, 60), color: HabitColors.colors[habit.color], isExtend: true,),
+                    Rocket(
+                      size: const Size(110, 60),
+                      color: HabitColors.colors[habit.color],
+                      isExtend: true,
+                    ),
                     Expanded(
                       child: Center(
                         child: Text(
