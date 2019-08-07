@@ -6,7 +6,6 @@ class DataHabitCreation {
   static final DataHabitCreation _singleton = new DataHabitCreation._internal();
 
   int indexColor;
-  int icon;
   dynamic frequency;
   List<Reminder> reminders;
 
@@ -22,7 +21,6 @@ class DataHabitCreation {
 
   void emptyData() {
     indexColor = Random().nextInt(HabitColors.colors.length);
-    icon = 0xe028;
     frequency = null;
     reminders = new List();
   }
