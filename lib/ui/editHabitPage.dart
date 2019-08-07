@@ -31,7 +31,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   void initState() {
     super.initState();
 
-    DataHabitCreation().icon = DataHabitDetail().habit.icon;
     DataHabitCreation().indexColor = DataHabitDetail().habit.color;
     DataHabitCreation().frequency = DataHabitDetail().frequency;
     DataHabitCreation().reminders = DataHabitDetail().reminders;
@@ -60,7 +59,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
       Habit editedHabit = new Habit(
           id: DataHabitDetail().habit.id,
           color: DataHabitCreation().indexColor,
-          icon: DataHabitCreation().icon,
           habit: habitController.text,
           cue: DataHabitDetail().habit.cue,
           score: DataHabitDetail().habit.score,
@@ -69,8 +67,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
 
       Loading.showLoading(context);
 
-      if (editedHabit.icon != DataHabitDetail().habit.icon ||
-          editedHabit.color != DataHabitDetail().habit.color ||
+      if (editedHabit.color != DataHabitDetail().habit.color ||
           editedHabit.habit.compareTo(DataHabitDetail().habit.habit) == 0) {
         await DataControl().updateHabit(editedHabit);
       }

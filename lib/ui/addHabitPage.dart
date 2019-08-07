@@ -52,7 +52,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
     } else {
       Habit habit = new Habit(
         color: DataHabitCreation().indexColor,
-        icon: DataHabitCreation().icon,
         habit: habitController.text,
       );
 
