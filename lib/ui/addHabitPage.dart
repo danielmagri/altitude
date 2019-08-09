@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
-import 'package:habit/ui/addHabitWidgets/cueWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
 import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
 import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
@@ -10,7 +9,9 @@ import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/utils/Util.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key}) : super(key: key);
@@ -23,7 +24,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
-  final cueController = TextEditingController();
 
   @override
   void initState() {
@@ -35,7 +35,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
   @override
   void dispose() {
     habitController.dispose();
-    cueController.dispose();
     super.dispose();
   }
 
@@ -48,20 +47,18 @@ class _AddHabitPageState extends State<AddHabitPage> {
   void _createHabitTap() {
     if (Validate.habitTextValidate(habitController.text) != null) {
       showToast("O hábito precisa ser preenchido.");
-    } else if (Validate.cueTextValidate(cueController.text) != null) {
-      showToast("A deixa precisa ser preenchido.");
     } else if (DataHabitCreation().frequency == null) {
       showToast("Escolha qual será a frequência.");
     } else {
       Habit habit = new Habit(
         color: DataHabitCreation().indexColor,
-        icon: DataHabitCreation().icon,
-        cue: cueController.text,
         habit: habitController.text,
       );
 
+      Loading.showLoading(context);
+
       DataControl().addHabit(habit, DataHabitCreation().frequency, DataHabitCreation().reminders).then((result) {
-        Navigator.pop(context);
+        Util.goDetailsPage(context, habit.id, pushReplacement: true);
         showToast("O hábito foi criado com sucesso!");
       });
     }
@@ -75,7 +72,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 50.0),
+              margin: EdgeInsets.only(top: 40),
               child: Row(
                 children: <Widget>[
                   SizedBox(
@@ -98,7 +95,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
               height: 1,
               color: Colors.grey,
               width: double.maxFinite,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+              margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
             ),
             ColorWidget(
               currentColor: DataHabitCreation().indexColor,
@@ -114,11 +111,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
             ),
             FrequencyWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],
-            ),
-            CueWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
-              controller: cueController,
-              keyboard: _keyboardVisibility,
             ),
             AlarmWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],

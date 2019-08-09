@@ -258,7 +258,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
             width: double.maxFinite,
             margin: const EdgeInsets.only(left: 16, bottom: 6),
             child: Text(
-              "Quando deseja ser lembrado da deixa?",
+              "Deseja ser lembrado do hábito?",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
             ),
           ),
@@ -648,130 +648,6 @@ class DayWidget extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(color: status ? Colors.white : Colors.black),
-      ),
-    );
-  }
-}
-
-class RepeatingDialog extends StatefulWidget {
-  RepeatingDialog({Key key, this.category}) : super(key: key);
-
-  final Color category;
-
-  @override
-  _RepeatingDialogState createState() => new _RepeatingDialogState();
-}
-
-class _RepeatingDialogState extends State<RepeatingDialog> {
-  int _currentValue1;
-  int _currentValue2;
-
-  @override
-  initState() {
-    super.initState();
-
-    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqRepeating) {
-      FreqRepeating repeating = DataHabitCreation().frequency;
-      _currentValue1 = repeating.daysTime;
-      _currentValue2 = repeating.daysCycle;
-    } else {
-      _currentValue1 = 5;
-      _currentValue2 = 15;
-    }
-  }
-
-  void _validate() {
-    if (_currentValue1 > _currentValue2) {
-      Fluttertoast.showToast(
-          msg: "O número de repetições deve ser menor que o do intervalo.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Color.fromARGB(255, 220, 220, 220),
-          textColor: Colors.black,
-          fontSize: 16.0);
-    } else {
-      DataHabitCreation().frequency = new FreqRepeating(daysTime: _currentValue1, daysCycle: _currentValue2);
-      Navigator.of(context).pop(true);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 5.0,
-      backgroundColor: Colors.white,
-      child: Theme(
-        data: Theme.of(context).copyWith(accentColor: Colors.yellow),
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                "Intervalo",
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text("Escolha quantos vezes irá realizar o hábito e o intervalo de tempo para isso:"),
-              SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new NumberPicker.integer(
-                    initialValue: _currentValue1,
-                    minValue: 1,
-                    maxValue: 30,
-                    listViewWidth: 45.0,
-                    onChanged: (newValue) => setState(() => _currentValue1 = newValue),
-                  ),
-                  Text(
-                    "vezes em",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  new NumberPicker.integer(
-                    initialValue: _currentValue2,
-                    minValue: 1,
-                    maxValue: 30,
-                    listViewWidth: 45.0,
-                    onChanged: (newValue) => setState(() => _currentValue2 = newValue),
-                  ),
-                  Text(
-                    "dias.",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                ],
-              ),
-              SizedBox(height: 24.0),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancelar"),
-                      ),
-                      FlatButton(
-                        onPressed: _validate,
-                        child: Text(
-                          "Ok",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  )),
-            ],
-          ),
-        ),
       ),
     );
   }

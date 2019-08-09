@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:habit/ui/tutorialPage.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -90,32 +91,48 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 20),
-          child: Row(
-            children: <Widget>[
-              BackButton(),
-              Text(
-                "Configurações",
-                style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.bold),
-              ),
-            ],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 40, bottom: 16),
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 50,
+                  child: BackButton(),
+                ),
+                Spacer(),
+                Text(
+                  "CONFIGURAÇÕES",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: 50,
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 64,
-        ),
-        ListTile(
-          title: Text("Seu nome"),
-          trailing: Text(
-            name,
-            style: TextStyle(color: Colors.grey),
+          ListTile(
+            title: Text("Seu nome"),
+            trailing: Text(
+              name,
+              style: TextStyle(color: Colors.grey),
+            ),
+            onTap: () => _showNameDialog(context),
           ),
-          onTap: () => _showNameDialog(context),
-        ),
-        Divider(),
-      ]),
+          Divider(),
+          ListTile(
+            title: Text("Rever tutorial inicial"),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return TutorialPage(showNameTab: false,);
+              }));
+            },
+          ),
+        ]),
+      ),
     );
   }
 }

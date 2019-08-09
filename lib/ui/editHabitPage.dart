@@ -5,21 +5,18 @@ import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
-import 'package:habit/ui/addHabitWidgets/cueWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
 import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
 import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/datas/dataHabitDetail.dart';
 
 class EditHabitPage extends StatefulWidget {
-  EditHabitPage({Key key, this.habit, this.reminders, this.frequency}) : super(key: key);
-
-  final Habit habit;
-  final List<Reminder> reminders;
-  final dynamic frequency;
+  EditHabitPage({Key key}) : super(key: key);
 
   @override
   _EditHabitPagePageState createState() => _EditHabitPagePageState();
@@ -29,25 +26,21 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
-  final cueController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
 
-    DataHabitCreation().icon = widget.habit.icon;
-    DataHabitCreation().indexColor = widget.habit.color;
-    DataHabitCreation().frequency = widget.frequency;
-    DataHabitCreation().reminders = widget.reminders;
+    DataHabitCreation().indexColor = DataHabitDetail().habit.color;
+    DataHabitCreation().frequency = DataHabitDetail().frequency;
+    DataHabitCreation().reminders = DataHabitDetail().reminders;
 
-    habitController.text = widget.habit.habit;
-    cueController.text = widget.habit.cue;
+    habitController.text = DataHabitDetail().habit.habit;
   }
 
   @override
   void dispose() {
     habitController.dispose();
-    cueController.dispose();
     super.dispose();
   }
 
@@ -60,41 +53,41 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   void _createHabitTap() async {
     if (Validate.habitTextValidate(habitController.text) != null) {
       showToast("O hábito precisa ser preenchido.");
-    } else if (Validate.cueTextValidate(cueController.text) != null) {
-      showToast("A deixa precisa ser preenchido.");
     } else if (DataHabitCreation().frequency == null) {
       showToast("Escolha qual será a frequência.");
     } else {
       Habit editedHabit = new Habit(
-        id: widget.habit.id,
-        color: DataHabitCreation().indexColor,
-        icon: DataHabitCreation().icon,
-        cue: cueController.text,
-        habit: habitController.text,
-        score: widget.habit.score,
-        cycle: widget.habit.cycle,
-        daysDone: widget.habit.daysDone,
-        initialDate: widget.habit.initialDate
-      );
+          id: DataHabitDetail().habit.id,
+          color: DataHabitCreation().indexColor,
+          habit: habitController.text,
+          cue: DataHabitDetail().habit.cue,
+          score: DataHabitDetail().habit.score,
+          daysDone: DataHabitDetail().habit.daysDone,
+          initialDate: DataHabitDetail().habit.initialDate);
 
-      if (editedHabit.icon != widget.habit.icon ||
-          editedHabit.color != widget.habit.color ||
-          editedHabit.cue.compareTo(widget.habit.cue) == 0 ||
-          editedHabit.habit.compareTo(widget.habit.habit) == 0) {
+      Loading.showLoading(context);
+
+      if (editedHabit.color != DataHabitDetail().habit.color ||
+          editedHabit.habit.compareTo(DataHabitDetail().habit.habit) == 0) {
         await DataControl().updateHabit(editedHabit);
       }
 
-      if (!compareFrequency(widget.frequency, DataHabitCreation().frequency)) {
+      if (!compareFrequency(DataHabitDetail().frequency, DataHabitCreation().frequency)) {
         await DataControl()
-            .updateFrequency(editedHabit.id, DataHabitCreation().frequency, widget.frequency.runtimeType);
+            .updateFrequency(editedHabit.id, DataHabitCreation().frequency, DataHabitDetail().frequency.runtimeType);
       }
 
-      if (!compareReminders(widget.reminders, DataHabitCreation().reminders)) {
-        await DataControl().deleteReminders(widget.habit.id, widget.reminders);
+      if (!compareReminders(DataHabitDetail().reminders, DataHabitCreation().reminders)) {
+        await DataControl().deleteReminders(DataHabitDetail().habit.id, DataHabitDetail().reminders);
         await DataControl().addReminders(editedHabit, DataHabitCreation().reminders);
       }
 
-      Navigator.pop(context, {0:editedHabit, 1: DataHabitCreation().frequency, 2: DataHabitCreation().reminders});
+      Loading.closeLoading(context);
+
+      DataHabitDetail().habit = editedHabit;
+      DataHabitDetail().frequency = DataHabitCreation().frequency;
+      DataHabitDetail().reminders = DataHabitCreation().reminders;
+      Navigator.of(context).pop();
       showToast("O hábito foi editado!");
     }
   }
@@ -119,13 +112,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
           FreqWeekly weekly1 = f1;
           FreqWeekly weekly2 = f2;
           if (weekly1.daysTime == weekly2.daysTime) {
-            return true;
-          }
-          return false;
-        case FreqRepeating:
-          FreqRepeating repeating1 = f1;
-          FreqRepeating repeating2 = f2;
-          if (repeating1.daysTime == repeating2.daysTime && repeating1.daysCycle == repeating2.daysCycle) {
             return true;
           }
           return false;
@@ -157,7 +143,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         child: Column(
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(top: 50.0),
+              margin: EdgeInsets.only(top: 40),
               child: Row(
                 children: <Widget>[
                   SizedBox(
@@ -186,7 +172,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                                   new FlatButton(
                                     child: new Text("Sim"),
                                     onPressed: () {
-                                      DataControl().deleteHabit(widget.habit.id).then((status) {
+                                      DataControl().deleteHabit(DataHabitDetail().habit.id, DataHabitDetail().habit.score).then((status) {
                                         Navigator.of(context).popUntil((route) => route.isFirst);
                                       });
                                     },
@@ -210,7 +196,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               height: 1,
               color: Colors.grey,
               width: double.maxFinite,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 25),
+              margin: EdgeInsets.only(left: 40, right: 40, top: 10, bottom: 30),
             ),
             ColorWidget(
               currentColor: DataHabitCreation().indexColor,
@@ -226,11 +212,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
             ),
             FrequencyWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],
-            ),
-            CueWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
-              controller: cueController,
-              keyboard: _keyboardVisibility,
             ),
             AlarmWidget(
               color: HabitColors.colors[DataHabitCreation().indexColor],

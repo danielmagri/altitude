@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
-import 'package:habit/ui/widgets/HabitListItem.dart';
+import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
-import 'package:habit/ui/allHabitsPage.dart';
-import 'package:habit/objects/Person.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:vibration/vibration.dart';
 
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        accentColor: Color.fromARGB(255, 24, 24, 24),
+        accentColor: Color.fromARGB(255, 34, 34, 34),
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
@@ -58,10 +57,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
+  AnimationController _controllerDragTarget;
 
-  List<Habit> habitsForToday;
-  List<DayDone> habitsDone;
-  Person person = new Person(name: "");
+  PageController _pageController = new PageController();
+  int pageIndex = 0;
+
+  int score;
   int previousScore = 0;
 
   @override
@@ -69,30 +70,16 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.initState();
 
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    _controllerDragTarget = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
   }
 
   @override
   void didChangeDependencies() {
-    DataPreferences().getName().then((name) {
-      if (name != null) {
-        setState(() {
-          person.name = name;
-        });
-      }
-    });
-
     DataPreferences().getScore().then((score) {
       setState(() {
-        person.score = score;
+        this.score = score;
       });
-      animateScore();
-    });
-
-    DataControl().getHabitsToday().then((data) {
-      setState(() {
-        habitsForToday = data[0];
-        habitsDone = data[1];
-      });
+      updateScore();
     });
 
     super.didChangeDependencies();
@@ -101,226 +88,508 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controllerScore.dispose();
+    _controllerDragTarget.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
-  void animateScore() {
-    if (previousScore != person.score) {
+  void updateScore() {
+    if (previousScore != score) {
       _controllerScore.reset();
-      _controllerScore.forward().orCancel.then((e) {
-        previousScore = person.score;
-      }).catchError((error) {
-        print(error.toString());
-        previousScore = person.score;
+      _controllerScore.forward().whenComplete(() {
+        previousScore = score;
       });
     }
   }
 
+  void showDragTarget(bool show) {
+    if (show) {
+      _controllerDragTarget.forward();
+    } else {
+      _controllerDragTarget.reverse();
+    }
+  }
+
   void setHabitDone(id) {
-    setState(() {
-      habitsDone.add(new DayDone(done: 1, habitId: id));
-    });
-    int cycle = habitsForToday.firstWhere((habit) => habit.id == id, orElse: () => null).cycle;
+    Loading.showLoading(context);
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-    Vibration.hasVibrator().then((resp) {
-      if (resp != null && resp == true) {
-        Vibration.vibrate(duration: 100);
-      }
-    });
-
-    DataControl().setHabitDoneAndScore(id, cycle).then((earnedScore) {
-      setState(() {
-        person.score += earnedScore;
+    DataControl().setHabitDoneAndScore(today, id).then((earnedScore) {
+      Loading.closeLoading(context);
+      Vibration.hasVibrator().then((resp) {
+        if (resp != null && resp == true) {
+          Vibration.vibrate(duration: 100);
+        }
       });
-      animateScore();
+
+      setState(() {
+        score += earnedScore;
+      });
+      updateScore();
+    });
+  }
+
+  void pageScroll(int index) {
+    setState(() {
+      pageIndex = index;
+      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          HeaderWidget(
-            name: person.name,
-            score: person.score,
-            previousScore: previousScore,
-            controllerScore: _controllerScore,
+          Column(
+            children: <Widget>[
+              _AppBar(),
+              ScoreWidget(
+                animation: IntTween(begin: previousScore, end: score)
+                    .animate(CurvedAnimation(parent: _controllerScore, curve: Curves.fastOutSlowIn)),
+              ),
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: BouncingScrollPhysics(),
+                  onPageChanged: (index) {
+                    setState(() {
+                      pageIndex = index;
+                    });
+                  },
+                  children: <Widget>[
+                    _TodayHabitsPage(
+                      showDragTarget: showDragTarget,
+                    ),
+                    _AllHabitsPage(
+                      showDragTarget: showDragTarget,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Container(
-            height: 1,
-            color: Colors.grey,
-            width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 12.0),
-            child: Text(
-              "HÁBITOS DE HOJE",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-            ),
-          ),
-          Expanded(
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                _doneIconBackgroundWidget(),
-                LayoutBuilder(builder: _habitsForTodayBuild),
-              ],
-            ),
+          _DragTargetDoneHabit(
+            controller: _controllerDragTarget,
+            setHabitDone: setHabitDone,
           ),
         ],
       ),
-      bottomNavigationBar: _bottomNavigationBarWidget(),
-    );
-  }
-
-  Widget _doneIconBackgroundWidget() {
-//    if (habitsForToday != null && habitsDone != null && habitsDone.length > 0) {
-//      for (Habit habit in habitsForToday) {
-//        if (habitsDone.firstWhere((done) => done.habitId == habit.id, orElse: () => null).habitId == null) {
-//          return Container();
-//        }
-//      }
-//
-//      return Center(
-//        child: Icon(
-//          Icons.done,
-//          size: 350,
-//          color: Colors.grey.withOpacity(0.1),
-//        ),
-//      );
-//    }
-    return Container();
-  }
-
-  Widget _habitsForTodayBuild(BuildContext context, BoxConstraints constrant) {
-    List<Widget> widgets = new List();
-
-    if (habitsForToday == null) {
-      widgets.add(Center(child: CircularProgressIndicator()));
-    } else if (habitsForToday.length == 0) {
-      widgets.add(
-        Center(
-          child: Text(
-            "Não tem hábitos para serem feitos hoje",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
-          ),
-        ),
-      );
-    } else {
-      for (Habit habit in habitsForToday) {
-        DayDone done = habitsDone.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
-        Widget habitWidget = HabitListItem(
-            habit: habit, done: done == null ? false : true, setHabitDone: setHabitDone, width: constrant.maxWidth);
-
-        widgets.add(habitWidget);
-      }
-    }
-
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        children: widgets,
-      ),
-    );
-  }
-
-  Widget _bottomNavigationBarWidget() {
-    return BottomAppBar(
-      child: Container(
-        height: 65,
-        decoration: BoxDecoration(
-          color: Theme.of(context).accentColor,
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
-          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              child: IconButton(
-                tooltip: "Todos os hábitos",
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return AlHabitsPage();
-                  }));
-                },
-              ),
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return AddHabitPage();
-                }));
-              },
-              tooltip: 'Adicionar',
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 32,
-              ),
-              backgroundColor: Colors.white,
-            ),
-            Expanded(
-              child: IconButton(
-                tooltip: "Configurações",
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return SettingsPage();
-                  }));
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      color: Colors.transparent,
-      elevation: 0.0,
+      bottomNavigationBar: _BottomNavigationBar(index: pageIndex, onTap: pageScroll),
     );
   }
 }
 
-class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.name, this.score, this.previousScore, this.controllerScore}) : super(key: key);
+class _TodayHabitsPage extends StatelessWidget {
+  _TodayHabitsPage({Key key, @required this.showDragTarget}) : super(key: key);
 
-  final String name;
-  final int score;
-  final int previousScore;
-  final controllerScore;
+  final Function showDragTarget;
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 36),
+          child: Text(
+            "HÁBITOS DE HOJE",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: FutureBuilder(
+              future: DataControl().getHabitsToday(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<Habit> habits = snapshot.data[0];
+                  List<DayDone> dones = snapshot.data[1];
+                  if (habits.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "Não tem hábitos para serem feitos hoje",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                      ),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: habits.map((habit) {
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
+                          return HabitCardItem(
+                            habit: habit,
+                            showDragTarget: showDragTarget,
+                            done: done == null ? false : true,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _AllHabitsPage extends StatelessWidget {
+  _AllHabitsPage({Key key, @required this.showDragTarget}) : super(key: key);
+
+  final Function showDragTarget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 36),
+          child: Text(
+            "TODOS OS HÁBITOS",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: FutureBuilder(
+              future: DataControl().getAllHabits(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<Habit> habits = snapshot.data[0];
+                  List<DayDone> dones = snapshot.data[1];
+                  if (habits.isEmpty) {
+                    return Text(
+                      "Crie um novo hábito pelo botão \"+\" na tela principal.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: habits.map((habit) {
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
+                          return HabitCardItem(
+                            habit: habit,
+                            showDragTarget: showDragTarget,
+                            done: done == null ? false : true,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class _BottomNavigationBar extends StatelessWidget {
+  _BottomNavigationBar({Key key, this.index, @required this.onTap}) : super(key: key);
+
+  final int index;
+  final Function(int index) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      color: Colors.transparent,
+      elevation: 0.0,
+      child: Container(
+        height: 55,
+        margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).accentColor,
+          borderRadius: BorderRadius.circular(40),
+          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 200),
+                  opacity: index == 1 ? 1 : 0,
+                  child: Container(
+                    height: 4,
+                    width: 25,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                IconButton(
+                  tooltip: "Todos os hábitos",
+                  icon: Icon(
+                    Icons.apps,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () => onTap(1),
+                ),
+              ],
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return AddHabitPage();
+                }));
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                  size: 28,
+                ),
+              ),
+            ),
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                AnimatedOpacity(
+                  duration: Duration(milliseconds: 200),
+                  opacity: index == 0 ? 1 : 0,
+                  child: Container(
+                    height: 4,
+                    width: 25,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+                IconButton(
+                  tooltip: "Configurações",
+                  icon: Icon(
+                    Icons.today,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () => onTap(0),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      height: 160,
-      alignment: Alignment(0.0, 0.5),
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
+      width: double.maxFinite,
+      height: 75,
+      margin: const EdgeInsets.only(top: 12, left: 12),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Text(
-            name,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300),
+          FutureBuilder(
+            future: DataPreferences().getName(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                      text: "Olá, ",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w300,
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                    TextSpan(
+                      text: snapshot.data,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0,
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                  ]),
+                );
+              } else {
+                return Text(
+                  "Bem-vindo...",
+                  style: TextStyle(color: Colors.black, fontSize: 18.0),
+                );
+              }
+            },
           ),
-          SizedBox(
-            height: 65,
+          Spacer(),
+          IconButton(
+            tooltip: "Configurações",
+            icon: Icon(
+              Icons.settings,
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return SettingsPage();
+              }));
+            },
           ),
-          ScoreWidget(
-            animation: IntTween(begin: previousScore, end: score)
-                .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
-          )
         ],
       ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class _DragTargetDoneHabit extends StatelessWidget {
+  _DragTargetDoneHabit({Key key, @required this.controller, @required this.setHabitDone})
+      : opacity = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.0,
+              0.8,
+              curve: Curves.easeInOutSine,
+            ),
+          ),
+        ),
+        offsetSky = Tween<double>(
+          begin: -1.0,
+          end: 0.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.0,
+              0.6,
+              curve: Curves.easeOutSine,
+            ),
+          ),
+        ),
+        offsetCloud = Tween<double>(
+          begin: -1.0,
+          end: 0.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.3,
+              1.0,
+              curve: Curves.easeOutSine,
+            ),
+          ),
+        ),
+        opacityText = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Interval(
+              0.5,
+              1.0,
+              curve: Curves.easeInOutCubic,
+            ),
+          ),
+        ),
+        super(key: key);
+
+  final Function(int id) setHabitDone;
+  final Animation<double> controller;
+  final Animation<double> opacity;
+  final Animation<double> offsetSky;
+  final Animation<double> offsetCloud;
+  final Animation<double> opacityText;
+
+  bool hover = false;
+
+  Widget _buildAnimation(BuildContext context, Widget child) {
+    return FractionalTranslation(
+      translation: Offset(0, offsetSky.value),
+      child: Opacity(
+        opacity: opacity.value,
+        child: Container(
+          height: 175,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.7, 1],
+                  colors: [Color.fromARGB(255, 118, 213, 216), Theme.of(context).canvasColor])),
+          child: DragTarget<int>(
+            builder: (context, List<int> candidateData, rejectedData) {
+              return Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment(-1.1, -0.9 + offsetCloud.value),
+                    child: Image.asset(
+                      "assets/c1white.png",
+                      fit: BoxFit.contain,
+                      height: 60,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(1.2, 0 + offsetCloud.value),
+                    child: Image.asset(
+                      "assets/c2white.png",
+                      fit: BoxFit.contain,
+                      height: 45,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment(0, 0.6),
+                    child: Opacity(
+                      opacity: opacityText.value,
+                      child: Text(
+                        "ARRASTE AQUI PARA COMPLETAR",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: hover ? Color.fromARGB(255, 78, 173, 176) : Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            onWillAccept: (data) {
+              hover = true;
+              return true;
+            },
+            onAccept: (data) {
+              hover = false;
+              setHabitDone(data);
+            },
+            onLeave: (data) {
+              hover = false;
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      builder: _buildAnimation,
+      animation: controller,
     );
   }
 }

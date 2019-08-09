@@ -2,182 +2,39 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:vibration/vibration.dart';
-
-class CueWidget extends StatelessWidget {
-  CueWidget({Key key, this.cue, this.color}) : super(key: key);
-
-  final String cue;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Deixa", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
-            Text(cue, style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CoolDataWidget extends StatelessWidget {
-  CoolDataWidget({Key key, this.initialDate, this.daysDone, this.cycles, this.color}) : super(key: key);
-
-  final DateTime initialDate;
-  final int daysDone;
-  final int cycles;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Informações Legais",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
-            Text(
-                "Começou em " +
-                    initialDate.day.toString().padLeft(2, '0') +
-                    "/" +
-                    initialDate.month.toString().padLeft(2, '0') +
-                    "/" +
-                    initialDate.year.toString(),
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            Text("Dias cumpridos: " + daysDone.toString(),
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-            Text("Ciclos feitos: " + cycles.toString(),
-                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, height: 1.2)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CalendarWidget extends StatelessWidget {
-  CalendarWidget({Key key, @required this.markedDays, this.color}) : super(key: key);
-
-  final Map<DateTime, List> markedDays;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(top: 6.0, bottom: 6.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Dias feito",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, height: 1.4, color: color)),
-            TableCalendar(
-              events: markedDays,
-              formatAnimation: FormatAnimation.slide,
-              startingDayOfWeek: StartingDayOfWeek.sunday,
-              availableGestures: AvailableGestures.horizontalSwipe,
-              forcedCalendarFormat: CalendarFormat.month,
-              rowHeight: 40,
-              builders: CalendarBuilders(markersBuilder: (context, date, event, list) {
-                return <Widget>[
-                  Container(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      alignment: Alignment(0.0, 0.0),
-                      margin: EdgeInsets.only(top: 5, bottom: 5, left: event[0] ? 0 : 5, right: event[1] ? 0 : 5),
-                      decoration: new BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(
-                            left: event[0] ? Radius.circular(0) : Radius.circular(20),
-                            right: event[1] ? Radius.circular(0) : Radius.circular(20)),
-                        color: color,
-                      ))
-                ];
-              }, selectedDayBuilder: (context, date, list) {
-                return Container(
-                  child: Text(
-                    date.day.toString(),
-                  ),
-                  alignment: Alignment(0.0, 0.0),
-                );
-              }, todayDayBuilder: (context, date, list) {
-                return Container(
-                  child: Text(
-                    date.day.toString(),
-                  ),
-                  alignment: Alignment(0.0, 0.0),
-                  margin: EdgeInsets.all(5),
-                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: color, width: 2)),
-                );
-              }),
-              headerStyle: HeaderStyle(
-                formatButtonTextStyle: TextStyle().copyWith(color: Colors.white, fontSize: 15.0),
-                formatButtonDecoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/ui/detailHabitWidget/cueWidget.dart';
+import 'package:habit/ui/detailHabitWidget/coolDataWidget.dart';
+import 'package:habit/ui/detailHabitWidget/calendarWidget.dart';
+import 'package:habit/datas/dataHabitDetail.dart';
+import 'package:habit/ui/dialogs/editCueDialog.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
+import 'package:habit/utils/Util.dart';
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage({Key key, this.habit, this.reminders, this.frequency, this.markedDays, this.fromAllHabits}) : super(key: key);
-
-  final Habit habit;
-  final List<Reminder> reminders;
-  final dynamic frequency;
-  final Map<DateTime, List> markedDays;
-  final bool fromAllHabits;
+  HabitDetailsPage({Key key}) : super(key: key);
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
 class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
+  PanelController _panelController = new PanelController();
   AnimationController _controllerScore;
 
+  DataHabitDetail data = DataHabitDetail();
+
+  int _panelIndex = -1;
   int previousScore = 0;
-  Habit habit;
-  List<Reminder> reminders;
-  dynamic frequency;
-  Map<DateTime, List> markedDays;
 
   @override
   initState() {
     super.initState();
-
-    habit = widget.habit;
-    reminders = widget.reminders;
-    frequency = widget.frequency;
-    markedDays = widget.markedDays;
 
     _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
 
@@ -191,17 +48,22 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   void animateScore() {
-    if (previousScore != habit.score) {
+    if (previousScore != data.habit.score) {
       _controllerScore.reset();
       _controllerScore.forward().then((e) {
-        previousScore = habit.score;
+        previousScore = data.habit.score;
       });
     }
   }
 
+  void updateScreen() {
+    setState(() {});
+    animateScore();
+  }
+
   bool hasDoneToday() {
     DateTime now = DateTime.now();
-    if (markedDays.containsKey(DateTime(now.year, now.month, now.day))) {
+    if (data.daysDone.containsKey(DateTime(now.year, now.month, now.day))) {
       return true;
     } else {
       return false;
@@ -212,35 +74,75 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     if (hasDoneToday()) {
       showToast("Você já completou esse hábito hoje!");
     } else {
-      Vibration.hasVibrator().then((resp) {
-        if (resp != null && resp == true) {
-          Vibration.vibrate(duration: 100);
-        }
-      });
+      Loading.showLoading(context);
+      DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-      DataControl().setHabitDoneAndScore(habit.id, habit.cycle).then((earnedScore) {
-        DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DataControl().setHabitDoneAndScore(today, data.habit.id).then((earnedScore) {
+        Loading.closeLoading(context);
+        Vibration.hasVibrator().then((resp) {
+          if (resp != null && resp == true) {
+            Vibration.vibrate(duration: 100);
+          }
+        });
+
         bool before;
-        if (markedDays.length - 1 >= 0 && markedDays.containsKey(now.subtract(Duration(days: 1)))) {
-          markedDays[now.subtract(Duration(days: 1))] = [markedDays[now.subtract(Duration(days: 1))][0], true];
+        if (data.daysDone.length - 1 >= 0 && data.daysDone.containsKey(today.subtract(Duration(days: 1)))) {
+          data.daysDone.update(today.subtract(Duration(days: 1)), (old) => [old[0], true]);
           before = true;
         } else {
           before = false;
         }
 
         setState(() {
-          habit.score += earnedScore;
-          markedDays.putIfAbsent(now, () => [before, false]);
-          habit.daysDone++;
+          data.habit.score += earnedScore;
+          data.daysDone.putIfAbsent(today, () => [before, false]);
+          data.habit.daysDone++;
         });
         animateScore();
       });
     }
   }
 
+  Future<bool> onBackPress() async {
+    if (_panelController.isPanelOpen()) {
+      closeBottomSheet();
+      return false;
+    }
+
+    return true;
+  }
+
+  void openBottomSheet(int index) {
+    if (index == 0) {
+      setState(() {
+        _panelIndex = 0;
+      });
+      _panelController.open();
+    } else {
+      setState(() {
+        _panelIndex = -1;
+      });
+    }
+  }
+
+  void closeBottomSheet() {
+    setState(() {});
+    _panelController.close();
+  }
+
+  Widget _bottomSheetBuilder() {
+    if (_panelIndex == 0) {
+      return EditCueDialog(
+        closeBottomSheet: closeBottomSheet,
+      );
+    } else {
+      return SizedBox();
+    }
+  }
+
   String frequencyText() {
-    if (frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freq = frequency;
+    if (data.frequency.runtimeType == FreqDayWeek) {
+      FreqDayWeek freq = data.frequency;
       String text = "";
       bool hasOne = false;
 
@@ -278,12 +180,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         text += "Domingo";
       }
       return text;
-    } else if (frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freq = frequency;
+    } else if (data.frequency.runtimeType == FreqWeekly) {
+      FreqWeekly freq = data.frequency;
       return freq.daysTime.toString() + " vezes por semana";
-    } else if (frequency.runtimeType == FreqRepeating) {
-      FreqRepeating freq = frequency;
-      return freq.daysTime.toString() + " vezes em " + freq.daysCycle.toString() + " dias";
     } else {
       return "";
     }
@@ -291,79 +190,76 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 70.0,
-              child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                BackButton(color: HabitColors.colors[habit.color]),
-                Spacer(),
-                IconButton(
-                    icon: Icon(Icons.check, size: 34, color: HabitColors.colors[habit.color]),
-                    onPressed: setDoneHabit),
+    return WillPopScope(
+      onWillPop: onBackPress,
+      child: Scaffold(
+        body: SlidingUpPanel(
+          controller: _panelController,
+          borderRadius: const BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          backdropEnabled: true,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+          minHeight: 0,
+          panel: _bottomSheetBuilder(),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: <Widget>[
                 SizedBox(
-                  width: 8,
+                  height: 75,
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    BackButton(color: data.getColor()),
+                    Spacer(),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    IconButton(
+                        icon: Icon(Icons.edit, size: 30, color: data.getColor()),
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) {
+                            return EditHabitPage();
+                          }));
+                        }),
+                  ]),
                 ),
-                IconButton(
-                    icon: Icon(Icons.edit, size: 30, color: HabitColors.colors[habit.color]),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return EditHabitPage(
-                          habit: habit,
-                          reminders: reminders,
-                          frequency: frequency,
-                        );
-                      })).then((editedData) {
-                        if (editedData != null) {
-                          setState(() {
-                            habit = editedData[0];
-                            frequency = editedData[1];
-                            reminders = editedData[2];
-                          });
-                        }
-                      });
-                    }),
-              ]),
+                HeaderWidget(
+                  previousScore: previousScore,
+                  controllerScore: _controllerScore,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 28, bottom: 8, left: 20, right: 20),
+                  width: double.maxFinite,
+                  child: RaisedButton(
+                    color: hasDoneToday() ? data.getColor() : Colors.white,
+                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    elevation: 5.0,
+                    onPressed: setDoneHabit,
+                    child: Text(
+                      "COMPLETAR HÁBITO DE HOJE",
+                      style: TextStyle(
+                          color: hasDoneToday() ? Colors.white : data.getColor(), fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    frequencyText(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black54),
+                  ),
+                ),
+                CueWidget(
+                  openBottomSheet: openBottomSheet,
+                ),
+                CalendarWidget(updateScreen: updateScreen,),
+                CoolDataWidget(),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-            HeaderWidget(
-              id: habit.id,
-              name: habit.habit,
-              score: habit.score,
-              previousScore: previousScore,
-              color: HabitColors.colors[habit.color],
-              icon: habit.icon,
-              fromAllHabits: widget.fromAllHabits,
-              controllerScore: _controllerScore,
-            ),
-            Container(
-              height: 1,
-              color: Colors.grey,
-              width: double.maxFinite,
-              margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            ),
-            Text(
-              frequencyText(),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300, color: Colors.black54),
-            ),
-            CueWidget(
-              cue: habit.cue,
-              color: HabitColors.colors[habit.color],
-            ),
-            CoolDataWidget(
-              initialDate: habit.initialDate != null ? habit.initialDate : DateTime.now(),
-              daysDone: habit.daysDone,
-              cycles: habit.cycle,
-              color: HabitColors.colors[habit.color],
-            ),
-            CalendarWidget(
-              markedDays: markedDays,
-              color: HabitColors.colors[habit.color],
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -371,76 +267,62 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget(
-      {Key key,
-      this.id,
-      this.name,
-      this.score,
-      this.previousScore,
-      this.color,
-      this.icon,
-      this.fromAllHabits,
-      this.controllerScore})
-      : super(key: key);
+  HeaderWidget({Key key, this.previousScore, this.controllerScore}) : super(key: key);
 
-  final int id;
-  final String name;
-  final int score;
   final int previousScore;
-  final Color color;
-  final int icon;
-  final bool fromAllHabits;
   final controllerScore;
+
+  double _setRocketForce() {
+    double force;
+    int cycleDays = Util.getDaysCycle(DataHabitDetail().frequency);
+    int timesDays = Util.getTimesDays(DataHabitDetail().frequency);
+    List<DateTime> dates = DataHabitDetail().daysDone.keys.toList();
+
+    int daysDoneLastCycle =
+        dates.where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1)))).length;
+
+    force = daysDoneLastCycle / timesDays;
+
+    if (force > 1.3) force = 1.3;
+    return force;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      alignment: Alignment(0.0, 0.5),
+      height: 140,
       child: Row(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Container(
-            width: 100.0,
-            height: 90.0,
-            alignment: Alignment(-0.1, 0.0),
-            child: Hero(
-              tag: fromAllHabits ? id + 1000 : id,
-              transitionOnUserGestures: true,
-              child: Icon(
-                IconData(icon, fontFamily: 'MaterialIcons'),
-                size: 40.0,
-                color: Colors.white,
-              ),
+          Expanded(
+            child: SkyScene(
+              size: const Size(140, 140),
+              color: DataHabitDetail().getColor(),
+              force: _setRocketForce(),
             ),
-            decoration: new BoxDecoration(
-                borderRadius: BorderRadius.only(bottomRight: Radius.circular(50), topRight: Radius.circular(50)),
-                color: color,
-                boxShadow: <BoxShadow>[BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.5))]),
           ),
-          Spacer(
-            flex: 2,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  DataHabitDetail().habit.habit,
+                  textAlign: TextAlign.right,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(fontSize: 19),
+                ),
+                ScoreWidget(
+                  color: DataHabitDetail().getColor(),
+                  animation: IntTween(begin: previousScore, end: DataHabitDetail().habit.score)
+                      .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
+                ),
+              ],
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                name,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-              ),
-              SizedBox(
-                height: 65,
-              ),
-              ScoreWidget(
-                color: color,
-                animation: IntTween(begin: previousScore, end: score)
-                    .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
-              ),
-            ],
-          ),
-          Spacer(
-            flex: 1,
-          ),
+          SizedBox(width: 16),
         ],
       ),
     );

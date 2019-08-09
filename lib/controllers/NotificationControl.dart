@@ -41,7 +41,7 @@ class NotificationControl {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
-        id, habit.cue, "para " + habit.habit.toLowerCase(), day, time, platformChannelSpecifics,
+        id, habit.habit, "", day, time, platformChannelSpecifics,
         payload: habit.id.toString());
   }
 

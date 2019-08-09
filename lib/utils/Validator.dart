@@ -18,8 +18,8 @@ abstract class Validate {
       return "Por favor preencha o campo.";
     } else if (treatedText.length < 3) {
       return "A deixa precisa ser maior que 3 letras.";
-    } else if (treatedText.length > 40) {
-      return "A deixa pode ter no máximo 40 caracteres.";
+    } else if (treatedText.length > 45) {
+      return "A deixa pode ter no máximo 45 caracteres.";
     }
 
     return null;

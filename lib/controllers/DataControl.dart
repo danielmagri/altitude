@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:habit/controllers/DaysDoneControl.dart';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
-import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 
@@ -18,15 +16,22 @@ class DataControl {
 
   DataControl._internal();
 
-  // ***** HABIT *****
-  Future<List<Habit>> getAllHabits() async {
-    return await DatabaseService().getAllHabits();
+  /// Retorna todos os hábitos registrados e os já feitos hoje.
+  /// Ex: {0: todos_os_hábitos(Habit), 1: hábitos_feitos_hoje(DayDone)}
+  Future<Map<int, List>> getAllHabits() async {
+    List daysDone = await DatabaseService().getHabitsDoneToday();
+    List habits = await DatabaseService().getAllHabits();
+
+    return {0: habits, 1: daysDone};
   }
 
+  /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     return await DatabaseService().getHabit(id);
   }
 
+  /// Retorna todos os hábitos para serem feitos hoje e os já feitos hoje.
+  /// Ex: {0: hábitos_de_hoje(Habit), 1: hábitos_feitos_hoje(DayDone)}
   Future<Map<int, List>> getHabitsToday() async {
     List daysDone = await DatabaseService().getHabitsDoneToday();
     List habits = await DatabaseService().getHabitsToday();
@@ -34,8 +39,10 @@ class DataControl {
     return {0: habits, 1: daysDone};
   }
 
+  /// Adiciona um novo hábito com sua frequência e alarmes.
   Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
     Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+    habit.id = response[0];
     for (Reminder reminder in response[1]) {
       await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
     }
@@ -43,19 +50,28 @@ class DataControl {
     return true;
   }
 
+  /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit) async {
     return await DatabaseService().updateHabit(habit);
   }
 
-  Future<bool> deleteHabit(int id) async {
+  /// Atualiza o gatilho do hábito.
+  Future<bool> updateCue(int id, String cue) async {
+    return await DatabaseService().updateCue(id, cue);
+  }
+
+  /// Deleta o hábito.
+  Future<bool> deleteHabit(int id, int score) async {
+    await DataPreferences().setScore(-score);
     return await DatabaseService().deleteHabit(id);
   }
 
-  // ***** REMINDER *****
+  /// Retorna a lista de alarmes do hábito.
   Future<List<Reminder>> getReminders(int id) async {
     return await DatabaseService().getReminders(id);
   }
 
+  /// Adiciona os alarmes do hábito.
   Future<bool> addReminders(Habit habit, List<Reminder> reminders) async {
     List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
 
@@ -66,6 +82,7 @@ class DataControl {
     return true;
   }
 
+  /// Deleta os alarmes do hábito.
   Future<bool> deleteReminders(int habitId, List<Reminder> reminders) async {
     for (Reminder reminder in reminders) {
       await NotificationControl().removeNotification(reminder.id);
@@ -73,16 +90,17 @@ class DataControl {
     return await DatabaseService().deleteAllReminders(habitId);
   }
 
-  // ***** FREQUENCY *****
+  /// Retorna a frequência do hábito.
   Future<dynamic> getFrequency(int id) async {
     return await DatabaseService().getFrequency(id);
   }
 
+  /// Atualiza a frequência do hábito.
   Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
     return await DatabaseService().updateFrequency(id, frequency, typeOldFreq);
   }
 
-  // ***** DAYDONE *****
+  /// Retorna um map com os dias feitos do hábito.
   Future<Map<DateTime, List>> getDaysDone(int id) async {
     Map<DateTime, List> map = new Map();
     List<DayDone> list = await DatabaseService().getDaysDone(id);
@@ -107,32 +125,29 @@ class DataControl {
     return map;
   }
 
-  Future<List<DayDone>> getCycleDaysDone(int id, int cycle) async {
-    return await DatabaseService().getCycleDaysDone(id, cycle);
-  }
+  /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
+  Future<int> setHabitDoneAndScore(DateTime date, int id, {dynamic freq, bool add = true}) async {
+    dynamic frequency = freq != null ? freq : await getFrequency(id);
+    int weekDay = date.weekday == 7 ? 0 : date.weekday;
+    DateTime startDate = date.subtract(Duration(days: weekDay));
+    DateTime endDate = date.add(Duration(days: 6 - weekDay));
+    int score;
 
-  Future<int> setHabitDoneAndScore(int id, int cycle) async {
-    dynamic freq = await getFrequency(id);
-    Map result;
+    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
-    if (freq.runtimeType == FreqDayWeek) {
-      result = await DaysDoneControl().checkCycleDoneDayWeek(id, cycle);
-    } else if (freq.runtimeType == FreqWeekly) {
-      result = await DaysDoneControl().checkCycleDoneWeekly(id, cycle);
-    } else {
-      result = await DaysDoneControl().checkCycleDoneRepeating(id, cycle, freq);
-    }
-
-    if (result != null) {
-      int score = await ScoreControl().calculateScore(id, freq, result[1]);
-
-      print("Pontuação: $score");
+    if (add) {
+      score = await ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
-      await DatabaseService().habitDone(id, cycle, result[0]);
-      return score;
-    } else {
-      return 0;
+      await DatabaseService().setDayDone(id, date);
+    }else {
+      print(daysDone.length);
+      score = -await ScoreControl().calculateScore(id, frequency, daysDone.length);
+      await DataPreferences().setScore(score);
+      await DatabaseService().updateScore(id, score);
+      await DatabaseService().deleteDayDone(id, date);
     }
+    print(score);
+    return score;
   }
 }

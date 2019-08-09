@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/Toast.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 
@@ -28,9 +28,6 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
           break;
         case FreqWeekly:
           chosen = 1;
-          break;
-        case FreqRepeating:
-          chosen = 2;
           break;
       }
     }
@@ -135,52 +132,6 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                       ),
                       Text(
                         "Ex. 3 vezes por semana",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              InkWell(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => RepeatingDialog(
-                          color: widget.color,
-                        ),
-                  ).then((result) {
-                    if (result != null) {
-                      setState(() {
-                        chosen = 2;
-                      });
-                    }
-                  });
-                },
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                    color: chosen != 2 ? HabitColors.disableHabitCreation : widget.color,
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Intervalo",
-                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "Ex. 5 vezes em 15 dias",
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w200),
                       )
                     ],
@@ -480,123 +431,6 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
                   ),
                   Text(
                     "vezes por semana.",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                ],
-              ),
-              SizedBox(height: 24.0),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Cancelar"),
-                      ),
-                      FlatButton(
-                        onPressed: _validate,
-                        child: Text(
-                          "Ok",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RepeatingDialog extends StatefulWidget {
-  RepeatingDialog({Key key, this.color}) : super(key: key);
-
-  final Color color;
-
-  @override
-  _RepeatingDialogState createState() => new _RepeatingDialogState();
-}
-
-class _RepeatingDialogState extends State<RepeatingDialog> {
-  int _currentValue1;
-  int _currentValue2;
-
-  @override
-  initState() {
-    super.initState();
-
-    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqRepeating) {
-      FreqRepeating repeating = DataHabitCreation().frequency;
-      _currentValue1 = repeating.daysTime;
-      _currentValue2 = repeating.daysCycle;
-    } else {
-      _currentValue1 = 5;
-      _currentValue2 = 15;
-    }
-  }
-
-  void _validate() {
-    if (_currentValue1 > _currentValue2) {
-      showToast("O número de repetições deve ser menor que o do intervalo.");
-    } else {
-      DataHabitCreation().frequency = new FreqRepeating(daysTime: _currentValue1, daysCycle: _currentValue2);
-      Navigator.of(context).pop(true);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      elevation: 5.0,
-      backgroundColor: Colors.white,
-      child: Theme(
-        data: Theme.of(context).copyWith(accentColor: widget.color),
-        child: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                "Intervalo",
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text("Escolha quantos vezes irá realizar o hábito e o intervalo de tempo para isso:"),
-              SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new NumberPicker.integer(
-                    initialValue: _currentValue1,
-                    minValue: 1,
-                    maxValue: 30,
-                    listViewWidth: 45.0,
-                    onChanged: (newValue) => setState(() => _currentValue1 = newValue),
-                  ),
-                  Text(
-                    "vezes em",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  new NumberPicker.integer(
-                    initialValue: _currentValue2,
-                    minValue: 1,
-                    maxValue: 30,
-                    listViewWidth: 45.0,
-                    onChanged: (newValue) => setState(() => _currentValue2 = newValue),
-                  ),
-                  Text(
-                    "dias.",
                     style: TextStyle(fontSize: 16.0),
                   ),
                 ],
