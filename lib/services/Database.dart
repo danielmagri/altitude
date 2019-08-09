@@ -148,6 +148,15 @@ class DatabaseService {
               ON UPDATE CASCADE);''');
   }
 
+  /// Retorna a quantidade de hábitos registrados.
+  Future<int> getAllHabitsCount() async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT COUNT(*) as qtd FROM habit;');
+
+    int qtd = result.first["qtd"] != null ? result.first["qtd"] : 0;
+    return qtd;
+  }
+
   /// Retorna todos os hábitos registrados.
   Future<List> getAllHabits() async {
     final db = await database;

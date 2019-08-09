@@ -26,6 +26,7 @@ dependencies:
   flutter_local_notifications: ^0.7.1+1
   vibration: ^1.2.1
   sliding_up_panel: ^0.3.4
+  auto_size_text: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:

@@ -16,6 +16,11 @@ class DataControl {
 
   DataControl._internal();
 
+  /// Retorna a quantidade de hábitos registrados.
+  Future<int> getAllHabitCount() async {
+    return await DatabaseService().getAllHabitsCount();
+  }
+
   /// Retorna todos os hábitos registrados e os já feitos hoje.
   /// Ex: {0: todos_os_hábitos(Habit), 1: hábitos_feitos_hoje(DayDone)}
   Future<Map<int, List>> getAllHabits() async {
