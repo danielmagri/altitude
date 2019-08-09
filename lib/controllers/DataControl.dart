@@ -127,6 +127,7 @@ class DataControl {
 
       map.putIfAbsent(list[i].dateDone, () => [before, after]);
     }
+    print(map);
     return map;
   }
 
@@ -152,7 +153,6 @@ class DataControl {
       await DatabaseService().updateScore(id, score);
       await DatabaseService().deleteDayDone(id, date);
     }
-    print(score);
     return score;
   }
 }

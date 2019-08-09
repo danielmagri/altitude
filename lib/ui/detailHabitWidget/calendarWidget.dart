@@ -17,18 +17,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   bool _editing = false;
   double _loadingOpacity = 0.0;
 
-  void _onDaySelected(DateTime day, List events) {
+  void _onDaySelected(DateTime date, List events) {
     if (_editing) {
       setState(() {
         _loadingOpacity = 1.0;
       });
+
+      DateTime day = new DateTime(date.year, date.month, date.day);
       bool add = events.length == 0 ? true : false;
+
       DataControl()
-          .setHabitDoneAndScore(day, DataHabitDetail().habit.id, freq: DataHabitDetail().frequency, add: add)
+          .setHabitDoneAndScore(day, DataHabitDetail().habit.id,
+              freq: DataHabitDetail().frequency, add: add)
           .then((earnedScore) {
-        setState(() {
-          _loadingOpacity = 0.0;
-        });
         Vibration.hasVibrator().then((resp) {
           if (resp != null && resp == true) {
             Vibration.vibrate(duration: 100);
@@ -42,30 +43,43 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           DataHabitDetail().habit.daysDone--;
         }
 
-        bool yesterday = DataHabitDetail().daysDone.containsKey(day.subtract(Duration(days: 1)));
-        bool tomorrow = DataHabitDetail().daysDone.containsKey(day.add(Duration(days: 1)));
+        bool yesterday = DataHabitDetail()
+            .daysDone
+            .containsKey(day.subtract(Duration(days: 1)));
+        bool tomorrow =
+            DataHabitDetail().daysDone.containsKey(day.add(Duration(days: 1)));
 
-        if (DataHabitDetail().daysDone.containsKey(day)) {
+        if (!add) {
+          // Remover dia
           DataHabitDetail().daysDone.remove(day);
           if (yesterday) {
-            DataHabitDetail().daysDone.update(day.subtract(Duration(days: 1)), (old) => [old[0], false]);
+            DataHabitDetail().daysDone.update(
+                day.subtract(Duration(days: 1)), (old) => [old[0], false]);
           }
 
           if (tomorrow) {
-            DataHabitDetail().daysDone.update(day.add(Duration(days: 1)), (old) => [false, old[1]]);
+            DataHabitDetail()
+                .daysDone
+                .update(day.add(Duration(days: 1)), (old) => [false, old[1]]);
           }
         } else {
-          DataHabitDetail().daysDone.putIfAbsent(day, () => [yesterday, tomorrow]);
-
+          // Adicionar dia
+          DataHabitDetail()
+              .daysDone
+              .putIfAbsent(day, () => [yesterday, tomorrow]);
+          print(tomorrow);
           if (yesterday) {
-            DataHabitDetail().daysDone.update(day.subtract(Duration(days: 1)), (old) => [old[0], true]);
+            DataHabitDetail().daysDone.update(
+                day.subtract(Duration(days: 1)), (old) => [old[0], true]);
           }
 
           if (tomorrow) {
-            DataHabitDetail().daysDone.update(day.add(Duration(days: 1)), (old) => [true, old[1]]);
+            DataHabitDetail()
+                .daysDone
+                .update(day.add(Duration(days: 1)), (old) => [true, old[1]]);
           }
         }
-
+        _loadingOpacity = 0.0;
         widget.updateScreen();
       });
     }
@@ -78,8 +92,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       ),
       alignment: Alignment(0.0, 0.0),
       margin: EdgeInsets.all(5),
-      decoration:
-          BoxDecoration(shape: BoxShape.circle, border: Border.all(color: DataHabitDetail().getColor(), width: 2)),
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: DataHabitDetail().getColor(), width: 2)),
     );
   }
 
@@ -135,11 +150,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                           style: TextStyle(color: Colors.white),
                         ),
                         alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 5, bottom: 5, left: event[0] ? 0 : 5, right: event[1] ? 0 : 5),
+                        margin: EdgeInsets.only(
+                            top: 5,
+                            bottom: 5,
+                            left: event[0] ? 0 : 5,
+                            right: event[1] ? 0 : 5),
                         decoration: new BoxDecoration(
                           borderRadius: BorderRadius.horizontal(
-                              left: event[0] ? Radius.circular(0) : Radius.circular(20),
-                              right: event[1] ? Radius.circular(0) : Radius.circular(20)),
+                              left: event[0]
+                                  ? Radius.circular(0)
+                                  : Radius.circular(20),
+                              right: event[1]
+                                  ? Radius.circular(0)
+                                  : Radius.circular(20)),
                           color: DataHabitDetail().getColor(),
                         ))
                   ];
@@ -151,7 +174,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     return Container(
                       child: Text(
                         date.day.toString(),
-                        style: TextStyle(color: date.weekday >= 6 ? Colors.red : Colors.black),
+                        style: TextStyle(
+                            color:
+                                date.weekday >= 6 ? Colors.red : Colors.black),
                       ),
                       alignment: Alignment(0.0, 0.0),
                     );
@@ -164,7 +189,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             alignment: Alignment.centerRight,
             child: FlatButton(
               color: _editing ? DataHabitDetail().getColor() : Colors.white,
-              shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20)),
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(20)),
               onPressed: () {
                 setState(() {
                   _editing = !_editing;
