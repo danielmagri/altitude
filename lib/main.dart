@@ -20,7 +20,8 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color.fromARGB(255, 24, 24, 24)));
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark));
 
   bool showTutorial = false;
   if (await DataPreferences().getName() == null) showTutorial = true;
