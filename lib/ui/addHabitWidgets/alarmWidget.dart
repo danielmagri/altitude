@@ -279,7 +279,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
                   padding: EdgeInsets.symmetric(horizontal: _chosen != 1 ? 16 : 0, vertical: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                    color: DataHabitCreation().reminders.length == 0 ? HabitColors.disableHabitCreation : widget.color,
+                    color: DataHabitCreation().reminders.length == 0 ? AppColors.disableHabitCreation : widget.color,
                     boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                   ),
                   child: _chosen != 0
@@ -308,7 +308,7 @@ class _AlarmWidgetState extends State<AlarmWidget> {
                   padding: EdgeInsets.symmetric(horizontal: _chosen != 1 ? 16 : 0, vertical: 4),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                    color: DataHabitCreation().reminders.length == 0 ? HabitColors.disableHabitCreation : widget.color,
+                    color: DataHabitCreation().reminders.length == 0 ? AppColors.disableHabitCreation : widget.color,
                     boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                   ),
                   child: _chosen != 1

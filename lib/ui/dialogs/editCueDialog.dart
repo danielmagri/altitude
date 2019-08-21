@@ -128,7 +128,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
     }else {
       return [
         TextSpan(
-          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria essa gatilho? ",
+          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
           style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(

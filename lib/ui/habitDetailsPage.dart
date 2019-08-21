@@ -261,13 +261,13 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 ),
                 Container(
                   margin: const EdgeInsets.only(
-                      top: 28, bottom: 8, left: 20, right: 20),
+                      top: 28, bottom: 4, left: 20, right: 20),
                   width: double.maxFinite,
                   child: RaisedButton(
                     color: hasDoneToday() ? data.getColor() : Colors.white,
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: 13),
                     elevation: 5.0,
                     onPressed: setDoneHabit,
                     child: Text(
@@ -354,7 +354,7 @@ class HeaderWidget extends StatelessWidget {
               children: <Widget>[
                 Text(
                   DataHabitDetail().habit.habit,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.center,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

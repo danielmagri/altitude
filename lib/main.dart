@@ -13,6 +13,9 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/controllers/LevelControl.dart';
+import 'package:habit/ui/dialogs/newLevelDialog.dart';
+import 'package:habit/ui/allLevelsPage.dart';
 
 void main() async {
   SystemChrome.setPreferredOrientations(
@@ -62,10 +65,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   AnimationController _controllerScore;
   AnimationController _controllerDragTarget;
 
-  PageController _pageController = new PageController();
-  int pageIndex = 0;
+  PageController _pageController = new PageController(initialPage: 1);
+  int pageIndex = 1;
 
-  int score;
+  int score = 0;
   int previousScore = 0;
 
   @override
@@ -81,10 +84,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     DataPreferences().getScore().then((score) {
-      setState(() {
-        this.score = score;
-      });
-      updateScore();
+      this.score = 0;
+      updateScore(score);
     });
 
     super.didChangeDependencies();
@@ -98,7 +99,34 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void updateScore() {
+  void updateScore(int earnedScore) async {
+    setState(() {
+      score += earnedScore;
+    });
+    int newLevel = LevelControl.getLevel(score);
+    if (newLevel > await DataPreferences().getLevel()) {
+      Navigator.of(context).push(new PageRouteBuilder(
+          opaque: false,
+          transitionDuration: Duration(milliseconds: 300),
+          transitionsBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                  Widget child) =>
+              new FadeTransition(
+                  opacity: new CurvedAnimation(
+                      parent: animation, curve: Curves.easeOut),
+                  child: child),
+          pageBuilder: (BuildContext context, _, __) {
+            return NewLevelDialog(
+              score: score,
+            );
+          }));
+    }
+
+    if (newLevel != await DataPreferences().getLevel()) {
+      DataPreferences().setLevel(newLevel);
+    }
+
     if (previousScore != score) {
       _controllerScore.reset();
       _controllerScore.forward().whenComplete(() {
@@ -128,10 +156,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         }
       });
 
-      setState(() {
-        score += earnedScore;
-      });
-      updateScore();
+      updateScore(earnedScore);
     });
   }
 
@@ -151,13 +176,39 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           Column(
             children: <Widget>[
               _AppBar(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ScoreWidget(
-                  animation: IntTween(begin: previousScore, end: score).animate(
-                      CurvedAnimation(
-                          parent: _controllerScore,
-                          curve: Curves.fastOutSlowIn)),
+              Text(LevelControl.getLevelText(score)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return AllLevelsPage(
+                      score: score,
+                    );
+                  }));
+                },
+                child: Container(
+                  color: Theme.of(context).canvasColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 40,
+                      ),
+                      ScoreWidget(
+                        animation: IntTween(begin: previousScore, end: score)
+                            .animate(CurvedAnimation(
+                                parent: _controllerScore,
+                                curve: Curves.fastOutSlowIn)),
+                      ),
+                      Image.asset(
+                        LevelControl.getLevelImagePath(score),
+                        height: 40,
+                        width: 40,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -170,10 +221,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     });
                   },
                   children: <Widget>[
-                    _TodayHabitsPage(
+                    _AllHabitsPage(
                       showDragTarget: showDragTarget,
                     ),
-                    _AllHabitsPage(
+                    _TodayHabitsPage(
                       showDragTarget: showDragTarget,
                     ),
                   ],
@@ -359,7 +410,7 @@ class _BottomNavigationBar extends StatelessWidget {
               children: <Widget>[
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 200),
-                  opacity: index == 1 ? 1 : 0,
+                  opacity: index == 0 ? 1 : 0,
                   child: Container(
                     height: 4,
                     width: 25,
@@ -376,7 +427,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     color: Colors.white,
                     size: 28,
                   ),
-                  onPressed: () => onTap(1),
+                  onPressed: () => onTap(0),
                 ),
               ],
             ),
@@ -398,7 +449,7 @@ class _BottomNavigationBar extends StatelessWidget {
               children: <Widget>[
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 200),
-                  opacity: index == 0 ? 1 : 0,
+                  opacity: index == 1 ? 1 : 0,
                   child: Container(
                     height: 4,
                     width: 25,
@@ -415,7 +466,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     color: Colors.white,
                     size: 28,
                   ),
-                  onPressed: () => onTap(0),
+                  onPressed: () => onTap(1),
                 ),
               ],
             ),

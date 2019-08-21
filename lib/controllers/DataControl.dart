@@ -127,7 +127,6 @@ class DataControl {
 
       map.putIfAbsent(list[i].dateDone, () => [before, after]);
     }
-    print(map);
     return map;
   }
 
@@ -142,13 +141,12 @@ class DataControl {
     List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
-      score = await ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
+      score = await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().setDayDone(id, date);
     }else {
-      print(daysDone.length);
-      score = -await ScoreControl().calculateScore(id, frequency, daysDone.length);
+      score = -await ScoreControl.calculateScore(id, frequency, daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().deleteDayDone(id, date);
