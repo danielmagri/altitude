@@ -206,20 +206,20 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               height: 20,
             ),
             HabitWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
+              color: AppColors.habitsColor[DataHabitCreation().indexColor],
               controller: habitController,
               keyboard: _keyboardVisibility,
             ),
             FrequencyWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
+              color: AppColors.habitsColor[DataHabitCreation().indexColor],
             ),
             AlarmWidget(
-              color: HabitColors.colors[DataHabitCreation().indexColor],
+              color: AppColors.habitsColor[DataHabitCreation().indexColor],
             ),
             Container(
               margin: const EdgeInsets.only(top: 20, bottom: 28),
               child: RaisedButton(
-                color: HabitColors.colors[DataHabitCreation().indexColor],
+                color: AppColors.habitsColor[DataHabitCreation().indexColor],
                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
                 padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,

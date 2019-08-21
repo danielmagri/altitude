@@ -71,7 +71,7 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                    color: chosen != 0 ? HabitColors.disableHabitCreation : widget.color,
+                    color: chosen != 0 ? AppColors.disableHabitCreation : widget.color,
                     boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                   ),
                   child: Column(
@@ -117,7 +117,7 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                    color: chosen != 1 ? HabitColors.disableHabitCreation : widget.color,
+                    color: chosen != 1 ? AppColors.disableHabitCreation : widget.color,
                     boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                   ),
                   child: Column(

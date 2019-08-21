@@ -44,6 +44,16 @@ flutter:
     - assets/createHabit.png
     - assets/completeHabit.png
     - assets/score.png
+    - assets/level/gold1.png
+    - assets/level/gold2.png
+    - assets/level/gold3.png
+    - assets/level/silver1.png
+    - assets/level/silver2.png
+    - assets/level/silver3.png
+    - assets/level/bronze0.png
+    - assets/level/bronze1.png
+    - assets/level/bronze2.png
+    - assets/level/bronze3.png
 
   fonts:
       - family: Montserrat

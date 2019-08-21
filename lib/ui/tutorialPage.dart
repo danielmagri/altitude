@@ -60,7 +60,7 @@ class _TutorialPageState extends State<TutorialPage> {
     if (widget.showNameTab) {
       widgets.add(
         Container(
-          color: HabitColors.colors[5],
+          color: AppColors.habitsColor[5],
           child: Column(
             children: <Widget>[
               Container(
@@ -153,7 +153,7 @@ class Initial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[0],
+      color: AppColors.habitsColor[0],
       child: Column(
         children: <Widget>[
           Container(
@@ -183,7 +183,7 @@ class Initial extends StatelessWidget {
                     angle: 0.8,
                     child: Rocket(
                       size: const Size(200, 190),
-                      color: HabitColors.colors[0],
+                      color: AppColors.habitsColor[0],
                       state: RocketState.ON_FIRE,
                       fireForce: 1,
                     ),
@@ -242,7 +242,7 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[1],
+      color: AppColors.habitsColor[1],
       child: Column(
         children: <Widget>[
           Container(
@@ -387,7 +387,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[3],
+      color: AppColors.habitsColor[3],
       child: Column(
         children: <Widget>[
           Container(
@@ -423,7 +423,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                           child: Rocket(
                             size: Size(
                                 (constraint.biggest.width * sizeRocket) + 10, constraint.biggest.width * sizeRocket),
-                            color: HabitColors.colors[3],
+                            color: AppColors.habitsColor[3],
                             state: RocketState.ON_FIRE,
                             fireForce: 1,
                           ),
@@ -509,7 +509,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[4],
+      color: AppColors.habitsColor[4],
       child: Column(
         children: <Widget>[
           Container(

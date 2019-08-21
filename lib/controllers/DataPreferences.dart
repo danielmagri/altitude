@@ -21,6 +21,7 @@ class DataPreferences {
   // User data
   static const String NAME = "USER_NAME";
   static const String SCORE = "USER_SCORE";
+  static const String LEVEL = "USER_LEVEL";
   // Tutorials
   static const String HABIT_TUTORIAL = "HABIT_TUTORIAL";
   static const String ROCKET_ON_DETAILS_PAGE = "ROCKET_ON_DETAILS_PAGE";
@@ -45,6 +46,17 @@ class DataPreferences {
     SharedPreferences sf = await prefs;
     int score = sf.getInt(SCORE);
     return score == null ? 0 : score;
+  }
+
+  Future<bool> setLevel(int level) async {
+    SharedPreferences sf = await prefs;
+    return await sf.setInt(LEVEL, level);
+  }
+
+  Future<int> getLevel() async {
+    SharedPreferences sf = await prefs;
+    int level = sf.getInt(LEVEL);
+    return level == null ? 0 : level;
   }
 
   Future<bool> setHabitTutorial(bool value) async {

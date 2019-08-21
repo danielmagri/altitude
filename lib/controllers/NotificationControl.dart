@@ -36,7 +36,7 @@ class NotificationControl {
       importance: Importance.Max,
       priority: Priority.High,
       ticker: 'ticker',
-      color: HabitColors.colors[habit.color],
+      color: AppColors.habitsColor[habit.color],
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);

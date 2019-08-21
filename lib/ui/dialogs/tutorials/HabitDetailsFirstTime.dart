@@ -36,7 +36,12 @@ class HabitDetailsFirstTime extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 20)),
                     TextSpan(
                         text:
-                            "\nQuanto mais vezes você fizer seu hábito mais potente ele fica e mais longe vai!"),
+                            "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                    TextSpan(
+                        text:
+                        "\n\nSiga a frequência certinho para ir ainda mais longe!",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300)),
                   ],
                 ),
               ),

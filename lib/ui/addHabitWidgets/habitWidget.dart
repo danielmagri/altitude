@@ -189,7 +189,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
               color:
-                  validated ? widget.color : HabitColors.disableHabitCreation,
+                  validated ? widget.color : AppColors.disableHabitCreation,
               boxShadow: <BoxShadow>[
                 BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))
               ],

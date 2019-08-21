@@ -8,7 +8,8 @@ import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/objects/Frequency.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
+  static void goDetailsPage(BuildContext context, int id,
+      {bool pushReplacement = false}) async {
     Loading.showLoading(context);
 
     Habit data = await DataControl().getHabit(id);
@@ -17,7 +18,10 @@ abstract class Util {
     Map<DateTime, List> daysDone = await DataControl().getDaysDone(id);
 
     Loading.closeLoading(context);
-    if (data != null && data.id != null && frequency != null && reminders != null) {
+    if (data != null &&
+        data.id != null &&
+        frequency != null &&
+        reminders != null) {
       DataHabitDetail().habit = data;
       DataHabitDetail().reminders = reminders;
       DataHabitDetail().frequency = frequency;
@@ -61,5 +65,24 @@ abstract class Util {
   /// Coleta o tamanho do ciclo em dias.
   static int getDaysCycle(dynamic frequency) {
     return 7;
+  }
+
+  /// Clareia a cor de acordo com o 'value' de 0 a 255
+  static Color setWhitening(Color color, int value) {
+    int r = color.red + value;
+    int g = color.green + value;
+    int b = color.blue + value;
+
+    if (r > 255)
+      r = 255;
+    else if (r < 0) r = 0;
+    if (g > 255)
+      g = 255;
+    else if (g < 0) g = 0;
+    if (b > 255)
+      b = 255;
+    else if (b < 0) b = 0;
+
+    return Color.fromARGB(color.alpha, r, g, b);
   }
 }
