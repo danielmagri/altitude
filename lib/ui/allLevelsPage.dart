@@ -63,7 +63,6 @@ class _AllLevelsPageState extends State<AllLevelsPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: LevelControl.getLevelColorByCode(i),
                         ),
                       ),
                       Text(
