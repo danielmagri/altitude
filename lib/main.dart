@@ -194,7 +194,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                        width: 40,
+                        width: 30,
                       ),
                       ScoreWidget(
                         animation: IntTween(begin: previousScore, end: score)
@@ -204,8 +204,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       ),
                       Image.asset(
                         LevelControl.getLevelImagePath(score),
-                        height: 40,
-                        width: 40,
+                        height: 30,
+                        width: 30,
                       ),
                     ],
                   ),
