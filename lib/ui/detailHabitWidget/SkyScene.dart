@@ -43,6 +43,7 @@ class SkyScene extends StatelessWidget {
           size: size,
           color: color,
           force: force,
+          duration: duration,
         ),
       ],
     );
@@ -54,12 +55,14 @@ class RocketAnimated extends StatefulWidget {
       {Key key,
       @required this.size,
       @required this.color,
-      @required this.force})
+      @required this.force,
+      @required this.duration})
       : super(key: key);
 
   final Size size;
   final Color color;
   final double force;
+  final int duration;
 
   @override
   _RocketAnimatedState createState() => _RocketAnimatedState();
@@ -72,10 +75,10 @@ class _RocketAnimatedState extends State<RocketAnimated>
   @override
   void initState() {
     _controller = AnimationController(
-        duration: Duration(milliseconds: 1500),
+        duration: Duration(milliseconds: widget.duration - 400),
         vsync: this,
-        lowerBound: pi,
-        upperBound: 8 * pi);
+        lowerBound: 2 * pi,
+        upperBound: 9 * pi);
 
     _controller.addListener(() {
       setState(() {});
