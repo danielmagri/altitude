@@ -619,7 +619,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
       child: Opacity(
         opacity: opacity.value,
         child: Container(
-          height: 175,
+          height: 180,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
