@@ -4,7 +4,7 @@ import 'package:habit/ui/widgets/generic/Rocket.dart';
 
 class SkyScene extends StatelessWidget {
   SkyScene({Key key, this.size, @required this.color, this.force = 0})
-      : duration = 2000 - (961 * force).toInt(),
+      : duration = 2000 - (900 * force).toInt(),
         super(key: key);
 
   final Size size;
@@ -84,6 +84,14 @@ class _RocketAnimatedState extends State<RocketAnimated>
       setState(() {});
     });
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(RocketAnimated oldWidget) {
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = Duration(milliseconds: widget.duration);
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -201,6 +209,15 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
     _controller.value = widget.startPoint;
     _controller.repeat();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(Cloud oldWidget) {
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = Duration(milliseconds: widget.duration);
+      _controller.repeat();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
