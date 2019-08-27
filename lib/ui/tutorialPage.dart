@@ -161,8 +161,8 @@ class Initial extends StatelessWidget {
             height: 100,
             alignment: Alignment.center,
             child: Text(
-              "ALTITUDE",
-              style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
+              "Bem-vindo",
+              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(

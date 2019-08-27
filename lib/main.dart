@@ -176,7 +176,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           Column(
             children: <Widget>[
               _AppBar(),
-              Text(LevelControl.getLevelText(score)),
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -194,18 +193,27 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SizedBox(
-                        width: 30,
+                        width: 25,
                       ),
-                      ScoreWidget(
-                        animation: IntTween(begin: previousScore, end: score)
-                            .animate(CurvedAnimation(
-                                parent: _controllerScore,
-                                curve: Curves.fastOutSlowIn)),
+                      Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text(LevelControl.getLevelText(score)),
+                          ScoreWidget(
+                            animation:
+                                IntTween(begin: previousScore, end: score)
+                                    .animate(CurvedAnimation(
+                                        parent: _controllerScore,
+                                        curve: Curves.fastOutSlowIn)),
+                          ),
+                        ],
                       ),
                       Image.asset(
                         LevelControl.getLevelImagePath(score),
-                        height: 30,
-                        width: 30,
+                        height: 25,
+                        width: 25,
                       ),
                     ],
                   ),
@@ -254,10 +262,10 @@ class _TodayHabitsPage extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 36),
+          margin: EdgeInsets.only(top: 40),
           child: Text(
             "HÁBITOS DE HOJE",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
           ),
         ),
         Expanded(
@@ -318,10 +326,10 @@ class _AllHabitsPage extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 36),
+          margin: EdgeInsets.only(top: 40),
           child: Text(
             "TODOS OS HÁBITOS",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
           ),
         ),
         Expanded(
