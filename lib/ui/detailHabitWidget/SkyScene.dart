@@ -39,13 +39,75 @@ class SkyScene extends StatelessWidget {
           imagePath: "assets/c1.png",
           fromRight: true,
         ),
-        Rocket(
+        RocketAnimated(
           size: size,
           color: color,
-          fireForce: force,
-          state: RocketState.ON_FIRE,
-        )
+          force: force,
+        ),
       ],
+    );
+  }
+}
+
+class RocketAnimated extends StatefulWidget {
+  RocketAnimated(
+      {Key key,
+      @required this.size,
+      @required this.color,
+      @required this.force})
+      : super(key: key);
+
+  final Size size;
+  final Color color;
+  final double force;
+
+  @override
+  _RocketAnimatedState createState() => _RocketAnimatedState();
+}
+
+class _RocketAnimatedState extends State<RocketAnimated>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+        duration: Duration(milliseconds: 1500),
+        vsync: this,
+        lowerBound: pi,
+        upperBound: 8 * pi);
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _controller.reset();
+        _controller.forward();
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: Transform.rotate(
+          angle: sin(_controller.value) / _controller.value,
+          child: Rocket(
+            size: widget.size,
+            color: widget.color,
+            fireForce: widget.force,
+            state: RocketState.ON_FIRE,
+          ),
+        ),
+      ),
     );
   }
 }
