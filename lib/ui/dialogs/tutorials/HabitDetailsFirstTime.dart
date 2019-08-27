@@ -13,12 +13,12 @@ class HabitDetailsFirstTime extends StatelessWidget {
                 colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
                 center: Alignment(-0.55, -0.6),
                 stops: [0.9, 1],
-                radius: 0.45,
+                radius: 0.42,
               ),
             ),
           ),
           Align(
-            alignment: Alignment(0, 0.45),
+            alignment: Alignment(0, 0.5),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: RichText(
