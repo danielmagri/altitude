@@ -15,6 +15,8 @@ import 'package:habit/ui/dialogs/editCueDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
+import 'package:habit/ui/dialogs/tutorials/HabitDetailsFirstTime.dart';
+import 'package:habit/controllers/DataPreferences.dart';
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage({Key key}) : super(key: key);
@@ -23,7 +25,8 @@ class HabitDetailsPage extends StatefulWidget {
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
+class _HabitDetailsPageState extends State<HabitDetailsPage>
+    with TickerProviderStateMixin {
   PanelController _panelController = new PanelController();
   AnimationController _controllerScore;
 
@@ -36,7 +39,28 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   initState() {
     super.initState();
 
-    _controllerScore = AnimationController(duration: const Duration(milliseconds: 2000), vsync: this);
+    _controllerScore = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!await DataPreferences().getRocketTutorial()) {
+        Navigator.of(context).push(new PageRouteBuilder(
+            opaque: false,
+            transitionDuration: Duration(milliseconds: 300),
+            transitionsBuilder: (BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child) =>
+                new FadeTransition(
+                    opacity: new CurvedAnimation(
+                        parent: animation, curve: Curves.easeOut),
+                    child: child),
+            pageBuilder: (BuildContext context, _, __) {
+              return HabitDetailsFirstTime();
+            }));
+        await DataPreferences().setRocketTutorial(true);
+      }
+    });
 
     animateScore();
   }
@@ -75,9 +99,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       showToast("Você já completou esse hábito hoje!");
     } else {
       Loading.showLoading(context);
-      DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime today = DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-      DataControl().setHabitDoneAndScore(today, data.habit.id).then((earnedScore) {
+      DataControl()
+          .setHabitDoneAndScore(today, data.habit.id)
+          .then((earnedScore) {
         Loading.closeLoading(context);
         Vibration.hasVibrator().then((resp) {
           if (resp != null && resp == true) {
@@ -86,8 +113,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         });
 
         bool before;
-        if (data.daysDone.length - 1 >= 0 && data.daysDone.containsKey(today.subtract(Duration(days: 1)))) {
-          data.daysDone.update(today.subtract(Duration(days: 1)), (old) => [old[0], true]);
+        if (data.daysDone.length - 1 >= 0 &&
+            data.daysDone.containsKey(today.subtract(Duration(days: 1)))) {
+          data.daysDone.update(
+              today.subtract(Duration(days: 1)), (old) => [old[0], true]);
           before = true;
         } else {
           before = false;
@@ -195,7 +224,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
       child: Scaffold(
         body: SlidingUpPanel(
           controller: _panelController,
-          borderRadius: const BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
           backdropEnabled: true,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           minHeight: 0,
@@ -206,38 +236,46 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
               children: <Widget>[
                 SizedBox(
                   height: 75,
-                  child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                    BackButton(color: data.getColor()),
-                    Spacer(),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    IconButton(
-                        icon: Icon(Icons.edit, size: 30, color: data.getColor()),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) {
-                            return EditHabitPage();
-                          }));
-                        }),
-                  ]),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        BackButton(color: data.getColor()),
+                        Spacer(),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.edit,
+                                size: 30, color: data.getColor()),
+                            onPressed: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                return EditHabitPage();
+                              }));
+                            }),
+                      ]),
                 ),
                 HeaderWidget(
                   previousScore: previousScore,
                   controllerScore: _controllerScore,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 28, bottom: 8, left: 20, right: 20),
+                  margin: const EdgeInsets.only(
+                      top: 28, bottom: 4, left: 20, right: 20),
                   width: double.maxFinite,
                   child: RaisedButton(
                     color: hasDoneToday() ? data.getColor() : Colors.white,
-                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(vertical: 13),
                     elevation: 5.0,
                     onPressed: setDoneHabit,
                     child: Text(
                       "COMPLETAR HÁBITO DE HOJE",
                       style: TextStyle(
-                          color: hasDoneToday() ? Colors.white : data.getColor(), fontWeight: FontWeight.bold),
+                          color:
+                              hasDoneToday() ? Colors.white : data.getColor(),
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -246,13 +284,18 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                   child: Text(
                     frequencyText(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.black54),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black54),
                   ),
                 ),
                 CueWidget(
                   openBottomSheet: openBottomSheet,
                 ),
-                CalendarWidget(updateScreen: updateScreen,),
+                CalendarWidget(
+                  updateScreen: updateScreen,
+                ),
                 CoolDataWidget(),
                 SizedBox(
                   height: 20,
@@ -267,7 +310,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.previousScore, this.controllerScore}) : super(key: key);
+  HeaderWidget({Key key, this.previousScore, this.controllerScore})
+      : super(key: key);
 
   final int previousScore;
   final controllerScore;
@@ -278,8 +322,10 @@ class HeaderWidget extends StatelessWidget {
     int timesDays = Util.getTimesDays(DataHabitDetail().frequency);
     List<DateTime> dates = DataHabitDetail().daysDone.keys.toList();
 
-    int daysDoneLastCycle =
-        dates.where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1)))).length;
+    int daysDoneLastCycle = dates
+        .where((date) => date
+            .isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1))))
+        .length;
 
     force = daysDoneLastCycle / timesDays;
 
@@ -308,7 +354,7 @@ class HeaderWidget extends StatelessWidget {
               children: <Widget>[
                 Text(
                   DataHabitDetail().habit.habit,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.center,
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -316,8 +362,12 @@ class HeaderWidget extends StatelessWidget {
                 ),
                 ScoreWidget(
                   color: DataHabitDetail().getColor(),
-                  animation: IntTween(begin: previousScore, end: DataHabitDetail().habit.score)
-                      .animate(CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
+                  animation: IntTween(
+                          begin: previousScore,
+                          end: DataHabitDetail().habit.score)
+                      .animate(CurvedAnimation(
+                          parent: controllerScore,
+                          curve: Curves.fastOutSlowIn)),
                 ),
               ],
             ),

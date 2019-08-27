@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/utils/Util.dart';
 import 'dart:math';
 
 enum RocketState { ON_FIRE, STOPPED }
@@ -13,32 +14,34 @@ class _RocketPainter extends CustomPainter {
     Path path = Path();
     Paint paint = Paint();
 
+    Color lightenedColor = Util.setWhitening(color, -50);
+
     path.moveTo(size.width * 0.49, 0);
     path.quadraticBezierTo(size.width * 0.44, size.height * 0.1, size.width * 0.41, size.height * 0.2);
     path.lineTo(size.width * 0.59, size.height * 0.2);
     path.quadraticBezierTo(size.width * 0.56, size.height * 0.1, size.width * 0.51, 0);
     path.close();
 
-    paint.color = color;
+    paint.color = lightenedColor;
     canvas.drawPath(path, paint);
 
     path = Path();
-    path.moveTo(size.width * 0.38, size.height * 0.55);
+    path.moveTo(size.width * 0.38, size.height * 0.5);
     path.quadraticBezierTo(size.width * 0.25, size.height * 0.8, size.width * 0.26, size.height);
     path.quadraticBezierTo(size.width * 0.32, size.height * 0.85, size.width * 0.4, size.height * 0.88);
     path.close();
 
-    paint.color = color;
+    paint.color = lightenedColor;
     canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
 
     path = Path();
-    path.moveTo(size.width * 0.62, size.height * 0.55);
+    path.moveTo(size.width * 0.62, size.height * 0.5);
     path.quadraticBezierTo(size.width * 0.74, size.height * 0.8, size.width * 0.73, size.height);
     path.quadraticBezierTo(size.width * 0.67, size.height * 0.85, size.width * 0.59, size.height * 0.88);
     path.close();
 
-    paint.color = color;
+    paint.color = lightenedColor;
     canvas.drawShadow(path, Colors.black, 5, true);
     canvas.drawPath(path, paint);
 
@@ -49,11 +52,10 @@ class _RocketPainter extends CustomPainter {
     path.quadraticBezierTo(size.width * 0.66, size.height * 0.5, size.width * 0.59, size.height * 0.2);
     path.close();
 
-    paint.color = Colors.black;
-    canvas.drawShadow(path, Colors.black, 5, true);
+    paint.color = Util.setWhitening(color, 10);
     canvas.drawPath(path, paint);
 
-    paint.color = color;
+    paint.color = lightenedColor;
     canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.45), size.width * 0.05, paint);
   }
 

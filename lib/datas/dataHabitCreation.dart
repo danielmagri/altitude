@@ -20,7 +20,7 @@ class DataHabitCreation {
   }
 
   void emptyData() {
-    indexColor = Random().nextInt(HabitColors.colors.length);
+    indexColor = Random().nextInt(AppColors.habitsColor.length);
     frequency = null;
     reminders = new List();
   }

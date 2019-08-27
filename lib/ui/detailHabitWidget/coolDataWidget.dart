@@ -42,7 +42,7 @@ class CoolDataWidget extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.normal),
                     text: DataHabitDetail().habit.daysDone.toString(),
                   ),
-                  TextSpan(text: " dias cumpridos"),
+                  TextSpan(text: " dias cumpridos no total"),
                 ],
               ),
             ),

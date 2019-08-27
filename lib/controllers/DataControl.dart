@@ -16,6 +16,11 @@ class DataControl {
 
   DataControl._internal();
 
+  /// Retorna a quantidade de hábitos registrados.
+  Future<int> getAllHabitCount() async {
+    return await DatabaseService().getAllHabitsCount();
+  }
+
   /// Retorna todos os hábitos registrados e os já feitos hoje.
   /// Ex: {0: todos_os_hábitos(Habit), 1: hábitos_feitos_hoje(DayDone)}
   Future<Map<int, List>> getAllHabits() async {
@@ -136,18 +141,16 @@ class DataControl {
     List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
-      score = await ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
+      score = await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().setDayDone(id, date);
     }else {
-      print(daysDone.length);
-      score = -await ScoreControl().calculateScore(id, frequency, daysDone.length);
+      score = -await ScoreControl.calculateScore(id, frequency, daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().deleteDayDone(id, date);
     }
-    print(score);
     return score;
   }
 }

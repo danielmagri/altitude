@@ -18,6 +18,6 @@ class DataHabitDetail {
   DataHabitDetail._internal();
 
   Color getColor() {
-    return HabitColors.colors[habit.color];
+    return AppColors.habitsColor[habit.color];
   }
 }

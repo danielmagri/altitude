@@ -60,7 +60,7 @@ class _TutorialPageState extends State<TutorialPage> {
     if (widget.showNameTab) {
       widgets.add(
         Container(
-          color: HabitColors.colors[5],
+          color: AppColors.habitsColor[5],
           child: Column(
             children: <Widget>[
               Container(
@@ -153,7 +153,7 @@ class Initial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[0],
+      color: AppColors.habitsColor[0],
       child: Column(
         children: <Widget>[
           Container(
@@ -161,7 +161,7 @@ class Initial extends StatelessWidget {
             height: 100,
             alignment: Alignment.center,
             child: Text(
-              "HÁBITOS",
+              "Bem-vindo",
               style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
             ),
           ),
@@ -183,7 +183,7 @@ class Initial extends StatelessWidget {
                     angle: 0.8,
                     child: Rocket(
                       size: const Size(200, 190),
-                      color: HabitColors.colors[0],
+                      color: AppColors.habitsColor[3],
                       state: RocketState.ON_FIRE,
                       fireForce: 1,
                     ),
@@ -242,7 +242,7 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[1],
+      color: AppColors.habitsColor[1],
       child: Column(
         children: <Widget>[
           Container(
@@ -323,7 +323,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
 
     positionYRocketAnimation = Tween<double>(
       begin: 1,
-      end: -0.55,
+      end: -0.65,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -335,8 +335,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
       ),
     );
     positionXRocketAnimation = Tween<double>(
-      begin: 0.5,
-      end: 0.2,
+      begin: 0.4,
+      end: 0.1,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -349,7 +349,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
     );
     positionYFingerAnimation = Tween<double>(
       begin: 1.7,
-      end: -0.15,
+      end: -0.25,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -361,8 +361,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
       ),
     );
     positionXFingerAnimation = Tween<double>(
-      begin: 1.9,
-      end: 1.45,
+      begin: 1.8,
+      end: 1.35,
     ).animate(
       CurvedAnimation(
         parent: _controller,
@@ -387,7 +387,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[3],
+      color: AppColors.habitsColor[3],
       child: Column(
         children: <Widget>[
           Container(
@@ -423,7 +423,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                           child: Rocket(
                             size: Size(
                                 (constraint.biggest.width * sizeRocket) + 10, constraint.biggest.width * sizeRocket),
-                            color: HabitColors.colors[3],
+                            color: AppColors.habitsColor[3],
                             state: RocketState.ON_FIRE,
                             fireForce: 1,
                           ),
@@ -509,7 +509,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: HabitColors.colors[4],
+      color: AppColors.habitsColor[4],
       child: Column(
         children: <Widget>[
           Container(
@@ -534,11 +534,11 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(50),
                     boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: Align(
-                    alignment: Alignment(0, -0.48),
+                    alignment: Alignment(0, -0.41),
                     child: Text(
                       scoreAnimation.value.toInt().toString(),
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
+                      style: TextStyle(fontSize: 47, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
                     ),
                   ),
               ),
@@ -550,7 +550,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(right: 16, left: 16),
                 child: Text(
-                  "A cada vez que você completar um hábito o seu foguete elevará de altitude, o espaço é o limite!",
+                  "A cada vez que você completar um hábito o seu foguete subirá de altitude, o espaço é o limite!",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 21),
                 ),
