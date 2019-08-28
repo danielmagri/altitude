@@ -20,23 +20,23 @@ class SkyScene extends StatelessWidget {
         Cloud(
           duration: duration,
           startPoint: 1 / 4,
-          imagePath: "assets/c1.png",
+          imagePath: "assets/cloud1.png",
         ),
         Cloud(
           duration: duration,
           startPoint: 2 / 4,
-          imagePath: "assets/c2.png",
+          imagePath: "assets/cloud2.png",
           fromRight: true,
         ),
         Cloud(
           duration: duration,
           startPoint: 3 / 4,
-          imagePath: "assets/c2.png",
+          imagePath: "assets/cloud2.png",
         ),
         Cloud(
           duration: duration,
           startPoint: 4 / 4,
-          imagePath: "assets/c1.png",
+          imagePath: "assets/cloud1.png",
           fromRight: true,
         ),
         RocketAnimated(
@@ -243,6 +243,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
                 ? Alignment.centerLeft
                 : Alignment.centerRight,
             fit: BoxFit.contain,
+            color: Color.fromARGB(255, 98, 193, 196),
           ),
         ),
       ),

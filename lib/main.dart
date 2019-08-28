@@ -639,7 +639,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   Align(
                     alignment: Alignment(-1.1, -0.9 + offsetCloud.value),
                     child: Image.asset(
-                      "assets/c1white.png",
+                      "assets/cloud1.png",
                       fit: BoxFit.contain,
                       height: 60,
                     ),
@@ -647,7 +647,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   Align(
                     alignment: Alignment(1.2, 0 + offsetCloud.value),
                     child: Image.asset(
-                      "assets/c2white.png",
+                      "assets/cloud2.png",
                       fit: BoxFit.contain,
                       height: 45,
                     ),
