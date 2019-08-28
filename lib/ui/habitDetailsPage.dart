@@ -42,7 +42,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     super.initState();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1500), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await DataPreferences().getRocketTutorial()) {
@@ -76,7 +76,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   void animateScore() {
     if (previousScore != data.habit.score) {
       _controllerScore.reset();
-      _controllerScore.forward().then((e) {
+      _controllerScore.forward().orCancel.whenComplete(() {
         previousScore = data.habit.score;
       });
     }

@@ -76,7 +76,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.initState();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1500), vsync: this);
     _controllerDragTarget = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
   }
@@ -129,7 +129,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     if (previousScore != score) {
       _controllerScore.reset();
-      _controllerScore.forward().whenComplete(() {
+      _controllerScore.forward().orCancel.whenComplete(() {
         previousScore = score;
       });
     }
