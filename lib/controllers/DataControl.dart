@@ -45,11 +45,13 @@ class DataControl {
   }
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
-  Future<bool> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
-    Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+  Future<bool> addHabit(
+      Habit habit, dynamic frequency, List<Reminder> reminders) async {
+    Map response =
+        await DatabaseService().addHabit(habit, frequency, reminders);
     habit.id = response[0];
     for (Reminder reminder in response[1]) {
-      await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
+      await NotificationControl().addNotification(reminder, habit);
     }
 
     return true;
@@ -77,14 +79,16 @@ class DataControl {
   }
 
   /// Adiciona os alarmes do hábito.
-  Future<bool> addReminders(Habit habit, List<Reminder> reminders) async {
-    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
+  Future<List<Reminder>> addReminders(
+      Habit habit, List<Reminder> reminders) async {
+    List<Reminder> remindersAdded =
+        await DatabaseService().addReminders(habit.id, reminders);
 
     for (Reminder reminder in remindersAdded) {
-      await NotificationControl().addNotification(reminder.id, reminder.hour, reminder.minute, reminder.weekday, habit);
+      await NotificationControl().addNotification(reminder, habit);
     }
 
-    return true;
+    return remindersAdded;
   }
 
   /// Deleta os alarmes do hábito.
@@ -101,7 +105,8 @@ class DataControl {
   }
 
   /// Atualiza a frequência do hábito.
-  Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
+  Future<bool> updateFrequency(
+      int id, dynamic frequency, Type typeOldFreq) async {
     return await DatabaseService().updateFrequency(id, frequency, typeOldFreq);
   }
 
@@ -113,13 +118,17 @@ class DataControl {
     bool after = false;
 
     for (int i = 0; i < list.length; i++) {
-      if (i - 1 >= 0 && list[i].dateDone.difference(list[i - 1].dateDone) == Duration(days: 1)) {
+      if (i - 1 >= 0 &&
+          list[i].dateDone.difference(list[i - 1].dateDone) ==
+              Duration(days: 1)) {
         before = true;
       } else {
         before = false;
       }
 
-      if (i + 1 < list.length && list[i + 1].dateDone.difference(list[i].dateDone) == Duration(days: 1)) {
+      if (i + 1 < list.length &&
+          list[i + 1].dateDone.difference(list[i].dateDone) ==
+              Duration(days: 1)) {
         after = true;
       } else {
         after = false;
@@ -131,22 +140,26 @@ class DataControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, {dynamic freq, bool add = true}) async {
+  Future<int> setHabitDoneAndScore(DateTime date, int id,
+      {dynamic freq, bool add = true}) async {
     dynamic frequency = freq != null ? freq : await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.add(Duration(days: 6 - weekDay));
     int score;
 
-    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> daysDone = await DatabaseService()
+        .getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
-      score = await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
+      score =
+          await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().setDayDone(id, date);
-    }else {
-      score = -await ScoreControl.calculateScore(id, frequency, daysDone.length);
+    } else {
+      score =
+          -await ScoreControl.calculateScore(id, frequency, daysDone.length);
       await DataPreferences().setScore(score);
       await DatabaseService().updateScore(id, score);
       await DatabaseService().deleteDayDone(id, date);

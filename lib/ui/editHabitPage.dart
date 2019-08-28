@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
 import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
-import 'package:habit/ui/addHabitWidgets/alarmWidget.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -33,7 +31,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
 
     DataHabitCreation().indexColor = DataHabitDetail().habit.color;
     DataHabitCreation().frequency = DataHabitDetail().frequency;
-    DataHabitCreation().reminders = DataHabitDetail().reminders;
 
     habitController.text = DataHabitDetail().habit.habit;
   }
@@ -77,16 +74,10 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
             .updateFrequency(editedHabit.id, DataHabitCreation().frequency, DataHabitDetail().frequency.runtimeType);
       }
 
-      if (!compareReminders(DataHabitDetail().reminders, DataHabitCreation().reminders)) {
-        await DataControl().deleteReminders(DataHabitDetail().habit.id, DataHabitDetail().reminders);
-        await DataControl().addReminders(editedHabit, DataHabitCreation().reminders);
-      }
-
       Loading.closeLoading(context);
 
       DataHabitDetail().habit = editedHabit;
       DataHabitDetail().frequency = DataHabitCreation().frequency;
-      DataHabitDetail().reminders = DataHabitCreation().reminders;
       Navigator.of(context).pop();
       showToast("O hábito foi editado!");
     }
@@ -118,21 +109,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
       }
     }
     return false;
-  }
-
-  bool compareReminders(List<Reminder> r1, List<Reminder> r2) {
-    if (r1.length != r2.length) return false;
-    if (r1.length == 0 && r2.length == 0) return true;
-
-    if (r1[0].hour != r2[0].hour || r1[0].minute != r2[0].minute) return false;
-
-    for (Reminder reminder in r1) {
-      if (r2.firstWhere((r) => r.weekday == reminder.weekday, orElse: () => null) == null) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   @override
@@ -211,9 +187,6 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               keyboard: _keyboardVisibility,
             ),
             FrequencyWidget(
-              color: AppColors.habitsColor[DataHabitCreation().indexColor],
-            ),
-            AlarmWidget(
               color: AppColors.habitsColor[DataHabitCreation().indexColor],
             ),
             Container(

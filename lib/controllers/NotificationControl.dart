@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Reminder.dart';
 
 class NotificationControl {
   static final NotificationControl _singleton = new NotificationControl._internal();
@@ -26,9 +27,10 @@ class NotificationControl {
     }
   }
 
-  Future<void> addNotification(int id, int hour, int minute, int weekday, Habit habit) async {
-    Time time = Time(hour, minute);
-    Day day = Day(weekday);
+  Future<void> addNotification(Reminder reminder, Habit habit) async {
+    Time time = Time(reminder.hour, reminder.minute);
+    Day day = Day(reminder.weekday);
+    String title = reminder.type == 0 ? habit.habit : habit.cue;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       "1", // channel id
       "Aviso do hábito", // channel name
@@ -41,7 +43,7 @@ class NotificationControl {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
-        id, habit.habit, "", day, time, platformChannelSpecifics,
+        reminder.id, title, "", day, time, platformChannelSpecifics,
         payload: habit.id.toString());
   }
 

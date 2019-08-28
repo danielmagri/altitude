@@ -9,7 +9,7 @@ class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
 
   static final _databaseName = "habitus.db";
-  static final _databaseVersion = 3;
+  static final _databaseVersion = 4;
 
   static Database _database;
 
@@ -55,7 +55,8 @@ class DatabaseService {
       });
 
       await db.transaction((txn) async {
-        var result = await txn.rawQuery('SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'freq_repeating\';');
+        var result = await txn.rawQuery(
+            'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'freq_repeating\';');
 
         if (result != null && result.isNotEmpty) {
           await txn.rawInsert('''INSERT INTO freq_weekly(days_time, habit_id)
@@ -84,6 +85,11 @@ class DatabaseService {
 
         await txn.execute('DROP TABLE _day_done_old;');
       });
+    }
+
+    if (oldVersion < 4) {
+      await db
+          .execute('ALTER TABLE reminder ADD type INTEGER NOT NULL DEFAULT 0;');
     }
   }
 
@@ -137,6 +143,7 @@ class DatabaseService {
     await db.execute('''
           CREATE TABLE reminder (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            type INTEGER NOT NULL DEFAULT 0,
             hour INTEGER NOT NULL,
             minute INTEGER NOT NULL,
             weekday INTEGER NOT NULL,
@@ -351,14 +358,17 @@ class DatabaseService {
 
     for (Reminder reminder in reminders) {
       int reminderId = await db.rawInsert(
-          '''INSERT INTO reminder (hour, minute, weekday, habit_id) VALUES (${reminder.hour},
-                                                                                               ${reminder.minute},
-                                                                                               ${reminder.weekday},
-                                                                                               $habitId);''');
+          '''INSERT INTO reminder (hour, minute, weekday, type, habit_id) VALUES (${reminder.hour},
+                                                                                  ${reminder.minute},
+                                                                                  ${reminder.weekday},
+                                                                                  ${reminder.type},
+                                                                                  $habitId);''');
       remindersAdded.add(new Reminder(
           id: reminderId,
           hour: reminder.hour,
           minute: reminder.minute,
+          type: reminder.type,
+          habitId: reminder.habitId,
           weekday: reminder.weekday));
     }
 
