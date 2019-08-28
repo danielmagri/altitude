@@ -36,10 +36,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/c1.png
-    - assets/c2.png
-    - assets/c1white.png
-    - assets/c2white.png
+    - assets/cloud1.png
+    - assets/cloud2.png
     - assets/finger.png
     - assets/createHabit.png
     - assets/completeHabit.png

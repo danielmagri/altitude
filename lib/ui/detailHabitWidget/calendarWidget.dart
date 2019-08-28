@@ -67,7 +67,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           DataHabitDetail()
               .daysDone
               .putIfAbsent(day, () => [yesterday, tomorrow]);
-          print(tomorrow);
           if (yesterday) {
             DataHabitDetail().daysDone.update(
                 day.subtract(Duration(days: 1)), (old) => [old[0], true]);
