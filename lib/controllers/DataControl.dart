@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
 import 'package:habit/services/Database.dart';
+import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/objects/Habit.dart';
+import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/utils/Util.dart';
 
 class DataControl {
   static final DataControl _singleton = new DataControl._internal();
@@ -54,6 +57,12 @@ class DataControl {
       await NotificationControl().addNotification(reminder, habit);
     }
 
+    FireAnalytics().sendNewHabit(
+        habit.habit,
+        habit.color,
+        frequency.runtimeType == FreqDayWeek ? 0 : 1,
+        Util.getTimesDays(frequency),
+        reminders.length != 0 ? true : false);
     return true;
   }
 
@@ -63,7 +72,12 @@ class DataControl {
   }
 
   /// Atualiza o gatilho do hábito.
-  Future<bool> updateCue(int id, String cue) async {
+  Future<bool> updateCue(int id, String habit, String cue) async {
+    if (cue == null) {
+      FireAnalytics().sendRemoveCue(habit);
+    } else {
+      FireAnalytics().sendSetCue(habit, cue);
+    }
     return await DatabaseService().updateCue(id, cue);
   }
 
@@ -164,6 +178,10 @@ class DataControl {
       await DatabaseService().updateScore(id, score);
       await DatabaseService().deleteDayDone(id, date);
     }
+
+    FireAnalytics().sendDoneHabit(
+        "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}");
+
     return score;
   }
 }

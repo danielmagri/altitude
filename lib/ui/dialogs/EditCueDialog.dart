@@ -17,7 +17,8 @@ class EditCueDialog extends StatefulWidget {
 }
 
 class _EditCueDialogState extends State<EditCueDialog> {
-  KeyboardVisibilityNotification _keyboardVisibilityNotification = new KeyboardVisibilityNotification();
+  KeyboardVisibilityNotification _keyboardVisibilityNotification =
+      new KeyboardVisibilityNotification();
   TapGestureRecognizer _tapGestureRecognizer = new TapGestureRecognizer();
   ScrollController _scrollController = new ScrollController();
   TextEditingController _controller = new TextEditingController();
@@ -40,7 +41,10 @@ class _EditCueDialogState extends State<EditCueDialog> {
     _keyboardVisibilityNotification.addNewListener(
       onChange: (bool visible) {
         if (visible) {
-          _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut);
         }
       },
     );
@@ -89,7 +93,8 @@ class _EditCueDialogState extends State<EditCueDialog> {
     String result = Validate.cueTextValidate(_controller.text);
 
     if (result == null) {
-      await DataControl().updateCue(DataHabitDetail().habit.id, _controller.text);
+      await DataControl().updateCue(DataHabitDetail().habit.id,
+          DataHabitDetail().habit.habit, _controller.text);
       DataHabitDetail().habit.cue = _controller.text;
       widget.closeBottomSheet();
     } else {
@@ -98,7 +103,8 @@ class _EditCueDialogState extends State<EditCueDialog> {
   }
 
   void _remove() async {
-    await DataControl().updateCue(DataHabitDetail().habit.id, null);
+    await DataControl().updateCue(
+        DataHabitDetail().habit.id, DataHabitDetail().habit.habit, null);
     DataHabitDetail().habit.cue = null;
     widget.closeBottomSheet();
   }
@@ -107,34 +113,43 @@ class _EditCueDialogState extends State<EditCueDialog> {
     if (showAll) {
       return [
         TextSpan(
-          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+          text:
+              "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
+          style: TextStyle(
+              color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
-          text: "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
+          text:
+              "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
           style: TextStyle(color: Colors.black, fontSize: 17.0, height: 1.2),
         ),
         TextSpan(
           text:
-          " Por exemplo ao deixar sua roupa de corrida do lado da cama pode ser uma boa forma de iniciar seu hábito de correr de manhã.",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+              " Por exemplo ao deixar sua roupa de corrida do lado da cama pode ser uma boa forma de iniciar seu hábito de correr de manhã.",
+          style: TextStyle(
+              color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text:
-          "\n\n  Qual seria um gatilho (ação) a ser tomado para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
+              "\n\n  Qual seria um gatilho (ação) a ser tomado para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
           style: TextStyle(color: Colors.black, fontSize: 17.0),
         ),
       ];
-    }else {
+    } else {
       return [
         TextSpan(
-          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+          text:
+              "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
+          style: TextStyle(
+              color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text: "Continuar lendo...",
           recognizer: _tapGestureRecognizer,
-          style: TextStyle(color: Colors.black, fontSize: 18.0, decoration: TextDecoration.underline),
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 18.0,
+              decoration: TextDecoration.underline),
         ),
       ];
     }
@@ -151,19 +166,26 @@ class _EditCueDialogState extends State<EditCueDialog> {
           Container(
             width: 40,
             height: 10,
-            decoration: BoxDecoration(color: Colors.grey[350], borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(
+                color: Colors.grey[350],
+                borderRadius: BorderRadius.circular(20)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 12, bottom: 4),
             height: 30,
             child: Text(
               "Gatilho",
-              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: DataHabitDetail().getColor()),
+              style: TextStyle(
+                  fontSize: 21.0,
+                  fontWeight: FontWeight.bold,
+                  color: DataHabitDetail().getColor()),
             ),
           ),
           RichText(
             textAlign: TextAlign.justify,
-            text: TextSpan(children: _texts(),),
+            text: TextSpan(
+              children: _texts(),
+            ),
           ),
           Container(
             height: (MediaQuery.of(context).size.height * 0.8) - 140,
@@ -181,7 +203,9 @@ class _EditCueDialogState extends State<EditCueDialog> {
                   style: TextStyle(fontSize: 19),
                   cursorColor: DataHabitDetail().getColor(),
                   decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: DataHabitDetail().getColor())),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: DataHabitDetail().getColor())),
                       hintText: "Escreva aqui seu gatilho",
                       hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                 ),
@@ -195,7 +219,9 @@ class _EditCueDialogState extends State<EditCueDialog> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  padding: _suggestion.length != 0 ? EdgeInsets.only(top: 12, bottom: 8) : EdgeInsets.all(0),
+                  padding: _suggestion.length != 0
+                      ? EdgeInsets.only(top: 12, bottom: 8)
+                      : EdgeInsets.all(0),
                   itemCount: _suggestion.length < 3 ? _suggestion.length : 3,
                   itemBuilder: (context, position) {
                     return GestureDetector(
@@ -208,7 +234,8 @@ class _EditCueDialogState extends State<EditCueDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           _suggestion[position],
-                          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
+                          style: TextStyle(
+                              fontSize: 16.0, fontWeight: FontWeight.w300),
                         ),
                       ),
                     );
@@ -219,24 +246,31 @@ class _EditCueDialogState extends State<EditCueDialog> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    DataHabitDetail().habit.cue != null ? FlatButton(
-                      onPressed: _remove,
-                      child: Text(
-                        "Remover",
-                        style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
-                      ),
-                    ) : SizedBox(),
+                    DataHabitDetail().habit.cue != null
+                        ? FlatButton(
+                            onPressed: _remove,
+                            child: Text(
+                              "Remover",
+                              style: TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        : SizedBox(),
                     FlatButton(
                       onPressed: _validateAndSave,
                       child: Text(
                         "Salvar",
-                        style:
-                            TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: DataHabitDetail().getColor()),
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            color: DataHabitDetail().getColor()),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 8,),
+                SizedBox(
+                  height: 8,
+                ),
               ],
             ),
           ),

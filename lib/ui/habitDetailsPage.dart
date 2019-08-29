@@ -19,6 +19,7 @@ import 'package:habit/utils/Util.dart';
 import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
+import 'package:habit/services/FireAnalytics.dart';
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage({Key key}) : super(key: key);
@@ -145,6 +146,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 
   void openBottomSheet(int index) {
     if (index == 0) {
+      FireAnalytics().sendReadCue();
       setState(() {
         _panelIndex = 0;
       });
