@@ -16,6 +16,7 @@ import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/LevelControl.dart';
 import 'package:habit/ui/dialogs/newLevelDialog.dart';
 import 'package:habit/ui/allLevelsPage.dart';
+import 'package:habit/services/FireAnalytics.dart';
 
 void main() async {
   SystemChrome.setPreferredOrientations(
@@ -105,6 +106,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
     int newLevel = LevelControl.getLevel(score);
     if (newLevel > await DataPreferences().getLevel()) {
+      FireAnalytics().sendNextLevel(score);
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           transitionDuration: Duration(milliseconds: 300),

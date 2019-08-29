@@ -4,6 +4,7 @@ import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/services/FireAnalytics.dart';
 
 class EditAlarmDialog extends StatefulWidget {
   EditAlarmDialog({Key key, @required this.closeBottomSheet}) : super(key: key);
@@ -64,6 +65,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
       }
 
       List<Reminder> reminders = new List();
+      String days = "";
       for (int i = 0; i < 7; i++) {
         if (_weekdayStatus[i]) {
           reminders.add(new Reminder(
@@ -72,12 +74,17 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
               minute: _temporaryTime.minute,
               weekday: i + 1,
               type: _reminderType));
+          days += _weekdayText[i];
+        } else {
+          days += "-";
         }
       }
 
       DataHabitDetail().reminders =
           await DataControl().addReminders(DataHabitDetail().habit, reminders);
 
+      FireAnalytics().sendSetAlarm(DataHabitDetail().habit.habit, _reminderType,
+          _temporaryTime.hour, _temporaryTime.minute, days);
       showToast("Alarme salvo");
       Loading.closeLoading(context);
       widget.closeBottomSheet();
@@ -92,6 +99,8 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
         .then((status) {
       Loading.closeLoading(context);
       DataHabitDetail().reminders = new List();
+
+      FireAnalytics().sendRemoveAlarm(DataHabitDetail().habit.habit);
       showToast("Alarme removido");
       widget.closeBottomSheet();
     });

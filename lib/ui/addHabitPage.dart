@@ -21,7 +21,8 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> {
-  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  KeyboardVisibilityNotification _keyboardVisibility =
+      new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
 
@@ -57,7 +58,10 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
       Loading.showLoading(context);
 
-      DataControl().addHabit(habit, DataHabitCreation().frequency, DataHabitCreation().reminders).then((result) {
+      DataControl()
+          .addHabit(habit, DataHabitCreation().frequency,
+              DataHabitCreation().reminders)
+          .then((result) {
         Util.goDetailsPage(context, habit.id, pushReplacement: true);
         showToast("O hábito foi criado com sucesso!");
       });
@@ -82,7 +86,8 @@ class _AddHabitPageState extends State<AddHabitPage> {
                   Spacer(),
                   Text(
                     "NOVO HÁBITO",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   SizedBox(
@@ -119,13 +124,16 @@ class _AddHabitPageState extends State<AddHabitPage> {
               margin: const EdgeInsets.only(top: 20, bottom: 28),
               child: RaisedButton(
                 color: AppColors.habitsColor[DataHabitCreation().indexColor],
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(20.0)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,
                 onPressed: _createHabitTap,
                 child: const Text(
                   "CRIAR",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
