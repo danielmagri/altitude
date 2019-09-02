@@ -16,6 +16,7 @@ import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/LevelControl.dart';
 import 'package:habit/ui/dialogs/newLevelDialog.dart';
 import 'package:habit/ui/allLevelsPage.dart';
+import 'package:habit/services/FireAnalytics.dart';
 
 void main() async {
   SystemChrome.setPreferredOrientations(
@@ -76,7 +77,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     super.initState();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1500), vsync: this);
     _controllerDragTarget = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
   }
@@ -105,6 +106,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
     int newLevel = LevelControl.getLevel(score);
     if (newLevel > await DataPreferences().getLevel()) {
+      FireAnalytics().sendNextLevel(score);
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           transitionDuration: Duration(milliseconds: 300),
@@ -129,7 +131,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     if (previousScore != score) {
       _controllerScore.reset();
-      _controllerScore.forward().whenComplete(() {
+      _controllerScore.forward().orCancel.whenComplete(() {
         previousScore = score;
       });
     }
@@ -639,7 +641,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   Align(
                     alignment: Alignment(-1.1, -0.9 + offsetCloud.value),
                     child: Image.asset(
-                      "assets/c1white.png",
+                      "assets/cloud1.png",
                       fit: BoxFit.contain,
                       height: 60,
                     ),
@@ -647,7 +649,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   Align(
                     alignment: Alignment(1.2, 0 + offsetCloud.value),
                     child: Image.asset(
-                      "assets/c2white.png",
+                      "assets/cloud2.png",
                       fit: BoxFit.contain,
                       height: 45,
                     ),

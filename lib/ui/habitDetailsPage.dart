@@ -11,12 +11,15 @@ import 'package:habit/ui/detailHabitWidget/cueWidget.dart';
 import 'package:habit/ui/detailHabitWidget/coolDataWidget.dart';
 import 'package:habit/ui/detailHabitWidget/calendarWidget.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/ui/dialogs/editCueDialog.dart';
+import 'package:habit/ui/dialogs/EditCueDialog.dart';
+import 'package:habit/ui/dialogs/EditAlarmDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
-import 'package:habit/ui/dialogs/tutorials/HabitDetailsFirstTime.dart';
+import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
+import 'package:habit/services/FireAnalytics.dart';
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage({Key key}) : super(key: key);
@@ -40,7 +43,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     super.initState();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
+        duration: const Duration(milliseconds: 1500), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await DataPreferences().getRocketTutorial()) {
@@ -74,7 +77,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   void animateScore() {
     if (previousScore != data.habit.score) {
       _controllerScore.reset();
-      _controllerScore.forward().then((e) {
+      _controllerScore.forward().orCancel.whenComplete(() {
         previousScore = data.habit.score;
       });
     }
@@ -143,8 +146,14 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 
   void openBottomSheet(int index) {
     if (index == 0) {
+      FireAnalytics().sendReadCue();
       setState(() {
         _panelIndex = 0;
+      });
+      _panelController.open();
+    } else if (index == 1) {
+      setState(() {
+        _panelIndex = 1;
       });
       _panelController.open();
     } else {
@@ -162,6 +171,10 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   Widget _bottomSheetBuilder() {
     if (_panelIndex == 0) {
       return EditCueDialog(
+        closeBottomSheet: closeBottomSheet,
+      );
+    } else if (_panelIndex == 1) {
+      return EditAlarmDialog(
         closeBottomSheet: closeBottomSheet,
       );
     } else {
@@ -241,18 +254,23 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       children: [
                         BackButton(color: data.getColor()),
                         Spacer(),
-                        SizedBox(
-                          width: 8,
+                        IconButtonStatus(
+                          status: data.reminders.length != 0 ? true : false,
+                          color: data.getColor(),
+                          icon: Icon(Icons.alarm,
+                              size: 25, color: data.getColor()),
+                          onPressed: () => openBottomSheet(1),
                         ),
                         IconButton(
-                            icon: Icon(Icons.edit,
-                                size: 30, color: data.getColor()),
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (_) {
-                                return EditHabitPage();
-                              }));
-                            }),
+                          icon: Icon(Icons.edit,
+                              size: 25, color: data.getColor()),
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (_) {
+                              return EditHabitPage();
+                            }));
+                          },
+                        ),
                       ]),
                 ),
                 HeaderWidget(

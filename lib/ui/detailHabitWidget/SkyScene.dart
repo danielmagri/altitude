@@ -4,7 +4,7 @@ import 'package:habit/ui/widgets/generic/Rocket.dart';
 
 class SkyScene extends StatelessWidget {
   SkyScene({Key key, this.size, @required this.color, this.force = 0})
-      : duration = 2000 - (961 * force).toInt(),
+      : duration = 2000 - (900 * force).toInt(),
         super(key: key);
 
   final Size size;
@@ -20,32 +20,105 @@ class SkyScene extends StatelessWidget {
         Cloud(
           duration: duration,
           startPoint: 1 / 4,
-          imagePath: "assets/c1.png",
+          imagePath: "assets/cloud1.png",
         ),
         Cloud(
           duration: duration,
           startPoint: 2 / 4,
-          imagePath: "assets/c2.png",
+          imagePath: "assets/cloud2.png",
           fromRight: true,
         ),
         Cloud(
           duration: duration,
           startPoint: 3 / 4,
-          imagePath: "assets/c2.png",
+          imagePath: "assets/cloud2.png",
         ),
         Cloud(
           duration: duration,
           startPoint: 4 / 4,
-          imagePath: "assets/c1.png",
+          imagePath: "assets/cloud1.png",
           fromRight: true,
         ),
-        Rocket(
+        RocketAnimated(
           size: size,
           color: color,
-          fireForce: force,
-          state: RocketState.ON_FIRE,
-        )
+          force: force,
+          duration: duration,
+        ),
       ],
+    );
+  }
+}
+
+class RocketAnimated extends StatefulWidget {
+  RocketAnimated(
+      {Key key,
+      @required this.size,
+      @required this.color,
+      @required this.force,
+      @required this.duration})
+      : super(key: key);
+
+  final Size size;
+  final Color color;
+  final double force;
+  final int duration;
+
+  @override
+  _RocketAnimatedState createState() => _RocketAnimatedState();
+}
+
+class _RocketAnimatedState extends State<RocketAnimated>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+        duration: Duration(milliseconds: widget.duration - 400),
+        vsync: this,
+        lowerBound: 2 * pi,
+        upperBound: 9 * pi);
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(RocketAnimated oldWidget) {
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = Duration(milliseconds: widget.duration);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _controller.reset();
+        _controller.forward();
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: Transform.rotate(
+          angle: sin(_controller.value) / _controller.value,
+          child: Rocket(
+            size: widget.size,
+            color: widget.color,
+            fireForce: widget.force,
+            state: RocketState.ON_FIRE,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -139,6 +212,15 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
   }
 
   @override
+  void didUpdateWidget(Cloud oldWidget) {
+    if (oldWidget.duration != widget.duration) {
+      _controller.duration = Duration(milliseconds: widget.duration);
+      _controller.repeat();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -161,6 +243,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
                 ? Alignment.centerLeft
                 : Alignment.centerRight,
             fit: BoxFit.contain,
+            color: Color.fromARGB(255, 98, 193, 196),
           ),
         ),
       ),
