@@ -204,12 +204,12 @@ class _AlarmWidgetState extends State<AlarmWidget> {
         if (_chosen == 0) {
           DataHabitCreation()
               .reminders
-              .add(new Reminder(hour: _temporaryTime.hour, minute: _temporaryTime.minute, weekday: i + 1));
+              .add(new Reminder(hour: _temporaryTime.hour, minute: _temporaryTime.minute, weekday: i + 1, type: 0));
         } else {
           if (_daysSelected[i]) {
             DataHabitCreation()
                 .reminders
-                .add(new Reminder(hour: _temporaryTime.hour, minute: _temporaryTime.minute, weekday: i + 1));
+                .add(new Reminder(hour: _temporaryTime.hour, minute: _temporaryTime.minute, weekday: i + 1, type: 0));
           }
         }
       }
