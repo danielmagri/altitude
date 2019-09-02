@@ -82,8 +82,7 @@ class DataControl {
   }
 
   /// Deleta o hábito.
-  Future<bool> deleteHabit(int id, int score) async {
-    await DataPreferences().setScore(-score);
+  Future<bool> deleteHabit(int id) async {
     return await DatabaseService().deleteHabit(id);
   }
 
