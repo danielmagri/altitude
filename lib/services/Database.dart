@@ -491,6 +491,8 @@ class DatabaseService {
         '''DELETE FROM day_done WHERE date_done=\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\'
                                                      AND habit_id=$id;''');
 
+    await db.rawInsert('UPDATE habit SET days_done=days_done-1 WHERE id=$id;');
+
     return true;
   }
 }
