@@ -149,7 +149,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                               return WidgetDialog(
                                 title: "Deletar",
                                 body:
-                                    "Você deseja deletar para sempre o hábito?\n(Todo o progresso dele será perdido)",
+                                    "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
+                                subBody:
+                                    "(Todo o progresso dele será perdido e a quilômetragem perdida)",
                                 action: <Widget>[
                                   new FlatButton(
                                     child: new Text(
@@ -159,7 +161,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                                     onPressed: () {
                                       DataControl()
                                           .deleteHabit(
-                                              DataHabitDetail().habit.id)
+                                              DataHabitDetail().habit.id,
+                                              DataHabitDetail().habit.score)
                                           .then((status) {
                                         Navigator.of(context)
                                             .popUntil((route) => route.isFirst);
