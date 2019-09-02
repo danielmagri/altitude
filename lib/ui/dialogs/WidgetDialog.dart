@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class WidgetDialog extends StatelessWidget {
-  WidgetDialog({Key key, this.title, this.body, this.action}) : super(key: key);
+  WidgetDialog({Key key, this.title, this.body, this.subBody, this.action}) : super(key: key);
 
   final String title;
   final String body;
+  final String subBody;
   final List<Widget> action;
 
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
         decoration: new BoxDecoration(
           color: Colors.white,
@@ -30,6 +31,7 @@ class WidgetDialog extends StatelessWidget {
             children: <Widget>[
               Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -37,8 +39,18 @@ class WidgetDialog extends StatelessWidget {
               ),
               Text(
                 body,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.w300, height: 1.1),
+                    fontSize: 18, height: 1.1),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Text(
+                subBody,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 15, fontWeight: FontWeight.w300, height: 1.1),
               ),
               SizedBox(
                 height: 18,
