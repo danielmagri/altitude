@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:vibration/vibration.dart';
 
 class CalendarWidget extends StatefulWidget {
-  CalendarWidget({Key key, this.updateScreen}) : super(key: key);
+  CalendarWidget({Key key, this.updateScreen, this.showSuggestionsDialog}) : super(key: key);
 
   final Function updateScreen;
+  final Function showSuggestionsDialog;
 
   @override
   _CalendarWidgetState createState() => _CalendarWidgetState();
@@ -194,6 +196,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 setState(() {
                   _editing = !_editing;
                 });
+
+                if (!_editing) {
+                  widget.showSuggestionsDialog(suggestionsType.SET_ALARM);
+                }
               },
               child: Text(
                 _editing ? "Editando" : "Editar",

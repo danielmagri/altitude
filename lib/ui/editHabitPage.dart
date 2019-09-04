@@ -12,7 +12,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/ui/dialogs/WidgetDialog.dart';
+import 'package:habit/ui/dialogs/BaseDialog.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key}) : super(key: key);
@@ -40,6 +40,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   @override
   void dispose() {
     habitController.dispose();
+    _keyboardVisibility.dispose();
     super.dispose();
   }
 
@@ -146,7 +147,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return WidgetDialog(
+                              return BaseDialog(
                                 title: "Deletar",
                                 body:
                                     "Você estava indo tão bem... Tem certeza que quer deletá-lo?",

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class WidgetDialog extends StatelessWidget {
-  WidgetDialog({Key key, this.title, this.body, this.subBody, this.action}) : super(key: key);
+class BaseDialog extends StatelessWidget {
+  BaseDialog({Key key, this.title, this.body, this.subBody, this.action}) : super(key: key);
 
   final String title;
   final String body;

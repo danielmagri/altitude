@@ -17,9 +17,12 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
 import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
+import 'package:habit/ui/dialogs/tutorials/AlarmPresentation.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
 import 'package:habit/services/FireAnalytics.dart';
+
+enum suggestionsType { SET_ALARM }
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage({Key key}) : super(key: key);
@@ -31,6 +34,7 @@ class HabitDetailsPage extends StatefulWidget {
 class _HabitDetailsPageState extends State<HabitDetailsPage>
     with TickerProviderStateMixin {
   PanelController _panelController = new PanelController();
+  ScrollController _scrollController = new ScrollController();
   AnimationController _controllerScore;
 
   DataHabitDetail data = DataHabitDetail();
@@ -47,21 +51,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await DataPreferences().getRocketTutorial()) {
-        Navigator.of(context).push(new PageRouteBuilder(
-            opaque: false,
-            transitionDuration: Duration(milliseconds: 300),
-            transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) =>
-                new FadeTransition(
-                    opacity: new CurvedAnimation(
-                        parent: animation, curve: Curves.easeOut),
-                    child: child),
-            pageBuilder: (BuildContext context, _, __) {
-              return HabitDetailsFirstTime();
-            }));
-        await DataPreferences().setRocketTutorial(true);
+        Util.dialogNavigator(context, RocketPresentation());
+        DataPreferences().setRocketTutorial(true);
       }
     });
 
@@ -71,7 +62,20 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   @override
   void dispose() {
     _controllerScore.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void showSuggestionsDialog(suggestionsType suggestion) async {
+    if (suggestion == suggestionsType.SET_ALARM) {
+      int timesDisplayed = await DataPreferences().getAlarmTutorial();
+      if (timesDisplayed < 2 && DataHabitDetail().reminders.length == 0) {
+        Util.dialogNavigator(context, AlarmPresentation());
+        _scrollController.animateTo(
+            0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        DataPreferences().setAlarmTutorial();
+      }
+    }
   }
 
   void animateScore() {
@@ -244,6 +248,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
           minHeight: 0,
           panel: _bottomSheetBuilder(),
           body: SingleChildScrollView(
+            controller: _scrollController,
             physics: BouncingScrollPhysics(),
             child: Column(
               children: <Widget>[
@@ -313,6 +318,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 ),
                 CalendarWidget(
                   updateScreen: updateScreen,
+                  showSuggestionsDialog: showSuggestionsDialog,
                 ),
                 CoolDataWidget(),
                 SizedBox(

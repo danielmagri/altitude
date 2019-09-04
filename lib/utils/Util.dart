@@ -39,6 +39,22 @@ abstract class Util {
     }
   }
 
+  static Future<dynamic> dialogNavigator(
+      BuildContext context, dynamic dialog) async {
+    return Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        transitionDuration: Duration(milliseconds: 300),
+        transitionsBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation, Widget child) =>
+            new FadeTransition(
+                opacity: new CurvedAnimation(
+                    parent: animation, curve: Curves.easeOut),
+                child: child),
+        pageBuilder: (BuildContext context, _, __) {
+          return dialog;
+        }));
+  }
+
   /// Coleta a quatidade de dias a ser feito dentro de um ciclo.
   static int getTimesDays(dynamic frequency) {
     if (frequency.runtimeType == FreqDayWeek) {
