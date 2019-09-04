@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/utils/Util.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Suggestions.dart';
@@ -72,44 +73,35 @@ class _HabitWidgetState extends State<HabitWidget> {
   }
 
   Future showTutorial() async {
-    Navigator.of(context).push(new PageRouteBuilder(
-        opaque: false,
-        transitionDuration: Duration(milliseconds: 300),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) =>
-            new FadeTransition(
-                opacity: new CurvedAnimation(
-                    parent: animation, curve: Curves.easeOut),
-                child: child),
-        pageBuilder: (BuildContext context, _, __) {
-          return TutorialDialog(
-            hero: "helpHabit",
-            texts: [
-              TextSpan(
-                text:
-                    "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano e depois com que frequência deseja realizá-lo.",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                    height: 1.2),
-              ),
-              TextSpan(
-                text: "\n\n  O segredo para conseguir construir um hábito é ",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w300,
-                    height: 1.2),
-              ),
-              TextSpan(
-                text: "criar um ritual e sempre fazer a mesma coisa.",
-                style:
-                    TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
-              ),
-            ],
-          );
-        }));
+    Util.dialogNavigator(
+        context,
+        TutorialDialog(
+          hero: "helpHabit",
+          texts: [
+            TextSpan(
+              text:
+                  "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano e depois com que frequência deseja realizá-lo.",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w300,
+                  height: 1.2),
+            ),
+            TextSpan(
+              text: "\n\n  O segredo para conseguir construir um hábito é ",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w300,
+                  height: 1.2),
+            ),
+            TextSpan(
+              text: "criar um ritual e sempre fazer a mesma coisa.",
+              style:
+                  TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+            ),
+          ],
+        ));
   }
 
   List getSuggestions() {
@@ -188,8 +180,7 @@ class _HabitWidgetState extends State<HabitWidget> {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   bottomLeft: Radius.circular(20)),
-              color:
-                  validated ? widget.color : AppColors.disableHabitCreation,
+              color: validated ? widget.color : AppColors.disableHabitCreation,
               boxShadow: <BoxShadow>[
                 BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))
               ],
