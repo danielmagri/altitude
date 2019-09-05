@@ -19,7 +19,6 @@ import 'package:habit/utils/Util.dart';
 import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/ui/dialogs/tutorials/AlarmPresentation.dart';
 import 'package:habit/controllers/DataPreferences.dart';
-import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
 import 'package:habit/services/FireAnalytics.dart';
 
 enum suggestionsType { SET_ALARM }
@@ -259,10 +258,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                       children: [
                         BackButton(color: data.getColor()),
                         Spacer(),
-                        IconButtonStatus(
-                          status: data.reminders.length != 0 ? true : false,
-                          color: data.getColor(),
-                          icon: Icon(Icons.alarm,
+                        IconButton(
+                          icon: Icon(data.reminders.length != 0 ? Icons.alarm_on : Icons.alarm,
                               size: 25, color: data.getColor()),
                           onPressed: () => openBottomSheet(1),
                         ),
