@@ -9,7 +9,7 @@ class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
 
   static final _databaseName = "habitus.db";
-  static final _databaseVersion = 4;
+  static final _databaseVersion = 5;
 
   static Database _database;
 
@@ -87,9 +87,32 @@ class DatabaseService {
       });
     }
 
+    // 1.1.4
     if (oldVersion < 4) {
       await db
           .execute('ALTER TABLE reminder ADD type INTEGER NOT NULL DEFAULT 0;');
+    }
+
+    // 1.1.5
+    if (oldVersion < 5) {
+      var result =
+          await db.rawQuery('SELECT id, color, habit_text FROM habit;');
+
+      List<Habit> habits = result.isNotEmpty
+          ? result.map((c) => Habit.fromJson(c)).toList()
+          : [];
+
+      for (Habit habit in habits) {
+        result = await db.rawQuery(
+            'SELECT * FROM day_done WHERE habit_id=${habit.id} ORDER BY date_done;');
+
+        List<DayDone> list = result.isNotEmpty
+            ? result.map((c) => DayDone.fromJson(c)).toList()
+            : [];
+        int count = list.length;
+        await db.rawUpdate('''UPDATE habit SET days_done=$count
+                                           WHERE id=${habit.id};''');
+      }
     }
   }
 
@@ -165,7 +188,7 @@ class DatabaseService {
   }
 
   /// Retorna todos os hábitos registrados.
-  Future<List> getAllHabits() async {
+  Future<List<Habit>> getAllHabits() async {
     final db = await database;
     var result = await db.rawQuery('SELECT id, color, habit_text FROM habit;');
 

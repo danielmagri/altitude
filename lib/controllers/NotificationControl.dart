@@ -34,7 +34,7 @@ class NotificationControl {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       "1", // channel id
       "Aviso do hábito", // channel name
-      "Aviso para não esquecer sobre a deixa do hábito", // channel description
+      "Aviso para não esquecer sobre o hábito", // channel description
       importance: Importance.Max,
       priority: Priority.High,
       ticker: 'ticker',
