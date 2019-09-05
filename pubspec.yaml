@@ -23,9 +23,9 @@ dependencies:
   keyboard_visibility: ^0.5.2
   shared_preferences: ^0.5.2
   numberpicker: ^1.0.0
-  flutter_local_notifications: ^0.7.1+1
+  flutter_local_notifications: ^0.8.2
   vibration: ^1.2.1
-  sliding_up_panel: ^0.3.4
+  sliding_up_panel: ^0.3.5
   auto_size_text: ^2.0.2+1
   firebase_core: ^0.4.0+9
   firebase_analytics: ^5.0.1
