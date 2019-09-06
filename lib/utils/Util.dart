@@ -15,7 +15,9 @@ abstract class Util {
     Habit data = await DataControl().getHabit(id);
     List<Reminder> reminders = await DataControl().getReminders(id);
     dynamic frequency = await DataControl().getFrequency(id);
-    Map<DateTime, List> daysDone = await DataControl().getDaysDone(id);
+    Map<DateTime, List> daysDone = await DataControl().getDaysDone(id,
+        startDate: getLastDayMonthBehind(DateTime.now()),
+        endDate: DateTime.now());
 
     Loading.closeLoading(context);
     if (data != null &&
@@ -100,5 +102,12 @@ abstract class Util {
     else if (b < 0) b = 0;
 
     return Color.fromARGB(color.alpha, r, g, b);
+  }
+
+  /// Retorna o ultimo dia do mês anterior
+  static DateTime getLastDayMonthBehind(DateTime date) {
+    return new DateTime(DateTime.now().year, DateTime.now().month,
+        1)
+        .subtract(Duration(days: 1));
   }
 }

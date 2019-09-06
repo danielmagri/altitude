@@ -125,9 +125,10 @@ class DataControl {
   }
 
   /// Retorna um map com os dias feitos do hábito.
-  Future<Map<DateTime, List>> getDaysDone(int id) async {
+  Future<Map<DateTime, List>> getDaysDone(int id,
+      {DateTime startDate, DateTime endDate}) async {
     Map<DateTime, List> map = new Map();
-    List<DayDone> list = await DatabaseService().getDaysDone(id);
+    List<DayDone> list = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
     bool before = false;
     bool after = false;
 
