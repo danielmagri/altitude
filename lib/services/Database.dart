@@ -332,15 +332,26 @@ class DatabaseService {
     return list;
   }
 
+  Future<bool> checkDayDone(int id, DateTime date) async {
+    final db = await database;
+
+    var result = await db.rawQuery(
+        'SELECT * FROM day_done WHERE habit_id=$id AND date_done=\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';');
+
+    return result.isNotEmpty;
+  }
+
   /// Registra o dia feito do hábito.
   Future<bool> setDayDone(int id, DateTime date) async {
     final db = await database;
-    await db.rawInsert(
-        '''INSERT INTO day_done (date_done, habit_id) VALUES (\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\',
-                                                                                   $id);''');
+    if (!await checkDayDone(id, date)) {
+      await db.rawInsert(
+          '''INSERT INTO day_done (date_done, habit_id) VALUES (\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\',
+                                                                $id);''');
 
-    await db.rawInsert('UPDATE habit SET days_done=days_done+1 WHERE id=$id;');
-
+      await db
+          .rawInsert('UPDATE habit SET days_done=days_done+1 WHERE id=$id;');
+    }
     return true;
   }
 
