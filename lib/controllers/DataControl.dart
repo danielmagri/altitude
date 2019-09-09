@@ -82,7 +82,10 @@ class DataControl {
   }
 
   /// Deleta o hábito.
-  Future<bool> deleteHabit(int id, int score) async {
+  Future<bool> deleteHabit(int id, int score, List<Reminder> reminders) async {
+    for (Reminder reminder in reminders) {
+      await NotificationControl().removeNotification(reminder.id);
+    }
     await DataPreferences().setScore(-score);
     return await DatabaseService().deleteHabit(id);
   }

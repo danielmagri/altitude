@@ -163,7 +163,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                                       DataControl()
                                           .deleteHabit(
                                               DataHabitDetail().habit.id,
-                                              DataHabitDetail().habit.score)
+                                              DataHabitDetail().habit.score,
+                                              DataHabitDetail().reminders)
                                           .then((status) {
                                         Navigator.of(context)
                                             .popUntil((route) => route.isFirst);
