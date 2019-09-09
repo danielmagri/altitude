@@ -4,7 +4,8 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Reminder.dart';
 
 class NotificationControl {
-  static final NotificationControl _singleton = new NotificationControl._internal();
+  static final NotificationControl _singleton =
+      new NotificationControl._internal();
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -15,13 +16,16 @@ class NotificationControl {
   NotificationControl._internal() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    var initializationSettingsAndroid = AndroidInitializationSettings('ic_notification');
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('ic_notification');
     var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
   }
 
-  Future<void> onSelectNotification(String payload) async {
+  Future onSelectNotification(String payload) async {
     if (payload != null) {
       print('notification payload: ' + payload);
     }
@@ -41,7 +45,8 @@ class NotificationControl {
       color: AppColors.habitsColor[habit.color],
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
         reminder.id, title, "", day, time, platformChannelSpecifics,
         payload: habit.id.toString());
