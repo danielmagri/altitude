@@ -12,6 +12,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
+import 'package:habit/ui/dialogs/BaseDialog.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key}) : super(key: key);
@@ -21,7 +22,8 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPagePageState extends State<EditHabitPage> {
-  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
+  KeyboardVisibilityNotification _keyboardVisibility =
+      new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
 
@@ -38,6 +40,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   @override
   void dispose() {
     habitController.dispose();
+    _keyboardVisibility.dispose();
     super.dispose();
   }
 
@@ -69,9 +72,12 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         await DataControl().updateHabit(editedHabit);
       }
 
-      if (!compareFrequency(DataHabitDetail().frequency, DataHabitCreation().frequency)) {
-        await DataControl()
-            .updateFrequency(editedHabit.id, DataHabitCreation().frequency, DataHabitDetail().frequency.runtimeType);
+      if (!compareFrequency(
+          DataHabitDetail().frequency, DataHabitCreation().frequency)) {
+        await DataControl().updateFrequency(
+            editedHabit.id,
+            DataHabitCreation().frequency,
+            DataHabitDetail().frequency.runtimeType);
       }
 
       Loading.closeLoading(context);
@@ -129,7 +135,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                   Spacer(),
                   Text(
                     "EDITAR HÁBITO",
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   SizedBox(
@@ -140,21 +147,37 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: new Text("Deletar"),
-                                content: new Text(
-                                    "Você deseja deletar permanentemente o hábito?\n(Todos o progresso dele será perdido)"),
-                                actions: <Widget>[
+                              return BaseDialog(
+                                title: "Deletar",
+                                body:
+                                    "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
+                                subBody:
+                                    "(Todo o progresso dele será perdido e a quilômetragem perdida)",
+                                action: <Widget>[
                                   new FlatButton(
-                                    child: new Text("Sim"),
+                                    child: new Text(
+                                      "SIM",
+                                      style: TextStyle(fontSize: 17),
+                                    ),
                                     onPressed: () {
-                                      DataControl().deleteHabit(DataHabitDetail().habit.id, DataHabitDetail().habit.score).then((status) {
-                                        Navigator.of(context).popUntil((route) => route.isFirst);
+                                      DataControl()
+                                          .deleteHabit(
+                                              DataHabitDetail().habit.id,
+                                              DataHabitDetail().habit.score,
+                                              DataHabitDetail().reminders)
+                                          .then((status) {
+                                        Navigator.of(context)
+                                            .popUntil((route) => route.isFirst);
                                       });
                                     },
                                   ),
                                   new FlatButton(
-                                    child: new Text("Não"),
+                                    child: new Text(
+                                      "NÃO",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
@@ -193,13 +216,16 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               margin: const EdgeInsets.only(top: 20, bottom: 28),
               child: RaisedButton(
                 color: AppColors.habitsColor[DataHabitCreation().indexColor],
-                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(20.0)),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,
                 onPressed: _createHabitTap,
                 child: const Text(
                   "SALVAR",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

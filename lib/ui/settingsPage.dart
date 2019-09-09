@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/ui/HelpPage.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/tutorialPage.dart';
@@ -128,6 +129,14 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
                 return TutorialPage(showNameTab: false,);
+              }));
+            },
+          ),
+          ListTile(
+            title: Text("Ajuda"),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return HelpPage();
               }));
             },
           ),
