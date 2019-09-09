@@ -25,6 +25,7 @@ class DataPreferences {
   // Tutorials
   static const String HABIT_TUTORIAL = "HABIT_TUTORIAL";
   static const String ROCKET_ON_DETAILS_PAGE = "ROCKET_ON_DETAILS_PAGE";
+  static const String ALARM_ON_DETAILS_PAGE = "ALARM_ON_DETAILS_PAGE";
 
   Future<bool> setName(String name) async {
     SharedPreferences sf = await prefs;
@@ -79,5 +80,17 @@ class DataPreferences {
     SharedPreferences sf = await prefs;
     bool value = sf.getBool(ROCKET_ON_DETAILS_PAGE);
     return value == null ? false : value;
+  }
+
+  Future<bool> setAlarmTutorial() async {
+    SharedPreferences sf = await prefs;
+    int currentAlarm = await getAlarmTutorial();
+    return await sf.setInt(ALARM_ON_DETAILS_PAGE, 1 + currentAlarm);
+  }
+
+  Future<int> getAlarmTutorial() async {
+    SharedPreferences sf = await prefs;
+    int value = sf.getInt(ALARM_ON_DETAILS_PAGE);
+    return value == null ? 0 : value;
   }
 }

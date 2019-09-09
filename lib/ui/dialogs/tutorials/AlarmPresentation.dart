@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RocketPresentation extends StatelessWidget {
+class AlarmPresentation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,14 +11,14 @@ class RocketPresentation extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: RadialGradient(
                 colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
-                center: Alignment(-0.55, -0.6),
+                center: Alignment(0.59, -0.85),
                 stops: [0.9, 1],
-                radius: 0.42,
+                radius: 0.15,
               ),
             ),
           ),
           Align(
-            alignment: Alignment(0, 0.5),
+            alignment: Alignment(0, 0),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: RichText(
@@ -31,24 +31,19 @@ class RocketPresentation extends StatelessWidget {
                       fontFamily: "Montserrat"),
                   children: <TextSpan>[
                     TextSpan(
-                        text: "Esse é seu hábito em forma de foguete..",
+                        text: "Esqueceu de marcar como feito o hábito?",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20)),
                     TextSpan(
                         text:
-                            "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
-                    TextSpan(
-                        text:
-                        "\n\nSiga a frequência certinho para ir ainda mais longe!",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300)),
+                            "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
                   ],
                 ),
               ),
             ),
           ),
           Align(
-            alignment: const Alignment(0, 0.9),
+            alignment: const Alignment(0, 0.85),
             child: SizedBox(
               width: 150,
               child: RaisedButton(

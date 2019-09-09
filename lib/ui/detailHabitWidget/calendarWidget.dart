@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/controllers/DataControl.dart';
 import 'package:vibration/vibration.dart';
 
 class CalendarWidget extends StatefulWidget {
-  CalendarWidget({Key key, this.updateScreen}) : super(key: key);
+  CalendarWidget({Key key, this.updateScreen, this.showSuggestionsDialog})
+      : super(key: key);
 
   final Function updateScreen;
+  final Function showSuggestionsDialog;
 
   @override
   _CalendarWidgetState createState() => _CalendarWidgetState();
@@ -84,6 +87,23 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     }
   }
 
+  void _onSwipeMonth(DateTime start, DateTime end, CalendarFormat format) {
+    setState(() {
+      _loadingOpacity = 1.0;
+    });
+
+    DataControl()
+        .getDaysDone(DataHabitDetail().habit.id,
+            startDate: start.subtract(Duration(days: 1)),
+            endDate: end.add(Duration(days: 1)))
+        .then((map) {
+      setState(() {
+        _loadingOpacity = 0.0;
+        DataHabitDetail().daysDone = map;
+      });
+    });
+  }
+
   Widget _todayDayBuilder(context, date, list) {
     return Container(
       child: Text(
@@ -111,6 +131,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             availableGestures: AvailableGestures.horizontalSwipe,
             forcedCalendarFormat: CalendarFormat.month,
             onDaySelected: _onDaySelected,
+            onVisibleDaysChanged: _onSwipeMonth,
             daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {
               switch (date.weekday) {
                 case 1:
@@ -131,7 +152,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   return "";
               }
             }),
-            endDay: DateTime.now(),
+            endDay: new DateTime(DateTime.now().year, DateTime.now().month,
+                    DateTime.now().day)
+                .add(Duration(days: 1)),
             rowHeight: 40,
             headerStyle: HeaderStyle(
               formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
@@ -194,6 +217,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 setState(() {
                   _editing = !_editing;
                 });
+
+                if (!_editing) {
+                  widget.showSuggestionsDialog(suggestionsType.SET_ALARM);
+                }
               },
               child: Text(
                 _editing ? "Editando" : "Editar",
