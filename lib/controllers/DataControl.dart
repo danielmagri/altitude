@@ -33,6 +33,11 @@ class DataControl {
     return {0: habits, 1: daysDone};
   }
 
+  /// Retorna uma lista com todas as cores
+  Future<List<int>> getAllHabitsColor() async {
+    return await DatabaseService().getAllHabitsColor();
+  }
+
   /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     return await DatabaseService().getHabit(id);
@@ -131,7 +136,8 @@ class DataControl {
   Future<Map<DateTime, List>> getDaysDone(int id,
       {DateTime startDate, DateTime endDate}) async {
     Map<DateTime, List> map = new Map();
-    List<DayDone> list = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> list = await DatabaseService()
+        .getDaysDone(id, startDate: startDate, endDate: endDate);
     bool before = false;
     bool after = false;
 

@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit/ui/loginPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
@@ -11,6 +13,7 @@ import 'package:habit/controllers/DataControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/utils/Color.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/LevelControl.dart';
@@ -30,6 +33,8 @@ void main() async {
   bool showTutorial = false;
   if (await DataPreferences().getName() == null) showTutorial = true;
 
+  await AppColors.getColorMix();
+
   runApp(MyApp(
     showTutorial: showTutorial,
   ));
@@ -47,7 +52,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
-        accentColor: Color.fromARGB(255, 34, 34, 34),
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
@@ -63,6 +67,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AnimationController _controllerScore;
   AnimationController _controllerDragTarget;
 
@@ -87,6 +92,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DataPreferences().getScore().then((score) {
       this.score = 0;
       updateScore(score);
+    });
+
+    DataControl().getAllHabitsColor().then((colors) {
+      if (AppColors.updateColorMix(colors)) {
+        setState(() {});
+      }
     });
 
     super.didChangeDependencies();
@@ -173,11 +184,118 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.7,
+        child: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+              decoration: BoxDecoration(color: AppColors.colorHabitMix),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "DM",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 14),
+                  FutureBuilder(
+                    future: DataPreferences().getName(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(
+                          "Olá, ${snapshot.data}",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold),
+                        );
+                      } else {
+                        return Text(
+                          "Bem-vindo...",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    "${LevelControl.getLevelText(score)}",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              title: Text(
+                'Amigos',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              leading: Icon(
+                Icons.people,
+                color: Colors.black,
+              ),
+              onTap: () {
+                // Ação para mudar para tela 2
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return LoginPage();
+                }));
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Configurações',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              leading: Icon(
+                Icons.settings,
+                color: Colors.black,
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return SettingsPage();
+                }));
+              },
+            ),
+          ]),
+        ),
+      ),
+      drawerScrimColor: Colors.black12,
       body: Stack(
         children: <Widget>[
           Column(
             children: <Widget>[
-              _AppBar(),
+              Container(
+                width: double.maxFinite,
+                height: 75,
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(top: 12, left: 12),
+                child: IconButton(
+                  tooltip: "Menu",
+                  icon: Icon(
+                    Icons.menu,
+                    color: AppColors.colorHabitMix,
+                  ),
+                  onPressed: () {
+                    _scaffoldKey.currentState.openDrawer();
+                  },
+                ),
+              ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -204,6 +322,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           ),
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
+                            color: AppColors.colorHabitMix,
                             animation:
                                 IntTween(begin: previousScore, end: score)
                                     .animate(CurvedAnimation(
@@ -342,6 +461,7 @@ class _AllHabitsPage extends StatelessWidget {
                 if (snapshot.hasData) {
                   List<Habit> habits = snapshot.data[0];
                   List<DayDone> dones = snapshot.data[1];
+
                   if (habits.isEmpty) {
                     return Text(
                       "Crie um novo hábito pelo botão \"+\" na tela principal.",
@@ -405,7 +525,7 @@ class _BottomNavigationBar extends StatelessWidget {
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).accentColor,
+          color: AppColors.colorHabitMix,
           borderRadius: BorderRadius.circular(40),
           boxShadow: <BoxShadow>[
             BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))
@@ -449,7 +569,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                 child: Icon(
                   Icons.add,
-                  color: Colors.black,
+                  color: AppColors.colorHabitMix,
                   size: 28,
                 ),
               ),
@@ -482,67 +602,6 @@ class _BottomNavigationBar extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _AppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      height: 75,
-      margin: const EdgeInsets.only(top: 12, left: 12),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          FutureBuilder(
-            future: DataPreferences().getName(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                return RichText(
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                      text: "Olá, ",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w300,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                    TextSpan(
-                      text: snapshot.data,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ]),
-                );
-              } else {
-                return Text(
-                  "Bem-vindo...",
-                  style: TextStyle(color: Colors.black, fontSize: 18.0),
-                );
-              }
-            },
-          ),
-          Spacer(),
-          IconButton(
-            tooltip: "Configurações",
-            icon: Icon(
-              Icons.settings,
-            ),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return SettingsPage();
-              }));
-            },
-          ),
-        ],
       ),
     );
   }

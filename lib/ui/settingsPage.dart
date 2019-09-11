@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/DataPreferences.dart';
-import 'package:habit/ui/HelpPage.dart';
+import 'package:habit/ui/helpPage.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/tutorialPage.dart';

@@ -197,6 +197,15 @@ class DatabaseService {
     return list;
   }
 
+  Future<List<int>> getAllHabitsColor() async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT color FROM habit;');
+
+    List<int> list =
+    result.isNotEmpty ? result.map((c) => c["color"] as int).toList() : [];
+    return list;
+  }
+
   /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     final db = await database;

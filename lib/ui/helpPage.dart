@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit/ui/tutorialPage.dart';
 
 class HelpPage extends StatefulWidget {
-  HelpPage({Key key}) : super(key: key);
 
   @override
   _HelpPageState createState() => _HelpPageState();
