@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/DataPreferences.dart';
 
 abstract class AppColors {
   static const Color disableHabitCreation = Colors.grey;
+  static Color colorHabitMix = Colors.black;
 
   static const List<Color> habitsColor = [
     Color.fromARGB(255, 244, 67, 54),
@@ -18,4 +20,35 @@ abstract class AppColors {
     Color.fromARGB(255, 192, 192, 192),
     Color.fromARGB(255, 255, 215, 0)
   ];
+
+  static Future<void> getColorMix() async {
+    String rgb = await DataPreferences().getColor();
+    if (rgb != null && rgb.isNotEmpty) {
+      List<String> splited = rgb.split(",");
+      colorHabitMix = new Color.fromARGB(255, int.parse(splited[0]),
+          int.parse(splited[1]), int.parse(splited[2]));
+    }
+  }
+
+  static bool updateColorMix(List<int> colors) {
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    for (int color in colors) {
+      r += habitsColor[color].red;
+      g += habitsColor[color].green;
+      b += habitsColor[color].blue;
+    }
+    r = (r / colors.length).round();
+    g = (g / colors.length).round();
+    b = (b / colors.length).round();
+
+    if(r != colorHabitMix.red || g != colorHabitMix.green || b != colorHabitMix.blue) {
+      colorHabitMix = new Color.fromARGB(255, r, g, b);
+      DataPreferences().setColor(r, g, b);
+      return true;
+    }else {
+      return false;
+    }
+  }
 }

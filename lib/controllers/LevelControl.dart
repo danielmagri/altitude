@@ -16,24 +16,37 @@ abstract class LevelControl {
     "Astronauta"
   ];
 
+  static const List<int> _levelsValue = [
+    0,
+    15,
+    50,
+    125,
+    250,
+    400,
+    600,
+    800,
+    1000,
+    1500
+  ];
+
   static int getLevel(int score) {
-    if (score >= 1500) {
+    if (score >= _levelsValue[9]) {
       return 9;
-    } else if (score >= 1000) {
+    } else if (score >= _levelsValue[8]) {
       return 8;
-    } else if (score >= 850) {
+    } else if (score >= _levelsValue[7]) {
       return 7;
-    } else if (score >= 650) {
+    } else if (score >= _levelsValue[6]) {
       return 6;
-    } else if (score >= 450) {
+    } else if (score >= _levelsValue[5]) {
       return 5;
-    } else if (score >= 350) {
+    } else if (score >= _levelsValue[4]) {
       return 4;
-    } else if (score >= 200) {
+    } else if (score >= _levelsValue[3]) {
       return 3;
-    } else if (score >= 100) {
+    } else if (score >= _levelsValue[2]) {
       return 2;
-    } else if (score >= 15) {
+    } else if (score >= _levelsValue[1]) {
       return 1;
     } else {
       return 0;
@@ -41,30 +54,7 @@ abstract class LevelControl {
   }
 
   static int getMaxScore(int code) {
-    switch (code) {
-      case 0:
-        return 0;
-      case 1:
-        return 15;
-      case 2:
-        return 100;
-      case 3:
-        return 200;
-      case 4:
-        return 350;
-      case 5:
-        return 450;
-      case 6:
-        return 650;
-      case 7:
-        return 850;
-      case 8:
-        return 1000;
-      case 9:
-        return 1500;
-      default:
-        return 0;
-    }
+    return _levelsValue[code];
   }
 
   static String getLevelText(int score) {
