@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit/ui/FriendsPage.dart';
 import 'package:habit/ui/loginPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
@@ -202,7 +203,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         shape: BoxShape.circle, color: Colors.white),
                     alignment: Alignment.center,
                     child: Text(
-                      "DM",
+                      "KK",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -249,12 +250,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 color: Colors.black,
               ),
               onTap: () {
-                // Ação para mudar para tela 2
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return LoginPage();
+                  return FriendsPage();
                 }));
               },
+            ),
+            ListTile(
+              title: Text(
+                'Competição',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                'Em breve',
+              ),
+              leading: Image.asset("assets/ic_award.png", width: 25,color: Colors.grey,),
+              enabled: false,
             ),
             ListTile(
               title: Text(
