@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit/ui/FriendsPage.dart';
-import 'package:habit/ui/loginPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
