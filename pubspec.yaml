@@ -39,6 +39,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/first.png
+    - assets/second.png
+    - assets/third.png
     - assets/ic_award.png
     - assets/cloud1.png
     - assets/cloud2.png
