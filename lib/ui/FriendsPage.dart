@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Person.dart';
+import 'package:habit/ui/loginPage.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Util.dart';
 
 class FriendsPage extends StatefulWidget {
   @override
@@ -22,6 +24,15 @@ class _FriendsPageState extends State<FriendsPage> {
             "Joaquim da silva capistrano castro junquira neto nogueira ghkgjfhdg",
         score: 23),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+        Util.dialogNavigator(context, LoginPage());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
