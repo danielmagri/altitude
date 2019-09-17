@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/AuthDataControl.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/ui/loginPage.dart';
 import 'package:habit/utils/Color.dart';
@@ -36,7 +37,9 @@ class _FriendsPageState extends State<FriendsPage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Util.dialogNavigator(context, LoginPage());
+      if(!await AuthDataControl().isLogged()) {
+        Util.dialogNavigator(context, LoginPage());
+      }
     });
   }
 
@@ -64,7 +67,7 @@ class _FriendsPageState extends State<FriendsPage> {
           backgroundColor: Colors.transparent,
           brightness: Brightness.light,
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Colors.black,
           ),
           title: Text(
             "Amigos",

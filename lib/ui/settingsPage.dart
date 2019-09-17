@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:habit/controllers/AuthDataControl.dart';
 import 'package:habit/controllers/DataPreferences.dart';
 import 'package:habit/ui/helpPage.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/tutorialPage.dart';
+
+import 'dialogs/BaseDialog.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -16,14 +22,21 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController _nameTextController = TextEditingController();
 
   String name = "";
+  bool logged = false;
 
   @override
   initState() {
     super.initState();
 
-    DataPreferences().getName().then((name) {
+    AuthDataControl().getName().then((name) {
       setState(() {
         this.name = name;
+      });
+    });
+
+    AuthDataControl().isLogged().then((status) {
+      setState(() {
+        this.logged = status;
       });
     });
   }
@@ -38,11 +51,14 @@ class _SettingsPageState extends State<SettingsPage> {
     String result = Validate.nameTextValidate(_nameTextController.text);
 
     if (result == null) {
+      Loading.showLoading(context);
       await DataPreferences().setName(_nameTextController.text);
+      await AuthDataControl().setName(_nameTextController.text);
 
       setState(() {
         name = _nameTextController.text;
       });
+      Loading.closeLoading(context);
       Navigator.of(context).pop();
     } else {
       Fluttertoast.showToast(
@@ -54,6 +70,50 @@ class _SettingsPageState extends State<SettingsPage> {
           textColor: Colors.black,
           fontSize: 16.0);
     }
+  }
+
+  void _logout() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BaseDialog(
+          title: "Logout",
+          body:
+          "Tem certeza que deseja sair?",
+          subBody:
+          "Você não vai poder mais competir com seus amigos..",
+          action: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "SIM",
+                style: TextStyle(fontSize: 17),
+              ),
+              onPressed: () async {
+                Loading.showLoading(context);
+                await FacebookLogin().logOut();
+                await FirebaseAuth.instance.signOut();
+                Loading.closeLoading(context);
+                Navigator.pop(context);
+                setState(() {
+                  logged = false;
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "NÃO",
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   _showNameDialog(BuildContext context) async {
@@ -123,12 +183,19 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             onTap: () => _showNameDialog(context),
           ),
+          ListTile(
+            title: Text("Logout"),
+            enabled: logged,
+            onTap: _logout,
+          ),
           Divider(),
           ListTile(
             title: Text("Rever tutorial inicial"),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return TutorialPage(showNameTab: false,);
+                return TutorialPage(
+                  showNameTab: false,
+                );
               }));
             },
           ),
