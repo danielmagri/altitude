@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,9 +20,9 @@ class _LoginPageState extends State<LoginPage> {
         Loading.showLoading(context);
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
+
         await FirebaseAuth.instance.signInWithCredential(credential);
         Loading.closeLoading(context);
-
         Navigator.pop(context);
         break;
       case FacebookLoginStatus.cancelledByUser:
@@ -28,11 +30,31 @@ class _LoginPageState extends State<LoginPage> {
         break;
       case FacebookLoginStatus.error:
         print(result.errorMessage);
+        showToast("Ocorreu um erro");
         break;
     }
   }
 
-  void loginWithGoogle() async {}
+  void loginWithGoogle() async {
+    GoogleSignIn googleSignIn = new GoogleSignIn();
+
+    try {
+      Loading.showLoading(context);
+      var result = await googleSignIn.signIn();
+      GoogleSignInAuthentication googleAuth = await result.authentication;
+      AuthCredential credential = GoogleAuthProvider.getCredential(
+          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+
+      FirebaseAuth.instance.signInWithCredential(credential);
+      Loading.closeLoading(context);
+      Navigator.pop(context);
+    } catch (error) {
+      Loading.closeLoading(context);
+      print(error);
+      showToast("Ocorreu um erro");
+    }
+
+  }
 
   Future<bool> onBackPress() async {
     Navigator.of(context).popUntil((route) => route.isFirst);
