@@ -28,8 +28,10 @@ dependencies:
   sliding_up_panel: ^0.3.5
   auto_size_text: ^2.0.2+1
   firebase_core: ^0.4.0+9
+  firebase_auth: ^0.14.0+5
   firebase_analytics: ^5.0.1
   firebase_messaging: ^5.1.4
+  flutter_facebook_login: ^2.0.1
 
 dev_dependencies:
   flutter_test:

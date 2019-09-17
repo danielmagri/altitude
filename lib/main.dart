@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit/controllers/AuthDataControl.dart';
 import 'package:habit/ui/FriendsPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
@@ -195,20 +196,52 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  FutureBuilder(
+                    future: AuthDataControl().getEmail(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData && snapshot.data != "") {
+                        return Text(
+                          "${snapshot.data}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                  ),
+                  SizedBox(height: 8),
                   Container(
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.white),
                     alignment: Alignment.center,
-                    child: Text(
-                      "KK",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    child: FutureBuilder(
+                      future: AuthDataControl().getPhotoUrl(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData && snapshot.data != "") {
+                          return ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                        child: Image.network(
+                            snapshot.data,
+                          ),);
+                        } else {
+                          return Icon(
+                            Icons.person,
+                            size: 32,
+                          );
+                        }
+                      },
                     ),
                   ),
                   SizedBox(height: 14),
                   FutureBuilder(
-                    future: DataPreferences().getName(),
+                    future: AuthDataControl().getName(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         return Text(
@@ -263,7 +296,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               subtitle: Text(
                 'Em breve',
               ),
-              leading: Image.asset("assets/ic_award.png", width: 25,color: Colors.grey,),
+              leading: Image.asset(
+                "assets/ic_award.png",
+                width: 25,
+                color: Colors.grey,
+              ),
               enabled: false,
             ),
             ListTile(
