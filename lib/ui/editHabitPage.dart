@@ -68,7 +68,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
       Loading.showLoading(context);
 
       if (editedHabit.color != DataHabitDetail().habit.color ||
-          editedHabit.habit.compareTo(DataHabitDetail().habit.habit) == 0) {
+          editedHabit.habit.compareTo(DataHabitDetail().habit.habit) != 0) {
         await DataControl().updateHabit(editedHabit);
       }
 
