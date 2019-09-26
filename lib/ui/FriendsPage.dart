@@ -113,6 +113,7 @@ class _FriendsPageState extends State<FriendsPage> {
                                     fontSize: 17, fontWeight: FontWeight.bold),
                               ),
                             ),
+                            SizedBox(width: 8),
                             Column(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -216,6 +217,8 @@ class _FriendsPageState extends State<FriendsPage> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: AppColors.colorHabitMix,
+          onPressed: () {
+          },
         ),
       ),
     );

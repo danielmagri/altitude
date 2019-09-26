@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
+        accentColor: Color.fromARGB(255, 34, 34, 34),
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
@@ -206,7 +207,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300
                           ),
                         );
                       } else {
@@ -250,7 +252,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 19,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         );
                       } else {
@@ -258,7 +260,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           "Bem-vindo...",
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         );
                       }
@@ -267,7 +269,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   SizedBox(height: 4),
                   Text(
                     "${LevelControl.getLevelText(score)}",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                   ),
                 ],
               ),
@@ -275,7 +277,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ListTile(
               title: Text(
                 'Amigos',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16),
               ),
               leading: Icon(
                 Icons.people,
@@ -291,7 +293,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ListTile(
               title: Text(
                 'Competição',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16),
               ),
               subtitle: Text(
                 'Em breve',
@@ -306,7 +308,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             ListTile(
               title: Text(
                 'Configurações',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16),
               ),
               leading: Icon(
                 Icons.settings,
@@ -336,7 +338,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   tooltip: "Menu",
                   icon: Icon(
                     Icons.menu,
-                    color: AppColors.colorHabitMix,
                   ),
                   onPressed: () {
                     _scaffoldKey.currentState.openDrawer();
@@ -369,7 +370,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           ),
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
-                            color: AppColors.colorHabitMix,
                             animation:
                                 IntTween(begin: previousScore, end: score)
                                     .animate(CurvedAnimation(
@@ -572,7 +572,7 @@ class _BottomNavigationBar extends StatelessWidget {
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
         decoration: BoxDecoration(
-          color: AppColors.colorHabitMix,
+          color: Theme.of(context).accentColor,
           borderRadius: BorderRadius.circular(40),
           boxShadow: <BoxShadow>[
             BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))
