@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/DataPreferences.dart';
+import 'Util.dart';
 
 abstract class AppColors {
   static const Color disableHabitCreation = Colors.grey;
@@ -43,11 +44,15 @@ abstract class AppColors {
     g = (g / colors.length).round();
     b = (b / colors.length).round();
 
-    if(r != colorHabitMix.red || g != colorHabitMix.green || b != colorHabitMix.blue) {
-      colorHabitMix = new Color.fromARGB(255, r, g, b);
-      DataPreferences().setColor(r, g, b);
+    var newColor = Util.setWhitening(new Color.fromARGB(255, r, g, b), -120);
+
+    if (newColor.red != colorHabitMix.red ||
+        newColor.green != colorHabitMix.green ||
+        newColor.blue != colorHabitMix.blue) {
+      colorHabitMix = newColor;
+      DataPreferences().setColor(newColor.red, newColor.green, newColor.blue);
       return true;
-    }else {
+    } else {
       return false;
     }
   }
