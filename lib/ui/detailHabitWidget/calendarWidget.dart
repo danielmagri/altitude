@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:vibration/vibration.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -29,7 +29,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       DateTime day = new DateTime(date.year, date.month, date.day);
       bool add = events.length == 0 ? true : false;
 
-      DataControl()
+      HabitsControl()
           .setHabitDoneAndScore(day, DataHabitDetail().habit.id,
               freq: DataHabitDetail().frequency, add: add)
           .then((earnedScore) {
@@ -92,7 +92,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       _loadingOpacity = 1.0;
     });
 
-    DataControl()
+    HabitsControl()
         .getDaysDone(DataHabitDetail().habit.id,
             startDate: start.subtract(Duration(days: 1)),
             endDate: end.add(Duration(days: 1)))

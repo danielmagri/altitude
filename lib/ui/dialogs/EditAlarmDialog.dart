@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/services/FireAnalytics.dart';
 
@@ -60,7 +60,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
     } else {
       Loading.showLoading(context);
       if (DataHabitDetail().reminders.length != 0) {
-        await DataControl().deleteReminders(
+        await HabitsControl().deleteReminders(
             DataHabitDetail().habit.id, DataHabitDetail().reminders);
       }
 
@@ -81,7 +81,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
       }
 
       DataHabitDetail().reminders =
-          await DataControl().addReminders(DataHabitDetail().habit, reminders);
+          await HabitsControl().addReminders(DataHabitDetail().habit, reminders);
 
       FireAnalytics().sendSetAlarm(DataHabitDetail().habit.habit, _reminderType,
           _temporaryTime.hour, _temporaryTime.minute, days);
@@ -93,7 +93,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
 
   void _remove() {
     Loading.showLoading(context);
-    DataControl()
+    HabitsControl()
         .deleteReminders(
             DataHabitDetail().habit.id, DataHabitDetail().reminders)
         .then((status) {

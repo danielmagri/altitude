@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:habit/controllers/DataPreferences.dart';
-import 'package:habit/services/Functions.dart';
+import 'package:habit/controllers/UserControl.dart';
+import 'package:habit/services/SharedPref.dart';
+import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 
@@ -23,11 +24,18 @@ class _LoginPageState extends State<LoginPage> {
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
 
-        AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-        await Functions().newUser(fireResult.user.displayName, fireResult.user.email, await DataPreferences().getScore());
+        AuthResult fireResult =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        if (!await FireFunctions().newUser(fireResult.user.displayName,
+            fireResult.user.email, await SharedPref().getScore())) {
+          await UserControl().logout();
+          showToast("Ocorreu um erro");
+          Loading.closeLoading(context);
+        } else {
+          Loading.closeLoading(context);
+          Navigator.pop(context);
+        }
 
-        Loading.closeLoading(context);
-        Navigator.pop(context);
         break;
       case FacebookLoginStatus.cancelledByUser:
         print("Facebook login cancelled");
@@ -49,16 +57,23 @@ class _LoginPageState extends State<LoginPage> {
       AuthCredential credential = GoogleAuthProvider.getCredential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      await Functions().newUser(fireResult.user.displayName, fireResult.user.email, await DataPreferences().getScore());
-      Loading.closeLoading(context);
-      Navigator.pop(context);
+      AuthResult fireResult =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (!await FireFunctions().newUser(fireResult.user.displayName,
+          fireResult.user.email, await SharedPref().getScore())) {
+        await UserControl().logout();
+        showToast("Ocorreu um erro");
+        Loading.closeLoading(context);
+      } else {
+        Loading.closeLoading(context);
+        Navigator.pop(context);
+      }
+
     } catch (error) {
       Loading.closeLoading(context);
       print(error);
       showToast("Ocorreu um erro");
     }
-
   }
 
   Future<bool> onBackPress() async {

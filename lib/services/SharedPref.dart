@@ -1,15 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DataPreferences {
-  static final DataPreferences _singleton = new DataPreferences._internal();
+class SharedPref {
+  static final SharedPref _singleton = new SharedPref._internal();
 
   static SharedPreferences _prefs;
 
-  factory DataPreferences() {
+  factory SharedPref() {
     return _singleton;
   }
 
-  DataPreferences._internal();
+  SharedPref._internal();
 
   Future<SharedPreferences> get prefs async {
     if (_prefs != null) return _prefs;

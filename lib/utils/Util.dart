@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Reminder.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/objects/Frequency.dart';
@@ -12,10 +12,10 @@ abstract class Util {
       {bool pushReplacement = false}) async {
     Loading.showLoading(context);
 
-    Habit data = await DataControl().getHabit(id);
-    List<Reminder> reminders = await DataControl().getReminders(id);
-    dynamic frequency = await DataControl().getFrequency(id);
-    Map<DateTime, List> daysDone = await DataControl().getDaysDone(id,
+    Habit data = await HabitsControl().getHabit(id);
+    List<Reminder> reminders = await HabitsControl().getReminders(id);
+    dynamic frequency = await HabitsControl().getFrequency(id);
+    Map<DateTime, List> daysDone = await HabitsControl().getDaysDone(id,
         startDate: getLastDayMonthBehind(DateTime.now()),
         endDate: DateTime.now());
 

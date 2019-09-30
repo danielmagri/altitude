@@ -1,43 +1,32 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:habit/objects/Person.dart';
 
-class Functions {
-  static const NAME = "display_name";
-  static const EMAIL = "email";
-  static const SCORE = "score";
+class FireFunctions {
 
   Future<bool> newUser(String name, String email, int score) async {
-    Map data = {
-      NAME: name,
-      EMAIL: email,
-      SCORE: score,
-    };
+    Person person = new Person(name: name, email: email, score: score);
+
     try {
       await CloudFunctions.instance
           .getHttpsCallable(functionName: 'newUser')
-          .call(data);
+          .call(person.toJson());
       return true;
     } on CloudFunctionsException catch (e) {
-      print(e.message);
+      print("newUser: ${e.message}");
       return false;
     }
   }
 
   Future<bool> updateUser({String name, int score}) async {
-    Map data = {};
-    if (name != null) {
-      data.putIfAbsent(NAME, () => name);
-    }
-    if (score != null) {
-      data.putIfAbsent(SCORE, () => score);
-    }
+    Person person = new Person(name: name, score: score);
 
     try {
       await CloudFunctions.instance
           .getHttpsCallable(functionName: 'updateUser')
-          .call(data);
+          .call(person.toJson());
       return true;
     } on CloudFunctionsException catch (e) {
-      print(e.message);
+      print("updateUser: ${e.message}");
       return false;
     }
   }

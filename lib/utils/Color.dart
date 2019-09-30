@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'Util.dart';
 
 abstract class AppColors {
@@ -23,7 +23,7 @@ abstract class AppColors {
   ];
 
   static Future<void> getColorMix() async {
-    String rgb = await DataPreferences().getColor();
+    String rgb = await SharedPref().getColor();
     if (rgb != null && rgb.isNotEmpty) {
       List<String> splited = rgb.split(",");
       colorHabitMix = new Color.fromARGB(255, int.parse(splited[0]),
@@ -50,7 +50,7 @@ abstract class AppColors {
         newColor.green != colorHabitMix.green ||
         newColor.blue != colorHabitMix.blue) {
       colorHabitMix = newColor;
-      DataPreferences().setColor(newColor.red, newColor.green, newColor.blue);
+      SharedPref().setColor(newColor.red, newColor.green, newColor.blue);
       return true;
     } else {
       return false;

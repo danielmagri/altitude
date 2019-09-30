@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
@@ -69,12 +69,12 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
 
       if (editedHabit.color != DataHabitDetail().habit.color ||
           editedHabit.habit.compareTo(DataHabitDetail().habit.habit) != 0) {
-        await DataControl().updateHabit(editedHabit);
+        await HabitsControl().updateHabit(editedHabit);
       }
 
       if (!compareFrequency(
           DataHabitDetail().frequency, DataHabitCreation().frequency)) {
-        await DataControl().updateFrequency(
+        await HabitsControl().updateFrequency(
             editedHabit.id,
             DataHabitCreation().frequency,
             DataHabitDetail().frequency.runtimeType);
@@ -160,7 +160,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                                       style: TextStyle(fontSize: 17),
                                     ),
                                     onPressed: () {
-                                      DataControl()
+                                      HabitsControl()
                                           .deleteHabit(
                                               DataHabitDetail().habit.id,
                                               DataHabitDetail().habit.score,

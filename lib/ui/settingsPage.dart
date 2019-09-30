@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:habit/controllers/AuthDataControl.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/controllers/UserControl.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/ui/helpPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/tutorialPage.dart';
@@ -28,13 +29,13 @@ class _SettingsPageState extends State<SettingsPage> {
   initState() {
     super.initState();
 
-    AuthDataControl().getName().then((name) {
+    UserControl().getName().then((name) {
       setState(() {
         this.name = name;
       });
     });
 
-    AuthDataControl().isLogged().then((status) {
+    UserControl().isLogged().then((status) {
       setState(() {
         this.logged = status;
       });
@@ -52,23 +53,18 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (result == null) {
       Loading.showLoading(context);
-      await DataPreferences().setName(_nameTextController.text);
-      await AuthDataControl().setName(_nameTextController.text);
+      if (!await UserControl().setName(_nameTextController.text)) {
+        showToast("Ocorreu um erro");
+      } else {
+        setState(() {
+          name = _nameTextController.text;
+        });
+      }
 
-      setState(() {
-        name = _nameTextController.text;
-      });
       Loading.closeLoading(context);
       Navigator.of(context).pop();
     } else {
-      Fluttertoast.showToast(
-          msg: result,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Color.fromARGB(255, 220, 220, 220),
-          textColor: Colors.black,
-          fontSize: 16.0);
+      showToast(result);
     }
   }
 
@@ -78,10 +74,8 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (BuildContext context) {
         return BaseDialog(
           title: "Logout",
-          body:
-          "Tem certeza que deseja sair?",
-          subBody:
-          "Você não vai poder mais competir com seus amigos..",
+          body: "Tem certeza que deseja sair?",
+          subBody: "Você não vai poder mais competir com seus amigos..",
           action: <Widget>[
             new FlatButton(
               child: new Text(
@@ -90,8 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               onPressed: () async {
                 Loading.showLoading(context);
-                await FacebookLogin().logOut();
-                await FirebaseAuth.instance.signOut();
+                await UserControl().logout();
                 Loading.closeLoading(context);
                 Navigator.pop(context);
                 setState(() {
@@ -102,9 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
             new FlatButton(
               child: new Text(
                 "NÃO",
-                style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               ),
               onPressed: () {
                 Navigator.pop(context);
