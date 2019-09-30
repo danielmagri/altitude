@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/widgets/generic/DotsIndicator.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/main.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 
@@ -33,7 +33,7 @@ class _TutorialPageState extends State<TutorialPage> {
       String result = Validate.nameTextValidate(_nameTextController.text);
 
       if (result == null) {
-        await DataPreferences().setName(_nameTextController.text);
+        await SharedPref().setName(_nameTextController.text);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
           return MainPage();
         }));

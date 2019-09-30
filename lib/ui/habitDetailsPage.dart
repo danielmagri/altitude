@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
 import 'package:habit/objects/Frequency.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
@@ -18,7 +18,7 @@ import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
 import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/ui/dialogs/tutorials/AlarmPresentation.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/services/FireAnalytics.dart';
 
 enum suggestionsType { SET_ALARM }
@@ -49,9 +49,9 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
         duration: const Duration(milliseconds: 1500), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await DataPreferences().getRocketTutorial()) {
+      if (!await SharedPref().getRocketTutorial()) {
         Util.dialogNavigator(context, RocketPresentation());
-        DataPreferences().setRocketTutorial(true);
+        SharedPref().setRocketTutorial(true);
       }
     });
 
@@ -67,12 +67,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 
   void showSuggestionsDialog(suggestionsType suggestion) async {
     if (suggestion == suggestionsType.SET_ALARM) {
-      int timesDisplayed = await DataPreferences().getAlarmTutorial();
+      int timesDisplayed = await SharedPref().getAlarmTutorial();
       if (timesDisplayed < 2 && DataHabitDetail().reminders.length == 0) {
         Util.dialogNavigator(context, AlarmPresentation());
         _scrollController.animateTo(
             0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-        DataPreferences().setAlarmTutorial();
+        SharedPref().setAlarmTutorial();
       }
     }
   }
@@ -108,7 +108,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       DateTime today = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-      DataControl()
+      HabitsControl()
           .setHabitDoneAndScore(today, data.habit.id)
           .then((earnedScore) {
         Loading.closeLoading(context);

@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
+import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Reminder.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/utils/Util.dart';
 
-class DataControl {
-  static final DataControl _singleton = new DataControl._internal();
+class HabitsControl {
+  static final HabitsControl _singleton = new HabitsControl._internal();
 
-  factory DataControl() {
+  factory HabitsControl() {
     return _singleton;
   }
 
-  DataControl._internal();
+  HabitsControl._internal();
 
   /// Retorna a quantidade de hábitos registrados.
   Future<int> getAllHabitCount() async {
@@ -91,7 +92,7 @@ class DataControl {
     for (Reminder reminder in reminders) {
       await NotificationControl().removeNotification(reminder.id);
     }
-    await DataPreferences().setScore(-score);
+
     return await DatabaseService().deleteHabit(id);
   }
 
@@ -178,14 +179,12 @@ class DataControl {
     if (add) {
       score =
           await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
-      await DataPreferences().setScore(score);
-      await DatabaseService().updateScore(id, score);
+      await UserControl().setScore(id, score);
       await DatabaseService().setDayDone(id, date);
     } else {
       score =
           -await ScoreControl.calculateScore(id, frequency, daysDone.length);
-      await DataPreferences().setScore(score);
-      await DatabaseService().updateScore(id, score);
+      await UserControl().setScore(id, score);
       await DatabaseService().deleteDayDone(id, date);
     }
 

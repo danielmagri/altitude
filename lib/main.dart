@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit/controllers/AuthDataControl.dart';
+import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/ui/FriendsPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
@@ -10,10 +10,10 @@ import 'package:habit/ui/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/tutorialPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/controllers/DataPreferences.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
@@ -32,7 +32,7 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.dark));
 
   bool showTutorial = false;
-  if (await DataPreferences().getName() == null) showTutorial = true;
+  if (await SharedPref().getName() == null) showTutorial = true;
 
   await AppColors.getColorMix();
 
@@ -91,12 +91,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void didChangeDependencies() {
-    DataPreferences().getScore().then((score) {
+    SharedPref().getScore().then((score) {
       this.score = 0;
       updateScore(score);
     });
 
-    DataControl().getAllHabitsColor().then((colors) {
+    HabitsControl().getAllHabitsColor().then((colors) {
       if (AppColors.updateColorMix(colors)) {
         setState(() {});
       }
@@ -118,7 +118,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       score += earnedScore;
     });
     int newLevel = LevelControl.getLevel(score);
-    if (newLevel > await DataPreferences().getLevel()) {
+    if (newLevel > await SharedPref().getLevel()) {
       FireAnalytics().sendNextLevel(score);
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
@@ -138,8 +138,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           }));
     }
 
-    if (newLevel != await DataPreferences().getLevel()) {
-      DataPreferences().setLevel(newLevel);
+    if (newLevel != await SharedPref().getLevel()) {
+      SharedPref().setLevel(newLevel);
     }
 
     if (previousScore != score) {
@@ -163,7 +163,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-    DataControl().setHabitDoneAndScore(today, id).then((earnedScore) {
+    HabitsControl().setHabitDoneAndScore(today, id).then((earnedScore) {
       Loading.closeLoading(context);
       Vibration.hasVibrator().then((resp) {
         if (resp != null && resp == true) {
@@ -198,7 +198,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   FutureBuilder(
-                    future: AuthDataControl().getEmail(),
+                    future: UserControl().getEmail(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData && snapshot.data != "") {
                         return Text(
@@ -224,7 +224,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         shape: BoxShape.circle, color: Colors.white),
                     alignment: Alignment.center,
                     child: FutureBuilder(
-                      future: AuthDataControl().getPhotoUrl(),
+                      future: UserControl().getPhotoUrl(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData && snapshot.data != "") {
                           return ClipRRect(
@@ -243,7 +243,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   ),
                   SizedBox(height: 14),
                   FutureBuilder(
-                    future: AuthDataControl().getName(),
+                    future: UserControl().getName(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         return Text(
@@ -439,7 +439,7 @@ class _TodayHabitsPage extends StatelessWidget {
         Expanded(
           child: Center(
             child: FutureBuilder(
-              future: DataControl().getHabitsToday(),
+              future: HabitsControl().getHabitsToday(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<Habit> habits = snapshot.data[0];
@@ -503,7 +503,7 @@ class _AllHabitsPage extends StatelessWidget {
         Expanded(
           child: Center(
             child: FutureBuilder(
-              future: DataControl().getAllHabits(),
+              future: HabitsControl().getAllHabits(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<Habit> habits = snapshot.data[0];
@@ -554,7 +554,7 @@ class _BottomNavigationBar extends StatelessWidget {
   final Function(int index) onTap;
 
   void _addHabitTap(BuildContext context) async {
-    if (await DataControl().getAllHabitCount() < 9) {
+    if (await HabitsControl().getAllHabitCount() < 9) {
       Navigator.push(context, MaterialPageRoute(builder: (_) {
         return AddHabitPage();
       }));

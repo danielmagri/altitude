@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Habit.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/addHabitWidgets/colorWidget.dart';
 import 'package:habit/ui/addHabitWidgets/habitWidget.dart';
 import 'package:habit/ui/addHabitWidgets/frequencyWidget.dart';
@@ -58,7 +58,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
 
       Loading.showLoading(context);
 
-      DataControl()
+      HabitsControl()
           .addHabit(habit, DataHabitCreation().frequency,
               DataHabitCreation().reminders)
           .then((result) {

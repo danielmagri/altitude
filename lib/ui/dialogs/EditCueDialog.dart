@@ -4,7 +4,7 @@ import 'package:habit/utils/Suggestions.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/controllers/DataControl.dart';
+import 'package:habit/controllers/HabitsControl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueDialog extends StatefulWidget {
@@ -93,7 +93,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
     String result = Validate.cueTextValidate(_controller.text);
 
     if (result == null) {
-      await DataControl().updateCue(DataHabitDetail().habit.id,
+      await HabitsControl().updateCue(DataHabitDetail().habit.id,
           DataHabitDetail().habit.habit, _controller.text);
       DataHabitDetail().habit.cue = _controller.text;
       widget.closeBottomSheet();
@@ -103,7 +103,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
   }
 
   void _remove() async {
-    await DataControl().updateCue(
+    await HabitsControl().updateCue(
         DataHabitDetail().habit.id, DataHabitDetail().habit.habit, null);
     DataHabitDetail().habit.cue = null;
     widget.closeBottomSheet();

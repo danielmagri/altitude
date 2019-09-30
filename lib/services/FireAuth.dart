@@ -1,36 +1,40 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'DataPreferences.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
-class AuthDataControl {
+class FireAuth {
   Future<bool> isLogged() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    return user != null ? true : false;
+    return await FirebaseAuth.instance.currentUser() != null ? true : false;
   }
 
   Future<String> getName() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
-    return user != null ? user.displayName : DataPreferences().getName();
+    return user != null ? user.displayName : "";
   }
-  Future<void> setName(String name) async {
+
+  Future<bool> setName(String name) async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     if (user != null) {
       UserUpdateInfo info = UserUpdateInfo();
       info.displayName = name;
       user.updateProfile(info);
+      return true;
+    } else {
+      return false;
     }
   }
 
   Future<String> getEmail() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     return user != null ? user.email : "";
   }
 
   Future<String> getPhotoUrl() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     return user != null ? user.photoUrl : "";
+  }
+
+  Future<void> logout() async {
+    await FacebookLogin().logOut();
+    await FirebaseAuth.instance.signOut();
   }
 }
