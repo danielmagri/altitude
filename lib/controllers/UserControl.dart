@@ -1,3 +1,4 @@
+import 'package:habit/objects/Person.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAuth.dart';
 import 'package:habit/services/FireFunctions.dart';
@@ -40,6 +41,14 @@ class UserControl {
 
   Future<String> getPhotoUrl() async {
     return await FireAuth().getPhotoUrl();
+  }
+
+  Future<List<Person>> getFriends() async {
+    return await FireFunctions().getFriends();
+  }
+
+  Future<List<Person>> getPendingFriends() async {
+    return await FireFunctions().getPendingFriends();
   }
 
   Future<void> logout() async {

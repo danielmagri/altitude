@@ -8,7 +8,6 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Reminder.dart';
-import 'package:habit/services/SharedPref.dart';
 import 'package:habit/utils/Util.dart';
 
 class HabitsControl {

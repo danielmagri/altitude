@@ -1,13 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/services/SharedPref.dart';
 import 'package:habit/ui/helpPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Validator.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:habit/ui/tutorialPage.dart';
 
 import 'dialogs/BaseDialog.dart';
