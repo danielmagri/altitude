@@ -30,4 +30,40 @@ class FireFunctions {
       return false;
     }
   }
+
+  Future<List<Person>> getFriends() async {
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'getFriends')
+          .call();
+
+      List data = result.data;
+
+      return data.map((c) => Person.fromJson(c)).toList();
+    } on CloudFunctionsException catch (e) {
+      print("getFriends: ${e.message}");
+      return null;
+    } on Exception catch (e) {
+      print("getFriends: $e");
+      return null;
+    }
+  }
+
+  Future<List<Person>> getPendingFriends() async {
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'getPendingFriends')
+          .call();
+
+      List data = result.data;
+
+      return data.map((c) => Person.fromJson(c)).toList();
+    } on CloudFunctionsException catch (e) {
+      print("getPendingFriends: ${e.message}");
+      return null;
+    } on Exception catch (e) {
+      print("getPendingFriends: $e");
+      return null;
+    }
+  }
 }
