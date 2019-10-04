@@ -66,4 +66,23 @@ class FireFunctions {
       return null;
     }
   }
+
+  Future<List<Person>> searchEmail(String email) async {
+    Person person = new Person(email: email);
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'searchEmail')
+          .call(person.toJson());
+
+      List data = result.data;
+
+      return data.map((c) => Person.fromJson(c)).toList();
+    } on CloudFunctionsException catch (e) {
+      print("searchEmail: ${e.message}");
+      return null;
+    } on Exception catch (e) {
+      print("searchEmail: $e");
+      return null;
+    }
+  }
 }
