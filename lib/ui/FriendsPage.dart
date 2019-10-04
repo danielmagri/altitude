@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Person.dart';
+import 'package:habit/ui/AddFriendPage.dart';
 import 'package:habit/ui/PendingFriendsPage.dart';
 import 'package:habit/ui/loginPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
@@ -250,7 +251,9 @@ class _FriendsPageState extends State<FriendsPage> {
           child: Icon(Icons.add),
           heroTag: null,
           backgroundColor: AppColors.colorHabitMix,
-          onPressed: () {},
+          onPressed: () {
+            Util.dialogNavigator(context, AddFriendPage());
+          },
         ),
       ),
     );

@@ -51,6 +51,10 @@ class UserControl {
     return await FireFunctions().getPendingFriends();
   }
 
+  Future<List<Person>> searchEmail(String email) async {
+    return await FireFunctions().searchEmail(email);
+  }
+
   Future<void> logout() async {
     await FireAuth().logout();
   }
