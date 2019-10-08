@@ -1,3 +1,4 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Person.dart';
@@ -137,7 +138,29 @@ class _PendingFriendsPageState extends State<PendingFriendsPage> {
                                       heroTag: null,
                                       backgroundColor: Colors.red,
                                       elevation: 0,
-                                      onPressed: () {}),
+                                      onPressed: () {
+                                        Loading.showLoading(context);
+                                        UserControl()
+                                            .declineRequest(
+                                                pendingPersons[index].uid)
+                                            .then((_) {
+                                          Loading.closeLoading(context);
+                                          pendingPersons.removeAt(index);
+                                          if (pendingPersons.length == 0)
+                                            isEmpty = true;
+                                          setState(() {});
+                                        }).catchError((error) {
+                                          Loading.closeLoading(context);
+                                          if (error
+                                              is CloudFunctionsException) {
+                                            if (error.details == true) {
+                                              showToast(error.message);
+                                              return;
+                                            }
+                                          }
+                                          showToast("Ocorreu um erro");
+                                        });
+                                      }),
                                   SizedBox(width: 8),
                                   FloatingActionButton(
                                       child: Icon(Icons.check),
@@ -145,7 +168,29 @@ class _PendingFriendsPageState extends State<PendingFriendsPage> {
                                       heroTag: null,
                                       backgroundColor: Colors.green,
                                       elevation: 0,
-                                      onPressed: () {}),
+                                      onPressed: () {
+                                        Loading.showLoading(context);
+                                        UserControl()
+                                            .acceptRequest(
+                                                pendingPersons[index].uid)
+                                            .then((_) {
+                                          Loading.closeLoading(context);
+                                          pendingPersons.removeAt(index);
+                                          if (pendingPersons.length == 0)
+                                            isEmpty = true;
+                                          setState(() {});
+                                        }).catchError((error) {
+                                          Loading.closeLoading(context);
+                                          if (error
+                                              is CloudFunctionsException) {
+                                            if (error.details == true) {
+                                              showToast(error.message);
+                                              return;
+                                            }
+                                          }
+                                          showToast("Ocorreu um erro");
+                                        });
+                                      }),
                                 ],
                               ),
                             ),
