@@ -55,6 +55,22 @@ class UserControl {
     return await FireFunctions().searchEmail(email);
   }
 
+  Future<void> friendRequest(String uid) async {
+    return await FireFunctions().friendRequest(uid);
+  }
+
+  Future<void> acceptRequest(String uid) async {
+    return await FireFunctions().acceptRequest(uid);
+  }
+
+  Future<void> declineRequest(String uid) async {
+    return await FireFunctions().declineRequest(uid);
+  }
+
+  Future<void> cancelFriendRequest(String uid) async {
+    return await FireFunctions().cancelFriendRequest(uid);
+  }
+
   Future<void> logout() async {
     await FireAuth().logout();
   }

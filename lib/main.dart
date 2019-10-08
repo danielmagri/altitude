@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit/controllers/UserControl.dart';
+import 'package:habit/services/FireMenssaging.dart';
 import 'package:habit/ui/FriendsPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
@@ -83,10 +84,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   initState() {
     super.initState();
 
+    FireMessaging().configure();
+
     _controllerScore = AnimationController(
         duration: const Duration(milliseconds: 1500), vsync: this);
     _controllerDragTarget = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
+
+    FireMessaging().getToken().then((token) => print(token));
   }
 
   @override

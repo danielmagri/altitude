@@ -1,10 +1,14 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:habit/objects/Person.dart';
+import 'package:habit/services/FireMenssaging.dart';
 
 class FireFunctions {
-
   Future<bool> newUser(String name, String email, int score) async {
-    Person person = new Person(name: name, email: email, score: score);
+    Person person = new Person(
+        name: name,
+        email: email,
+        score: score,
+        fcmToken: await FireMessaging().getToken());
 
     try {
       await CloudFunctions.instance
@@ -82,6 +86,70 @@ class FireFunctions {
       return null;
     } on Exception catch (e) {
       print("searchEmail: $e");
+      return null;
+    }
+  }
+
+  Future<void> friendRequest(String uid) async {
+    Person person = new Person(uid: uid);
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'friendRequest')
+          .call(person.toJson());
+
+    } on CloudFunctionsException catch (e) {
+      print("friendRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("friendRequest: $e");
+      return null;
+    }
+  }
+
+  Future<void> acceptRequest(String uid) async {
+    Person person = new Person(uid: uid);
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'acceptRequest')
+          .call(person.toJson());
+
+    } on CloudFunctionsException catch (e) {
+      print("acceptRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("acceptRequest: $e");
+      return null;
+    }
+  }
+
+  Future<void> declineRequest(String uid) async {
+    Person person = new Person(uid: uid);
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'declineRequest')
+          .call(person.toJson());
+
+    } on CloudFunctionsException catch (e) {
+      print("declineRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("declineRequest: $e");
+      return null;
+    }
+  }
+
+  Future<void> cancelFriendRequest(String uid) async {
+    Person person = new Person(uid: uid);
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'cancelFriendRequest')
+          .call(person.toJson());
+
+    } on CloudFunctionsException catch (e) {
+      print("cancelFriendRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("cancelFriendRequest: $e");
       return null;
     }
   }

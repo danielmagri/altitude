@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Person.dart';
@@ -30,6 +33,56 @@ class _AddFriendPageState extends State<AddFriendPage> {
       return "Aceitar\nsolicitação";
     }
     return "";
+  }
+
+  void onClickButton(Person person) {
+    Loading.showLoading(context);
+    if (person.state == 0) {
+      UserControl().friendRequest(person.uid).then((_) {
+        Loading.closeLoading(context);
+        showToast("Pedido de amizade enviado.");
+        Navigator.of(context).pop();
+      }).catchError((error) {
+        Loading.closeLoading(context);
+        if (error is CloudFunctionsException) {
+          if (error.details == true) {
+            showToast(error.message);
+            return;
+          }
+        }
+        showToast("Ocorreu um erro");
+      });
+    } else if (person.state == 2) {
+      Loading.showLoading(context);
+      UserControl().cancelFriendRequest(person.uid).then((_) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop();
+      }).catchError((error) {
+        Loading.closeLoading(context);
+        if (error is CloudFunctionsException) {
+          if (error.details == true) {
+            showToast(error.message);
+            return;
+          }
+        }
+        showToast("Ocorreu um erro");
+      });
+    } else if (person.state == 3) {
+      Loading.showLoading(context);
+      UserControl().acceptRequest(person.uid).then((_) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop(person);
+      }).catchError((error) {
+        Loading.closeLoading(context);
+        if (error is CloudFunctionsException) {
+          if (error.details == true) {
+            showToast(error.message);
+            return;
+          }
+        }
+        showToast("Ocorreu um erro");
+      });
+    }
   }
 
   bool isEmail(String em) {
@@ -159,7 +212,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
                                       padding: const EdgeInsets.all(10),
                                       elevation: 0,
                                       onPressed: () =>
-                                          Navigator.of(context).pop(),
+                                          onClickButton(persons[index]),
                                       child: Text(
                                         buttonText(persons[index].state),
                                         maxLines: 2,

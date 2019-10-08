@@ -52,6 +52,7 @@ class Person {
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = new Map();
 
+    if (uid != null) map.putIfAbsent(UID, () => uid);
     if (name != null) map.putIfAbsent(NAME, () => name);
     if (email != null) map.putIfAbsent(EMAIL, () => email);
     if (score != null) map.putIfAbsent(SCORE, () => score);

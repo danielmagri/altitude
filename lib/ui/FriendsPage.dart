@@ -34,14 +34,13 @@ class _FriendsPageState extends State<FriendsPage> {
           isEmpty = true;
         } else {
           persons = friends;
-          persons.sort((a, b) => a.name.compareTo(b.name));
           personsOrdened = friends.toList();
           personsOrdened.add(new Person(
               name: await UserControl().getName(),
               email: await UserControl().getEmail(),
               score: await UserControl().getScore(),
               you: true));
-          personsOrdened.sort((a, b) => -a.score.compareTo(b.score));
+          sortLists();
         }
         Loading.closeLoading(context);
         setState(() {});
@@ -56,6 +55,11 @@ class _FriendsPageState extends State<FriendsPage> {
         Util.dialogNavigator(context, LoginPage());
       });
     }
+  }
+
+  void sortLists() {
+    persons.sort((a, b) => a.name.compareTo(b.name));
+    personsOrdened.sort((a, b) => -a.score.compareTo(b.score));
   }
 
   Widget _positionWidget(int position) {
@@ -220,11 +224,15 @@ class _FriendsPageState extends State<FriendsPage> {
                 color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
           ),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.group_add), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return PendingFriendsPage();
-              }));
-            })
+            IconButton(
+                icon: Icon(Icons.group_add),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) {
+                    return PendingFriendsPage();
+                  })).then((res) {
+                    getData();
+                  });
+                })
           ],
           bottom: TabBar(
             indicatorColor: AppColors.colorHabitMix,
@@ -252,7 +260,14 @@ class _FriendsPageState extends State<FriendsPage> {
           heroTag: null,
           backgroundColor: AppColors.colorHabitMix,
           onPressed: () {
-            Util.dialogNavigator(context, AddFriendPage());
+            Util.dialogNavigator(context, AddFriendPage()).then((data) {
+              if (data is Person) {
+                persons.add(data);
+                personsOrdened.add(data);
+                sortLists();
+                setState(() {});
+              }
+            });
           },
         ),
       ),
