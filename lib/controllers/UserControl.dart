@@ -71,6 +71,10 @@ class UserControl {
     return await FireFunctions().cancelFriendRequest(uid);
   }
 
+  Future<void> removeFriend(String uid) async {
+    return await FireFunctions().removeFriend(uid);
+  }
+
   Future<void> logout() async {
     await FireAuth().logout();
   }
