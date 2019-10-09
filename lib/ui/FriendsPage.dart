@@ -1,8 +1,10 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/ui/AddFriendPage.dart';
 import 'package:habit/ui/PendingFriendsPage.dart';
+import 'package:habit/ui/dialogs/BaseDialog.dart';
 import 'package:habit/ui/loginPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
@@ -87,36 +89,92 @@ class _FriendsPageState extends State<FriendsPage> {
         return Column(
           children: <Widget>[
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 19),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        persons[index].name != null ? persons[index].name : "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+              child: InkWell(
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return BaseDialog(
+                        title: "Desfazer amizade",
+                        body:
+                            "Tem certeza que deseja desfazer amizade com ${persons[index].name}?",
+                        action: <Widget>[
+                          new FlatButton(
+                            child: new Text(
+                              "SIM",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            onPressed: () async {
+                              Loading.showLoading(context);
+                              UserControl()
+                                  .removeFriend(persons[index].uid)
+                                  .then((_) {
+                                Loading.closeLoading(context);
+                                Navigator.of(context).pop();
+                                personsOrdened.removeWhere((person) =>
+                                    person.uid == persons[index].uid);
+                                persons.removeAt(index);
+                                setState(() {});
+                              }).catchError((error) {
+                                Loading.closeLoading(context);
+                                if (error is CloudFunctionsException) {
+                                  if (error.details == true) {
+                                    showToast(error.message);
+                                    return;
+                                  }
+                                }
+                                showToast("Ocorreu um erro");
+                              });
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text(
+                              "NÃO",
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 19),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          persons[index].name != null
+                              ? persons[index].name
+                              : "",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          persons[index].getLevelText(),
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          "${persons[index].score} Km",
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    )
-                  ],
+                      SizedBox(width: 8),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            persons[index].getLevelText(),
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            "${persons[index].score} Km",
+                            style: TextStyle(fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

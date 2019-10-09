@@ -153,4 +153,20 @@ class FireFunctions {
       return null;
     }
   }
+
+  Future<void> removeFriend(String uid) async {
+    Person person = new Person(uid: uid);
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'removeFriend')
+          .call(person.toJson());
+
+    } on CloudFunctionsException catch (e) {
+      print("removeFriend: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("removeFriend: $e");
+      return null;
+    }
+  }
 }

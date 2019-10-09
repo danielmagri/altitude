@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BaseDialog extends StatelessWidget {
-  BaseDialog({Key key, this.title, this.body, this.subBody, this.action}) : super(key: key);
+  BaseDialog({Key key, this.title, this.body, this.subBody, this.action})
+      : super(key: key);
 
   final String title;
   final String body;
@@ -40,18 +41,21 @@ class BaseDialog extends StatelessWidget {
               Text(
                 body,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 18, height: 1.1),
+                style: TextStyle(fontSize: 18, height: 1.1),
               ),
               SizedBox(
                 height: 4,
               ),
-              Text(
-                subBody,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 15, fontWeight: FontWeight.w300, height: 1.1),
-              ),
+              subBody != null
+                  ? Text(
+                      subBody,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                          height: 1.1),
+                    )
+                  : SizedBox(),
               SizedBox(
                 height: 18,
               ),

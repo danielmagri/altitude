@@ -90,8 +90,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 1500), vsync: this);
     _controllerDragTarget = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
-
-    FireMessaging().getToken().then((token) => print(token));
   }
 
   @override
