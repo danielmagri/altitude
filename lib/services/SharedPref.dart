@@ -23,6 +23,7 @@ class SharedPref {
   static const String SCORE = "USER_SCORE";
   static const String LEVEL = "USER_LEVEL";
   static const String COLOR = "USER_COLOR";
+  static const String PENDING_FRIENDS = "USER_PENDING_FRIENDS";
   // Tutorials
   static const String HABIT_TUTORIAL = "HABIT_TUTORIAL";
   static const String ROCKET_ON_DETAILS_PAGE = "ROCKET_ON_DETAILS_PAGE";
@@ -69,6 +70,17 @@ class SharedPref {
   Future<String> getColor() async {
     SharedPreferences sf = await prefs;
     return sf.getString(COLOR);
+  }
+
+  Future<bool> setPendingFriends(bool value) async {
+    SharedPreferences sf = await prefs;
+    return await sf.setBool(PENDING_FRIENDS, value);
+  }
+
+  Future<bool> getPendingFriends() async {
+    SharedPreferences sf = await prefs;
+    bool value = sf.getBool(PENDING_FRIENDS);
+    return value == null ? false : value;
   }
 
   Future<bool> setHabitTutorial(bool value) async {

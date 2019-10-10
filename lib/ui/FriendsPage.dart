@@ -6,6 +6,7 @@ import 'package:habit/ui/AddFriendPage.dart';
 import 'package:habit/ui/PendingFriendsPage.dart';
 import 'package:habit/ui/dialogs/BaseDialog.dart';
 import 'package:habit/ui/loginPage.dart';
+import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
@@ -17,9 +18,11 @@ class FriendsPage extends StatefulWidget {
 }
 
 class _FriendsPageState extends State<FriendsPage> {
-  bool isEmpty = false;
+  bool isEmpty = true;
   List<Person> persons = [];
   List<Person> personsOrdened = [];
+
+  bool pendingStatus = false;
 
   @override
   void initState() {
@@ -31,6 +34,7 @@ class _FriendsPageState extends State<FriendsPage> {
   void getData() async {
     if (await UserControl().isLogged()) {
       Loading.showLoading(context);
+      pendingStatus = await UserControl().getPendingFriendsStatus();
       UserControl().getFriends().then((friends) async {
         if (friends.length == 0) {
           isEmpty = true;
@@ -56,6 +60,8 @@ class _FriendsPageState extends State<FriendsPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Util.dialogNavigator(context, LoginPage());
       });
+      isEmpty = true;
+      setState(() {});
     }
   }
 
@@ -282,8 +288,9 @@ class _FriendsPageState extends State<FriendsPage> {
                 color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
           ),
           actions: <Widget>[
-            IconButton(
+            IconButtonStatus(
                 icon: Icon(Icons.group_add),
+                status: pendingStatus,
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
                     return PendingFriendsPage();

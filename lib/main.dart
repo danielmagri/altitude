@@ -100,8 +100,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
 
     HabitsControl().getAllHabitsColor().then((colors) {
-      if (AppColors.updateColorMix(colors)) {
-        setState(() {});
+      if (colors.length != 0) {
+        if (AppColors.updateColorMix(colors)) {
+          setState(() {});
+        }
       }
     });
 
@@ -209,10 +211,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w300
-                          ),
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300),
                         );
                       } else {
                         return SizedBox();
@@ -231,10 +232,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData && snapshot.data != "") {
                           return ClipRRect(
-                              borderRadius: BorderRadius.circular(30),
-                        child: Image.network(
-                            snapshot.data,
-                          ),);
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image.network(
+                              snapshot.data,
+                            ),
+                          );
                         } else {
                           return Icon(
                             Icons.person,
@@ -272,7 +274,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                   SizedBox(height: 4),
                   Text(
                     "${LevelControl.getLevelText(score)}",
-                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300),
                   ),
                 ],
               ),
@@ -285,6 +290,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               leading: Icon(
                 Icons.people,
                 color: Colors.black,
+              ),
+              trailing: FutureBuilder(
+                future: UserControl().getPendingFriendsStatus(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data) {
+                      return Container(
+                        width: 10,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.colorHabitMix),
+                      );
+                    }
+                  }
+                  return SizedBox();
+                },
               ),
               onTap: () {
                 Navigator.pop(context);

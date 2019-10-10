@@ -27,6 +27,7 @@ class _PendingFriendsPageState extends State<PendingFriendsPage> {
       UserControl().getPendingFriends().then((friends) async {
         if (friends.length == 0) {
           isEmpty = true;
+          await UserControl().setPendingFriendsStatus(false);
         } else {
           pendingPersons = friends;
           pendingPersons.sort((a, b) => a.name.compareTo(b.name));
@@ -146,8 +147,11 @@ class _PendingFriendsPageState extends State<PendingFriendsPage> {
                                             .then((_) {
                                           Loading.closeLoading(context);
                                           pendingPersons.removeAt(index);
-                                          if (pendingPersons.length == 0)
+                                          if (pendingPersons.length == 0) {
                                             isEmpty = true;
+                                            UserControl()
+                                                .setPendingFriendsStatus(false);
+                                          }
                                           setState(() {});
                                         }).catchError((error) {
                                           Loading.closeLoading(context);
@@ -176,8 +180,11 @@ class _PendingFriendsPageState extends State<PendingFriendsPage> {
                                             .then((_) {
                                           Loading.closeLoading(context);
                                           pendingPersons.removeAt(index);
-                                          if (pendingPersons.length == 0)
+                                          if (pendingPersons.length == 0) {
                                             isEmpty = true;
+                                            UserControl()
+                                                .setPendingFriendsStatus(false);
+                                          }
                                           setState(() {});
                                         }).catchError((error) {
                                           Loading.closeLoading(context);

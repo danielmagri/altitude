@@ -100,10 +100,13 @@ class _AddFriendPageState extends State<AddFriendPage> {
       Loading.showLoading(context);
       UserControl().searchEmail(_controller.text).then((friends) async {
         Loading.closeLoading(context);
-        setState(() {
-          persons = friends;
-          print(persons[0].state);
-        });
+        if (friends.length == 0) {
+          showToast("Esse email não foi encontrado.");
+        }else {
+          setState(() {
+            persons = friends;
+          });
+        }
       }).catchError((_) {
         Loading.closeLoading(context);
         showToast("Ocorreu um erro");
