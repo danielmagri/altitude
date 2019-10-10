@@ -56,6 +56,7 @@ class Person {
     if (name != null) map.putIfAbsent(NAME, () => name);
     if (email != null) map.putIfAbsent(EMAIL, () => email);
     if (score != null) map.putIfAbsent(SCORE, () => score);
+    if (fcmToken != null) map.putIfAbsent(FCM_TOKEN, () => fcmToken);
 
     return map;
   }

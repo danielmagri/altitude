@@ -51,8 +51,19 @@ class UserControl {
     return await FireFunctions().getPendingFriends();
   }
 
+  Future<bool> getPendingFriendsStatus() async {
+    return await SharedPref().getPendingFriends();
+  }
+
+  Future<void> setPendingFriendsStatus(bool value) async {
+    return await SharedPref().setPendingFriends(value);
+  }
+
   Future<List<Person>> searchEmail(String email) async {
-    return await FireFunctions().searchEmail(email);
+    if (email != await getEmail())
+      return await FireFunctions().searchEmail(email);
+    else
+      return List();
   }
 
   Future<void> friendRequest(String uid) async {
