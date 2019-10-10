@@ -18,7 +18,7 @@ class FriendsPage extends StatefulWidget {
 }
 
 class _FriendsPageState extends State<FriendsPage> {
-  bool isEmpty = true;
+  bool isEmpty = false;
   List<Person> persons = [];
   List<Person> personsOrdened = [];
 

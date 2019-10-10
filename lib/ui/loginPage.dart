@@ -24,24 +24,28 @@ class _LoginPageState extends State<LoginPage> {
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
 
-        AuthResult fireResult =
-            await FirebaseAuth.instance.signInWithCredential(credential);
-        if (!await FireFunctions().newUser(fireResult.user.displayName,
-            fireResult.user.email, await SharedPref().getScore())) {
-          await UserControl().logout();
+        try {
+          AuthResult fireResult =
+              await FirebaseAuth.instance.signInWithCredential(credential);
+
+          if (!await FireFunctions().newUser(fireResult.user.displayName,
+              fireResult.user.email, await SharedPref().getScore())) {
+            await UserControl().logout();
+            Loading.closeLoading(context);
+            showToast("Ocorreu um erro");
+          } else {
+            Loading.closeLoading(context);
+            Navigator.pop(context);
+          }
+        } catch (error) {
+          Loading.closeLoading(context);
           showToast("Ocorreu um erro");
-          Loading.closeLoading(context);
-        } else {
-          Loading.closeLoading(context);
-          Navigator.pop(context);
         }
 
         break;
       case FacebookLoginStatus.cancelledByUser:
-        print("Facebook login cancelled");
         break;
       case FacebookLoginStatus.error:
-        print(result.errorMessage);
         showToast("Ocorreu um erro");
         break;
     }
@@ -68,10 +72,8 @@ class _LoginPageState extends State<LoginPage> {
         Loading.closeLoading(context);
         Navigator.pop(context);
       }
-
     } catch (error) {
       Loading.closeLoading(context);
-      print(error);
       showToast("Ocorreu um erro");
     }
   }
