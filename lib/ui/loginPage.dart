@@ -7,6 +7,7 @@ import 'package:habit/services/SharedPref.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:habit/utils/Color.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -120,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                       "Você precisa fazer o login\n para continuar...",
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
                     ),
                     SizedBox(height: 24),
                     Container(
@@ -128,6 +129,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Adicione seu amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!",
                         textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1.25,
+                            color: AppColors.colorHabitMix,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -135,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                       "..selecione por qual preferir",
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
                     ),
                     SizedBox(height: 24),
                     Container(
