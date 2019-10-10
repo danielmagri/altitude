@@ -394,6 +394,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           ),
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
+                            color: AppColors.colorHabitMix,
                             animation:
                                 IntTween(begin: previousScore, end: score)
                                     .animate(CurvedAnimation(
@@ -596,7 +597,7 @@ class _BottomNavigationBar extends StatelessWidget {
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 12, left: 12),
         decoration: BoxDecoration(
-          color: Theme.of(context).accentColor,
+          color: AppColors.colorHabitMix,
           borderRadius: BorderRadius.circular(40),
           boxShadow: <BoxShadow>[
             BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))
