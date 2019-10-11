@@ -11,8 +11,8 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = '3008'
-def flutterVersionName = '1.1.7'
+def flutterVersionCode = '3013'
+def flutterVersionName = '2.0'
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -24,7 +24,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'
@@ -33,7 +33,7 @@ android {
     defaultConfig {
         applicationId "com.magrizo.habit"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -51,6 +51,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
+            shrinkResources true
             useProguard true
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
