@@ -295,7 +295,11 @@ class _FriendsPageState extends State<FriendsPage> {
                   Navigator.push(context, MaterialPageRoute(builder: (_) {
                     return PendingFriendsPage();
                   })).then((res) {
-                    getData();
+                    if (res is List<Person>) {
+                      persons.addAll(res);
+                      personsOrdened.addAll(res);
+                      sortLists();
+                    }
                   });
                 })
           ],
