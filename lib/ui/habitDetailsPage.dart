@@ -46,7 +46,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
     super.initState();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 1500), vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await SharedPref().getRocketTutorial()) {
@@ -281,18 +281,19 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                 ),
                 Container(
                   margin: const EdgeInsets.only(
-                      top: 28, bottom: 4, left: 20, right: 20),
+                      top: 36, bottom: 4, left: 32, right: 32),
                   width: double.maxFinite,
                   child: RaisedButton(
                     color: hasDoneToday() ? data.getColor() : Colors.white,
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
-                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     elevation: 5.0,
                     onPressed: setDoneHabit,
                     child: Text(
-                      "COMPLETAR HÁBITO DE HOJE",
+                      hasDoneToday() ? "HÁBITO COMPLETO!" :"COMPLETAR HÁBITO HOJE",
                       style: TextStyle(
+                        fontSize: 16,
                           color:
                               hasDoneToday() ? Colors.white : data.getColor(),
                           fontWeight: FontWeight.bold),
@@ -305,7 +306,6 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                     frequencyText(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontSize: 16,
                         fontWeight: FontWeight.w300,
                         color: Colors.black54),
                   ),

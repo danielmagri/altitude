@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     FireMessaging().configure();
 
     _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 1500), vsync: this);
+        duration: const Duration(milliseconds: 1000), vsync: this);
     _controllerDragTarget = AnimationController(
         duration: const Duration(milliseconds: 300), vsync: this);
   }
@@ -752,7 +752,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
       child: Opacity(
         opacity: opacity.value,
         child: Container(
-          height: 180,
+          height: 200,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,

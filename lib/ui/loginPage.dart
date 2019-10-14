@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       width: double.maxFinite,
                       child: Text(
-                        "Adicione seu amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!",
+                        "Adicione seus amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 18,
