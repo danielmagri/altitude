@@ -108,6 +108,6 @@ abstract class Util {
   static DateTime getLastDayMonthBehind(DateTime date) {
     return new DateTime(DateTime.now().year, DateTime.now().month,
         1)
-        .subtract(Duration(days: 1));
+        .subtract(Duration(days: 2));
   }
 }
