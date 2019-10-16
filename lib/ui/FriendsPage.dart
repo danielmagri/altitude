@@ -39,6 +39,7 @@ class _FriendsPageState extends State<FriendsPage> {
         if (friends.length == 0) {
           isEmpty = true;
         } else {
+          isEmpty = false;
           persons = friends;
           personsOrdened = friends.toList();
           personsOrdened.add(new Person(
@@ -58,7 +59,11 @@ class _FriendsPageState extends State<FriendsPage> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        Util.dialogNavigator(context, LoginPage());
+        Util.dialogNavigator(context, LoginPage()).then((res) {
+          if (res != null) {
+            getData();
+          }
+        });
       });
       isEmpty = true;
       setState(() {});

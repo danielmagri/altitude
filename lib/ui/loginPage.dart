@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
             showToast("Ocorreu um erro");
           } else {
             Loading.closeLoading(context);
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
         } catch (error) {
           Loading.closeLoading(context);
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
         Loading.closeLoading(context);
       } else {
         Loading.closeLoading(context);
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       }
     } catch (error) {
       Loading.closeLoading(context);

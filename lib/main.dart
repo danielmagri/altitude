@@ -46,16 +46,11 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-        systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor));
-
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
         accentColor: Color.fromARGB(255, 34, 34, 34),
-        primaryColor: Colors.white,
+        primaryColor: Colors.red,
         brightness: Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
@@ -86,6 +81,11 @@ class _MainPageState extends State<MainPage>
   @override
   initState() {
     super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Color.fromARGB(255, 250, 250, 250),
+        systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+        systemNavigationBarIconBrightness: Brightness.dark));
 
     WidgetsBinding.instance.addObserver(this);
     FireMessaging().configure();
@@ -127,9 +127,9 @@ class _MainPageState extends State<MainPage>
   didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-          systemNavigationBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor));
+          statusBarColor: Color.fromARGB(255, 250, 250, 250),
+          systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+          systemNavigationBarIconBrightness: Brightness.dark));
     }
     super.didChangeAppLifecycleState(state);
   }
