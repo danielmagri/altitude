@@ -16,6 +16,7 @@ import 'package:habit/ui/tutorialPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/services/SharedPref.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/LevelControl.dart';
@@ -204,6 +205,18 @@ class _MainPageState extends State<MainPage>
     });
   }
 
+  void _rateApp() async {
+    //const APP_STORE_URL =
+    //    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
+    const PLAY_STORE_URL =
+        'https://play.google.com/store/apps/details?id=com.magrizo.habit';
+    if (await canLaunch(PLAY_STORE_URL)) {
+      await launch(PLAY_STORE_URL);
+    } else {
+      throw 'Could not launch $PLAY_STORE_URL';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -359,6 +372,20 @@ class _MainPageState extends State<MainPage>
                 Navigator.push(context, MaterialPageRoute(builder: (_) {
                   return SettingsPage();
                 }));
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Avalie o app',
+                style: TextStyle(fontSize: 16),
+              ),
+              leading: Icon(
+                Icons.star,
+                color: Colors.black,
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                _rateApp();
               },
             ),
           ]),

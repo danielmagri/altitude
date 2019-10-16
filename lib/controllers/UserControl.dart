@@ -31,7 +31,9 @@ class UserControl {
   Future<bool> setScore(int id, int score) async {
     bool result1 = await SharedPref().setScore(score);
     bool result2 = await DatabaseService().updateScore(id, score);
-    FireFunctions().updateUser(score: await SharedPref().getScore());
+    if (await isLogged()) {
+      FireFunctions().updateUser(score: await SharedPref().getScore());
+    }
     return result1 && result2 ? true : false;
   }
 

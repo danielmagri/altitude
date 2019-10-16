@@ -17,8 +17,21 @@ class CalendarWidget extends StatefulWidget {
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
+  CalendarController _calendarController;
   bool _editing = false;
   double _loadingOpacity = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _calendarController = CalendarController();
+  }
+
+  @override
+  void dispose() {
+    _calendarController.dispose();
+    super.dispose();
+  }
 
   void _onDaySelected(DateTime date, List events) {
     if (_editing) {
@@ -125,11 +138,15 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       child: Stack(
         children: <Widget>[
           TableCalendar(
+            calendarController: _calendarController,
             events: DataHabitDetail().daysDone,
             formatAnimation: FormatAnimation.slide,
             startingDayOfWeek: StartingDayOfWeek.sunday,
             availableGestures: AvailableGestures.horizontalSwipe,
-            forcedCalendarFormat: CalendarFormat.month,
+            initialCalendarFormat: CalendarFormat.month,
+            availableCalendarFormats: const {
+              CalendarFormat.month: '',
+            },
             onDaySelected: _onDaySelected,
             onVisibleDaysChanged: _onSwipeMonth,
             daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {
