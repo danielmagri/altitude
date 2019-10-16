@@ -24,14 +24,6 @@ import 'package:habit/ui/allLevelsPage.dart';
 import 'package:habit/services/FireAnalytics.dart';
 
 void main() async {
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark));
-
   bool showTutorial = false;
   if (await SharedPref().getName() == null) showTutorial = true;
 
@@ -51,10 +43,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor));
+
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',
         accentColor: Color.fromARGB(255, 34, 34, 34),
+        primaryColor: Colors.white,
+        brightness: Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
@@ -69,7 +71,8 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
+class _MainPageState extends State<MainPage>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AnimationController _controllerScore;
   AnimationController _controllerDragTarget;
@@ -84,6 +87,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   initState() {
     super.initState();
 
+    WidgetsBinding.instance.addObserver(this);
     FireMessaging().configure();
 
     _controllerScore = AnimationController(
@@ -112,10 +116,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controllerScore.dispose();
     _controllerDragTarget.dispose();
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+          statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Theme.of(context).scaffoldBackgroundColor));
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   void updateScore(int earnedScore) async {
