@@ -44,7 +44,7 @@ abstract class AppColors {
     g = (g / colors.length).round();
     b = (b / colors.length).round();
 
-    var newColor = Util.setWhitening(new Color.fromARGB(255, r, g, b), -120);
+    var newColor = Util.setWhitening(new Color.fromARGB(255, r, g, b), -110);
 
     if (newColor.red != colorHabitMix.red ||
         newColor.green != colorHabitMix.green ||
