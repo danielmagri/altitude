@@ -12,7 +12,6 @@ class Person {
   bool you;
   int state; // 0-null 1-Amigo 2-Amigo pendente 3-Solicitação
 
-
   static const UID = "uid";
   static const NAME = "display_name";
   static const EMAIL = "email";

@@ -27,7 +27,7 @@ class HabitCardItem extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
                       Rocket(
-                        size: const Size(110, 60),
+                        size: const Size(60, 60),
                         color: AppColors.habitsColor[habit.color],
                         isExtend: true,
                       ),
@@ -68,7 +68,7 @@ class HabitCardItem extends StatelessWidget {
             onDragStarted: () => showDragTarget(true),
             onDragEnd: (details) => showDragTarget(false),
             feedback: Rocket(
-              size: const Size(110, 100),
+              size: const Size(100, 100),
               color: AppColors.habitsColor[habit.color],
               state: RocketState.ON_FIRE,
               isExtend: true,
@@ -85,7 +85,7 @@ class HabitCardItem extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Rocket(
-                      size: const Size(110, 60),
+                      size: const Size(60, 60),
                       color: AppColors.habitsColor[habit.color],
                       isExtend: true,
                     ),
@@ -112,7 +112,7 @@ class HabitCardItem extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    width: 110,
+                    width: 60,
                     height: 60,
                   ),
                   // Rocket(size: const Size(110, 60), color: HabitColors.colors[habit.color], state: RocketState.DISABLED,),

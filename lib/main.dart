@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/services/FireMenssaging.dart';
-import 'package:habit/ui/FriendsPage.dart';
+import 'package:habit/ui/competition/competitionPage.dart';
+import 'package:habit/ui/friends/friendsPage.dart';
 import 'dart:ui';
 import 'package:habit/ui/widgets/HabitCardItem.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/ui/addHabitPage.dart';
+import 'package:habit/ui/addHabit/addHabitPage.dart';
 import 'package:habit/ui/settingsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/DayDone.dart';
@@ -348,15 +349,17 @@ class _MainPageState extends State<MainPage>
                 'Competição',
                 style: TextStyle(fontSize: 16),
               ),
-              subtitle: Text(
-                'Em breve',
-              ),
               leading: Image.asset(
                 "assets/ic_award.png",
                 width: 25,
-                color: Colors.grey,
+                color: Colors.black,
               ),
-              enabled: false,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                  return CompetitionPage();
+                }));
+              },
             ),
             ListTile(
               title: Text(
