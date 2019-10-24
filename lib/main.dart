@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Montserrat',
         accentColor: Color.fromARGB(255, 34, 34, 34),
-        primaryColor: Colors.red,
+        primaryColor: Colors.white,
         brightness: Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
