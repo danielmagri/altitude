@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
+import 'package:habit/ui/competition/competitionDetailsPage.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Util.dart';
@@ -218,37 +219,43 @@ class _CompetitionPageState extends State<CompetitionPage> {
                 return Card(
                   elevation: 4,
                   margin: const EdgeInsets.all(10),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(color: AppColors.habitsColor[you.color].withAlpha(45),),
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: -50,
-                        child: LayoutBuilder(
-                          builder: (BuildContext context,
-                              BoxConstraints constraints) {
-                            return Transform.rotate(
-                              angle: 0.523,
-                              child: Rocket(
-                                size: Size(
-                                    constraints.maxWidth, constraints.maxWidth),
-                                color: AppColors.habitsColor[you.color],
-                                isExtend: true,
-                              ),
-                            );
-                          },
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return CompetitionDetailsPage(data: competitions[index]);
+                      }));
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: -50,
+                          child: LayoutBuilder(
+                            builder: (BuildContext context,
+                                BoxConstraints constraints) {
+                              return Transform.rotate(
+                                angle: 0.523,
+                                child: Rocket(
+                                  size: Size(constraints.maxWidth,
+                                      constraints.maxWidth),
+                                  color: AppColors.habitsColor[you.color],
+                                  isExtend: true,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          competitions[index].title,
-                          maxLines: 2,
-                          style: TextStyle(fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            competitions[index].title,
+                            maxLines: 2,
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
