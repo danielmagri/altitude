@@ -1,11 +1,13 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/HabitsControl.dart';
+import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
 import 'package:habit/ui/competition/competitionDetailsPage.dart';
+import 'package:habit/ui/competition/createCompetitionPage.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Util.dart';
 
 class CompetitionPage extends StatefulWidget {
   @override
@@ -194,7 +196,19 @@ class _CompetitionPageState extends State<CompetitionPage> {
                     color: AppColors.colorHabitMix,
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(30)),
-                    onPressed: () {},
+                    onPressed: () async {
+                      Loading.showLoading(context);
+                      List habits = await HabitsControl().getAllHabits();
+                      List friends = await UserControl().getFriends();
+                      Loading.closeLoading(context);
+
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return CreateCompetitionPage(
+                          habits: habits,
+                          friends: friends,
+                        );
+                      }));
+                    },
                     child: Text(
                       "Criar",
                       style: TextStyle(
@@ -222,7 +236,8 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return CompetitionDetailsPage(data: competitions[index]);
+                        return CompetitionDetailsPage(
+                            data: competitions[index]);
                       }));
                     },
                     child: Stack(

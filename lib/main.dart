@@ -574,7 +574,7 @@ class _AllHabitsPage extends StatelessWidget {
         Expanded(
           child: Center(
             child: FutureBuilder(
-              future: HabitsControl().getAllHabits(),
+              future: HabitsControl().getAllHabitsWithDoneDays(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<Habit> habits = snapshot.data[0];
