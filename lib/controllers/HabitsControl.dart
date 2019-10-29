@@ -24,9 +24,16 @@ class HabitsControl {
     return await DatabaseService().getAllHabitsCount();
   }
 
+  /// Retorna todos os hábitos registrados;
+  Future<List<Habit>> getAllHabits() async {
+    List habits = await DatabaseService().getAllHabits();
+
+    return habits;
+  }
+
   /// Retorna todos os hábitos registrados e os já feitos hoje.
   /// Ex: {0: todos_os_hábitos(Habit), 1: hábitos_feitos_hoje(DayDone)}
-  Future<Map<int, List>> getAllHabits() async {
+  Future<Map<int, List>> getAllHabitsWithDoneDays() async {
     List daysDone = await DatabaseService().getHabitsDoneToday();
     List habits = await DatabaseService().getAllHabits();
 
@@ -53,7 +60,7 @@ class HabitsControl {
   }
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
-  Future<bool> addHabit(
+  Future<Habit> addHabit(
       Habit habit, dynamic frequency, List<Reminder> reminders) async {
     Map response =
         await DatabaseService().addHabit(habit, frequency, reminders);
@@ -68,7 +75,7 @@ class HabitsControl {
         frequency.runtimeType == FreqDayWeek ? 0 : 1,
         Util.getTimesDays(frequency),
         reminders.length != 0 ? true : false);
-    return true;
+    return habit;
   }
 
   /// Atualiza o hábito.

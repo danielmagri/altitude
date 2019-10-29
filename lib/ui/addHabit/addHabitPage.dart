@@ -14,7 +14,9 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/utils/Util.dart';
 
 class AddHabitPage extends StatefulWidget {
-  AddHabitPage({Key key}) : super(key: key);
+  AddHabitPage({Key key, this.backTo = false}) : super(key: key);
+
+  final bool backTo;
 
   @override
   _AddHabitPageState createState() => _AddHabitPageState();
@@ -62,8 +64,15 @@ class _AddHabitPageState extends State<AddHabitPage> {
           .addHabit(habit, DataHabitCreation().frequency,
               DataHabitCreation().reminders)
           .then((result) {
-        Util.goDetailsPage(context, habit.id, pushReplacement: true);
-        showToast("O hábito foi criado com sucesso!");
+        Loading.closeLoading(context);
+        if (widget.backTo) {
+          Navigator.pop(context, result);
+        } else {
+          Util.goDetailsPage(context, habit.id, pushReplacement: true);
+          showToast("O hábito foi criado com sucesso!");
+        }
+      }).catchError((error) {
+        Loading.closeLoading(context);
       });
     }
   }
