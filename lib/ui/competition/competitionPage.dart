@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/objects/Competition.dart';
-import 'package:habit/objects/Competitor.dart';
+import 'package:habit/objects/CompetitionPresentation.dart';
 import 'package:habit/ui/competition/competitionDetailsPage.dart';
 import 'package:habit/ui/competition/createCompetitionPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
 
 class CompetitionPage extends StatefulWidget {
@@ -15,17 +16,6 @@ class CompetitionPage extends StatefulWidget {
 }
 
 class _CompetitionPageState extends State<CompetitionPage> {
-  List<Competition> competitions = [
-    Competition(title: "Competição de leitura", competitors: [
-      Competitor(name: "Daniel", score: 10, color: 2, you: true),
-      Competitor(name: "Giovana", score: 5, color: 1, you: false)
-    ]),
-    Competition(title: "Competição da academia", competitors: [
-      Competitor(name: "Daniel", score: 10, color: 4, you: true),
-      Competitor(name: "Giovana", score: 5, color: 1, you: false)
-    ])
-  ];
-
   Widget _positionWidget(int position) {
     if (position == 1) {
       return Image.asset("assets/first.png", height: 25);
@@ -219,62 +209,84 @@ class _CompetitionPageState extends State<CompetitionPage> {
                 ],
               ),
             ),
-            GridView.builder(
-              itemCount: competitions.length,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(0),
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (BuildContext context, int index) {
-                Competitor you = competitions[index]
-                    .competitors
-                    .firstWhere((e) => e.you == true);
-                return Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.all(10),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return CompetitionDetailsPage(
-                            data: competitions[index]);
-                      }));
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: -50,
-                          child: LayoutBuilder(
-                            builder: (BuildContext context,
-                                BoxConstraints constraints) {
-                              return Transform.rotate(
-                                angle: 0.523,
-                                child: Rocket(
-                                  size: Size(constraints.maxWidth,
-                                      constraints.maxWidth),
-                                  color: AppColors.habitsColor[you.color],
-                                  isExtend: true,
+            FutureBuilder(
+              future: CompetitionsControl().listCompetitions(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  List<CompetitionPresentation> competitions = snapshot.data;
+                  return GridView.builder(
+                    itemCount: competitions.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.all(10),
+                        child: InkWell(
+                          onTap: () {
+                            Loading.showLoading(context);
+                            CompetitionsControl()
+                                .getCompetitionDetail(competitions[index].id)
+                                .then((competition) async {
+                              Loading.closeLoading(context);
+                              if (competition != null) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (_) {
+                                  return CompetitionDetailsPage(
+                                      data: competition);
+                                }));
+                              } else {
+                                showToast("Ocorreu um erro");
+                              }
+                            }).catchError((_) {
+                              Loading.closeLoading(context);
+                              showToast("Ocorreu um erro");
+                            });
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: -50,
+                                child: LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    return Transform.rotate(
+                                      angle: 0.523,
+                                      child: Rocket(
+                                        size: Size(constraints.maxWidth,
+                                            constraints.maxWidth),
+                                        color: AppColors.habitsColor[
+                                            competitions[index].color],
+                                        isExtend: true,
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  competitions[index].title,
+                                  maxLines: 2,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            competitions[index].title,
-                            maxLines: 2,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                      );
+                    },
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
               },
-            )
+            ),
           ],
         ),
       ),

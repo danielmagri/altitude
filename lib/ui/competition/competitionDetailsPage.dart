@@ -1,7 +1,10 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/objects/Competition.dart';
+import 'package:habit/objects/Competitor.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:habit/utils/Color.dart';
 
 class CompetitionDetailsPage extends StatelessWidget {
   CompetitionDetailsPage({Key key, @required this.data}) : super(key: key);
@@ -9,15 +12,71 @@ class CompetitionDetailsPage extends StatelessWidget {
   final Competition data;
 
   double getMaxHeight(BuildContext context) {
-    double height = 650;
+    double height = 0;
 
-    // Soma com o maior score dos competidores
+    data.competitors
+        .forEach((competitor) => height = max(height, competitor.score * 10.0));
 
     if (height < MediaQuery.of(context).size.height) {
       return MediaQuery.of(context).size.height - 110;
     } else {
       return height;
     }
+  }
+
+  List<Widget> _competitorsWidget(BuildContext context) {
+    List<Widget> widgets = List();
+
+    widgets.add(Metrics(height: getMaxHeight(context)));
+
+    for (Competitor competitor in data.competitors) {
+      widgets.add(Expanded(
+        child: SizedBox(
+          height: (competitor.score * 10.0) + 60,
+          child: Stack(
+            overflow: Overflow.visible,
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Positioned(
+                top: 70,
+                bottom: 0,
+                width: 25,
+                child: Image.asset("assets/smoke.png",
+                    repeat: ImageRepeat.repeatY),
+              ),
+              Rocket(
+                size: Size(100, 100),
+                color: AppColors.habitsColor[competitor.color],
+                state: RocketState.ON_FIRE,
+                fireForce: 2,
+              ),
+              Transform.rotate(
+                angle: -1.57,
+                child: FractionalTranslation(
+                  translation: Offset(0.75, 0),
+                  child: SizedBox(
+                    width: 100,
+                    child: Text(
+                      competitor.you ? "Você" : competitor.name,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        decoration: competitor.you
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+
+    return widgets;
   }
 
   @override
@@ -53,48 +112,7 @@ class CompetitionDetailsPage extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Metrics(height: getMaxHeight(context)),
-                    Expanded(
-                      child: SizedBox(
-                        height: 400,
-                        child: Stack(
-                          overflow: Overflow.visible,
-                          alignment: Alignment.topCenter,
-                          children: <Widget>[
-                            Positioned(
-                              top: 70,
-                              bottom: 0,
-                              width: 25,
-                              child: Image.asset("assets/smoke.png",
-                                  repeat: ImageRepeat.repeatY),
-                            ),
-                            Rocket(
-                              size: Size(100, 100),
-                              color: Colors.red,
-                              state: RocketState.ON_FIRE,
-                              fireForce: 2,
-                            ),
-                            Transform.rotate(
-                              angle: -1.57,
-                              child: FractionalTranslation(
-                                translation: Offset(0.75, 0),
-                                child: SizedBox(
-                                  width: 100,
-                                  child: Text(
-                                    "Você",
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  children: _competitorsWidget(context),
                 ),
               ),
             ),
