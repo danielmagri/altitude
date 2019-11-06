@@ -1,7 +1,10 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/ui/addHabit/addHabitPage.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
@@ -45,7 +48,28 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
       showToast("Escolha um hábito para competir.");
     } else if (selectedFriends.length == 0) {
       showToast("Escolha pelo menos um amigo.");
-    } else {}
+    } else {
+      List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+      List<String> invitationsToken =
+          selectedFriends.map((person) => person.fcmToken).toList();
+
+      Loading.showLoading(context);
+      CompetitionsControl().createCompetition(
+          controller.text, selectedHabit.id, invitations, invitationsToken).then((state) {
+         Loading.closeLoading(context);
+         Navigator.pop(context);
+      }).catchError((error) {
+        Loading.closeLoading(context);
+
+        if (error is CloudFunctionsException) {
+          if (error.details == true) {
+            showToast(error.message);
+            return;
+          }
+        }
+        showToast("Ocorreu um erro");
+      });
+    }
   }
 
   @override

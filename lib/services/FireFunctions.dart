@@ -1,4 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:habit/objects/Competition.dart';
+import 'package:habit/objects/Competitor.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/services/FireMenssaging.dart';
 
@@ -167,6 +169,52 @@ class FireFunctions {
     } on Exception catch (e) {
       print("removeFriend: $e");
       return null;
+    }
+  }
+
+  // Competition
+
+  Future<String> createCompetition(String title, Competitor competitor,
+      List<String> invitations, List<String> invitationsToken) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent(Competition.TITLE, () => title);
+    map.putIfAbsent(Competitor.NAME, () => competitor.name);
+    map.putIfAbsent(Competitor.SCORE, () => competitor.score);
+    map.putIfAbsent(Competitor.COLOR, () => competitor.color);
+    map.putIfAbsent("invitations", () => invitations);
+    map.putIfAbsent("invitations_token", () => invitationsToken);
+
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'createCompetition')
+          .call(map);
+
+      return result.data;
+    } on CloudFunctionsException catch (e) {
+      print("createCompetition: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("createCompetition: $e");
+      throw e;
+    }
+  }
+
+  Future<Competition> getCompetitionDetail(String id) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent("id", () => id);
+
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'getCompetitionDetail')
+          .call(map);
+
+      return Competition.fromLinkedJson(result.data);
+    } on CloudFunctionsException catch (e) {
+      print("getCompetitionDetail: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("getCompetitionDetail: $e");
+      throw e;
     }
   }
 }

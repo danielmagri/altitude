@@ -1,3 +1,4 @@
+import 'package:habit/objects/CompetitionPresentation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:habit/objects/Habit.dart';
@@ -9,7 +10,7 @@ class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
 
   static final _databaseName = "habitus.db";
-  static final _databaseVersion = 5;
+  static final _databaseVersion = 6;
 
   static Database _database;
 
@@ -114,6 +115,22 @@ class DatabaseService {
                                            WHERE id=${habit.id};''');
       }
     }
+
+    // 2.1.0
+    if (oldVersion < 6) {
+      await db.execute('''
+          CREATE TABLE competition (
+            id VARCHAR(45) NOT NULL,
+            title VARCHAR(45) NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            initial_date DATE NOT NULL,
+            habit_id INTEGER NOT NULL,
+            CONSTRAINT fk_competition_habit_id
+              FOREIGN KEY (habit_id)
+              REFERENCES habit(id)
+              ON DELETE CASCADE
+              ON UPDATE CASCADE);''');
+    }
   }
 
   Future _onCreate(Database db, int version) async {
@@ -164,6 +181,19 @@ class DatabaseService {
               ON UPDATE CASCADE);''');
 
     await db.execute('''
+          CREATE TABLE competition (
+            id VARCHAR(45) NOT NULL,
+            title VARCHAR(45) NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            initial_date DATE NOT NULL,
+            habit_id INTEGER NOT NULL,
+            CONSTRAINT fk_competition_habit_id
+              FOREIGN KEY (habit_id)
+              REFERENCES habit(id)
+              ON DELETE CASCADE
+              ON UPDATE CASCADE);''');
+
+    await db.execute('''
           CREATE TABLE reminder (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             type INTEGER NOT NULL DEFAULT 0,
@@ -202,7 +232,7 @@ class DatabaseService {
     var result = await db.rawQuery('SELECT color FROM habit;');
 
     List<int> list =
-    result.isNotEmpty ? result.map((c) => c["color"] as int).toList() : [];
+        result.isNotEmpty ? result.map((c) => c["color"] as int).toList() : [];
     return list;
   }
 
@@ -382,8 +412,8 @@ class DatabaseService {
     // Inserção dos dados do hábito
     var id = await db.rawInsert(
         '''INSERT INTO habit (habit_text, color, initial_date) VALUES (\'${habit.habit}\',
-                                                                                        ${habit.color},
-                                                                                        \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
+                                                                       ${habit.color},
+                                                                       \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
     // Inserção dos dados da frequência
     await addFrequency(id, frequency);
 
@@ -537,5 +567,32 @@ class DatabaseService {
     await db.rawInsert('UPDATE habit SET days_done=days_done-1 WHERE id=$id;');
 
     return true;
+  }
+
+  /// Competição
+
+  /// Criar competição
+  Future<bool> createCompetitition(String id, String title, int habitId) async {
+    DateTime now = new DateTime.now();
+    final db = await database;
+
+    await db.rawInsert(
+        '''INSERT INTO competition (id, title, initial_date, habit_id) VALUES (\'$id\',
+                                                                               \'$title\',
+                                                                               \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
+                                                                               $habitId);''');
+
+    return true;
+  }
+
+  /// Listar competições
+  Future<List<CompetitionPresentation>> listCompetitions() async {
+    final db = await database;
+
+    var result = await db.rawQuery('SELECT c.id, c.title, c.score, h.color FROM competition AS c, habit AS h WHERE c.habit_id==h.id;');
+
+    List<CompetitionPresentation> list =
+    result.isNotEmpty ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList() : [];
+    return list;
   }
 }
