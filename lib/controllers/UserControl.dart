@@ -1,4 +1,5 @@
 import 'package:habit/objects/Person.dart';
+import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAuth.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/SharedPref.dart';
@@ -17,7 +18,9 @@ class UserControl {
     if (await FireAuth().isLogged()) {
       await SharedPref().setName(name);
       await FireAuth().setName(name);
-      return await FireFunctions().updateUser(name: name);
+      return await FireFunctions().updateUser(
+          await DatabaseService().listCompetitionsIds(),
+          name: name);
     } else {
       return await SharedPref().setName(name);
     }

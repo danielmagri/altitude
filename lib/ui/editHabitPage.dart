@@ -69,7 +69,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
 
       if (editedHabit.color != DataHabitDetail().habit.color ||
           editedHabit.habit.compareTo(DataHabitDetail().habit.habit) != 0) {
-        await HabitsControl().updateHabit(editedHabit);
+        await HabitsControl().updateHabit(editedHabit, DataHabitDetail().habit);
       }
 
       if (!compareFrequency(
