@@ -23,6 +23,22 @@ class FireFunctions {
     }
   }
 
+  Future<bool> setScore(int score, Map<String, int> competitions) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent("score", () => score);
+    map.putIfAbsent("competitions", () => competitions);
+
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'setScore')
+          .call(map);
+      return true;
+    } on CloudFunctionsException catch (e) {
+      print("setScore: ${e.message}");
+      return false;
+    }
+  }
+
   Future<bool> updateUser({String name, int score}) async {
     Person person = new Person(name: name, score: score);
 

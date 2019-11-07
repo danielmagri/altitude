@@ -1,5 +1,4 @@
 import 'package:habit/objects/Person.dart';
-import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAuth.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/SharedPref.dart';
@@ -22,19 +21,6 @@ class UserControl {
     } else {
       return await SharedPref().setName(name);
     }
-  }
-
-  Future<int> getScore() async {
-    return await SharedPref().getScore();
-  }
-
-  Future<bool> setScore(int id, int score) async {
-    bool result1 = await SharedPref().setScore(score);
-    bool result2 = await DatabaseService().updateScore(id, score);
-    if (await isLogged()) {
-      FireFunctions().updateUser(score: await SharedPref().getScore());
-    }
-    return result1 && result2 ? true : false;
   }
 
   Future<String> getEmail() async {
