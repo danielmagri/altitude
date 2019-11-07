@@ -20,7 +20,7 @@ class CompetitionDetailsPage extends StatelessWidget {
     if (height < MediaQuery.of(context).size.height) {
       return MediaQuery.of(context).size.height - 110;
     } else {
-      return height;
+      return height + 200;
     }
   }
 

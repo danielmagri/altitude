@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Person.dart';
 import 'package:habit/ui/friends/addFriendPage.dart';
@@ -45,7 +46,7 @@ class _FriendsPageState extends State<FriendsPage> {
           personsOrdened.add(new Person(
               name: await UserControl().getName(),
               email: await UserControl().getEmail(),
-              score: await UserControl().getScore(),
+              score: await ScoreControl().getScore(),
               you: true));
           sortLists();
         }

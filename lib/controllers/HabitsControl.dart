@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
-import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/objects/Habit.dart';
@@ -183,14 +182,12 @@ class HabitsControl {
         .getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
-      score =
-          await ScoreControl.calculateScore(id, frequency, 1 + daysDone.length);
-      await UserControl().setScore(id, score);
+      score = ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
+      await ScoreControl().setScore(id, score, date);
       await DatabaseService().setDayDone(id, date);
     } else {
-      score =
-          -await ScoreControl.calculateScore(id, frequency, daysDone.length);
-      await UserControl().setScore(id, score);
+      score = -ScoreControl().calculateScore(id, frequency, daysDone.length);
+      await ScoreControl().setScore(id, score, date);
       await DatabaseService().deleteDayDone(id, date);
     }
 

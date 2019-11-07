@@ -395,10 +395,13 @@ class DatabaseService {
   }
 
   /// Atualiza a pontuação do hábito.
-  Future<bool> updateScore(int id, int score) async {
+  Future<bool> updateScore(int id, int score, DateTime date) async {
     final db = await database;
 
     await db.rawInsert('UPDATE habit SET score = score+$score WHERE id=$id;');
+
+    await db.rawInsert('''UPDATE competition SET score = score+$score WHERE habit_id=$id AND
+                                                                            initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
 
     return true;
   }
@@ -594,5 +597,18 @@ class DatabaseService {
     List<CompetitionPresentation> list =
     result.isNotEmpty ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList() : [];
     return list;
+  }
+
+  /// Listar competições por id do hábito
+  Future<Map<String, int>> listHabitCompetitions(int id, DateTime date) async {
+    final db = await database;
+
+    var result = await db.rawQuery('''SELECT id, score FROM competition WHERE habit_id==$id AND
+                                                                              initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
+
+    Map<String, int> map = Map();
+    result.forEach((c) => map.putIfAbsent(c["id"], () => c["score"]));
+
+    return map;
   }
 }
