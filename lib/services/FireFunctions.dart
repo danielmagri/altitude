@@ -30,22 +30,25 @@ class FireFunctions {
 
     try {
       await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'setScore')
+          .getHttpsCallable(functionName: 'updateUser')
           .call(map);
       return true;
     } on CloudFunctionsException catch (e) {
-      print("setScore: ${e.message}");
+      print("updateUser: ${e.message}");
       return false;
     }
   }
 
-  Future<bool> updateUser({String name, int score}) async {
-    Person person = new Person(name: name, score: score);
+  Future<bool> updateUser(List<String> competitions, {String name, int color}) async {
+  Map<String, dynamic> map = new Map();
+  map.putIfAbsent("display_name", () => name);
+  map.putIfAbsent("color", () => color);
+  map.putIfAbsent("competitions", () => competitions);
 
     try {
       await CloudFunctions.instance
           .getHttpsCallable(functionName: 'updateUser')
-          .call(person.toJson());
+          .call(map);
       return true;
     } on CloudFunctionsException catch (e) {
       print("updateUser: ${e.message}");

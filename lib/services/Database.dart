@@ -400,7 +400,8 @@ class DatabaseService {
 
     await db.rawInsert('UPDATE habit SET score = score+$score WHERE id=$id;');
 
-    await db.rawInsert('''UPDATE competition SET score = score+$score WHERE habit_id=$id AND
+    await db.rawInsert(
+        '''UPDATE competition SET score = score+$score WHERE habit_id=$id AND
                                                                             initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
 
     return true;
@@ -589,13 +590,34 @@ class DatabaseService {
   }
 
   /// Listar competições
+  Future<List<String>> listCompetitionsIds({int habitId}) async {
+    final db = await database;
+
+    List<Map<String, dynamic>> result;
+
+    if (habitId == null) {
+      result = await db.rawQuery('SELECT id FROM competition;');
+    } else {
+      result = await db
+          .rawQuery('SELECT id FROM competition WHERE habit_id==$habitId;');
+    }
+
+    List<String> list = List();
+    result.forEach((c) => list.add(c["id"]));
+
+    return list;
+  }
+
+  /// Listar competições
   Future<List<CompetitionPresentation>> listCompetitions() async {
     final db = await database;
 
-    var result = await db.rawQuery('SELECT c.id, c.title, c.score, h.color FROM competition AS c, habit AS h WHERE c.habit_id==h.id;');
+    var result = await db.rawQuery(
+        'SELECT c.id, c.title, c.score, h.color FROM competition AS c, habit AS h WHERE c.habit_id==h.id;');
 
-    List<CompetitionPresentation> list =
-    result.isNotEmpty ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList() : [];
+    List<CompetitionPresentation> list = result.isNotEmpty
+        ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList()
+        : [];
     return list;
   }
 
@@ -603,7 +625,8 @@ class DatabaseService {
   Future<Map<String, int>> listHabitCompetitions(int id, DateTime date) async {
     final db = await database;
 
-    var result = await db.rawQuery('''SELECT id, score FROM competition WHERE habit_id==$id AND
+    var result = await db
+        .rawQuery('''SELECT id, score FROM competition WHERE habit_id==$id AND
                                                                               initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
 
     Map<String, int> map = Map();

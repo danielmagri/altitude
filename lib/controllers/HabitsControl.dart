@@ -7,6 +7,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Reminder.dart';
+import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/utils/Util.dart';
 
 class HabitsControl {
@@ -78,7 +79,12 @@ class HabitsControl {
   }
 
   /// Atualiza o hábito.
-  Future<bool> updateHabit(Habit habit) async {
+  Future<bool> updateHabit(Habit habit, Habit oldHabit) async {
+    if (habit.color != oldHabit.color) {
+      FireFunctions().updateUser(
+          await DatabaseService().listCompetitionsIds(habitId: habit.id),
+          color: habit.color);
+    }
     return await DatabaseService().updateHabit(habit);
   }
 
