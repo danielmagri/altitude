@@ -230,9 +230,17 @@ class _CompetitionPageState extends State<CompetitionPage> {
                             Loading.showLoading(context);
                             CompetitionsControl()
                                 .getCompetitionDetail(competitions[index].id)
-                                .then((competition) async {
+                                .then((competition) {
                               Loading.closeLoading(context);
+
                               if (competition != null) {
+                                if (competition.title !=
+                                    competitions[index].title) {
+                                  CompetitionsControl().updateCompetitionDB(
+                                      competitions[index].id,
+                                      competition.title);
+                                }
+
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
                                   return CompetitionDetailsPage(
