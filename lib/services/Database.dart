@@ -589,6 +589,15 @@ class DatabaseService {
     return true;
   }
 
+  Future<bool> updateCompetition(String id, String title) async {
+    final db = await database;
+
+    await db.rawUpdate('''UPDATE competition SET title=\'$title\'
+                                                 WHERE id=\'$id\';''');
+
+    return true;
+  }
+
   /// Listar competições
   Future<List<String>> listCompetitionsIds({int habitId}) async {
     final db = await database;

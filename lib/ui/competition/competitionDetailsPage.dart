@@ -1,20 +1,106 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
+import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Validator.dart';
 
-class CompetitionDetailsPage extends StatelessWidget {
+class CompetitionDetailsPage extends StatefulWidget {
   CompetitionDetailsPage({Key key, @required this.data}) : super(key: key);
 
   final Competition data;
 
+  @override
+  _CompetitionDetailsPageState createState() => _CompetitionDetailsPageState();
+}
+
+class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
+  TextEditingController _titleTextController = TextEditingController();
+
+  String title = "";
+
+  @override
+  initState() {
+    super.initState();
+
+    title = widget.data.title;
+  }
+
+  @override
+  void dispose() {
+    _titleTextController.dispose();
+    super.dispose();
+  }
+
+  _showNameDialog(BuildContext context) async {
+    _titleTextController.text = title;
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Alterar título'),
+            content: TextField(
+              controller: _titleTextController,
+              textInputAction: TextInputAction.done,
+              textCapitalization: TextCapitalization.sentences,
+              onEditingComplete: saveTitle,
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text(
+                  'SALVAR',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: saveTitle,
+              )
+            ],
+          );
+        });
+  }
+
+  void saveTitle() async {
+    String result = Validate.competitionNameValidate(_titleTextController.text);
+
+    if (result == null) {
+      Loading.showLoading(context);
+      CompetitionsControl()
+          .updateCompetition(widget.data.id, _titleTextController.text)
+          .then((res) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop();
+
+        if (res) {
+          setState(() {
+            title = _titleTextController.text;
+          });
+        }
+      }).catchError((error) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop();
+
+        showToast("Ocorreu um erro");
+      });
+    } else {
+      showToast(result);
+    }
+  }
+
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    data.competitors
+    widget.data.competitors
         .forEach((competitor) => height = max(height, competitor.score * 10.0));
 
     if (height < MediaQuery.of(context).size.height) {
@@ -29,7 +115,7 @@ class CompetitionDetailsPage extends StatelessWidget {
 
     widgets.add(Metrics(height: getMaxHeight(context)));
 
-    for (Competitor competitor in data.competitors) {
+    for (Competitor competitor in widget.data.competitors) {
       widgets.add(Expanded(
         child: SizedBox(
           height: (competitor.score * 10.0) + 60,
@@ -95,13 +181,37 @@ class CompetitionDetailsPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    data.title,
+                    title,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
                 SizedBox(
                   width: 50,
+                  child: PopupMenuButton<int>(
+                    onSelected: (int result) {
+                      switch (result) {
+                        case 1:
+                          _showNameDialog(context);
+                          break;
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<int>>[
+                      const PopupMenuItem<int>(
+                        value: 1,
+                        child: Text('Alterar título'),
+                      ),
+                      const PopupMenuItem<int>(
+                        value: 2,
+                        child: Text('Adicionar amigo'),
+                      ),
+                      const PopupMenuItem<int>(
+                        value: 3,
+                        child: Text('Sair da competição'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

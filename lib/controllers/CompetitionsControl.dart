@@ -35,6 +35,19 @@ class CompetitionsControl {
     }
   }
 
+  Future<bool> updateCompetition(String id, String title) async {
+    var result = await FireFunctions().updateCompetition(id, title);
+    if (result) {
+      return await DatabaseService().updateCompetition(id, title);
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> updateCompetitionDB(String id, String title) async {
+    return await DatabaseService().updateCompetition(id, title);
+  }
+
   Future<List<CompetitionPresentation>> listCompetitions() async {
     return await DatabaseService().listCompetitions();
   }

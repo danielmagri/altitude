@@ -218,6 +218,26 @@ class FireFunctions {
     }
   }
 
+  Future<bool> updateCompetition(String id, String title) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent("id", () => id);
+    map.putIfAbsent("title", () => title);
+
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'updateCompetition')
+          .call(map);
+
+      return true;
+    } on CloudFunctionsException catch (e) {
+      print("updateCompetition: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("updateCompetition: $e");
+      throw e;
+    }
+  }
+
   Future<Competition> getCompetitionDetail(String id) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent("id", () => id);
