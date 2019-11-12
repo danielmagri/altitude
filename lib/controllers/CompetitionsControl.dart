@@ -56,10 +56,10 @@ class CompetitionsControl {
     return await FireFunctions().getCompetitionDetail(id);
   }
 
-  Future<bool> addCompetitor(String id, String name, String uidCompetitor,
-      String tokenCompetitor) async {
+  Future<bool> addCompetitor(String id, String name, List<String> invitations,
+      List<String> invitationsToken) async {
     return await FireFunctions()
-        .addCompetitor(id, name, uidCompetitor, tokenCompetitor);
+        .addCompetitor(id, name, invitations, invitationsToken);
   }
 
   Future<bool> removeCompetitor(String id, String uidCompetitor) async {
@@ -67,7 +67,7 @@ class CompetitionsControl {
 
     if (result && uidCompetitor == await UserControl().getUid()) {
       return await DatabaseService().removeCompetition(id);
-    }else{
+    } else {
       return result;
     }
   }
