@@ -7,6 +7,11 @@ class FireAuth {
     return await FirebaseAuth.instance.currentUser() != null ? true : false;
   }
 
+  Future<String> getUid() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    return user != null ? user.uid : "";
+  }
+
   Future<String> getName() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     return user != null ? user.displayName : "";

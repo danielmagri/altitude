@@ -9,6 +9,10 @@ class UserControl {
     return await FireAuth().isLogged();
   }
 
+  Future<String> getUid() async {
+    return await FireAuth().getUid();
+  }
+
   Future<String> getName() async {
     String name = await FireAuth().getName();
     return name != "" ? name : SharedPref().getName();
