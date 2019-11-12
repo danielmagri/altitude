@@ -643,4 +643,13 @@ class DatabaseService {
 
     return map;
   }
+
+  /// Remover competição
+  Future<bool> removeCompetition(String id) async {
+    final db = await database;
+
+    await db.rawDelete('''DELETE FROM competition WHERE id=\'$id\';''');
+
+    return true;
+  }
 }

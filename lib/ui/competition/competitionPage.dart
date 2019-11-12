@@ -5,6 +5,7 @@ import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/CompetitionPresentation.dart';
 import 'package:habit/ui/competition/competitionDetailsPage.dart';
 import 'package:habit/ui/competition/createCompetitionPage.dart';
+import 'package:habit/ui/dialogs/BaseDialog.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
@@ -226,6 +227,55 @@ class _CompetitionPageState extends State<CompetitionPage> {
                         elevation: 4,
                         margin: const EdgeInsets.all(10),
                         child: InkWell(
+                          onLongPress: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BaseDialog(
+                                  title: "Largar competição",
+                                  body:
+                                      "Tem certeza que deseja sair da competição?",
+                                  action: <Widget>[
+                                    new FlatButton(
+                                      child: new Text(
+                                        "SIM",
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                      onPressed: () async {
+                                        Loading.showLoading(context);
+
+                                        CompetitionsControl()
+                                            .removeCompetitor(
+                                                competitions[index].id,
+                                                await UserControl().getUid())
+                                            .then((res) {
+                                          Loading.closeLoading(context);
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        }).catchError((error) {
+                                          Loading.closeLoading(context);
+                                          Navigator.pop(context);
+
+                                          showToast("Ocorreu um erro");
+                                        });
+                                      },
+                                    ),
+                                    new FlatButton(
+                                      child: new Text(
+                                        "NÃO",
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                           onTap: () {
                             Loading.showLoading(context);
                             CompetitionsControl()

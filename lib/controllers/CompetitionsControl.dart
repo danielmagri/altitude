@@ -55,4 +55,20 @@ class CompetitionsControl {
   Future<Competition> getCompetitionDetail(String id) async {
     return await FireFunctions().getCompetitionDetail(id);
   }
+
+  Future<bool> addCompetitor(String id, String name, String uidCompetitor,
+      String tokenCompetitor) async {
+    return await FireFunctions()
+        .addCompetitor(id, name, uidCompetitor, tokenCompetitor);
+  }
+
+  Future<bool> removeCompetitor(String id, String uidCompetitor) async {
+    var result = await FireFunctions().removeCompetitor(id, uidCompetitor);
+
+    if (result && uidCompetitor == await UserControl().getUid()) {
+      return await DatabaseService().removeCompetition(id);
+    }else{
+      return result;
+    }
+  }
 }

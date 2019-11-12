@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
+import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
+import 'package:habit/ui/dialogs/BaseDialog.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
@@ -37,7 +39,53 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     super.dispose();
   }
 
-  _showNameDialog(BuildContext context) async {
+  void _leaveCompetition() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BaseDialog(
+          title: "Largar competição",
+          body: "Tem certeza que deseja sair da competição?",
+          action: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "SIM",
+                style: TextStyle(fontSize: 17),
+              ),
+              onPressed: () async {
+                Loading.showLoading(context);
+
+                CompetitionsControl()
+                    .removeCompetitor(
+                        widget.data.id, await UserControl().getUid())
+                    .then((res) {
+                  Loading.closeLoading(context);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }).catchError((error) {
+                  Loading.closeLoading(context);
+                  Navigator.pop(context);
+
+                  showToast("Ocorreu um erro");
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "NÃO",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showNameDialog(BuildContext context) async {
     _titleTextController.text = title;
 
     return showDialog(
@@ -193,6 +241,9 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                       switch (result) {
                         case 1:
                           _showNameDialog(context);
+                          break;
+                        case 3:
+                          _leaveCompetition();
                           break;
                       }
                     },
