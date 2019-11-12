@@ -5,6 +5,7 @@ import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
+import 'package:habit/objects/Person.dart';
 import 'package:habit/ui/dialogs/BaseDialog.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
@@ -37,52 +38,6 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
   void dispose() {
     _titleTextController.dispose();
     super.dispose();
-  }
-
-  void _leaveCompetition() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return BaseDialog(
-          title: "Largar competição",
-          body: "Tem certeza que deseja sair da competição?",
-          action: <Widget>[
-            new FlatButton(
-              child: new Text(
-                "SIM",
-                style: TextStyle(fontSize: 17),
-              ),
-              onPressed: () async {
-                Loading.showLoading(context);
-
-                CompetitionsControl()
-                    .removeCompetitor(
-                        widget.data.id, await UserControl().getUid())
-                    .then((res) {
-                  Loading.closeLoading(context);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                }).catchError((error) {
-                  Loading.closeLoading(context);
-                  Navigator.pop(context);
-
-                  showToast("Ocorreu um erro");
-                });
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                "NÃO",
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _showNameDialog(BuildContext context) async {
@@ -143,6 +98,75 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     } else {
       showToast(result);
     }
+  }
+
+  void _addCompetitor(BuildContext context) async {
+    Loading.showLoading(context);
+    List<Person> friends = await UserControl().getFriends();
+    Loading.closeLoading(context);
+
+    if (friends == null) {
+      showToast("Ocorreu um erro");
+    } else {
+      List<String> competitors =
+          widget.data.competitors.map((competitor) => competitor.uid).toList();
+
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AddCompetitorsDialog(
+              id: widget.data.id,
+              friends: friends,
+              competitors: competitors,
+            );
+          });
+    }
+  }
+
+  void _leaveCompetition() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BaseDialog(
+          title: "Largar competição",
+          body: "Tem certeza que deseja sair da competição?",
+          action: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "SIM",
+                style: TextStyle(fontSize: 17),
+              ),
+              onPressed: () async {
+                Loading.showLoading(context);
+
+                CompetitionsControl()
+                    .removeCompetitor(
+                        widget.data.id, await UserControl().getUid())
+                    .then((res) {
+                  Loading.closeLoading(context);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }).catchError((error) {
+                  Loading.closeLoading(context);
+                  Navigator.pop(context);
+
+                  showToast("Ocorreu um erro");
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "NÃO",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   double getMaxHeight(BuildContext context) {
@@ -242,6 +266,9 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                         case 1:
                           _showNameDialog(context);
                           break;
+                        case 2:
+                          _addCompetitor(context);
+                          break;
                         case 3:
                           _leaveCompetition();
                           break;
@@ -255,7 +282,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                       ),
                       const PopupMenuItem<int>(
                         value: 2,
-                        child: Text('Adicionar amigo'),
+                        child: Text('Adicionar amigos'),
                       ),
                       const PopupMenuItem<int>(
                         value: 3,
@@ -337,6 +364,106 @@ class Metrics extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: _metricList(),
       ),
+    );
+  }
+}
+
+class AddCompetitorsDialog extends StatefulWidget {
+  AddCompetitorsDialog(
+      {Key key,
+      @required this.id,
+      @required this.friends,
+      @required this.competitors})
+      : super(key: key);
+
+  final String id;
+  final List<Person> friends;
+  final List<String> competitors;
+
+  @override
+  _AddCompetitorsDialogState createState() => _AddCompetitorsDialogState();
+}
+
+class _AddCompetitorsDialogState extends State<AddCompetitorsDialog> {
+  List<Person> selectedFriends = [];
+
+  void _addCompetitors() async {
+    if (selectedFriends.isNotEmpty) {
+      List<String> invitations =
+          selectedFriends.map((person) => person.uid).toList();
+      List<String> invitationsToken =
+          selectedFriends.map((person) => person.fcmToken).toList();
+
+      Loading.showLoading(context);
+
+      CompetitionsControl()
+          .addCompetitor(widget.id, await UserControl().getName(), invitations,
+              invitationsToken)
+          .then((res) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop();
+        showToast("Convite enviado!");
+      }).catchError((error) {
+        Loading.closeLoading(context);
+        Navigator.of(context).pop();
+
+        showToast("Ocorreu um erro");
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Adicionar amigos'),
+      content: Container(
+        margin: const EdgeInsets.only(
+          right: 8,
+          left: 8,
+        ),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Wrap(
+            runSpacing: 6,
+            spacing: 10,
+            alignment: WrapAlignment.center,
+            children: widget.friends.map((friend) {
+              return ChoiceChip(
+                label: Text(
+                  friend.name,
+                  style: TextStyle(fontSize: 15),
+                ),
+                selected: selectedFriends.contains(friend),
+                selectedColor: AppColors.colorHabitMix,
+                onSelected: widget.competitors.contains(friend.uid)
+                    ? null
+                    : (selected) {
+                        setState(() {
+                          selected
+                              ? selectedFriends.add(friend)
+                              : selectedFriends.remove(friend);
+                        });
+                      },
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          child: new Text('CANCEL'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        new FlatButton(
+          child: new Text(
+            'ADICIONAR',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          onPressed: _addCompetitors,
+        )
+      ],
     );
   }
 }

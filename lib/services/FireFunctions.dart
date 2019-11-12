@@ -254,13 +254,13 @@ class FireFunctions {
     }
   }
 
-  Future<bool> addCompetitor(String id, String name, String uidCompetitor,
-      String tokenCompetitor) async {
+  Future<bool> addCompetitor(String id, String name, List<String> invitations,
+      List<String> invitationsToken) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent("id", () => id);
     map.putIfAbsent("display_name", () => name);
-    map.putIfAbsent("token", () => tokenCompetitor);
-    map.putIfAbsent("uid", () => uidCompetitor);
+    map.putIfAbsent("invitations", () => invitations);
+    map.putIfAbsent("invitations_token", () => invitationsToken);
 
     try {
       await CloudFunctions.instance
