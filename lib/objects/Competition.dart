@@ -16,12 +16,28 @@ class Competition {
     this.competitors,
   });
 
+  String listCompetitors() {
+    String list = "";
+
+    if (competitors != null) {
+      for (var i = 0; i < competitors.length; i++) {
+        list += competitors[i].name;
+        if (i < competitors.length - 1) {
+          list += ", ";
+        }
+      }
+    }
+
+    return list;
+  }
+
   factory Competition.fromLinkedJson(LinkedHashMap<dynamic, dynamic> json) {
     return new Competition(
       id: json[ID],
       title: json[TITLE],
-      competitors:
-      (json[COMPETITORS] as List).map((c) => Competitor.fromJson(c)).toList(),
+      competitors: (json[COMPETITORS] as List)
+          .map((c) => Competitor.fromJson(c))
+          .toList(),
     );
   }
 

@@ -71,4 +71,26 @@ class CompetitionsControl {
       return result;
     }
   }
+
+  Future<List<Competition>> getPendingCompetitions() async {
+    return await FireFunctions().getPendingCompetitions();
+  }
+
+  Future<void> acceptCompetitionRequest(
+      String id, String title, int habitId) async {
+    try {
+      Habit habit = await HabitsControl().getHabit(habitId);
+
+      await FireFunctions().acceptCompetitionRequest(
+          id, await UserControl().getName(), habit.color, habit.score);
+
+      return await DatabaseService().createCompetitition(id, title, habitId);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> declineCompetitionRequest(String id) async {
+    return await FireFunctions().declineCompetitionRequest(id);
+  }
 }

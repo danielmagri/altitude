@@ -5,7 +5,9 @@ import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/CompetitionPresentation.dart';
 import 'package:habit/ui/competition/competitionDetailsPage.dart';
 import 'package:habit/ui/competition/createCompetitionPage.dart';
+import 'package:habit/ui/competition/pendingCompetitionsPage.dart';
 import 'package:habit/ui/dialogs/BaseDialog.dart';
+import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
@@ -52,6 +54,15 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   Spacer(),
                   SizedBox(
                     width: 50,
+                    child: IconButtonStatus(
+                        icon: Icon(Icons.group_add),
+                        status: false,
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
+                            return PendingCompetitionsPage();
+                          }));
+                        }),
                   ),
                 ],
               ),
