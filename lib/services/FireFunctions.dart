@@ -296,4 +296,60 @@ class FireFunctions {
       throw e;
     }
   }
+
+  Future<List<Competition>> getPendingCompetitions() async {
+    try {
+      HttpsCallableResult result = await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'getPendingCompetitions')
+          .call();
+
+      List data = result.data;
+
+      return data.map((c) => Competition.fromLinkedJson(c)).toList();
+    } on CloudFunctionsException catch (e) {
+      print("getPendingCompetitions: ${e.message}");
+      return null;
+    } on Exception catch (e) {
+      print("getPendingCompetitions: $e");
+      return null;
+    }
+  }
+
+  Future<void> acceptCompetitionRequest(String id, String name, int color, int score) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent(Competition.ID, () => id);
+    map.putIfAbsent(Competitor.NAME, () => name);
+    map.putIfAbsent(Competitor.SCORE, () => score);
+    map.putIfAbsent(Competitor.COLOR, () => color);
+
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'acceptCompetitionRequest')
+          .call(map);
+    } on CloudFunctionsException catch (e) {
+      print("acceptCompetitionRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("acceptCompetitionRequest: $e");
+      return null;
+    }
+  }
+
+  Future<void> declineCompetitionRequest(String id) async {
+    Map<String, dynamic> map = new Map();
+    map.putIfAbsent(Competition.ID, () => id);
+
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'declineCompetitionRequest')
+          .call(map);
+
+    } on CloudFunctionsException catch (e) {
+      print("declineCompetitionRequest: ${e.message}");
+      throw e;
+    } on Exception catch (e) {
+      print("declineCompetitionRequest: $e");
+      return null;
+    }
+  }
 }
