@@ -6,6 +6,7 @@ import 'package:habit/objects/Competitor.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireFunctions.dart';
+import 'package:habit/services/FireMenssaging.dart';
 
 class CompetitionsControl {
   static final CompetitionsControl _singleton =
@@ -23,6 +24,7 @@ class CompetitionsControl {
       Habit habit = await HabitsControl().getHabit(habitId);
       Competitor competitor = Competitor(
           name: await UserControl().getName(),
+          fcmToken: await FireMessaging().getToken(),
           color: habit.color,
           score: habit.score);
 
@@ -33,6 +35,10 @@ class CompetitionsControl {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<List<String>> listCompetitionsIds(int habitId) async {
+    return await DatabaseService().listCompetitionsIds(habitId: habitId);
   }
 
   Future<bool> updateCompetition(String id, String title) async {
@@ -82,7 +88,11 @@ class CompetitionsControl {
       Habit habit = await HabitsControl().getHabit(habitId);
 
       await FireFunctions().acceptCompetitionRequest(
-          id, await UserControl().getName(), habit.color, habit.score);
+          id,
+          await UserControl().getName(),
+          await FireMessaging().getToken(),
+          habit.color,
+          habit.score);
 
       return await DatabaseService().createCompetitition(id, title, habitId);
     } catch (e) {

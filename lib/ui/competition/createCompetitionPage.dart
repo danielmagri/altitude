@@ -8,6 +8,7 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Constants.dart';
 import 'package:habit/utils/Validator.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
@@ -41,13 +42,15 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
     super.dispose();
   }
 
-  void _createCompetitionTap() {
+  void _createCompetitionTap() async {
     if (Validate.competitionNameValidate(controller.text) != null) {
       showToast(Validate.competitionNameValidate(controller.text));
     } else if (selectedHabit == null) {
       showToast("Escolha um hábito para competir.");
     } else if (selectedFriends.length == 0) {
       showToast("Escolha pelo menos um amigo.");
+    } else if ((await CompetitionsControl().listCompetitions()).length >= MAX_COMPETITIONS) {
+      showToast("Você atingiu o número máximo de competições.");
     } else {
       List<String> invitations = selectedFriends.map((person) => person.uid).toList();
       List<String> invitationsToken =
