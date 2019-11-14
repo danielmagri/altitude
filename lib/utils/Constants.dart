@@ -1,0 +1,3 @@
+
+
+const MAX_COMPETITIONS = 5;

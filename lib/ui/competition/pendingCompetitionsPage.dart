@@ -9,6 +9,7 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Constants.dart';
 
 class PendingCompetitionsPage extends StatefulWidget {
   @override
@@ -52,6 +53,12 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
   void _chooseHabit(BuildContext context, int index) async {
     Loading.showLoading(context);
     List<Habit> habits = await HabitsControl().getAllHabits();
+    if ((await CompetitionsControl().listCompetitions()).length >=
+        MAX_COMPETITIONS) {
+      showToast("Você atingiu o número máximo de competições.");
+      return;
+    }
+
     Loading.closeLoading(context);
 
     if (habits == null) {

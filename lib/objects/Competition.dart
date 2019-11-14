@@ -14,7 +14,11 @@ class Competition {
     this.id,
     this.title,
     this.competitors,
-  });
+  }) {
+    if (competitors.isNotEmpty) {
+      competitors.sort((a, b) => b.score.compareTo(a.score));
+    }
+  }
 
   String listCompetitors() {
     String list = "";

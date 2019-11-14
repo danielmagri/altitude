@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Frequency.dart';
 import 'package:habit/controllers/HabitsControl.dart';
@@ -48,6 +49,47 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
     setState(() {
       DataHabitCreation().indexColor = index;
     });
+  }
+
+  void _removeHabit() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BaseDialog(
+          title: "Deletar",
+          body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
+          subBody:
+              "(Todo o progresso dele será perdido e a quilômetragem perdida)",
+          action: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "SIM",
+                style: TextStyle(fontSize: 17),
+              ),
+              onPressed: () {
+                HabitsControl()
+                    .deleteHabit(
+                        DataHabitDetail().habit.id,
+                        DataHabitDetail().habit.score,
+                        DataHabitDetail().reminders)
+                    .then((status) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                });
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "NÃO",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _createHabitTap() async {
@@ -143,49 +185,36 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                     width: 50,
                     child: IconButton(
                         icon: Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return BaseDialog(
-                                title: "Deletar",
-                                body:
-                                    "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
-                                subBody:
-                                    "(Todo o progresso dele será perdido e a quilômetragem perdida)",
-                                action: <Widget>[
-                                  new FlatButton(
-                                    child: new Text(
-                                      "SIM",
-                                      style: TextStyle(fontSize: 17),
+                        onPressed: () async {
+                          Loading.showLoading(context);
+                          var listCompetitions = await CompetitionsControl()
+                              .listCompetitionsIds(DataHabitDetail().habit.id);
+                          Loading.closeLoading(context);
+                          if (listCompetitions.isEmpty) {
+                            _removeHabit();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return BaseDialog(
+                                  title: "Opss",
+                                  body:
+                                      "É preciso sair das competições que esse hábito faz parte para poder deletá-lo.",
+                                  action: <Widget>[
+                                    new FlatButton(
+                                      child: new Text(
+                                        "Ok",
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
                                     ),
-                                    onPressed: () {
-                                      HabitsControl()
-                                          .deleteHabit(
-                                              DataHabitDetail().habit.id,
-                                              DataHabitDetail().habit.score,
-                                              DataHabitDetail().reminders)
-                                          .then((status) {
-                                        Navigator.of(context)
-                                            .popUntil((route) => route.isFirst);
-                                      });
-                                    },
-                                  ),
-                                  new FlatButton(
-                                    child: new Text(
-                                      "NÃO",
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }),
                   ),
                 ],

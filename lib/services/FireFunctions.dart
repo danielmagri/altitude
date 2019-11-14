@@ -194,6 +194,7 @@ class FireFunctions {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent(Competition.TITLE, () => title);
     map.putIfAbsent(Competitor.NAME, () => competitor.name);
+    map.putIfAbsent(Competitor.FCM_TOKEN, () => competitor.fcmToken);
     map.putIfAbsent(Competitor.SCORE, () => competitor.score);
     map.putIfAbsent(Competitor.COLOR, () => competitor.color);
     map.putIfAbsent("invitations", () => invitations);
@@ -315,10 +316,11 @@ class FireFunctions {
     }
   }
 
-  Future<void> acceptCompetitionRequest(String id, String name, int color, int score) async {
+  Future<void> acceptCompetitionRequest(String id, String name, String fcmToken, int color, int score) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent(Competition.ID, () => id);
     map.putIfAbsent(Competitor.NAME, () => name);
+    map.putIfAbsent(Competitor.FCM_TOKEN, () => fcmToken);
     map.putIfAbsent(Competitor.SCORE, () => score);
     map.putIfAbsent(Competitor.COLOR, () => color);
 

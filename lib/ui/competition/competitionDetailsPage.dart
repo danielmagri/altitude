@@ -172,13 +172,14 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    widget.data.competitors
-        .forEach((competitor) => height = max(height, competitor.score * 10.0));
+    if (widget.data.competitors != null && widget.data.competitors.isNotEmpty) {
+      height = (widget.data.competitors[0].score * 10.0) + 200;
+    }
 
     if (height < MediaQuery.of(context).size.height) {
       return MediaQuery.of(context).size.height - 110;
     } else {
-      return height + 200;
+      return height;
     }
   }
 
