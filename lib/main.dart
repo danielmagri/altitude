@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/services/FireMenssaging.dart';
 import 'package:habit/ui/competition/competitionPage.dart';
@@ -353,6 +354,22 @@ class _MainPageState extends State<MainPage>
                 "assets/ic_award.png",
                 width: 25,
                 color: Colors.black,
+              ),
+              trailing: FutureBuilder(
+                future: CompetitionsControl().getPendingCompetitionsStatus(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data) {
+                      return Container(
+                        width: 10,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.colorHabitMix),
+                      );
+                    }
+                  }
+                  return SizedBox();
+                },
               ),
               onTap: () {
                 Navigator.pop(context);

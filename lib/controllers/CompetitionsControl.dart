@@ -7,6 +7,7 @@ import 'package:habit/objects/Habit.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/FireMenssaging.dart';
+import 'package:habit/services/SharedPref.dart';
 
 class CompetitionsControl {
   static final CompetitionsControl _singleton =
@@ -35,6 +36,14 @@ class CompetitionsControl {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<bool> getPendingCompetitionsStatus() async {
+    return await SharedPref().getPendingCompetitions();
+  }
+
+  Future<void> setPendingCompetitionsStatus(bool value) async {
+    return await SharedPref().setPendingCompetitions(value);
   }
 
   Future<List<String>> listCompetitionsIds(int habitId) async {

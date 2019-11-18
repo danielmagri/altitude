@@ -6,11 +6,14 @@ import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/objects/Competition.dart';
 import 'package:habit/objects/Competitor.dart';
 import 'package:habit/objects/Person.dart';
+import 'package:habit/services/SharedPref.dart';
 import 'package:habit/ui/dialogs/BaseDialog.dart';
+import 'package:habit/ui/dialogs/TutorialDialog.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Util.dart';
 import 'package:habit/utils/Validator.dart';
 
 class CompetitionDetailsPage extends StatefulWidget {
@@ -32,12 +35,45 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     super.initState();
 
     title = widget.data.title;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!await SharedPref().getCompetitionTutorial()) {
+        await showTutorial();
+        await SharedPref().setCompetitionTutorial(true);
+      }
+    });
   }
 
   @override
   void dispose() {
     _titleTextController.dispose();
     super.dispose();
+  }
+
+  Future showTutorial() async {
+    Util.dialogNavigator(
+        context,
+        TutorialDialog(
+          hero: "",
+          texts: [
+            TextSpan(
+              text:
+              "  E que comece a competição! Qual de vocês consegue ir mais longe?",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  height: 1.2),
+            ),
+            TextSpan(
+              text: "\n\n  Ao iniciar uma competição a quilometragem do hábito começa a ser contada a partir do início da competição. Mas fique tranquilo o seu progresso pessoal não será perdido.",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w300,
+                  height: 1.2),
+            ),
+          ],
+        ));
   }
 
   void _showNameDialog(BuildContext context) async {
