@@ -12,6 +12,7 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Constants.dart';
 import 'package:habit/utils/Util.dart';
 
 import '../loginPage.dart';
@@ -227,6 +228,14 @@ class _CompetitionPageState extends State<CompetitionPage> {
                         borderRadius: new BorderRadius.circular(30)),
                     onPressed: () async {
                       Loading.showLoading(context);
+                      if ((await CompetitionsControl().listCompetitions())
+                              .length >=
+                          MAX_COMPETITIONS) {
+                        showToast(
+                            "Você atingiu o número máximo de competições.");
+                        Loading.closeLoading(context);
+                        return;
+                      }
                       List habits = await HabitsControl().getAllHabits();
                       List friends = await UserControl().getFriends();
                       Loading.closeLoading(context);
