@@ -12,6 +12,9 @@ import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Util.dart';
+
+import '../loginPage.dart';
 
 class CompetitionPage extends StatefulWidget {
   @override
@@ -19,6 +22,30 @@ class CompetitionPage extends StatefulWidget {
 }
 
 class _CompetitionPageState extends State<CompetitionPage> {
+  bool pendingStatus = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getData();
+  }
+
+  void getData() async {
+    if (await UserControl().isLogged()) {
+      pendingStatus =
+          await CompetitionsControl().getPendingCompetitionsStatus();
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        Util.dialogNavigator(context, LoginPage()).then((res) {
+          if (res != null) {
+            getData();
+          }
+        });
+      });
+    }
+  }
+
   Widget _positionWidget(int position) {
     if (position == 1) {
       return Image.asset("assets/first.png", height: 25);
@@ -55,14 +82,14 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   SizedBox(
                     width: 50,
                     child: IconButtonStatus(
-                        icon: Icon(Icons.group_add),
-                        status: false,
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) {
-                            return PendingCompetitionsPage();
-                          }));
-                        }),
+                      icon: Icon(Icons.group_add),
+                      status: pendingStatus,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return PendingCompetitionsPage();
+                        }));
+                      },
+                    ),
                   ),
                 ],
               ),

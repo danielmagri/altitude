@@ -34,7 +34,7 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
       CompetitionsControl().getPendingCompetitions().then((competitions) async {
         if (competitions.length == 0) {
           isEmpty = true;
-          //await UserControl().setPendingFriendsStatus(false);
+          CompetitionsControl().setPendingCompetitionsStatus(false);
         } else {
           pendingCompetitions = competitions;
           pendingCompetitions.sort((a, b) => a.title.compareTo(b.title));
@@ -75,7 +75,7 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
                 pendingCompetitions.removeAt(index);
                 if (pendingCompetitions.length == 0) {
                   isEmpty = true;
-                  //UserControl().setPendingFriendsStatus(false);
+                  CompetitionsControl().setPendingCompetitionsStatus(false);
                 }
                 setState(() {});
               },
@@ -186,8 +186,9 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
                                           pendingCompetitions.removeAt(index);
                                           if (pendingCompetitions.length == 0) {
                                             isEmpty = true;
-//                                            UserControl()
-//                                                .setPendingFriendsStatus(false);
+                                            CompetitionsControl()
+                                                .setPendingCompetitionsStatus(
+                                                    false);
                                           }
                                           setState(() {});
                                         }).catchError((error) {

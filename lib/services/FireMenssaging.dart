@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
 
 class FireMessaging {
@@ -24,11 +25,6 @@ class FireMessaging {
     });
   }
 
-  Future<dynamic> myBackgroundMessageHandler(
-      Map<String, dynamic> message) async {
-    return Future<void>.value();
-  }
-
   Future<String> getToken() async {
     return await FirebaseMessaging().getToken();
   }
@@ -36,6 +32,9 @@ class FireMessaging {
   void isNewFriendRequest(Map<dynamic, dynamic> data) {
     if (data.containsKey('new_friend')) {
       UserControl().setPendingFriendsStatus(true);
+    }
+    if (data.containsKey('new_competition')) {
+      CompetitionsControl().setPendingCompetitionsStatus(true);
     }
   }
 }
