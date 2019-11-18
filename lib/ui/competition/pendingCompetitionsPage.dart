@@ -52,12 +52,12 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
 
   void _chooseHabit(BuildContext context, int index) async {
     Loading.showLoading(context);
-    List<Habit> habits = await HabitsControl().getAllHabits();
     if ((await CompetitionsControl().listCompetitions()).length >=
         MAX_COMPETITIONS) {
       showToast("Você atingiu o número máximo de competições.");
       return;
     }
+    List<Habit> habits = await HabitsControl().getAllHabits();
 
     Loading.closeLoading(context);
 
@@ -307,7 +307,15 @@ class _ChooseHabitState extends State<ChooseHabit> {
               'COMPETIR',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            onPressed: () {
+            onPressed: () async {
+              if ((await CompetitionsControl()
+                          .listCompetitionsIds(selectedHabit.id))
+                      .length >=
+                  MAX_HABIT_COMPETITIONS) {
+                showToast(
+                    "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+                return;
+              }
               Loading.showLoading(context);
               CompetitionsControl()
                   .acceptCompetitionRequest(

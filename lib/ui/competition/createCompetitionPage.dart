@@ -49,18 +49,25 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
       showToast("Escolha um hábito para competir.");
     } else if (selectedFriends.length == 0) {
       showToast("Escolha pelo menos um amigo.");
-    } else if ((await CompetitionsControl().listCompetitions()).length >= MAX_COMPETITIONS) {
-      showToast("Você atingiu o número máximo de competições.");
+    } else if ((await CompetitionsControl()
+                .listCompetitionsIds(selectedHabit.id))
+            .length >=
+        MAX_HABIT_COMPETITIONS) {
+      showToast(
+          "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
-      List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+      List<String> invitations =
+          selectedFriends.map((person) => person.uid).toList();
       List<String> invitationsToken =
           selectedFriends.map((person) => person.fcmToken).toList();
 
       Loading.showLoading(context);
-      CompetitionsControl().createCompetition(
-          controller.text, selectedHabit.id, invitations, invitationsToken).then((state) {
-         Loading.closeLoading(context);
-         Navigator.pop(context);
+      CompetitionsControl()
+          .createCompetition(
+              controller.text, selectedHabit.id, invitations, invitationsToken)
+          .then((state) {
+        Loading.closeLoading(context);
+        Navigator.pop(context);
       }).catchError((error) {
         Loading.closeLoading(context);
 
