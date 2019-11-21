@@ -4,15 +4,18 @@ import 'package:habit/objects/Competitor.dart';
 class Competition {
   String id;
   String title;
+  DateTime initialDate;
   List<Competitor> competitors;
 
   static const ID = "id";
   static const TITLE = "title";
+  static const INITIAL_DATE = "initial_date";
   static const COMPETITORS = "competitors";
 
   Competition({
     this.id,
     this.title,
+    this.initialDate,
     this.competitors,
   }) {
     if (competitors.isNotEmpty) {
@@ -39,6 +42,7 @@ class Competition {
     return new Competition(
       id: json[ID],
       title: json[TITLE],
+      initialDate: json[INITIAL_DATE] == null ? null : new DateTime.fromMillisecondsSinceEpoch(json[INITIAL_DATE]),
       competitors: (json[COMPETITORS] as List)
           .map((c) => Competitor.fromJson(c))
           .toList(),

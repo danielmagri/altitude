@@ -60,10 +60,8 @@ class HabitsControl {
   }
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
-  Future<Habit> addHabit(
-      Habit habit, dynamic frequency, List<Reminder> reminders) async {
-    Map response =
-        await DatabaseService().addHabit(habit, frequency, reminders);
+  Future<Habit> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
+    Map response = await DatabaseService().addHabit(habit, frequency, reminders);
     habit.id = response[0];
     for (Reminder reminder in response[1]) {
       await NotificationControl().addNotification(reminder, habit);
@@ -81,8 +79,7 @@ class HabitsControl {
   /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit, Habit oldHabit) async {
     if (habit.color != oldHabit.color) {
-      FireFunctions().updateUser(
-          await DatabaseService().listCompetitionsIds(habitId: habit.id),
+      FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id),
           color: habit.color);
     }
     return await DatabaseService().updateHabit(habit);
@@ -113,10 +110,8 @@ class HabitsControl {
   }
 
   /// Adiciona os alarmes do hábito.
-  Future<List<Reminder>> addReminders(
-      Habit habit, List<Reminder> reminders) async {
-    List<Reminder> remindersAdded =
-        await DatabaseService().addReminders(habit.id, reminders);
+  Future<List<Reminder>> addReminders(Habit habit, List<Reminder> reminders) async {
+    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
 
     for (Reminder reminder in remindersAdded) {
       await NotificationControl().addNotification(reminder, habit);
@@ -139,32 +134,27 @@ class HabitsControl {
   }
 
   /// Atualiza a frequência do hábito.
-  Future<bool> updateFrequency(
-      int id, dynamic frequency, Type typeOldFreq) async {
+  Future<bool> updateFrequency(int id, dynamic frequency, Type typeOldFreq) async {
     return await DatabaseService().updateFrequency(id, frequency, typeOldFreq);
   }
 
   /// Retorna um map com os dias feitos do hábito.
-  Future<Map<DateTime, List>> getDaysDone(int id,
-      {DateTime startDate, DateTime endDate}) async {
+  Future<Map<DateTime, List>> getDaysDone(int id, {DateTime startDate, DateTime endDate}) async {
     Map<DateTime, List> map = new Map();
-    List<DayDone> list = await DatabaseService()
-        .getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> list =
+        await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
     bool before = false;
     bool after = false;
 
     for (int i = 0; i < list.length; i++) {
-      if (i - 1 >= 0 &&
-          list[i].dateDone.difference(list[i - 1].dateDone) ==
-              Duration(days: 1)) {
+      if (i - 1 >= 0 && list[i].dateDone.difference(list[i - 1].dateDone) == Duration(days: 1)) {
         before = true;
       } else {
         before = false;
       }
 
       if (i + 1 < list.length &&
-          list[i + 1].dateDone.difference(list[i].dateDone) ==
-              Duration(days: 1)) {
+          list[i + 1].dateDone.difference(list[i].dateDone) == Duration(days: 1)) {
         after = true;
       } else {
         after = false;
@@ -176,16 +166,15 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id,
-      {dynamic freq, bool add = true}) async {
+  Future<int> setHabitDoneAndScore(DateTime date, int id, {dynamic freq, bool add = true}) async {
     dynamic frequency = freq != null ? freq : await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.add(Duration(days: 6 - weekDay));
     int score;
 
-    List<DayDone> daysDone = await DatabaseService()
-        .getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> daysDone =
+        await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
       score = ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
@@ -199,6 +188,39 @@ class HabitsControl {
 
     FireAnalytics().sendDoneHabit(
         "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}");
+
+    return score;
+  }
+
+  /// Retorna a pontuação contada a partir da data
+  Future<int> getHabitScore(int id, DateTime initialDate) async {
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    dynamic frequency = await getFrequency(id);
+    int score = 0;
+
+    // Primeira semana
+    int weekDay = initialDate.weekday == 7 ? 0 : initialDate.weekday;
+    DateTime startDate = initialDate.subtract(Duration(days: weekDay));
+    DateTime date = initialDate.add(Duration(days: 6 - weekDay));
+    if (date.isAfter(today)) {
+      date = today;
+    }
+
+    int dayDoneCount = (await DatabaseService().getDaysDone(id, startDate: startDate, endDate: date)).length;
+
+    score += dayDoneCount * ScoreControl.fullDayPoint;
+    if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;
+
+    // Proximas semanas
+    date = date.add(Duration(days: 1));
+    while(date.isBefore(today)) {
+      dayDoneCount = (await DatabaseService().getDaysDone(id, startDate: date, endDate: date.add(Duration(days: 6)))).length;
+
+      score += dayDoneCount * ScoreControl.fullDayPoint;
+      if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;
+
+      date = date.add(Duration(days: 7));
+    }
 
     return score;
   }

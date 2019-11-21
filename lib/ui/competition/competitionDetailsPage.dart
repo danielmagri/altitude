@@ -58,14 +58,13 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
           texts: [
             TextSpan(
               text:
-              "  E que comece a competição! Qual de vocês consegue ir mais longe?",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  height: 1.2),
+                  "  E que comece a competição! Qual de vocês consegue ir mais longe?",
+              style:
+                  TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
             ),
             TextSpan(
-              text: "\n\n  Ao iniciar uma competição a quilometragem do hábito começa a ser contada a partir do início da competição. Mas fique tranquilo o seu progresso pessoal não será perdido.",
+              text:
+                  "\n\n  Ao iniciar uma competição a quilometragem do hábito começa a ser contada a partir da semana do início da competição. Mas fique tranquilo o seu progresso pessoal não será perdido.",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 18.0,
@@ -205,6 +204,29 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     );
   }
 
+  void _aboutCompetition() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BaseDialog(
+          title: "Sobre",
+          body: "Data de início: ${widget.data.initialDate.day.toString().padLeft(2, '0')}/${widget.data.initialDate.month.toString().padLeft(2, '0')}/${widget.data.initialDate.year}",
+          action: <Widget>[
+            new FlatButton(
+              child: new Text(
+                "Fechar",
+                style: TextStyle(fontSize: 17),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
@@ -309,6 +331,9 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                         case 3:
                           _leaveCompetition();
                           break;
+                        case 4:
+                          _aboutCompetition();
+                          break;
                       }
                     },
                     itemBuilder: (BuildContext context) =>
@@ -324,6 +349,10 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                       const PopupMenuItem<int>(
                         value: 3,
                         child: Text('Sair da competição'),
+                      ),
+                      const PopupMenuItem<int>(
+                        value: 4,
+                        child: Text('Sobre'),
                       ),
                     ],
                   ),

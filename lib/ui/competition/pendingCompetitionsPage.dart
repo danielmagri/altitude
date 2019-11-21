@@ -70,6 +70,7 @@ class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
             return ChooseHabit(
               id: pendingCompetitions[index].id,
               title: pendingCompetitions[index].title,
+              date: pendingCompetitions[index].initialDate,
               habits: habits,
               accepted: () {
                 pendingCompetitions.removeAt(index);
@@ -239,12 +240,14 @@ class ChooseHabit extends StatefulWidget {
       {Key key,
       @required this.id,
       @required this.title,
+      @required this.date,
       @required this.habits,
       @required this.accepted})
       : super(key: key);
 
   final String id;
   final String title;
+  final DateTime date;
   final List<Habit> habits;
   final Function accepted;
 
@@ -319,7 +322,7 @@ class _ChooseHabitState extends State<ChooseHabit> {
               Loading.showLoading(context);
               CompetitionsControl()
                   .acceptCompetitionRequest(
-                      widget.id, widget.title, selectedHabit.id)
+                      widget.id, widget.title, widget.date, selectedHabit.id)
                   .then((_) {
                 Loading.closeLoading(context);
                 Navigator.of(context).pop();

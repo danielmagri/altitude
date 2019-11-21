@@ -402,7 +402,7 @@ class DatabaseService {
 
     await db.rawInsert(
         '''UPDATE competition SET score = score+$score WHERE habit_id=$id AND
-                                                                            initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
+                                                             initial_date<=\'${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';''');
 
     return true;
   }
@@ -576,14 +576,13 @@ class DatabaseService {
   /// Competição
 
   /// Criar competição
-  Future<bool> createCompetitition(String id, String title, int habitId) async {
-    DateTime now = new DateTime.now();
+  Future<bool> createCompetitition(String id, String title, int habitId, DateTime date) async {
     final db = await database;
 
     await db.rawInsert(
         '''INSERT INTO competition (id, title, initial_date, habit_id) VALUES (\'$id\',
                                                                                \'$title\',
-                                                                               \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\',
+                                                                               \'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\',
                                                                                $habitId);''');
 
     return true;
