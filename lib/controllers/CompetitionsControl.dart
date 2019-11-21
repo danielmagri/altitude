@@ -23,16 +23,24 @@ class CompetitionsControl {
       List<String> invitations, List<String> invitationsToken) async {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
+      DateTime date = new DateTime(
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
       Competitor competitor = Competitor(
           name: await UserControl().getName(),
           fcmToken: await FireMessaging().getToken(),
           color: habit.color,
-          score: habit.score);
+          score: await HabitsControl().getHabitScore(habitId, date));
 
-      String id = await FireFunctions()
-          .createCompetition(title, competitor, invitations, invitationsToken);
+      String id = await FireFunctions().createCompetition(
+          title,
+          date.millisecondsSinceEpoch,
+          competitor,
+          invitations,
+          invitationsToken);
 
-      return await DatabaseService().createCompetitition(id, title, habitId);
+      return await DatabaseService()
+          .createCompetitition(id, title, habitId, date);
     } catch (e) {
       throw e;
     }
@@ -92,7 +100,7 @@ class CompetitionsControl {
   }
 
   Future<void> acceptCompetitionRequest(
-      String id, String title, int habitId) async {
+      String id, String title, DateTime date, int habitId) async {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
 
@@ -101,9 +109,10 @@ class CompetitionsControl {
           await UserControl().getName(),
           await FireMessaging().getToken(),
           habit.color,
-          habit.score);
+          await HabitsControl().getHabitScore(habitId, date));
 
-      return await DatabaseService().createCompetitition(id, title, habitId);
+      return await DatabaseService()
+          .createCompetitition(id, title, habitId, date);
     } catch (e) {
       throw e;
     }

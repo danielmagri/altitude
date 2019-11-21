@@ -189,10 +189,11 @@ class FireFunctions {
 
   // Competition
 
-  Future<String> createCompetition(String title, Competitor competitor,
+  Future<String> createCompetition(String title, int initialDate, Competitor competitor,
       List<String> invitations, List<String> invitationsToken) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent(Competition.TITLE, () => title);
+    map.putIfAbsent(Competition.INITIAL_DATE, () => initialDate);
     map.putIfAbsent(Competitor.NAME, () => competitor.name);
     map.putIfAbsent(Competitor.FCM_TOKEN, () => competitor.fcmToken);
     map.putIfAbsent(Competitor.SCORE, () => competitor.score);
@@ -244,7 +245,6 @@ class FireFunctions {
           .getHttpsCallable(functionName: 'getCompetitionDetail')
           .call(map);
 
-      print(result.data);
       return Competition.fromLinkedJson(result.data);
     } on CloudFunctionsException catch (e) {
       print("getCompetitionDetail: ${e.message}");
@@ -316,7 +316,7 @@ class FireFunctions {
     }
   }
 
-  Future<void> acceptCompetitionRequest(String id, String name, String fcmToken, int color, int score) async {
+  Future<int> acceptCompetitionRequest(String id, String name, String fcmToken, int color, int score) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent(Competition.ID, () => id);
     map.putIfAbsent(Competitor.NAME, () => name);
@@ -325,9 +325,11 @@ class FireFunctions {
     map.putIfAbsent(Competitor.COLOR, () => color);
 
     try {
-      await CloudFunctions.instance
+      HttpsCallableResult result = await CloudFunctions.instance
           .getHttpsCallable(functionName: 'acceptCompetitionRequest')
           .call(map);
+
+      return result.data;
     } on CloudFunctionsException catch (e) {
       print("acceptCompetitionRequest: ${e.message}");
       throw e;

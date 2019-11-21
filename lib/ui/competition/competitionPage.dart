@@ -34,8 +34,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
 
   void getData() async {
     if (await UserControl().isLogged()) {
-      pendingStatus =
-          await CompetitionsControl().getPendingCompetitionsStatus();
+      pendingStatus = await CompetitionsControl().getPendingCompetitionsStatus();
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Util.dialogNavigator(context, LoginPage()).then((res) {
@@ -95,123 +94,116 @@ class _CompetitionPageState extends State<CompetitionPage> {
                 ],
               ),
             ),
-            Card(
-              margin: const EdgeInsets.only(
-                  left: 16, right: 16, top: 0, bottom: 24),
-              elevation: 4,
-              child: Container(
-                width: double.maxFinite,
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        _positionWidget(1),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            "Giovana",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontSize: 16,
-                              decoration: false
-                                  ? TextDecoration.underline
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              "Coach",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              "${1000} Km",
-                              style: TextStyle(fontWeight: FontWeight.w300),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: <Widget>[
-                        _positionWidget(2),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            "Daniel",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontSize: 16,
-                              decoration: false
-                                  ? TextDecoration.underline
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              "Perseverante",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              "${500} Km",
-                              style: TextStyle(fontWeight: FontWeight.w300),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: <Widget>[
-                        _positionWidget(3),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            "Joaquim",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontSize: 16,
-                              decoration: false
-                                  ? TextDecoration.underline
-                                  : TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              "Procrastinador",
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              "${0} Km",
-                              style: TextStyle(fontWeight: FontWeight.w300),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+//            Card(
+//              margin: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 24),
+//              elevation: 4,
+//              child: Container(
+//                width: double.maxFinite,
+//                padding: const EdgeInsets.all(8),
+//                child: Column(
+//                  children: <Widget>[
+//                    Row(
+//                      children: <Widget>[
+//                        _positionWidget(1),
+//                        SizedBox(width: 12),
+//                        Expanded(
+//                          child: Text(
+//                            "Giovana",
+//                            overflow: TextOverflow.ellipsis,
+//                            maxLines: 2,
+//                            style: TextStyle(
+//                              fontSize: 16,
+//                              decoration: false ? TextDecoration.underline : TextDecoration.none,
+//                            ),
+//                          ),
+//                        ),
+//                        Column(
+//                          mainAxisSize: MainAxisSize.max,
+//                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                          crossAxisAlignment: CrossAxisAlignment.end,
+//                          children: <Widget>[
+//                            Text(
+//                              "Coach",
+//                              style: TextStyle(fontSize: 15),
+//                            ),
+//                            Text(
+//                              "${1000} Km",
+//                              style: TextStyle(fontWeight: FontWeight.w300),
+//                            ),
+//                          ],
+//                        )
+//                      ],
+//                    ),
+//                    SizedBox(height: 8),
+//                    Row(
+//                      children: <Widget>[
+//                        _positionWidget(2),
+//                        SizedBox(width: 12),
+//                        Expanded(
+//                          child: Text(
+//                            "Daniel",
+//                            overflow: TextOverflow.ellipsis,
+//                            maxLines: 2,
+//                            style: TextStyle(
+//                              fontSize: 16,
+//                              decoration: false ? TextDecoration.underline : TextDecoration.none,
+//                            ),
+//                          ),
+//                        ),
+//                        Column(
+//                          mainAxisSize: MainAxisSize.max,
+//                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                          crossAxisAlignment: CrossAxisAlignment.end,
+//                          children: <Widget>[
+//                            Text(
+//                              "Perseverante",
+//                              style: TextStyle(fontSize: 15),
+//                            ),
+//                            Text(
+//                              "${500} Km",
+//                              style: TextStyle(fontWeight: FontWeight.w300),
+//                            ),
+//                          ],
+//                        )
+//                      ],
+//                    ),
+//                    SizedBox(height: 8),
+//                    Row(
+//                      children: <Widget>[
+//                        _positionWidget(3),
+//                        SizedBox(width: 12),
+//                        Expanded(
+//                          child: Text(
+//                            "Joaquim",
+//                            overflow: TextOverflow.ellipsis,
+//                            maxLines: 2,
+//                            style: TextStyle(
+//                              fontSize: 16,
+//                              decoration: false ? TextDecoration.underline : TextDecoration.none,
+//                            ),
+//                          ),
+//                        ),
+//                        Column(
+//                          mainAxisSize: MainAxisSize.max,
+//                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                          crossAxisAlignment: CrossAxisAlignment.end,
+//                          children: <Widget>[
+//                            Text(
+//                              "Procrastinador",
+//                              style: TextStyle(fontSize: 15),
+//                            ),
+//                            Text(
+//                              "${0} Km",
+//                              style: TextStyle(fontWeight: FontWeight.w300),
+//                            ),
+//                          ],
+//                        )
+//                      ],
+//                    ),
+//                  ],
+//                ),
+//              ),
+//            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -224,15 +216,12 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   ),
                   FlatButton(
                     color: AppColors.colorHabitMix,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30)),
+                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
                     onPressed: () async {
                       Loading.showLoading(context);
-                      if ((await CompetitionsControl().listCompetitions())
-                              .length >=
+                      if ((await CompetitionsControl().listCompetitions()).length >=
                           MAX_COMPETITIONS) {
-                        showToast(
-                            "Você atingiu o número máximo de competições.");
+                        showToast("Você atingiu o número máximo de competições.");
                         Loading.closeLoading(context);
                         return;
                       }
@@ -240,12 +229,16 @@ class _CompetitionPageState extends State<CompetitionPage> {
                       List friends = await UserControl().getFriends();
                       Loading.closeLoading(context);
 
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return CreateCompetitionPage(
-                          habits: habits,
-                          friends: friends,
-                        );
-                      }));
+                      if (friends != null && habits != null) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return CreateCompetitionPage(
+                            habits: habits,
+                            friends: friends,
+                          );
+                        }));
+                      } else {
+                        showToast("Ocorreu um erro");
+                      }
                     },
                     child: Text(
                       "Criar",
@@ -267,8 +260,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: const EdgeInsets.all(0),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         elevation: 4,
@@ -280,8 +272,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                               builder: (BuildContext context) {
                                 return BaseDialog(
                                   title: "Largar competição",
-                                  body:
-                                      "Tem certeza que deseja sair da competição?",
+                                  body: "Tem certeza que deseja sair da competição?",
                                   action: <Widget>[
                                     new FlatButton(
                                       child: new Text(
@@ -292,8 +283,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                                         Loading.showLoading(context);
 
                                         CompetitionsControl()
-                                            .removeCompetitor(
-                                                competitions[index].id,
+                                            .removeCompetitor(competitions[index].id,
                                                 await UserControl().getUid())
                                             .then((res) {
                                           Loading.closeLoading(context);
@@ -310,9 +300,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                                     new FlatButton(
                                       child: new Text(
                                         "NÃO",
-                                        style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -331,17 +319,13 @@ class _CompetitionPageState extends State<CompetitionPage> {
                               Loading.closeLoading(context);
 
                               if (competition != null) {
-                                if (competition.title !=
-                                    competitions[index].title) {
+                                if (competition.title != competitions[index].title) {
                                   CompetitionsControl().updateCompetitionDB(
-                                      competitions[index].id,
-                                      competition.title);
+                                      competitions[index].id, competition.title);
                                 }
 
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (_) {
-                                  return CompetitionDetailsPage(
-                                      data: competition);
+                                Navigator.push(context, MaterialPageRoute(builder: (_) {
+                                  return CompetitionDetailsPage(data: competition);
                                 }));
                               } else {
                                 showToast("Ocorreu um erro");
@@ -358,15 +342,12 @@ class _CompetitionPageState extends State<CompetitionPage> {
                                 right: 0,
                                 bottom: -50,
                                 child: LayoutBuilder(
-                                  builder: (BuildContext context,
-                                      BoxConstraints constraints) {
+                                  builder: (BuildContext context, BoxConstraints constraints) {
                                     return Transform.rotate(
                                       angle: 0.523,
                                       child: Rocket(
-                                        size: Size(constraints.maxWidth,
-                                            constraints.maxWidth),
-                                        color: AppColors.habitsColor[
-                                            competitions[index].color],
+                                        size: Size(constraints.maxWidth, constraints.maxWidth),
+                                        color: AppColors.habitsColor[competitions[index].color],
                                         isExtend: true,
                                       ),
                                     );
