@@ -23,8 +23,6 @@ class CompetitionPage extends StatefulWidget {
 }
 
 class _CompetitionPageState extends State<CompetitionPage> {
-  bool pendingStatus = false;
-
   @override
   void initState() {
     super.initState();
@@ -33,9 +31,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
   }
 
   void getData() async {
-    if (await UserControl().isLogged()) {
-      pendingStatus = await CompetitionsControl().getPendingCompetitionsStatus();
-    } else {
+    if (!await UserControl().isLogged()) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Util.dialogNavigator(context, LoginPage()).then((res) {
           if (res != null) {
@@ -81,13 +77,24 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   Spacer(),
                   SizedBox(
                     width: 50,
-                    child: IconButtonStatus(
-                      icon: Icon(Icons.group_add),
-                      status: pendingStatus,
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return PendingCompetitionsPage();
-                        }));
+                    child: FutureBuilder(
+                      future: CompetitionsControl().getPendingCompetitionsStatus(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        bool pending = false;
+                        if (snapshot.hasData) {
+                          if (snapshot.data) {
+                            pending = snapshot.data;
+                          }
+                        }
+                        return IconButtonStatus(
+                          icon: Icon(Icons.group_add),
+                          status: pending,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (_) {
+                              return PendingCompetitionsPage();
+                            }));
+                          },
+                        );
                       },
                     ),
                   ),
