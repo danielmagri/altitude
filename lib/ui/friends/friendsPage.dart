@@ -108,8 +108,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     builder: (BuildContext context) {
                       return BaseDialog(
                         title: "Desfazer amizade",
-                        body:
-                            "Tem certeza que deseja desfazer amizade com ${persons[index].name}?",
+                        body: "Tem certeza que deseja desfazer amizade com ${persons[index].name}?",
                         action: <Widget>[
                           new FlatButton(
                             child: new Text(
@@ -118,13 +117,11 @@ class _FriendsPageState extends State<FriendsPage> {
                             ),
                             onPressed: () async {
                               Loading.showLoading(context);
-                              UserControl()
-                                  .removeFriend(persons[index].uid)
-                                  .then((_) {
+                              UserControl().removeFriend(persons[index].uid).then((_) {
                                 Loading.closeLoading(context);
                                 Navigator.of(context).pop();
-                                personsOrdened.removeWhere((person) =>
-                                    person.uid == persons[index].uid);
+                                personsOrdened
+                                    .removeWhere((person) => person.uid == persons[index].uid);
                                 persons.removeAt(index);
                                 setState(() {});
                               }).catchError((error) {
@@ -142,8 +139,7 @@ class _FriendsPageState extends State<FriendsPage> {
                           new FlatButton(
                             child: new Text(
                               "NÃO",
-                              style: TextStyle(
-                                  fontSize: 17, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               Navigator.pop(context);
@@ -160,13 +156,10 @@ class _FriendsPageState extends State<FriendsPage> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          persons[index].name != null
-                              ? persons[index].name
-                              : "",
+                          persons[index].name != null ? persons[index].name : "",
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                         ),
                       ),
                       SizedBox(width: 8),
@@ -220,9 +213,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        personsOrdened[index].name != null
-                            ? personsOrdened[index].name
-                            : "",
+                        personsOrdened[index].name != null ? personsOrdened[index].name : "",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
@@ -290,17 +281,21 @@ class _FriendsPageState extends State<FriendsPage> {
           ),
           title: Text(
             "Amigos",
-            style: TextStyle(
-                color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
           ),
           actions: <Widget>[
             IconButtonStatus(
                 icon: Icon(Icons.group_add),
                 status: pendingStatus,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return PendingFriendsPage();
-                  })).then((res) {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) {
+                                return PendingFriendsPage();
+                              },
+                              settings: RouteSettings(name: "Pending Friends Page")))
+                      .then((res) {
                     if (res is List<Person>) {
                       persons.addAll(res);
                       personsOrdened.addAll(res);

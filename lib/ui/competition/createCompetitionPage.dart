@@ -12,9 +12,7 @@ import 'package:habit/utils/Constants.dart';
 import 'package:habit/utils/Validator.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
-  CreateCompetitionPage(
-      {Key key, @required this.habits, @required this.friends})
-      : super(key: key);
+  CreateCompetitionPage({Key key, @required this.habits, @required this.friends}) : super(key: key);
 
   final List<Habit> habits;
   final List<Person> friends;
@@ -49,22 +47,16 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
       showToast("Escolha um hábito para competir.");
     } else if (selectedFriends.length == 0) {
       showToast("Escolha pelo menos um amigo.");
-    } else if ((await CompetitionsControl()
-                .listCompetitionsIds(selectedHabit.id))
-            .length >=
+    } else if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.id)).length >=
         MAX_HABIT_COMPETITIONS) {
-      showToast(
-          "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+      showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
-      List<String> invitations =
-          selectedFriends.map((person) => person.uid).toList();
-      List<String> invitationsToken =
-          selectedFriends.map((person) => person.fcmToken).toList();
+      List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+      List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
 
       Loading.showLoading(context);
       CompetitionsControl()
-          .createCompetition(
-              controller.text, selectedHabit.id, invitations, invitationsToken)
+          .createCompetition(controller.text, selectedHabit.id, invitations, invitationsToken)
           .then((state) {
         Loading.closeLoading(context);
         Navigator.pop(context);
@@ -130,8 +122,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
                 style: TextStyle(color: Colors.black, fontSize: 18.0),
                 decoration: InputDecoration(
                   hintText: "Competição de ...",
-                  hintStyle: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w300),
+                  hintStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
                 ),
               ),
             ),
@@ -192,9 +183,14 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
               child: FlatButton(
                 color: AppColors.colorHabitMix,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return AddHabitPage(backTo: true);
-                  })).then((habit) {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) {
+                                return AddHabitPage(backTo: true);
+                              },
+                              settings: RouteSettings(name: "Add Habit Page")))
+                      .then((habit) {
                     if (habit != null) {
                       setState(() {
                         habits.add(habit);
@@ -243,9 +239,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
                     selectedColor: AppColors.colorHabitMix,
                     onSelected: (selected) {
                       setState(() {
-                        selected
-                            ? selectedFriends.add(friend)
-                            : selectedFriends.remove(friend);
+                        selected ? selectedFriends.add(friend) : selectedFriends.remove(friend);
                       });
                     },
                   );
@@ -257,16 +251,13 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
               alignment: Alignment.topCenter,
               child: RaisedButton(
                 color: AppColors.colorHabitMix,
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0, vertical: 16.0),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,
                 onPressed: _createCompetitionTap,
                 child: const Text(
                   "CRIAR",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

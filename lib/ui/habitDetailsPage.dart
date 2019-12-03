@@ -31,8 +31,7 @@ class HabitDetailsPage extends StatefulWidget {
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends State<HabitDetailsPage>
-    with TickerProviderStateMixin {
+class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProviderStateMixin {
   PanelController _panelController = new PanelController();
   ScrollController _scrollController = new ScrollController();
   AnimationController _controllerScore;
@@ -46,8 +45,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
   initState() {
     super.initState();
 
-    _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
+    _controllerScore =
+        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!await SharedPref().getRocketTutorial()) {
@@ -71,8 +70,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       int timesDisplayed = await SharedPref().getAlarmTutorial();
       if (timesDisplayed < 2 && DataHabitDetail().reminders.length == 0) {
         Util.dialogNavigator(context, AlarmPresentation());
-        _scrollController.animateTo(
-            0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _scrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         SharedPref().setAlarmTutorial();
       }
     }
@@ -106,8 +105,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       showToast("Você já completou esse hábito hoje!");
     } else {
       Loading.showLoading(context);
-      DateTime today = DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
       HabitsControl()
           .setHabitDoneAndScore(today, data.habit.id, DonePageType.Detail)
@@ -122,8 +120,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
         bool before;
         if (data.daysDone.length - 1 >= 0 &&
             data.daysDone.containsKey(today.subtract(Duration(days: 1)))) {
-          data.daysDone.update(
-              today.subtract(Duration(days: 1)), (old) => [old[0], true]);
+          data.daysDone.update(today.subtract(Duration(days: 1)), (old) => [old[0], true]);
           before = true;
         } else {
           before = false;
@@ -241,8 +238,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
       child: Scaffold(
         body: SlidingUpPanel(
           controller: _panelController,
-          borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          borderRadius:
+              const BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
           backdropEnabled: true,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           minHeight: 0,
@@ -254,49 +251,47 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
               children: <Widget>[
                 SizedBox(
                   height: 75,
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        BackButton(color: data.getColor()),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(data.reminders.length != 0 ? Icons.alarm_on : Icons.alarm,
-                              size: 25, color: data.getColor()),
-                          onPressed: () => openBottomSheet(1),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.edit,
-                              size: 25, color: data.getColor()),
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (_) {
-                              return EditHabitPage();
-                            }));
-                          },
-                        ),
-                      ]),
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    BackButton(color: data.getColor()),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(data.reminders.length != 0 ? Icons.alarm_on : Icons.alarm,
+                          size: 25, color: data.getColor()),
+                      onPressed: () => openBottomSheet(1),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.edit, size: 25, color: data.getColor()),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) {
+                                  return EditHabitPage();
+                                },
+                                settings: RouteSettings(name: "Edit Habit Page")));
+                      },
+                    ),
+                  ]),
                 ),
                 HeaderWidget(
                   previousScore: previousScore,
                   controllerScore: _controllerScore,
                 ),
                 Container(
-                  margin: const EdgeInsets.only(
-                      top: 36, bottom: 4, left: 32, right: 32),
+                  margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
                   width: double.maxFinite,
                   child: RaisedButton(
                     color: hasDoneToday() ? data.getColor() : Colors.white,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
+                    shape:
+                        new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     elevation: 5.0,
                     onPressed: setDoneHabit,
                     child: Text(
-                      hasDoneToday() ? "HÁBITO COMPLETO!" :"COMPLETAR HÁBITO HOJE",
+                      hasDoneToday() ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
                       style: TextStyle(
-                        fontSize: 16,
-                          color:
-                              hasDoneToday() ? Colors.white : data.getColor(),
+                          fontSize: 16,
+                          color: hasDoneToday() ? Colors.white : data.getColor(),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -306,9 +301,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
                   child: Text(
                     frequencyText(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black54),
+                    style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54),
                   ),
                 ),
                 CueWidget(
@@ -332,8 +325,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
 }
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, this.previousScore, this.controllerScore})
-      : super(key: key);
+  HeaderWidget({Key key, this.previousScore, this.controllerScore}) : super(key: key);
 
   final int previousScore;
   final controllerScore;
@@ -345,8 +337,7 @@ class HeaderWidget extends StatelessWidget {
     List<DateTime> dates = DataHabitDetail().daysDone.keys.toList();
 
     int daysDoneLastCycle = dates
-        .where((date) => date
-            .isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1))))
+        .where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1))))
         .length;
 
     force = daysDoneLastCycle / timesDays;
@@ -384,12 +375,9 @@ class HeaderWidget extends StatelessWidget {
                 ),
                 ScoreWidget(
                   color: DataHabitDetail().getColor(),
-                  animation: IntTween(
-                          begin: previousScore,
-                          end: DataHabitDetail().habit.score)
-                      .animate(CurvedAnimation(
-                          parent: controllerScore,
-                          curve: Curves.fastOutSlowIn)),
+                  animation: IntTween(begin: previousScore, end: DataHabitDetail().habit.score)
+                      .animate(
+                          CurvedAnimation(parent: controllerScore, curve: Curves.fastOutSlowIn)),
                 ),
               ],
             ),
