@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/NotificationControl.dart';
+import 'package:habit/enums/DonePageType.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/objects/Habit.dart';
@@ -8,6 +9,7 @@ import 'package:habit/objects/Frequency.dart';
 import 'package:habit/objects/DayDone.dart';
 import 'package:habit/objects/Reminder.dart';
 import 'package:habit/services/FireFunctions.dart';
+import 'package:habit/utils/Color.dart';
 import 'package:habit/utils/Util.dart';
 
 class HabitsControl {
@@ -69,10 +71,10 @@ class HabitsControl {
 
     FireAnalytics().sendNewHabit(
         habit.habit,
-        habit.color,
-        frequency.runtimeType == FreqDayWeek ? 0 : 1,
+        AppColors.habitsColorName[habit.color],
+        frequency.runtimeType == FreqDayWeek ? "Diariamente" : "Semanalmente",
         Util.getTimesDays(frequency),
-        reminders.length != 0 ? true : false);
+        reminders.length != 0 ? "Sim" : "Não");
     return habit;
   }
 
@@ -166,7 +168,7 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, {dynamic freq, bool add = true}) async {
+  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {dynamic freq, bool add = true}) async {
     dynamic frequency = freq != null ? freq : await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
@@ -186,8 +188,7 @@ class HabitsControl {
       await DatabaseService().deleteDayDone(id, date);
     }
 
-    FireAnalytics().sendDoneHabit(
-        "${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}");
+    FireAnalytics().sendDoneHabit(page.toString());
 
     return score;
   }

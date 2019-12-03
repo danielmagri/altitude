@@ -16,6 +16,16 @@ abstract class AppColors {
     Color.fromARGB(255, 152, 53, 152)
   ];
 
+  static const List<String> habitsColorName = [
+    "Vermelho",
+    "Laranja",
+    "Amarelo",
+    "Verde",
+    "Azul claro",
+    "Azul escuro",
+    "Roxo"
+  ];
+
   static const List<Color> levelsColor = [
     Color.fromARGB(255, 205, 127, 50),
     Color.fromARGB(255, 192, 192, 192),
@@ -26,8 +36,8 @@ abstract class AppColors {
     String rgb = await SharedPref().getColor();
     if (rgb != null && rgb.isNotEmpty) {
       List<String> splited = rgb.split(",");
-      colorHabitMix = new Color.fromARGB(255, int.parse(splited[0]),
-          int.parse(splited[1]), int.parse(splited[2]));
+      colorHabitMix = new Color.fromARGB(
+          255, int.parse(splited[0]), int.parse(splited[1]), int.parse(splited[2]));
     }
   }
 

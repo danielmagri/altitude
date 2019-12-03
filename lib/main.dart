@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
+import 'package:habit/enums/DonePageType.dart';
 import 'package:habit/services/FireMenssaging.dart';
 import 'package:habit/ui/competition/competitionPage.dart';
 import 'package:habit/ui/friends/friendsPage.dart';
@@ -69,8 +70,7 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin, WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AnimationController _controllerScore;
   AnimationController _controllerDragTarget;
@@ -93,10 +93,10 @@ class _MainPageState extends State<MainPage>
     WidgetsBinding.instance.addObserver(this);
     FireMessaging().configure();
 
-    _controllerScore = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this);
-    _controllerDragTarget = AnimationController(
-        duration: const Duration(milliseconds: 300), vsync: this);
+    _controllerScore =
+        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
+    _controllerDragTarget =
+        AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
   }
 
   @override
@@ -143,17 +143,14 @@ class _MainPageState extends State<MainPage>
     });
     int newLevel = LevelControl.getLevel(score);
     if (newLevel > await SharedPref().getLevel()) {
-      FireAnalytics().sendNextLevel(score);
+      FireAnalytics().sendNextLevel(LevelControl.getLevelText(score));
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           transitionDuration: Duration(milliseconds: 300),
-          transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) =>
+          transitionsBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation, Widget child) =>
               new FadeTransition(
-                  opacity: new CurvedAnimation(
-                      parent: animation, curve: Curves.easeOut),
+                  opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
                   child: child),
           pageBuilder: (BuildContext context, _, __) {
             return NewLevelDialog(
@@ -184,10 +181,9 @@ class _MainPageState extends State<MainPage>
 
   void setHabitDone(id) {
     Loading.showLoading(context);
-    DateTime today =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-    HabitsControl().setHabitDoneAndScore(today, id).then((earnedScore) {
+    HabitsControl().setHabitDoneAndScore(today, id, DonePageType.Initial).then((earnedScore) {
       Loading.closeLoading(context);
       Vibration.hasVibrator().then((resp) {
         if (resp != null && resp == true) {
@@ -210,8 +206,7 @@ class _MainPageState extends State<MainPage>
   void _rateApp() async {
     //const APP_STORE_URL =
     //    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
-    const PLAY_STORE_URL =
-        'https://play.google.com/store/apps/details?id=com.magrizo.habit';
+    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.magrizo.habit';
     if (await canLaunch(PLAY_STORE_URL)) {
       await launch(PLAY_STORE_URL);
     } else {
@@ -242,9 +237,7 @@ class _MainPageState extends State<MainPage>
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300),
+                              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                         );
                       } else {
                         return SizedBox();
@@ -255,8 +248,7 @@ class _MainPageState extends State<MainPage>
                   Container(
                     width: 50,
                     height: 50,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                     alignment: Alignment.center,
                     child: FutureBuilder(
                       future: UserControl().getPhotoUrl(),
@@ -287,17 +279,13 @@ class _MainPageState extends State<MainPage>
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       } else {
                         return Text(
                           "Bem-vindo...",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       }
                     },
@@ -305,10 +293,8 @@ class _MainPageState extends State<MainPage>
                   SizedBox(height: 4),
                   Text(
                     "${LevelControl.getLevelText(score)}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300),
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                   ),
                 ],
               ),
@@ -329,9 +315,8 @@ class _MainPageState extends State<MainPage>
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.colorHabitMix),
+                        decoration:
+                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -362,9 +347,8 @@ class _MainPageState extends State<MainPage>
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.colorHabitMix),
+                        decoration:
+                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -458,11 +442,9 @@ class _MainPageState extends State<MainPage>
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
                             color: AppColors.colorHabitMix,
-                            animation:
-                                IntTween(begin: previousScore, end: score)
-                                    .animate(CurvedAnimation(
-                                        parent: _controllerScore,
-                                        curve: Curves.fastOutSlowIn)),
+                            animation: IntTween(begin: previousScore, end: score).animate(
+                                CurvedAnimation(
+                                    parent: _controllerScore, curve: Curves.fastOutSlowIn)),
                           ),
                         ],
                       ),
@@ -502,8 +484,7 @@ class _MainPageState extends State<MainPage>
           ),
         ],
       ),
-      bottomNavigationBar:
-          _BottomNavigationBar(index: pageIndex, onTap: pageScroll),
+      bottomNavigationBar: _BottomNavigationBar(index: pageIndex, onTap: pageScroll),
     );
   }
 }
@@ -537,9 +518,7 @@ class _TodayHabitsPage extends StatelessWidget {
                       child: Text(
                         "Não tem hábitos para serem feitos hoje",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 22.0,
-                            color: Colors.black.withOpacity(0.2)),
+                        style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
                       ),
                     );
                   } else {
@@ -548,8 +527,7 @@ class _TodayHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere(
-                              (dayDone) => dayDone.habitId == habit.id,
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
                               orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
@@ -601,8 +579,7 @@ class _AllHabitsPage extends StatelessWidget {
                     return Text(
                       "Crie um novo hábito pelo botão \"+\" na tela principal.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                      style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
                     );
                   } else {
                     return SingleChildScrollView(
@@ -610,8 +587,7 @@ class _AllHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere(
-                              (dayDone) => dayDone.habitId == habit.id,
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
                               orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
@@ -635,8 +611,7 @@ class _AllHabitsPage extends StatelessWidget {
 }
 
 class _BottomNavigationBar extends StatelessWidget {
-  _BottomNavigationBar({Key key, this.index, @required this.onTap})
-      : super(key: key);
+  _BottomNavigationBar({Key key, this.index, @required this.onTap}) : super(key: key);
 
   final int index;
   final Function(int index) onTap;
@@ -662,9 +637,7 @@ class _BottomNavigationBar extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.colorHabitMix,
           borderRadius: BorderRadius.circular(40),
-          boxShadow: <BoxShadow>[
-            BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))
-          ],
+          boxShadow: <BoxShadow>[BoxShadow(blurRadius: 7, color: Colors.black.withOpacity(0.5))],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -680,9 +653,8 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
+                    decoration:
+                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(
@@ -700,8 +672,7 @@ class _BottomNavigationBar extends StatelessWidget {
               onTap: () => _addHabitTap(context),
               child: Container(
                 padding: const EdgeInsets.all(8),
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                 child: Icon(
                   Icons.add,
                   color: AppColors.colorHabitMix,
@@ -719,9 +690,8 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
+                    decoration:
+                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(
@@ -744,8 +714,7 @@ class _BottomNavigationBar extends StatelessWidget {
 
 // ignore: must_be_immutable
 class _DragTargetDoneHabit extends StatelessWidget {
-  _DragTargetDoneHabit(
-      {Key key, @required this.controller, @required this.setHabitDone})
+  _DragTargetDoneHabit({Key key, @required this.controller, @required this.setHabitDone})
       : opacity = Tween<double>(
           begin: 0.0,
           end: 1.0,
@@ -820,14 +789,8 @@ class _DragTargetDoneHabit extends StatelessWidget {
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: [
-                0.7,
-                1
-              ],
-                  colors: [
-                Color.fromARGB(255, 118, 213, 216),
-                Theme.of(context).canvasColor
-              ])),
+                  stops: [0.7, 1],
+                  colors: [Color.fromARGB(255, 118, 213, 216), Theme.of(context).canvasColor])),
           child: DragTarget<int>(
             builder: (context, List<int> candidateData, rejectedData) {
               return Stack(
@@ -856,9 +819,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                         "ARRASTE AQUI PARA COMPLETAR",
                         style: TextStyle(
                             fontSize: 18,
-                            color: hover
-                                ? Color.fromARGB(255, 78, 173, 176)
-                                : Colors.white,
+                            color: hover ? Color.fromARGB(255, 78, 173, 176) : Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
                     ),

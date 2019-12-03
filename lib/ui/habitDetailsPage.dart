@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/enums/DonePageType.dart';
 import 'dart:ui';
 import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
@@ -109,7 +110,7 @@ class _HabitDetailsPageState extends State<HabitDetailsPage>
           DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
       HabitsControl()
-          .setHabitDoneAndScore(today, data.habit.id)
+          .setHabitDoneAndScore(today, data.habit.id, DonePageType.Detail)
           .then((earnedScore) {
         Loading.closeLoading(context);
         Vibration.hasVibrator().then((resp) {
