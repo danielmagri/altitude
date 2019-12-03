@@ -21,7 +21,7 @@ class IconButtonStatus extends StatelessWidget {
                 height: 10,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: color == null ? AppColors.colorHabitMix : color),
+                    color: color == null ? Colors.red : color),
               )
             : SizedBox(
                 height: 10,
