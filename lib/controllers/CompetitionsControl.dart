@@ -5,6 +5,7 @@ import 'package:habit/objects/CompetitionPresentation.dart';
 import 'package:habit/objects/Competitor.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/services/Database.dart';
+import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/FireMenssaging.dart';
 import 'package:habit/services/SharedPref.dart';
@@ -38,6 +39,8 @@ class CompetitionsControl {
           competitor,
           invitations,
           invitationsToken);
+
+      FireAnalytics().sendCreateCompetition(title, habit.habit, invitations.length);
 
       return await DatabaseService()
           .createCompetitition(id, title, habitId, date);

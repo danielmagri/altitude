@@ -10,13 +10,12 @@ class FireAnalytics {
 
   FireAnalytics._internal();
 
-  void sendNewHabit(
-      String habit, int color, int freqType, int freqTime, bool hasReminder) {
+  void sendNewHabit(String habit, String color, String freqType, int freqTime, String hasReminder) {
     try {
       analytics.logEvent(
         name: 'new_habit',
         parameters: <String, dynamic>{
-          'habit': habit,
+          'habit': habit.trim().toLowerCase(),
           'color': color,
           'freq_type': freqType,
           'freq_time': freqTime,
@@ -28,12 +27,12 @@ class FireAnalytics {
     }
   }
 
-  void sendDoneHabit(String date) {
+  void sendDoneHabit(String page, int hour) {
     try {
       analytics.logEvent(
         name: 'done_habit',
         parameters: <String, dynamic>{
-          'date': date,
+          'page': page,
         },
       );
     } catch (e) {
@@ -41,12 +40,12 @@ class FireAnalytics {
     }
   }
 
-  void sendNextLevel(int score) {
+  void sendNextLevel(String level) {
     try {
       analytics.logEvent(
         name: 'next_level',
         parameters: <String, dynamic>{
-          'score': score,
+          'level': level,
         },
       );
     } catch (e) {
@@ -69,8 +68,8 @@ class FireAnalytics {
       analytics.logEvent(
         name: 'set_cue',
         parameters: <String, dynamic>{
-          'habit': habit,
-          'cue': cue,
+          'habit': habit.trim().toLowerCase(),
+          'cue': cue.trim().toLowerCase(),
         },
       );
     } catch (e) {
@@ -83,7 +82,7 @@ class FireAnalytics {
       analytics.logEvent(
         name: 'remove_cue',
         parameters: <String, dynamic>{
-          'habit': habit,
+          'habit': habit.trim().toLowerCase(),
         },
       );
     } catch (e) {
@@ -98,7 +97,7 @@ class FireAnalytics {
         parameters: <String, dynamic>{
           'habit': habit,
           'type': type,
-          'time': "$hour : $minute",
+          'time': "$hour:$minute",
           'days': days,
         },
       );
@@ -112,7 +111,22 @@ class FireAnalytics {
       analytics.logEvent(
         name: 'remove_alarm',
         parameters: <String, dynamic>{
-          'habit': habit,
+          'habit': habit.trim().toLowerCase(),
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void sendCreateCompetition(String title, String habitName, int friends) {
+    try {
+      analytics.logEvent(
+        name: 'create_competition',
+        parameters: <String, dynamic>{
+          'title': title.trim().toLowerCase(),
+          'habit_name': habitName.trim().toLowerCase(),
+          'friends': friends,
         },
       );
     } catch (e) {
