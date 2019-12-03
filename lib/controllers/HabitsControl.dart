@@ -168,7 +168,8 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {dynamic freq, bool add = true}) async {
+  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page,
+      {dynamic freq, bool add = true}) async {
     dynamic frequency = freq != null ? freq : await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
@@ -188,7 +189,7 @@ class HabitsControl {
       await DatabaseService().deleteDayDone(id, date);
     }
 
-    FireAnalytics().sendDoneHabit(page.toString());
+    FireAnalytics().sendDoneHabit(page.toString(), DateTime.now().hour);
 
     return score;
   }
@@ -207,15 +208,18 @@ class HabitsControl {
       date = today;
     }
 
-    int dayDoneCount = (await DatabaseService().getDaysDone(id, startDate: startDate, endDate: date)).length;
+    int dayDoneCount =
+        (await DatabaseService().getDaysDone(id, startDate: startDate, endDate: date)).length;
 
     score += dayDoneCount * ScoreControl.fullDayPoint;
     if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;
 
     // Proximas semanas
     date = date.add(Duration(days: 1));
-    while(date.isBefore(today)) {
-      dayDoneCount = (await DatabaseService().getDaysDone(id, startDate: date, endDate: date.add(Duration(days: 6)))).length;
+    while (date.isBefore(today)) {
+      dayDoneCount = (await DatabaseService()
+              .getDaysDone(id, startDate: date, endDate: date.add(Duration(days: 6))))
+          .length;
 
       score += dayDoneCount * ScoreControl.fullDayPoint;
       if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;

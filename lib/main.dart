@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : MainPage(),
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: FireAnalytics().analytics)],
     );
   }
 }
@@ -325,9 +327,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return FriendsPage();
-                }));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) {
+                          return FriendsPage();
+                        },
+                        settings: RouteSettings(name: "Friends Page")));
               },
             ),
             ListTile(
@@ -357,9 +363,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return CompetitionPage();
-                }));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) {
+                          return CompetitionPage();
+                        },
+                        settings: RouteSettings(name: "Competition Page")));
               },
             ),
             ListTile(
@@ -373,9 +383,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
               ),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                  return SettingsPage();
-                }));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) {
+                          return SettingsPage();
+                        },
+                        settings: RouteSettings(name: "Settings Page")));
               },
             ),
             ListTile(
@@ -417,11 +431,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (_) {
-                    return AllLevelsPage(
-                      score: score,
-                    );
-                  }));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) {
+                            return AllLevelsPage(
+                              score: score,
+                            );
+                          },
+                          settings: RouteSettings(name: "All levels Page")));
                 },
                 child: Container(
                   color: Theme.of(context).canvasColor,
@@ -618,9 +636,13 @@ class _BottomNavigationBar extends StatelessWidget {
 
   void _addHabitTap(BuildContext context) async {
     if (await HabitsControl().getAllHabitCount() < 9) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) {
-        return AddHabitPage();
-      }));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) {
+                return AddHabitPage();
+              },
+              settings: RouteSettings(name: "Add Habit Page")));
     } else {
       showToast("Você atingiu o limite de 9 hábitos");
     }

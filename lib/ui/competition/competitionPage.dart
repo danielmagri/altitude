@@ -90,9 +90,13 @@ class _CompetitionPageState extends State<CompetitionPage> {
                           icon: Icon(Icons.group_add),
                           status: pending,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) {
-                              return PendingCompetitionsPage();
-                            }));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) {
+                                      return PendingCompetitionsPage();
+                                    },
+                                    settings: RouteSettings(name: "Pending Competition Page")));
                           },
                         );
                       },
@@ -237,12 +241,16 @@ class _CompetitionPageState extends State<CompetitionPage> {
                       Loading.closeLoading(context);
 
                       if (friends != null && habits != null) {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return CreateCompetitionPage(
-                            habits: habits,
-                            friends: friends,
-                          );
-                        }));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) {
+                                  return CreateCompetitionPage(
+                                    habits: habits,
+                                    friends: friends,
+                                  );
+                                },
+                                settings: RouteSettings(name: "Create Competition Page")));
                       } else {
                         showToast("Ocorreu um erro");
                       }
@@ -331,9 +339,13 @@ class _CompetitionPageState extends State<CompetitionPage> {
                                       competitions[index].id, competition.title);
                                 }
 
-                                Navigator.push(context, MaterialPageRoute(builder: (_) {
-                                  return CompetitionDetailsPage(data: competition);
-                                }));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) {
+                                          return CompetitionDetailsPage(data: competition);
+                                        },
+                                        settings: RouteSettings(name: "Competition Details Page")));
                               } else {
                                 showToast("Ocorreu um erro");
                               }

@@ -179,19 +179,27 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: Text("Rever tutorial inicial"),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return TutorialPage(
-                  showNameTab: false,
-                );
-              }));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) {
+                        return TutorialPage(
+                          showNameTab: false,
+                        );
+                      },
+                      settings: RouteSettings(name: "Tutorial Page")));
             },
           ),
           ListTile(
             title: Text("Ajuda"),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return HelpPage();
-              }));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) {
+                        return HelpPage();
+                      },
+                      settings: RouteSettings(name: "Help Page")));
             },
           ),
         ]),
