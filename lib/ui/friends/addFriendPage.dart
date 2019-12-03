@@ -100,7 +100,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
         Loading.closeLoading(context);
         if (friends.length == 0) {
           showToast("Esse email não foi encontrado.");
-        }else {
+        } else {
           setState(() {
             persons = friends;
           });
@@ -124,8 +124,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
           Center(
             child: Container(
               width: double.maxFinite,
-              padding: const EdgeInsets.only(
-                  top: 16, left: 16, right: 16, bottom: 10),
+              padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 10),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: new BoxDecoration(
                 color: Colors.white,
@@ -149,8 +148,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
                     style: TextStyle(fontSize: 16),
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: AppColors.colorHabitMix)),
+                            borderSide: BorderSide(color: AppColors.colorHabitMix)),
                         hintText: "Escreva o email do seu amigo",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
@@ -173,9 +171,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      persons[index].name != null
-                                          ? persons[index].name
-                                          : "",
+                                      persons[index].name != null ? persons[index].name : "",
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: TextStyle(
@@ -190,9 +186,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
                                       height: 5,
                                     ),
                                     Text(
-                                      persons[index].email != null
-                                          ? persons[index].email
-                                          : "",
+                                      persons[index].email != null ? persons[index].email : "",
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: TextStyle(
@@ -208,19 +202,16 @@ class _AddFriendPageState extends State<AddFriendPage> {
                                   : RaisedButton(
                                       color: Colors.black,
                                       shape: new RoundedRectangleBorder(
-                                          borderRadius:
-                                              new BorderRadius.circular(20.0)),
+                                          borderRadius: new BorderRadius.circular(20.0)),
                                       padding: const EdgeInsets.all(10),
                                       elevation: 0,
-                                      onPressed: () =>
-                                          onClickButton(persons[index]),
+                                      onPressed: () => onClickButton(persons[index]),
                                       child: Text(
                                         buttonText(persons[index].state),
                                         maxLines: 2,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                            color: Colors.white, fontWeight: FontWeight.bold),
                                       ),
                                     ),
                             ],
@@ -231,16 +222,14 @@ class _AddFriendPageState extends State<AddFriendPage> {
                   ),
                   RaisedButton(
                     color: Colors.black,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30),
+                    shape:
+                        new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                     elevation: 5.0,
                     onPressed: search,
                     child: Text(
                       "Buscar",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

@@ -86,7 +86,7 @@ class _MainPageState extends State<MainPage>
     super.initState();
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Color.fromARGB(255, 250, 250, 250),
+        statusBarColor: Color.fromARGB(100, 250, 250, 250),
         systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
         systemNavigationBarIconBrightness: Brightness.dark));
 
@@ -130,7 +130,7 @@ class _MainPageState extends State<MainPage>
   didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Color.fromARGB(255, 250, 250, 250),
+          statusBarColor: Color.fromARGB(100, 250, 250, 250),
           systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
           systemNavigationBarIconBrightness: Brightness.dark));
     }
