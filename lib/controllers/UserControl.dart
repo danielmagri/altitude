@@ -1,5 +1,6 @@
 import 'package:habit/objects/Person.dart';
 import 'package:habit/services/Database.dart';
+import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/services/FireAuth.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/SharedPref.dart';
@@ -22,9 +23,8 @@ class UserControl {
     if (await FireAuth().isLogged()) {
       await SharedPref().setName(name);
       await FireAuth().setName(name);
-      return await FireFunctions().updateUser(
-          await DatabaseService().listCompetitionsIds(),
-          name: name);
+      return await FireFunctions()
+          .updateUser(await DatabaseService().listCompetitionsIds(), name: name);
     } else {
       return await SharedPref().setName(name);
     }
@@ -62,18 +62,22 @@ class UserControl {
   }
 
   Future<void> friendRequest(String uid) async {
+    FireAnalytics().sendFriendRequest(false);
     return await FireFunctions().friendRequest(uid);
   }
 
   Future<void> acceptRequest(String uid) async {
+    FireAnalytics().sendFriendResponse(true);
     return await FireFunctions().acceptRequest(uid);
   }
 
   Future<void> declineRequest(String uid) async {
+    FireAnalytics().sendFriendResponse(false);
     return await FireFunctions().declineRequest(uid);
   }
 
   Future<void> cancelFriendRequest(String uid) async {
+    FireAnalytics().sendFriendRequest(true);
     return await FireFunctions().cancelFriendRequest(uid);
   }
 
