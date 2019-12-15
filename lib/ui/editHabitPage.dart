@@ -23,8 +23,7 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPagePageState extends State<EditHabitPage> {
-  KeyboardVisibilityNotification _keyboardVisibility =
-      new KeyboardVisibilityNotification();
+  KeyboardVisibilityNotification _keyboardVisibility = new KeyboardVisibilityNotification();
 
   final habitController = TextEditingController();
 
@@ -58,8 +57,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         return BaseDialog(
           title: "Deletar",
           body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
-          subBody:
-              "(Todo o progresso dele será perdido e a quilômetragem perdida)",
+          subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
           action: <Widget>[
             new FlatButton(
               child: new Text(
@@ -68,10 +66,8 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               ),
               onPressed: () {
                 HabitsControl()
-                    .deleteHabit(
-                        DataHabitDetail().habit.id,
-                        DataHabitDetail().habit.score,
-                        DataHabitDetail().reminders)
+                    .deleteHabit(DataHabitDetail().habit.id, DataHabitDetail().habit.habit,
+                        DataHabitDetail().habit.score, DataHabitDetail().reminders)
                     .then((status) {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 });
@@ -114,12 +110,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
         await HabitsControl().updateHabit(editedHabit, DataHabitDetail().habit);
       }
 
-      if (!compareFrequency(
-          DataHabitDetail().frequency, DataHabitCreation().frequency)) {
+      if (!compareFrequency(DataHabitDetail().frequency, DataHabitCreation().frequency)) {
         await HabitsControl().updateFrequency(
-            editedHabit.id,
-            DataHabitCreation().frequency,
-            DataHabitDetail().frequency.runtimeType);
+            editedHabit.id, DataHabitCreation().frequency, DataHabitDetail().frequency.runtimeType);
       }
 
       Loading.closeLoading(context);
@@ -177,8 +170,7 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
                   Spacer(),
                   Text(
                     "EDITAR HÁBITO",
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                   ),
                   Spacer(),
                   SizedBox(
@@ -245,16 +237,13 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
               margin: const EdgeInsets.only(top: 20, bottom: 28),
               child: RaisedButton(
                 color: AppColors.habitsColor[DataHabitCreation().indexColor],
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0, vertical: 16.0),
+                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,
                 onPressed: _createHabitTap,
                 child: const Text(
                   "SALVAR",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

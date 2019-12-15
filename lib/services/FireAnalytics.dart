@@ -27,13 +27,24 @@ class FireAnalytics {
     }
   }
 
+  void sendRemoveHabit(String habit) {
+    try {
+      analytics.logEvent(
+        name: 'remove_habit',
+        parameters: <String, dynamic>{
+          'habit': habit.trim().toLowerCase(),
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void sendDoneHabit(String page, int hour) {
     try {
       analytics.logEvent(
         name: 'done_habit',
-        parameters: <String, dynamic>{
-          'page': page,
-        },
+        parameters: <String, dynamic>{'page': page, 'hour': hour},
       );
     } catch (e) {
       print(e);
@@ -112,6 +123,32 @@ class FireAnalytics {
         name: 'remove_alarm',
         parameters: <String, dynamic>{
           'habit': habit.trim().toLowerCase(),
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void sendFriendRequest(bool canceled) {
+    try {
+      analytics.logEvent(
+        name: 'friend_request',
+        parameters: <String, dynamic>{
+          'state': canceled ? "Enviado" : "Cancelado",
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void sendFriendResponse(bool accepted) {
+    try {
+      analytics.logEvent(
+        name: 'friend_response',
+        parameters: <String, dynamic>{
+          'state': accepted ? "Aceito" : "Recusado",
         },
       );
     } catch (e) {
