@@ -812,7 +812,7 @@ class _DragTargetDoneHabit extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   stops: [0.7, 1],
-                  colors: [Color.fromARGB(255, 118, 213, 216), Theme.of(context).canvasColor])),
+                  colors: [AppColors.sky, Theme.of(context).canvasColor])),
           child: DragTarget<int>(
             builder: (context, List<int> candidateData, rejectedData) {
               return Stack(

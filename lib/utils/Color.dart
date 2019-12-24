@@ -5,6 +5,7 @@ import 'Util.dart';
 abstract class AppColors {
   static const Color disableHabitCreation = Colors.grey;
   static Color colorHabitMix = Colors.black;
+  static const Color sky = Color.fromARGB(255, 139, 216, 240);
 
   static const List<Color> habitsColor = [
     Color.fromARGB(255, 244, 67, 54),

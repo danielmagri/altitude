@@ -299,7 +299,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 118, 213, 216),
+      backgroundColor: AppColors.sky,
       body: Column(
         children: <Widget>[
           Container(

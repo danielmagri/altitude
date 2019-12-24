@@ -60,7 +60,7 @@ class _FriendsPageState extends State<FriendsPage> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        Util.dialogNavigator(context, LoginPage()).then((res) {
+        Util.dialogNavigator(context, LoginPage(isCompetitionPage: false,)).then((res) {
           if (res != null) {
             getData();
           }
