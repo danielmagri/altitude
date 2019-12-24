@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:habit/utils/Color.dart';
 
 class SkyScene extends StatelessWidget {
   SkyScene({Key key, this.size, @required this.color, this.force = 0})
@@ -243,7 +244,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
                 ? Alignment.centerLeft
                 : Alignment.centerRight,
             fit: BoxFit.contain,
-            color: Color.fromARGB(255, 98, 193, 196),
+            color: AppColors.sky,
           ),
         ),
       ),

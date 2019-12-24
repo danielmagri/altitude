@@ -10,27 +10,33 @@ import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/utils/Color.dart';
 
 class LoginPage extends StatefulWidget {
+  LoginPage({Key key, @required this.isCompetitionPage}) : super(key: key);
+
+  final bool isCompetitionPage;
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  static const String friendText =
+      "Adicione seus amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!";
+  static const String competitionText = "Crie competições com seus amigos para ver quem vai mais alto!";
+
   void loginWithFacebook() async {
-    var result = await FacebookLogin()
-        .logInWithReadPermissions(['email', 'public_profile']);
+    var result = await FacebookLogin().logInWithReadPermissions(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         Loading.showLoading(context);
-        AuthCredential credential = FacebookAuthProvider.getCredential(
-            accessToken: result.accessToken.token);
+        AuthCredential credential =
+            FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
 
         try {
-          AuthResult fireResult =
-              await FirebaseAuth.instance.signInWithCredential(credential);
+          AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
 
-          if (!await FireFunctions().newUser(fireResult.user.displayName,
-              fireResult.user.email, await SharedPref().getScore())) {
+          if (!await FireFunctions().newUser(
+              fireResult.user.displayName, fireResult.user.email, await SharedPref().getScore())) {
             await UserControl().logout();
             Loading.closeLoading(context);
             showToast("Ocorreu um erro");
@@ -62,10 +68,9 @@ class _LoginPageState extends State<LoginPage> {
       AuthCredential credential = GoogleAuthProvider.getCredential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      AuthResult fireResult =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      if (!await FireFunctions().newUser(fireResult.user.displayName,
-          fireResult.user.email, await SharedPref().getScore())) {
+      AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
+      if (!await FireFunctions().newUser(
+          fireResult.user.displayName, fireResult.user.email, await SharedPref().getScore())) {
         await UserControl().logout();
         showToast("Ocorreu um erro");
         Loading.closeLoading(context);
@@ -99,8 +104,7 @@ class _LoginPageState extends State<LoginPage> {
             Center(
               child: Container(
                 width: double.maxFinite,
-                margin: const EdgeInsets.only(
-                    top: 32, left: 16, right: 16, bottom: 24),
+                margin: const EdgeInsets.only(top: 32, left: 16, right: 16, bottom: 24),
                 padding: const EdgeInsets.all(16),
                 decoration: new BoxDecoration(
                   color: Colors.white,
@@ -116,21 +120,19 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    SizedBox(height: 16),
                     Text(
                       "Você precisa fazer o login\n para continuar...",
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                     ),
                     SizedBox(height: 24),
                     Container(
                       width: double.maxFinite,
                       child: Text(
-                        "Adicione seus amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!",
+                        widget.isCompetitionPage ? competitionText : friendText,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             height: 1.25,
                             color: AppColors.colorHabitMix,
                             fontWeight: FontWeight.bold),
@@ -140,8 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       "..selecione por qual preferir",
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                     ),
                     SizedBox(height: 24),
                     Container(
@@ -149,35 +150,32 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.maxFinite,
                       child: RaisedButton(
                         color: Color.fromARGB(255, 59, 89, 152),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(8)),
+                        shape:
+                            new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         onPressed: loginWithFacebook,
                         child: Text(
                           "Entrar com Facebook",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                     Container(
-                      margin:
-                          const EdgeInsets.only(top: 8, left: 20, right: 20),
+                      margin: const EdgeInsets.only(top: 8, left: 20, right: 20),
                       width: double.maxFinite,
                       child: RaisedButton(
                         color: Color.fromARGB(255, 218, 67, 54),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(8)),
+                        shape:
+                            new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         onPressed: loginWithGoogle,
                         child: Text(
                           "Entrar com Google",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                    SizedBox(height: 24),
+                    SizedBox(height: 8),
                   ],
                 ),
               ),

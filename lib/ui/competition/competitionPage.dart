@@ -33,7 +33,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
   void getData() async {
     if (!await UserControl().isLogged()) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        Util.dialogNavigator(context, LoginPage()).then((res) {
+        Util.dialogNavigator(context, LoginPage(isCompetitionPage: true,)).then((res) {
           if (res != null) {
             getData();
           }
