@@ -21,6 +21,8 @@ import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/ui/dialogs/tutorials/AlarmPresentation.dart';
 import 'package:habit/services/SharedPref.dart';
 import 'package:habit/services/FireAnalytics.dart';
+import 'competition/competitionPage.dart';
+import 'detailHabitWidget/competitionWidget.dart';
 
 enum suggestionsType { SET_ALARM }
 
@@ -143,6 +145,16 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
     }
 
     return true;
+  }
+
+  void goCompetition() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) {
+              return CompetitionPage();
+            },
+            settings: RouteSettings(name: "Competition Page")));
   }
 
   void openBottomSheet(int index) {
@@ -311,6 +323,11 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
                   updateScreen: updateScreen,
                   showSuggestionsDialog: showSuggestionsDialog,
                 ),
+                DataHabitDetail().competitions.isEmpty
+                    ? CompetitionWidget(
+                        goCompetition: goCompetition,
+                      )
+                    : SizedBox(),
                 CoolDataWidget(),
                 SizedBox(
                   height: 20,

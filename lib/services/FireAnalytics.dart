@@ -170,4 +170,17 @@ class FireAnalytics {
       print(e);
     }
   }
+
+  void sendGoCompetition(String index) {
+    try {
+      analytics.logEvent(
+        name: 'go_competition_from_details',
+        parameters: <String, dynamic>{
+          'text': index,
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 }
