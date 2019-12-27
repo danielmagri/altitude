@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
 import 'package:habit/objects/Habit.dart';
 import 'package:habit/objects/Reminder.dart';
@@ -16,6 +17,7 @@ abstract class Util {
     dynamic frequency = await HabitsControl().getFrequency(id);
     Map<DateTime, List> daysDone = await HabitsControl()
         .getDaysDone(id, startDate: getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
+    List<String> competitions = await CompetitionsControl().listCompetitionsIds(id);
 
     Loading.closeLoading(context);
     if (data != null && data.id != null && frequency != null && reminders != null) {
@@ -23,6 +25,7 @@ abstract class Util {
       DataHabitDetail().reminders = reminders;
       DataHabitDetail().frequency = frequency;
       DataHabitDetail().daysDone = daysDone;
+      DataHabitDetail().competitions = competitions;
 
       if (pushReplacement) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {

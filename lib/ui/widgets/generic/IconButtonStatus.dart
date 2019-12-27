@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habit/utils/Color.dart';
 
 class IconButtonStatus extends StatelessWidget {
   IconButtonStatus({this.status, this.icon, this.onPressed, this.color});

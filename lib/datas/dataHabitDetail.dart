@@ -10,6 +10,7 @@ class DataHabitDetail {
   List<Reminder> reminders;
   dynamic frequency;
   Map<DateTime, List> daysDone;
+  List<String> competitions;
 
   factory DataHabitDetail() {
     return _singleton;
