@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   static const String competitionText = "Crie competições com seus amigos para ver quem vai mais alto!";
 
   void loginWithFacebook() async {
-    var result = await FacebookLogin().logInWithReadPermissions(['email', 'public_profile']);
+    var result = await FacebookLogin().logIn(['email', 'public_profile']);
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:

@@ -30,6 +30,7 @@ import 'package:habit/services/FireAnalytics.dart';
 
 void main() async {
   bool showTutorial = false;
+  WidgetsFlutterBinding.ensureInitialized();
   if (await SharedPref().getName() == null) showTutorial = true;
 
   await AppColors.getColorMix();
