@@ -1,7 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:habit/objects/Competition.dart';
-import 'package:habit/objects/Competitor.dart';
-import 'package:habit/objects/Person.dart';
+import 'package:habit/model/Competition.dart';
+import 'package:habit/model/Competitor.dart';
+import 'package:habit/model/Person.dart';
 import 'package:habit/services/FireMenssaging.dart';
 
 class FireFunctions {

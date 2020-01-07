@@ -3,7 +3,7 @@ import 'package:habit/enums/DonePageType.dart';
 import 'dart:ui';
 import 'package:habit/ui/editHabitPage.dart';
 import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/objects/Frequency.dart';
+import 'package:habit/model/Frequency.dart';
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:vibration/vibration.dart';

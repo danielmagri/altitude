@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/ui/habitDetailsPage.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Reminder.dart';
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/objects/Frequency.dart';
+import 'package:habit/model/Frequency.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {

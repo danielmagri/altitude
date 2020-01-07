@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/objects/CompetitionPresentation.dart';
+import 'package:habit/model/CompetitionPresentation.dart';
 import 'package:habit/ui/competition/competitionDetailsPage.dart';
 import 'package:habit/ui/competition/createCompetitionPage.dart';
 import 'package:habit/ui/competition/pendingCompetitionsPage.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Reminder.dart';
 import 'package:habit/utils/Color.dart';
 
 class DataHabitDetail {

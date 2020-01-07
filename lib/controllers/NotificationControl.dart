@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Reminder.dart';
 
 class NotificationControl {
   static final NotificationControl _singleton =

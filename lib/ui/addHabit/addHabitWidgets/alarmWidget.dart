@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit/objects/Frequency.dart';
+import 'package:habit/model/Frequency.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:habit/datas/dataHabitCreation.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Reminder.dart';
 
 class AlarmWidget extends StatefulWidget {
   AlarmWidget({Key key, this.color}) : super(key: key);

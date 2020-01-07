@@ -2,7 +2,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/ScoreControl.dart';
 import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/objects/Person.dart';
+import 'package:habit/model/Person.dart';
 import 'package:habit/ui/friends/addFriendPage.dart';
 import 'package:habit/ui/friends/pendingFriendsPage.dart';
 import 'package:habit/ui/dialogs/BaseDialog.dart';
