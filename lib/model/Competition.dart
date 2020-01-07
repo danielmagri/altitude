@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'package:habit/objects/Competitor.dart';
+import 'package:habit/model/Competitor.dart';
 
 class Competition {
   String id;

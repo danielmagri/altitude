@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Frequency.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Frequency.dart';
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/utils/Validator.dart';
 import 'package:habit/ui/addHabit/addHabitWidgets/colorWidget.dart';

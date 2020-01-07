@@ -1,4 +1,4 @@
-import 'package:habit/objects/Person.dart';
+import 'package:habit/model/Person.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/services/FireAuth.dart';

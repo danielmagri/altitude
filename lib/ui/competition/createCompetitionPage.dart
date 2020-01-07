@@ -1,8 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Person.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Person.dart';
 import 'package:habit/ui/addHabit/addHabitPage.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';

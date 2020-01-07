@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Reminder.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:habit/controllers/HabitsControl.dart';

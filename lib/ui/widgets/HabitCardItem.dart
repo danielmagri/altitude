@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/objects/Habit.dart';
+import 'package:habit/model/Habit.dart';
 import 'package:habit/utils/Util.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:habit/ui/widgets/generic/Rocket.dart';

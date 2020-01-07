@@ -1,9 +1,9 @@
 import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/objects/Competition.dart';
-import 'package:habit/objects/CompetitionPresentation.dart';
-import 'package:habit/objects/Competitor.dart';
-import 'package:habit/objects/Habit.dart';
+import 'package:habit/model/Competition.dart';
+import 'package:habit/model/CompetitionPresentation.dart';
+import 'package:habit/model/Competitor.dart';
+import 'package:habit/model/Habit.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireAnalytics.dart';
 import 'package:habit/services/FireFunctions.dart';

@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:habit/utils/Color.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Reminder.dart';
 
 class DataHabitCreation {
   static final DataHabitCreation _singleton = new DataHabitCreation._internal();

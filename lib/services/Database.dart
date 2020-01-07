@@ -1,10 +1,10 @@
-import 'package:habit/objects/CompetitionPresentation.dart';
+import 'package:habit/model/CompetitionPresentation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:habit/objects/Habit.dart';
-import 'package:habit/objects/Frequency.dart';
-import 'package:habit/objects/DayDone.dart';
-import 'package:habit/objects/Reminder.dart';
+import 'package:habit/model/Habit.dart';
+import 'package:habit/model/Frequency.dart';
+import 'package:habit/model/DayDone.dart';
+import 'package:habit/model/Reminder.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
@@ -34,88 +34,6 @@ class DatabaseService {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 3) {
-      await db.transaction((txn) async {
-        await txn.execute('ALTER TABLE habit RENAME TO _habit_old;');
-        await txn.execute('''
-          CREATE TABLE habit (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            color INTEGER NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            habit_text VARCHAR(30) NOT NULL,
-            cue_text VARCHAR(45),
-            initial_date DATE NOT NULL,
-            days_done INTEGER NOT NULL DEFAULT 0);''');
-
-        await txn.rawInsert(
-            '''INSERT INTO habit(id, color, score, habit_text, cue_text, initial_date, days_done)
-                               SELECT id, color, score, habit_text, cue_text, initial_date, days_done
-                               FROM _habit_old;''');
-
-        await txn.execute('DROP TABLE _habit_old;');
-      });
-
-      await db.transaction((txn) async {
-        var result = await txn.rawQuery(
-            'SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'freq_repeating\';');
-
-        if (result != null && result.isNotEmpty) {
-          await txn.rawInsert('''INSERT INTO freq_weekly(days_time, habit_id)
-                               SELECT days_time, habit_id
-                               FROM freq_repeating;''');
-
-          await txn.execute('DROP TABLE freq_repeating;');
-        }
-      });
-
-      await db.transaction((txn) async {
-        await txn.execute('ALTER TABLE day_done RENAME TO _day_done_old;');
-        await txn.execute('''
-          CREATE TABLE day_done (
-            date_done DATE NOT NULL,
-            habit_id INTEGER NOT NULL,
-            CONSTRAINT fk_day_done_habit_id
-              FOREIGN KEY (habit_id)
-              REFERENCES habit(id)
-              ON DELETE CASCADE
-              ON UPDATE CASCADE);''');
-
-        await txn.rawInsert('''INSERT INTO day_done(date_done, habit_id)
-                               SELECT date_done, habit_id
-                               FROM _day_done_old;''');
-
-        await txn.execute('DROP TABLE _day_done_old;');
-      });
-    }
-
-    // 1.1.4
-    if (oldVersion < 4) {
-      await db
-          .execute('ALTER TABLE reminder ADD type INTEGER NOT NULL DEFAULT 0;');
-    }
-
-    // 1.1.5
-    if (oldVersion < 5) {
-      var result =
-          await db.rawQuery('SELECT id, color, habit_text FROM habit;');
-
-      List<Habit> habits = result.isNotEmpty
-          ? result.map((c) => Habit.fromJson(c)).toList()
-          : [];
-
-      for (Habit habit in habits) {
-        result = await db.rawQuery(
-            'SELECT * FROM day_done WHERE habit_id=${habit.id} ORDER BY date_done;');
-
-        List<DayDone> list = result.isNotEmpty
-            ? result.map((c) => DayDone.fromJson(c)).toList()
-            : [];
-        int count = list.length;
-        await db.rawUpdate('''UPDATE habit SET days_done=$count
-                                           WHERE id=${habit.id};''');
-      }
-    }
-
     // 2.1.0
     if (oldVersion < 6) {
       await db.execute('''
