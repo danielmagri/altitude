@@ -44,7 +44,7 @@ class FireAnalytics {
     try {
       analytics.logEvent(
         name: 'done_habit',
-        parameters: <String, dynamic>{'page': page, 'hour': hour},
+        parameters: <String, dynamic>{'page': page, 'hour': hour.toString()},
       );
     } catch (e) {
       print(e);

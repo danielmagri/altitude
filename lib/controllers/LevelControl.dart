@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:habit/utils/Color.dart';
 
 abstract class LevelControl {

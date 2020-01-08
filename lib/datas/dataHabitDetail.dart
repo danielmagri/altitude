@@ -6,17 +6,17 @@ import 'package:habit/utils/Color.dart';
 class DataHabitDetail {
   static final DataHabitDetail _singleton = new DataHabitDetail._internal();
 
-  Habit habit;
-  List<Reminder> reminders;
-  dynamic frequency;
-  Map<DateTime, List> daysDone;
-  List<String> competitions;
-
   factory DataHabitDetail() {
     return _singleton;
   }
 
   DataHabitDetail._internal();
+
+  Habit habit;
+  List<Reminder> reminders;
+  dynamic frequency;
+  Map<DateTime, List> daysDone;
+  List<String> competitions;
 
   Color getColor() {
     return AppColors.habitsColor[habit.color];

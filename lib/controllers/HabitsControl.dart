@@ -10,6 +10,7 @@ import 'package:habit/model/DayDone.dart';
 import 'package:habit/model/Reminder.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/utils/Color.dart';
+import 'package:habit/utils/Constants.dart';
 import 'package:habit/utils/Util.dart';
 
 class HabitsControl {
@@ -79,10 +80,15 @@ class HabitsControl {
   }
 
   /// Atualiza o hábito.
-  Future<bool> updateHabit(Habit habit, Habit oldHabit) async {
+  Future<bool> updateHabit(Habit habit, Habit oldHabit, List<Reminder> reminders) async {
     if (habit.color != oldHabit.color) {
       FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id),
           color: habit.color);
+    }
+
+    for (Reminder reminder in reminders) {
+      await NotificationControl().removeNotification(reminder.id);
+      await NotificationControl().addNotification(reminder, habit);
     }
     return await DatabaseService().updateHabit(habit);
   }
@@ -211,8 +217,8 @@ class HabitsControl {
     int dayDoneCount =
         (await DatabaseService().getDaysDone(id, startDate: startDate, endDate: date)).length;
 
-    score += dayDoneCount * ScoreControl.fullDayPoint;
-    if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;
+    score += dayDoneCount * DAY_POINT;
+    if (Util.getTimesDays(frequency) <= dayDoneCount) score += CYCLE_POINT;
 
     // Proximas semanas
     date = date.add(Duration(days: 1));
@@ -221,8 +227,8 @@ class HabitsControl {
               .getDaysDone(id, startDate: date, endDate: date.add(Duration(days: 6))))
           .length;
 
-      score += dayDoneCount * ScoreControl.fullDayPoint;
-      if (Util.getTimesDays(frequency) <= dayDoneCount) score += ScoreControl.fullCyclePoint;
+      score += dayDoneCount * DAY_POINT;
+      if (Util.getTimesDays(frequency) <= dayDoneCount) score += CYCLE_POINT;
 
       date = date.add(Duration(days: 7));
     }
