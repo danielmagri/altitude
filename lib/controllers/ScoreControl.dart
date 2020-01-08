@@ -3,17 +3,16 @@ import 'package:habit/controllers/UserControl.dart';
 import 'package:habit/services/Database.dart';
 import 'package:habit/services/FireFunctions.dart';
 import 'package:habit/services/SharedPref.dart';
+import 'package:habit/utils/Constants.dart';
 import 'package:habit/utils/Util.dart';
 
 class ScoreControl {
-  static const int fullDayPoint = 1;
-  static const int fullCyclePoint = 10;
 
   int calculateScore(int id, dynamic freq, int daysDone) {
     if (Util.getTimesDays(freq) == daysDone) {
-      return fullDayPoint + fullCyclePoint;
+      return DAY_POINT + CYCLE_POINT;
     } else {
-      return fullDayPoint;
+      return DAY_POINT;
     }
   }
 
