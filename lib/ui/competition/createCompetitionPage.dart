@@ -111,7 +111,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
                 left: 16,
               ),
               child: Text(
-                "Noma da competição",
+                "Nome da competição",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
