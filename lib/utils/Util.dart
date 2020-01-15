@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/ui/habitDetailsPage.dart';
+import 'package:habit/ui/habitDetails/habitDetailsPage.dart';
 import 'package:habit/model/Habit.dart';
 import 'package:habit/model/Reminder.dart';
 import 'package:habit/controllers/HabitsControl.dart';
