@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:habit/model/Habit.dart';
 import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/ui/addHabit/addHabitWidgets/colorWidget.dart';
-import 'package:habit/ui/addHabit/addHabitWidgets/habitWidget.dart';
-import 'package:habit/ui/addHabit/addHabitWidgets/frequencyWidget.dart';
-import 'package:habit/ui/addHabit/addHabitWidgets/alarmWidget.dart';
+import 'package:habit/ui/addHabit/widgets/colorWidget.dart';
+import 'package:habit/ui/addHabit/widgets/habitWidget.dart';
+import 'package:habit/ui/addHabit/widgets/frequencyWidget.dart';
+import 'package:habit/ui/addHabit/widgets/alarmWidget.dart';
 import 'package:habit/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:habit/datas/dataHabitCreation.dart';

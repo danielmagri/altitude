@@ -8,21 +8,21 @@ import 'package:habit/controllers/HabitsControl.dart';
 import 'package:habit/ui/widgets/generic/Toast.dart';
 import 'package:vibration/vibration.dart';
 import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/detailHabitWidget/cueWidget.dart';
-import 'package:habit/ui/detailHabitWidget/coolDataWidget.dart';
-import 'package:habit/ui/detailHabitWidget/calendarWidget.dart';
+import 'package:habit/ui/habitDetails/widgets/cueWidget.dart';
+import 'package:habit/ui/habitDetails/widgets/coolDataWidget.dart';
+import 'package:habit/ui/habitDetails/widgets/calendarWidget.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/ui/dialogs/EditCueDialog.dart';
 import 'package:habit/ui/dialogs/EditAlarmDialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:habit/ui/detailHabitWidget/SkyScene.dart';
+import 'package:habit/ui/habitDetails/widgets/SkyScene.dart';
 import 'package:habit/utils/Util.dart';
 import 'package:habit/ui/dialogs/tutorials/RocketPresentation.dart';
 import 'package:habit/ui/dialogs/tutorials/AlarmPresentation.dart';
 import 'package:habit/services/SharedPref.dart';
 import 'package:habit/services/FireAnalytics.dart';
-import 'competition/competitionPage.dart';
-import 'detailHabitWidget/competitionWidget.dart';
+import 'package:habit/ui/competition/competitionPage.dart';
+import 'package:habit/ui/habitDetails/widgets/competitionWidget.dart';
 
 enum suggestionsType { SET_ALARM }
 

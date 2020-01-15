@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habit/enums/DonePageType.dart';
-import 'package:habit/ui/habitDetailsPage.dart';
+import 'package:habit/ui/habitDetails/habitDetailsPage.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/controllers/HabitsControl.dart';
