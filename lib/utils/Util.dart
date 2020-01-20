@@ -9,18 +9,24 @@ import 'package:habit/datas/dataHabitDetail.dart';
 import 'package:habit/model/Frequency.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
+  static void goDetailsPage(BuildContext context, int id,
+      {bool pushReplacement = false}) async {
     Loading.showLoading(context);
 
     Habit data = await HabitsControl().getHabit(id);
     List<Reminder> reminders = await HabitsControl().getReminders(id);
     dynamic frequency = await HabitsControl().getFrequency(id);
-    Map<DateTime, List> daysDone = await HabitsControl()
-        .getDaysDone(id, startDate: getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
-    List<String> competitions = await CompetitionsControl().listCompetitionsIds(id);
+    Map<DateTime, List> daysDone = await HabitsControl().getDaysDone(id,
+        startDate: getLastDayMonthBehind(DateTime.now()),
+        endDate: DateTime.now());
+    List<String> competitions =
+        await CompetitionsControl().listCompetitionsIds(id);
 
     Loading.closeLoading(context);
-    if (data != null && data.id != null && frequency != null && reminders != null) {
+    if (data != null &&
+        data.id != null &&
+        frequency != null &&
+        reminders != null) {
       DataHabitDetail().habit = data;
       DataHabitDetail().reminders = reminders;
       DataHabitDetail().frequency = frequency;
@@ -29,28 +35,30 @@ abstract class Util {
 
       if (pushReplacement) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-          return HabitDetailsPage();
+          return HabitDetailsPage.newinstance(id);
         }));
       } else {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) {
-                  return HabitDetailsPage();
+                  return HabitDetailsPage.newinstance(id);
                 },
                 settings: RouteSettings(name: "Habit Details Page")));
       }
     }
   }
 
-  static Future<dynamic> dialogNavigator(BuildContext context, dynamic dialog) async {
+  static Future<dynamic> dialogNavigator(
+      BuildContext context, dynamic dialog) async {
     return Navigator.of(context).push(new PageRouteBuilder(
         opaque: false,
         transitionDuration: Duration(milliseconds: 300),
         transitionsBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation, Widget child) =>
             new FadeTransition(
-                opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                opacity: new CurvedAnimation(
+                    parent: animation, curve: Curves.easeOut),
                 child: child),
         pageBuilder: (BuildContext context, _, __) {
           return dialog;
@@ -106,6 +114,7 @@ abstract class Util {
 
   /// Retorna o ultimo dia do mês anterior
   static DateTime getLastDayMonthBehind(DateTime date) {
-    return new DateTime(DateTime.now().year, DateTime.now().month, 1).subtract(Duration(days: 2));
+    return new DateTime(DateTime.now().year, DateTime.now().month, 1)
+        .subtract(Duration(days: 2));
   }
 }
