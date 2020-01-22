@@ -213,7 +213,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        personsOrdened[index].name != null ? personsOrdened[index].name : "",
+                        personsOrdened[index].you ? "Eu" : personsOrdened[index].name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(
