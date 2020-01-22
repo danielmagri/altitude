@@ -272,7 +272,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                   translation: Offset(0.75, 0),
                   child: SizedBox(
                     width: 100,
-                    child: Text(competitor.you ? "EU" : competitor.name,
+                    child: Text(competitor.you ? "Eu" : competitor.name,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
