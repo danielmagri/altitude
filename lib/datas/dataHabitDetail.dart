@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Reminder.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Reminder.dart';
+import 'package:altitude/utils/Color.dart';
 
 class DataHabitDetail {
   static final DataHabitDetail _singleton = new DataHabitDetail._internal();

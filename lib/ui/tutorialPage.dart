@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit/ui/widgets/generic/DotsIndicator.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/main.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/ui/widgets/generic/DotsIndicator.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/main.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key key, this.showNameTab = true}) : super(key: key);

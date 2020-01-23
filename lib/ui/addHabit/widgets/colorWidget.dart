@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/utils/Color.dart';
 
 class ColorWidget extends StatelessWidget {
   ColorWidget({Key key, this.currentColor, this.changeColor}) : super(key: key);

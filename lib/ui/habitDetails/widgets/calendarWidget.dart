@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit/enums/DonePageType.dart';
-import 'package:habit/ui/habitDetails/habitDetailsPage.dart';
+import 'package:altitude/enums/DonePageType.dart';
+import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/controllers/HabitsControl.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:vibration/vibration.dart';
 
 class CalendarWidget extends StatefulWidget {

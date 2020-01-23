@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:habit/datas/dataHabitCreation.dart';
+import 'package:altitude/datas/dataHabitCreation.dart';
 
 class FrequencyWidget extends StatefulWidget {
   FrequencyWidget({Key key, this.color}) : super(key: key);

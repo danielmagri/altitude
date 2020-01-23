@@ -1,14 +1,14 @@
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/Competition.dart';
-import 'package:habit/model/CompetitionPresentation.dart';
-import 'package:habit/model/Competitor.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/services/Database.dart';
-import 'package:habit/services/FireAnalytics.dart';
-import 'package:habit/services/FireFunctions.dart';
-import 'package:habit/services/FireMenssaging.dart';
-import 'package:habit/services/SharedPref.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/Competition.dart';
+import 'package:altitude/model/CompetitionPresentation.dart';
+import 'package:altitude/model/Competitor.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/services/Database.dart';
+import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/services/FireMenssaging.dart';
+import 'package:altitude/services/SharedPref.dart';
 
 class CompetitionsControl {
   static final CompetitionsControl _singleton =

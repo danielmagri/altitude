@@ -1,10 +1,10 @@
-import 'package:habit/model/CompetitionPresentation.dart';
+import 'package:altitude/model/CompetitionPresentation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/model/DayDone.dart';
-import 'package:habit/model/Reminder.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/model/DayDone.dart';
+import 'package:altitude/model/Reminder.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();

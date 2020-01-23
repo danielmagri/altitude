@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/services/Database.dart';
-import 'package:habit/services/FireFunctions.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/utils/Constants.dart';
-import 'package:habit/utils/Util.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/services/Database.dart';
+import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/utils/Constants.dart';
+import 'package:altitude/utils/Util.dart';
 
 class ScoreControl {
 

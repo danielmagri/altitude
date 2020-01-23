@@ -1,15 +1,15 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/Competition.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Constants.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/Competition.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Constants.dart';
 
 class PendingCompetitionsPage extends StatefulWidget {
   @override

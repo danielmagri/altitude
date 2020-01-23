@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/ui/habitDetails/habitDetailsPage.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Reminder.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/model/Frequency.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Reminder.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/model/Frequency.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {

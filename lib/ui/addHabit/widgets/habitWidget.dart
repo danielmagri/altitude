@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Util.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Suggestions.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Util.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/dialogs/TutorialDialog.dart';
-import 'package:habit/datas/dataHabitCreation.dart';
-import 'package:habit/services/SharedPref.dart';
+import 'package:altitude/ui/dialogs/TutorialDialog.dart';
+import 'package:altitude/datas/dataHabitCreation.dart';
+import 'package:altitude/services/SharedPref.dart';
 
 class HabitWidget extends StatefulWidget {
   HabitWidget({Key key, this.color, this.controller, this.keyboard})

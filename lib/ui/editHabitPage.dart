@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/addHabit/widgets/colorWidget.dart';
-import 'package:habit/ui/addHabit/widgets/habitWidget.dart';
-import 'package:habit/ui/addHabit/widgets/frequencyWidget.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/datas/dataHabitCreation.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/ui/addHabit/widgets/colorWidget.dart';
+import 'package:altitude/ui/addHabit/widgets/habitWidget.dart';
+import 'package:altitude/ui/addHabit/widgets/frequencyWidget.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/ui/dialogs/BaseDialog.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/ui/dialogs/BaseDialog.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key}) : super(key: key);

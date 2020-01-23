@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
 import 'dart:math';
 
-import 'package:habit/services/FireAnalytics.dart';
+import 'package:altitude/services/FireAnalytics.dart';
 
 class CompetitionWidget extends StatelessWidget {
   CompetitionWidget({Key key, @required this.goCompetition}) : super(key: key);
