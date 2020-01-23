@@ -1,17 +1,17 @@
 import 'dart:async';
-import 'package:habit/controllers/ScoreControl.dart';
-import 'package:habit/controllers/NotificationControl.dart';
-import 'package:habit/enums/DonePageType.dart';
-import 'package:habit/services/Database.dart';
-import 'package:habit/services/FireAnalytics.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/model/DayDone.dart';
-import 'package:habit/model/Reminder.dart';
-import 'package:habit/services/FireFunctions.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Constants.dart';
-import 'package:habit/utils/Util.dart';
+import 'package:altitude/controllers/ScoreControl.dart';
+import 'package:altitude/controllers/NotificationControl.dart';
+import 'package:altitude/enums/DonePageType.dart';
+import 'package:altitude/services/Database.dart';
+import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/model/DayDone.dart';
+import 'package:altitude/model/Reminder.dart';
+import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Constants.dart';
+import 'package:altitude/utils/Util.dart';
 
 class HabitsControl {
   static final HabitsControl _singleton = new HabitsControl._internal();

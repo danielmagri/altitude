@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/CompetitionPresentation.dart';
-import 'package:habit/ui/competition/competitionDetailsPage.dart';
-import 'package:habit/ui/competition/createCompetitionPage.dart';
-import 'package:habit/ui/competition/pendingCompetitionsPage.dart';
-import 'package:habit/ui/dialogs/BaseDialog.dart';
-import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Constants.dart';
-import 'package:habit/utils/Util.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/CompetitionPresentation.dart';
+import 'package:altitude/ui/competition/competitionDetailsPage.dart';
+import 'package:altitude/ui/competition/createCompetitionPage.dart';
+import 'package:altitude/ui/competition/pendingCompetitionsPage.dart';
+import 'package:altitude/ui/dialogs/BaseDialog.dart';
+import 'package:altitude/ui/widgets/generic/IconButtonStatus.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Constants.dart';
+import 'package:altitude/utils/Util.dart';
 
 import '../loginPage.dart';
 

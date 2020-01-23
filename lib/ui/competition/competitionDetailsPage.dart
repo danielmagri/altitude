@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/Competition.dart';
-import 'package:habit/model/Competitor.dart';
-import 'package:habit/model/Person.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/ui/dialogs/BaseDialog.dart';
-import 'package:habit/ui/dialogs/TutorialDialog.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Util.dart';
-import 'package:habit/utils/Validator.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/Competition.dart';
+import 'package:altitude/model/Competitor.dart';
+import 'package:altitude/model/Person.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/ui/dialogs/BaseDialog.dart';
+import 'package:altitude/ui/dialogs/TutorialDialog.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Util.dart';
+import 'package:altitude/utils/Validator.dart';
 
 class CompetitionDetailsPage extends StatefulWidget {
   CompetitionDetailsPage({Key key, @required this.data}) : super(key: key);

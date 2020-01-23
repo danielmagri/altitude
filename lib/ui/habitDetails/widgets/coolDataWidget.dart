@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
 
 class CoolDataWidget extends StatelessWidget {
   CoolDataWidget({Key key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/LevelControl.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/controllers/LevelControl.dart';
+import 'package:altitude/utils/Color.dart';
 
 class NewLevelDialog extends StatelessWidget {
   final int score;

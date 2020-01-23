@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/utils/Color.dart';
 
 abstract class LevelControl {
   static const List<String> _levelsText = [

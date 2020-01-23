@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/LevelControl.dart';
+import 'package:altitude/controllers/LevelControl.dart';
 
 class AllLevelsPage extends StatefulWidget {
   AllLevelsPage({Key key, this.score}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'package:habit/controllers/LevelControl.dart';
+import 'package:altitude/controllers/LevelControl.dart';
 
 class Person {
   String uid;

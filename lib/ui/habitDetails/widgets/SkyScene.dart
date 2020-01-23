@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/utils/Color.dart';
 
 class SkyScene extends StatelessWidget {
   SkyScene({Key key, this.size, @required this.color, this.force = 0})

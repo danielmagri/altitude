@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/utils/Suggestions.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/controllers/HabitsControl.dart';
+import 'package:altitude/utils/Suggestions.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueDialog extends StatefulWidget {

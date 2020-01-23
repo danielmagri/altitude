@@ -1,10 +1,10 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/Person.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/Person.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
 
 class AddFriendPage extends StatefulWidget {
   @override
