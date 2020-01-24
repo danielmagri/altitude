@@ -1,12 +1,17 @@
 abstract class Suggestions {
   static const List _habits = [
-    "Ir na academia",
     "Ler",
+    "Ir na academia",
     "Estudar inglês",
-    "Natação",
     "Correr",
     "Meditar",
     "Fazer alongamento",
+    "Acordar cedo",
+    "Caminhar",
+    "Beber água",
+    "Arrumar a cama",
+    "Yoga",
+    "Natação",
   ];
 
   static List getHabits() {
@@ -14,9 +19,11 @@ abstract class Suggestions {
   }
 
   static const List _cues = [
-    "Deixar roupa do exercício do lado da cama",
     "Colocar livro ao lado da cama",
+    "Deixar roupa do exercício do lado da cama",
+    "Deixar garrafa em cima da mesa",
     "Levar roupa do exercício para o trabalho",
+    "Levar livro para o trabalho",
     "Deixar o óculos de leitura por perto",
     "Arrumar tapete do alongamento",
     "Colocar uma música",
