@@ -1,3 +1,4 @@
+import 'package:altitude/model/Frequency.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/model/Habit.dart';
 import 'package:altitude/model/Reminder.dart';
@@ -14,7 +15,7 @@ class DataHabitDetail {
 
   Habit habit;
   List<Reminder> reminders;
-  dynamic frequency;
+  Frequency frequency;
   Map<DateTime, List> daysDone;
   List<String> competitions;
 

@@ -4,9 +4,9 @@ import 'package:altitude/utils/Color.dart';
 abstract class LevelControl {
   static const List<String> _levelsText = [
     "Procrastinador",
+    "Novato",
     "Aprendiz",
-    "Transformador",
-    "Persistente",
+    "Teimoso",
     "Motivador",
     "Inspirador",
     "Nova pessoa",
@@ -21,11 +21,11 @@ abstract class LevelControl {
     50,
     125,
     250,
-    400,
-    600,
-    800,
+    450,
+    700,
     1000,
-    1500
+    1500,
+    2500
   ];
 
   static int getLevel(int score) {

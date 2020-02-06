@@ -49,8 +49,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return MaterialApp(
       theme: ThemeData(
@@ -96,10 +95,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
     WidgetsBinding.instance.addObserver(this);
     FireMessaging().configure();
 
-    _controllerScore =
-        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
-    _controllerDragTarget =
-        AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _controllerScore = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
+    _controllerDragTarget = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
   }
 
   @override
@@ -150,11 +147,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           transitionDuration: Duration(milliseconds: 300),
-          transitionsBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation, Widget child) =>
-              new FadeTransition(
-                  opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                  child: child),
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                  Widget child) =>
+              new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
           pageBuilder: (BuildContext context, _, __) {
             return NewLevelDialog(
               score: score,
@@ -201,8 +196,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
   void pageScroll(int index) {
     setState(() {
       pageIndex = index;
-      _pageController.animateToPage(index,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -239,8 +233,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           "${snapshot.data}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                         );
                       } else {
                         return SizedBox();
@@ -281,14 +274,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           "Olá, ${snapshot.data}",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       } else {
                         return Text(
                           "Bem-vindo...",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       }
                     },
@@ -296,8 +287,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                   SizedBox(height: 4),
                   Text(
                     "${LevelControl.getLevelText(score)}",
-                    style:
-                        TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                   ),
                 ],
               ),
@@ -318,8 +308,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -354,8 +343,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -461,9 +449,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
                             color: AppColors.colorHabitMix,
-                            animation: IntTween(begin: previousScore, end: score).animate(
-                                CurvedAnimation(
-                                    parent: _controllerScore, curve: Curves.fastOutSlowIn)),
+                            animation: IntTween(begin: previousScore, end: score)
+                                .animate(CurvedAnimation(parent: _controllerScore, curve: Curves.fastOutSlowIn)),
                           ),
                         ],
                       ),
@@ -546,8 +533,7 @@ class _TodayHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
-                              orElse: () => null);
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
                             showDragTarget: showDragTarget,
@@ -606,8 +592,7 @@ class _AllHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
-                              orElse: () => null);
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
                             showDragTarget: showDragTarget,
@@ -676,8 +661,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration:
-                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(
@@ -713,8 +697,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration:
-                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(
