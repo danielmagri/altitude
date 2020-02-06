@@ -23,10 +23,10 @@ class _FrequencyWidgetState extends State<FrequencyWidget> {
 
     if (DataHabitCreation().frequency != null) {
       switch (DataHabitCreation().frequency.runtimeType) {
-        case FreqDayWeek:
+        case DayWeek:
           chosen = 0;
           break;
-        case FreqWeekly:
+        case Weekly:
           chosen = 1;
           break;
       }
@@ -162,8 +162,8 @@ class _DailyDialogState extends State<DailyDialog> {
   initState() {
     super.initState();
 
-    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek dayWeek = DataHabitCreation().frequency;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == DayWeek) {
+      DayWeek dayWeek = DataHabitCreation().frequency;
 
       days = [
         dayWeek.sunday == 1 ? true : false,
@@ -179,7 +179,7 @@ class _DailyDialogState extends State<DailyDialog> {
 
   void _validate() {
     if (days.contains(true)) {
-      FreqDayWeek dayWeek = new FreqDayWeek(
+      DayWeek dayWeek = new DayWeek(
           monday: days[1] ? 1 : 0,
           tuesday: days[2] ? 1 : 0,
           wednesday: days[3] ? 1 : 0,
@@ -380,8 +380,8 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
   initState() {
     super.initState();
 
-    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqWeekly) {
-      FreqWeekly weekly = DataHabitCreation().frequency;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == Weekly) {
+      Weekly weekly = DataHabitCreation().frequency;
       _currentValue = weekly.daysTime;
     } else {
       _currentValue = 3;
@@ -389,7 +389,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
   }
 
   void _validate() {
-    DataHabitCreation().frequency = new FreqWeekly(daysTime: _currentValue);
+    DataHabitCreation().frequency = new Weekly(daysTime: _currentValue);
 
     Navigator.of(context).pop(true);
   }

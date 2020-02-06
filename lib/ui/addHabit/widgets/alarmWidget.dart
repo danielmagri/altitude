@@ -444,8 +444,8 @@ class _DailyDialogState extends State<DailyDialog> {
   initState() {
     super.initState();
 
-    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek dayWeek = DataHabitCreation().frequency;
+    if (DataHabitCreation().frequency != null && DataHabitCreation().frequency.runtimeType == DayWeek) {
+      DayWeek dayWeek = DataHabitCreation().frequency;
 
       days = [
         dayWeek.sunday == 1 ? true : false,
@@ -461,7 +461,7 @@ class _DailyDialogState extends State<DailyDialog> {
 
   void _validate() {
     if (days.contains(true)) {
-      FreqDayWeek dayWeek = new FreqDayWeek(
+      DayWeek dayWeek = new DayWeek(
           monday: days[1] ? 1 : 0,
           tuesday: days[2] ? 1 : 0,
           wednesday: days[3] ? 1 : 0,

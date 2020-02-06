@@ -128,9 +128,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   bool compareFrequency(dynamic f1, dynamic f2) {
     if (f1.runtimeType == f2.runtimeType) {
       switch (f1.runtimeType) {
-        case FreqDayWeek:
-          FreqDayWeek dayweek1 = f1;
-          FreqDayWeek dayweek2 = f2;
+        case DayWeek:
+          DayWeek dayweek1 = f1;
+          DayWeek dayweek2 = f2;
           if (dayweek1.sunday == dayweek2.sunday &&
               dayweek1.monday == dayweek2.monday &&
               dayweek1.tuesday == dayweek2.tuesday &&
@@ -141,9 +141,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
             return true;
           }
           return false;
-        case FreqWeekly:
-          FreqWeekly weekly1 = f1;
-          FreqWeekly weekly2 = f2;
+        case Weekly:
+          Weekly weekly1 = f1;
+          Weekly weekly2 = f2;
           if (weekly1.daysTime == weekly2.daysTime) {
             return true;
           }

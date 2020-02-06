@@ -10,8 +10,6 @@ import 'package:altitude/model/DayDone.dart';
 import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/services/FireFunctions.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/utils/Constants.dart';
-import 'package:altitude/utils/Util.dart';
 
 class HabitsControl {
   static final HabitsControl _singleton = new HabitsControl._internal();
@@ -63,7 +61,7 @@ class HabitsControl {
   }
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
-  Future<Habit> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
+  Future<Habit> addHabit(Habit habit, Frequency frequency, List<Reminder> reminders) async {
     Map response = await DatabaseService().addHabit(habit, frequency, reminders);
     habit.id = response[0];
     for (Reminder reminder in response[1]) {
@@ -73,8 +71,8 @@ class HabitsControl {
     FireAnalytics().sendNewHabit(
         habit.habit,
         AppColors.habitsColorName[habit.color],
-        frequency.runtimeType == FreqDayWeek ? "Diariamente" : "Semanalmente",
-        Util.getTimesDays(frequency),
+        frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
+        frequency.daysCount(),
         reminders.length != 0 ? "Sim" : "Não");
     return habit;
   }
@@ -82,8 +80,7 @@ class HabitsControl {
   /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit, Habit oldHabit, List<Reminder> reminders) async {
     if (habit.color != oldHabit.color) {
-      FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id),
-          color: habit.color);
+      FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id), color: habit.color);
     }
 
     for (Reminder reminder in reminders) {
@@ -149,8 +146,7 @@ class HabitsControl {
   /// Retorna um map com os dias feitos do hábito.
   Future<Map<DateTime, List>> getDaysDone(int id, {DateTime startDate, DateTime endDate}) async {
     Map<DateTime, List> map = new Map();
-    List<DayDone> list =
-        await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> list = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
     bool before = false;
     bool after = false;
 
@@ -161,8 +157,7 @@ class HabitsControl {
         before = false;
       }
 
-      if (i + 1 < list.length &&
-          list[i + 1].dateDone.difference(list[i].dateDone) == Duration(days: 1)) {
+      if (i + 1 < list.length && list[i + 1].dateDone.difference(list[i].dateDone) == Duration(days: 1)) {
         after = true;
       } else {
         after = false;
@@ -174,23 +169,21 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page,
-      {dynamic freq, bool add = true}) async {
-    dynamic frequency = freq != null ? freq : await getFrequency(id);
+  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {Frequency freq, bool add = true}) async {
+    Frequency frequency = freq != null ? freq : await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.add(Duration(days: 6 - weekDay));
     int score;
 
-    List<DayDone> daysDone =
-        await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
+    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
     if (add) {
-      score = ScoreControl().calculateScore(id, frequency, 1 + daysDone.length);
+      score = ScoreControl().calculateScore(ScoreType.ADD, frequency, daysDone, date);
       await ScoreControl().setScore(id, score, date);
       await DatabaseService().setDayDone(id, date);
     } else {
-      score = -ScoreControl().calculateScore(id, frequency, daysDone.length);
+      score = -ScoreControl().calculateScore(ScoreType.SUBTRACT, frequency, daysDone, date);
       await ScoreControl().setScore(id, score, date);
       await DatabaseService().deleteDayDone(id, date);
     }
@@ -204,35 +197,8 @@ class HabitsControl {
   Future<int> getHabitScore(int id, DateTime initialDate) async {
     DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     dynamic frequency = await getFrequency(id);
-    int score = 0;
+    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: initialDate, endDate: today);
 
-    // Primeira semana
-    int weekDay = initialDate.weekday == 7 ? 0 : initialDate.weekday;
-    DateTime startDate = initialDate.subtract(Duration(days: weekDay));
-    DateTime date = initialDate.add(Duration(days: 6 - weekDay));
-    if (date.isAfter(today)) {
-      date = today;
-    }
-
-    int dayDoneCount =
-        (await DatabaseService().getDaysDone(id, startDate: startDate, endDate: date)).length;
-
-    score += dayDoneCount * DAY_POINT;
-    if (Util.getTimesDays(frequency) <= dayDoneCount) score += CYCLE_POINT;
-
-    // Proximas semanas
-    date = date.add(Duration(days: 1));
-    while (date.isBefore(today)) {
-      dayDoneCount = (await DatabaseService()
-              .getDaysDone(id, startDate: date, endDate: date.add(Duration(days: 6))))
-          .length;
-
-      score += dayDoneCount * DAY_POINT;
-      if (Util.getTimesDays(frequency) <= dayDoneCount) score += CYCLE_POINT;
-
-      date = date.add(Duration(days: 7));
-    }
-
-    return score;
+    return ScoreControl().scoreEarnedTotal(frequency, daysDone);
   }
 }

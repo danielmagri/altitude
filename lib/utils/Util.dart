@@ -6,7 +6,6 @@ import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/ui/widgets/generic/Loading.dart';
 import 'package:altitude/datas/dataHabitDetail.dart';
-import 'package:altitude/model/Frequency.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
@@ -55,34 +54,6 @@ abstract class Util {
         pageBuilder: (BuildContext context, _, __) {
           return dialog;
         }));
-  }
-
-  /// Coleta a quatidade de dias a ser feito dentro de um ciclo.
-  static int getTimesDays(dynamic frequency) {
-    if (frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freqDayWeek = frequency;
-      int sumDays = 0;
-      if (freqDayWeek.monday == 1) sumDays++;
-      if (freqDayWeek.tuesday == 1) sumDays++;
-      if (freqDayWeek.wednesday == 1) sumDays++;
-      if (freqDayWeek.thursday == 1) sumDays++;
-      if (freqDayWeek.friday == 1) sumDays++;
-      if (freqDayWeek.saturday == 1) sumDays++;
-      if (freqDayWeek.sunday == 1) sumDays++;
-
-      return sumDays;
-    } else if (frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freqWeekly = frequency;
-
-      return freqWeekly.daysTime;
-    } else {
-      return 0;
-    }
-  }
-
-  /// Coleta o tamanho do ciclo em dias.
-  static int getDaysCycle(dynamic frequency) {
-    return 7;
   }
 
   /// Clareia a cor de acordo com o 'value' de 0 a 255

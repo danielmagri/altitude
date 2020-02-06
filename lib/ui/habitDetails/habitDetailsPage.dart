@@ -1,3 +1,4 @@
+import 'package:altitude/utils/Constants.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/enums/DonePageType.dart';
 import 'dart:ui';
@@ -196,8 +197,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
   }
 
   String frequencyText() {
-    if (data.frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freq = data.frequency;
+    if (data.frequency is DayWeek) {
+      DayWeek freq = data.frequency;
       String text = "";
       bool hasOne = false;
 
@@ -235,8 +236,8 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> with TickerProvider
         text += "Domingo";
       }
       return text;
-    } else if (data.frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freq = data.frequency;
+    } else if (data.frequency is Weekly) {
+      Weekly freq = data.frequency;
       return freq.daysTime.toString() + " vezes por semana";
     } else {
       return "";
@@ -349,12 +350,11 @@ class HeaderWidget extends StatelessWidget {
 
   double _setRocketForce() {
     double force;
-    int cycleDays = Util.getDaysCycle(DataHabitDetail().frequency);
-    int timesDays = Util.getTimesDays(DataHabitDetail().frequency);
+    int timesDays = DataHabitDetail().frequency.daysCount();
     List<DateTime> dates = DataHabitDetail().daysDone.keys.toList();
 
     int daysDoneLastCycle = dates
-        .where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1))))
+        .where((date) => date.isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1))))
         .length;
 
     force = daysDoneLastCycle / timesDays;
