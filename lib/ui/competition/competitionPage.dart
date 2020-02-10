@@ -12,7 +12,7 @@ import 'package:altitude/ui/widgets/generic/Loading.dart';
 import 'package:altitude/ui/widgets/generic/Rocket.dart';
 import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/utils/Constants.dart';
+import 'package:altitude/core/Constants.dart';
 import 'package:altitude/utils/Util.dart';
 
 import '../loginPage.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:altitude/core/BlocBase.dart';
+import 'package:altitude/core/bloc/BlocBase.dart';
 
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
   BlocProvider({Key key, @required this.widget, @required this.bloc})

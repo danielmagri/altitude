@@ -1,15 +1,8 @@
+import 'package:altitude/core/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {
-  static final SharedPref _singleton = new SharedPref._internal();
-
   static SharedPreferences _prefs;
-
-  factory SharedPref() {
-    return _singleton;
-  }
-
-  SharedPref._internal();
 
   Future<SharedPreferences> get prefs async {
     if (_prefs != null) return _prefs;
@@ -18,18 +11,16 @@ class SharedPref {
     return _prefs;
   }
 
-  // User data
-  static const String NAME = "USER_NAME";
-  static const String SCORE = "USER_SCORE";
-  static const String LEVEL = "USER_LEVEL";
-  static const String COLOR = "USER_COLOR";
-  static const String PENDING_FRIENDS = "USER_PENDING_FRIENDS";
-  static const String COMPETITION_FRIENDS = "USER_COMPETITION_FRIENDS";
-  // Tutorials
-  static const String HABIT_TUTORIAL = "HABIT_TUTORIAL";
-  static const String COMPETITION_TUTORIAL = "COMPETITION_TUTORIAL";
-  static const String ROCKET_ON_DETAILS_PAGE = "ROCKET_ON_DETAILS_PAGE";
-  static const String ALARM_ON_DETAILS_PAGE = "ALARM_ON_DETAILS_PAGE";
+  Future<bool> setVersion(int version) async {
+    SharedPreferences sf = await prefs;
+    return await sf.setInt(VERSION, version);
+  }
+
+  Future<int> getVersion() async {
+    SharedPreferences sf = await prefs;
+    int version = sf.getInt(VERSION);
+    return version == null ? 0 : version;
+  }
 
   Future<bool> setName(String name) async {
     SharedPreferences sf = await prefs;

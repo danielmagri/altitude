@@ -1,4 +1,4 @@
-import 'package:altitude/utils/Constants.dart';
+import 'package:altitude/core/Constants.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/enums/DonePageType.dart';
 import 'dart:ui';
