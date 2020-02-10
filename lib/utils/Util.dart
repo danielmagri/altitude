@@ -1,3 +1,4 @@
+import 'package:altitude/services/SharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
@@ -6,6 +7,7 @@ import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/ui/widgets/generic/Loading.dart';
 import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:package_info/package_info.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
@@ -46,14 +48,18 @@ abstract class Util {
     return Navigator.of(context).push(new PageRouteBuilder(
         opaque: false,
         transitionDuration: Duration(milliseconds: 300),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) =>
-            new FadeTransition(
-                opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                child: child),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                Widget child) =>
+            new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
         pageBuilder: (BuildContext context, _, __) {
           return dialog;
         }));
+  }
+
+  static Future<bool> checkUpdatedVersion() async {
+    print(await SharedPref().getVersion());
+    print(int.parse((await PackageInfo.fromPlatform()).buildNumber));
+    return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
   }
 
   /// Clareia a cor de acordo com o 'value' de 0 a 255

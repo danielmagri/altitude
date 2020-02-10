@@ -1,3 +1,5 @@
+import 'package:altitude/ui/dialogs/TutorialDialog.dart';
+import 'package:altitude/utils/Util.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ import 'package:altitude/ui/tutorialPage.dart';
 import 'package:altitude/ui/widgets/generic/Loading.dart';
 import 'package:altitude/services/SharedPref.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 import 'package:altitude/ui/widgets/generic/Toast.dart';
@@ -407,15 +410,59 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                 width: double.maxFinite,
                 height: 75,
                 alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(top: 12, left: 12),
-                child: IconButton(
-                  tooltip: "Menu",
-                  icon: Icon(
-                    Icons.menu,
-                  ),
-                  onPressed: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
+                padding: const EdgeInsets.only(top: 12, left: 12),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      tooltip: "Menu",
+                      icon: Icon(
+                        Icons.menu,
+                      ),
+                      onPressed: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      },
+                    ),
+                    Spacer(),
+                    FutureBuilder<bool>(
+                        future: Util.checkUpdatedVersion(),
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          return !snapshot.data ? IconButton(
+                            tooltip: "News",
+                            icon: new Hero(
+                              tag: "newsRelease",
+                              child: Icon(
+                                Icons.new_releases,
+                              ),
+                            ),
+                            onPressed: () {
+                              Util.dialogNavigator(
+                                  context,
+                                  TutorialDialog(
+                                    hero: "newsRelease",
+                                    icon: Icons.new_releases,
+                                    texts: [
+                                      TextSpan(
+                                        text: "  A pontuação do hábito mudou!",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1.2),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            " Agora a cada dia completado você ganha 2km.\n\n E ao completar a frequência na semana (por exemplo: 3 vezes na semana ou segunda, quarta e sexta) os dias passam a valer 3km, tanto os dias dessa semana que ja foi marcado quanto os que marcar!",
+                                        style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+                                      ),
+                                    ],
+                                  )).then((data) async {
+                                int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
+                                SharedPref().setVersion(version);
+                              });
+                            },
+                          ) : Container();
+                        }),
+                  ],
                 ),
               ),
               GestureDetector(
