@@ -1,8 +1,8 @@
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/ui/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:habit/ui/widgets/generic/Skeleton.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
 
 class CalendarWidget extends StatelessWidget {
   CalendarWidget({Key key, @required this.bloc, this.showSuggestionsDialog}) : super(key: key);
@@ -88,7 +88,7 @@ class CalendarWidget extends StatelessWidget {
                   headerStyle: HeaderStyle(
                     formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
                     formatButtonDecoration: BoxDecoration(
-                      color: DataHabitDetail().getColor(),
+                      //color: DataHabitDetail().getColor(),
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                   ),
@@ -107,7 +107,7 @@ class CalendarWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.horizontal(
                                     left: event[0] ? Radius.circular(0) : Radius.circular(20),
                                     right: event[1] ? Radius.circular(0) : Radius.circular(20)),
-                                color: DataHabitDetail().getColor(),
+                                //color: DataHabitDetail().getColor(),
                               ))
                         ];
                       },

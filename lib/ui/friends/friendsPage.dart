@@ -1,17 +1,17 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/ScoreControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/model/Person.dart';
-import 'package:habit/ui/friends/addFriendPage.dart';
-import 'package:habit/ui/friends/pendingFriendsPage.dart';
-import 'package:habit/ui/dialogs/BaseDialog.dart';
-import 'package:habit/ui/loginPage.dart';
-import 'package:habit/ui/widgets/generic/IconButtonStatus.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Util.dart';
+import 'package:altitude/controllers/ScoreControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/model/Person.dart';
+import 'package:altitude/ui/friends/addFriendPage.dart';
+import 'package:altitude/ui/friends/pendingFriendsPage.dart';
+import 'package:altitude/ui/dialogs/BaseDialog.dart';
+import 'package:altitude/ui/loginPage.dart';
+import 'package:altitude/ui/widgets/generic/IconButtonStatus.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Util.dart';
 
 class FriendsPage extends StatefulWidget {
   @override
@@ -213,7 +213,7 @@ class _FriendsPageState extends State<FriendsPage> {
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        personsOrdened[index].name != null ? personsOrdened[index].name : "",
+                        personsOrdened[index].you ? "Eu" : personsOrdened[index].name,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: TextStyle(

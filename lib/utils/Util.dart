@@ -1,32 +1,27 @@
+import 'package:altitude/services/SharedPref.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/ui/habitDetails/habitDetailsPage.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Reminder.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/model/Frequency.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Reminder.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:package_info/package_info.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id,
-      {bool pushReplacement = false}) async {
+  static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
     Loading.showLoading(context);
 
     Habit data = await HabitsControl().getHabit(id);
     List<Reminder> reminders = await HabitsControl().getReminders(id);
     dynamic frequency = await HabitsControl().getFrequency(id);
-    Map<DateTime, List> daysDone = await HabitsControl().getDaysDone(id,
-        startDate: getLastDayMonthBehind(DateTime.now()),
-        endDate: DateTime.now());
-    List<String> competitions =
-        await CompetitionsControl().listCompetitionsIds(id);
+    Map<DateTime, List> daysDone = await HabitsControl()
+        .getDaysDone(id, startDate: getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
+    List<String> competitions = await CompetitionsControl().listCompetitionsIds(id);
 
     Loading.closeLoading(context);
-    if (data != null &&
-        data.id != null &&
-        frequency != null &&
-        reminders != null) {
+    if (data != null && data.id != null && frequency != null && reminders != null) {
       DataHabitDetail().habit = data;
       DataHabitDetail().reminders = reminders;
       DataHabitDetail().frequency = frequency;
@@ -49,48 +44,22 @@ abstract class Util {
     }
   }
 
-  static Future<dynamic> dialogNavigator(
-      BuildContext context, dynamic dialog) async {
+  static Future<dynamic> dialogNavigator(BuildContext context, dynamic dialog) async {
     return Navigator.of(context).push(new PageRouteBuilder(
         opaque: false,
         transitionDuration: Duration(milliseconds: 300),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation, Widget child) =>
-            new FadeTransition(
-                opacity: new CurvedAnimation(
-                    parent: animation, curve: Curves.easeOut),
-                child: child),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                Widget child) =>
+            new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
         pageBuilder: (BuildContext context, _, __) {
           return dialog;
         }));
   }
 
-  /// Coleta a quatidade de dias a ser feito dentro de um ciclo.
-  static int getTimesDays(dynamic frequency) {
-    if (frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freqDayWeek = frequency;
-      int sumDays = 0;
-      if (freqDayWeek.monday == 1) sumDays++;
-      if (freqDayWeek.tuesday == 1) sumDays++;
-      if (freqDayWeek.wednesday == 1) sumDays++;
-      if (freqDayWeek.thursday == 1) sumDays++;
-      if (freqDayWeek.friday == 1) sumDays++;
-      if (freqDayWeek.saturday == 1) sumDays++;
-      if (freqDayWeek.sunday == 1) sumDays++;
-
-      return sumDays;
-    } else if (frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freqWeekly = frequency;
-
-      return freqWeekly.daysTime;
-    } else {
-      return 0;
-    }
-  }
-
-  /// Coleta o tamanho do ciclo em dias.
-  static int getDaysCycle(dynamic frequency) {
-    return 7;
+  static Future<bool> checkUpdatedVersion() async {
+    print(await SharedPref().getVersion());
+    print(int.parse((await PackageInfo.fromPlatform()).buildNumber));
+    return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
   }
 
   /// Clareia a cor de acordo com o 'value' de 0 a 255
@@ -114,7 +83,6 @@ abstract class Util {
 
   /// Retorna o ultimo dia do mês anterior
   static DateTime getLastDayMonthBehind(DateTime date) {
-    return new DateTime(DateTime.now().year, DateTime.now().month, 1)
-        .subtract(Duration(days: 2));
+    return new DateTime(DateTime.now().year, DateTime.now().month, 1).subtract(Duration(days: 2));
   }
 }

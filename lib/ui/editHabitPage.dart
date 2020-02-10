@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/addHabit/widgets/colorWidget.dart';
-import 'package:habit/ui/addHabit/widgets/habitWidget.dart';
-import 'package:habit/ui/addHabit/widgets/frequencyWidget.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/datas/dataHabitCreation.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/ui/addHabit/widgets/colorWidget.dart';
+import 'package:altitude/ui/addHabit/widgets/habitWidget.dart';
+import 'package:altitude/ui/addHabit/widgets/frequencyWidget.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/ui/dialogs/BaseDialog.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/ui/dialogs/BaseDialog.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage({Key key}) : super(key: key);
@@ -128,9 +128,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
   bool compareFrequency(dynamic f1, dynamic f2) {
     if (f1.runtimeType == f2.runtimeType) {
       switch (f1.runtimeType) {
-        case FreqDayWeek:
-          FreqDayWeek dayweek1 = f1;
-          FreqDayWeek dayweek2 = f2;
+        case DayWeek:
+          DayWeek dayweek1 = f1;
+          DayWeek dayweek2 = f2;
           if (dayweek1.sunday == dayweek2.sunday &&
               dayweek1.monday == dayweek2.monday &&
               dayweek1.tuesday == dayweek2.tuesday &&
@@ -141,9 +141,9 @@ class _EditHabitPagePageState extends State<EditHabitPage> {
             return true;
           }
           return false;
-        case FreqWeekly:
-          FreqWeekly weekly1 = f1;
-          FreqWeekly weekly2 = f2;
+        case Weekly:
+          Weekly weekly1 = f1;
+          Weekly weekly2 = f2;
           if (weekly1.daysTime == weekly2.daysTime) {
             return true;
           }

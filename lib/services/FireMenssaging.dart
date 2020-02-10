@@ -1,8 +1,7 @@
 import 'dart:collection';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
 
 class FireMessaging {
   void configure() {

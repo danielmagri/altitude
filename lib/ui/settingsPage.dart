@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/ui/helpPage.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/ui/tutorialPage.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/ui/helpPage.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/ui/tutorialPage.dart';
 
 import 'dialogs/BaseDialog.dart';
 

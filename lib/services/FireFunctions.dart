@@ -1,8 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:habit/model/Competition.dart';
-import 'package:habit/model/Competitor.dart';
-import 'package:habit/model/Person.dart';
-import 'package:habit/services/FireMenssaging.dart';
+import 'package:altitude/model/Competition.dart';
+import 'package:altitude/model/Competitor.dart';
+import 'package:altitude/model/Person.dart';
+import 'package:altitude/services/FireMenssaging.dart';
 
 class FireFunctions {
   Future<bool> newUser(String name, String email, int score) async {

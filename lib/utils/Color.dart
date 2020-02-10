@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/services/SharedPref.dart';
+import 'package:altitude/services/SharedPref.dart';
 import 'Util.dart';
 
 abstract class AppColors {

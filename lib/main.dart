@@ -1,32 +1,35 @@
+import 'package:altitude/ui/dialogs/TutorialDialog.dart';
+import 'package:altitude/utils/Util.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/enums/DonePageType.dart';
-import 'package:habit/services/FireMenssaging.dart';
-import 'package:habit/ui/competition/competitionPage.dart';
-import 'package:habit/ui/friends/friendsPage.dart';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/enums/DonePageType.dart';
+import 'package:altitude/services/FireMenssaging.dart';
+import 'package:altitude/ui/competition/competitionPage.dart';
+import 'package:altitude/ui/friends/friendsPage.dart';
 import 'dart:ui';
-import 'package:habit/ui/widgets/HabitCardItem.dart';
-import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/ui/addHabit/addHabitPage.dart';
-import 'package:habit/ui/settingsPage.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/DayDone.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/ui/tutorialPage.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/ui/widgets/HabitCardItem.dart';
+import 'package:altitude/ui/widgets/ScoreTextAnimated.dart';
+import 'package:altitude/ui/addHabit/addHabitPage.dart';
+import 'package:altitude/ui/settingsPage.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/DayDone.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/ui/tutorialPage.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/controllers/LevelControl.dart';
-import 'package:habit/ui/dialogs/newLevelDialog.dart';
-import 'package:habit/ui/allLevelsPage.dart';
-import 'package:habit/services/FireAnalytics.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/controllers/LevelControl.dart';
+import 'package:altitude/ui/dialogs/newLevelDialog.dart';
+import 'package:altitude/ui/allLevelsPage.dart';
+import 'package:altitude/services/FireAnalytics.dart';
 
 void main() async {
   bool showTutorial = false;
@@ -49,8 +52,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return MaterialApp(
       theme: ThemeData(
@@ -96,10 +98,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
     WidgetsBinding.instance.addObserver(this);
     FireMessaging().configure();
 
-    _controllerScore =
-        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
-    _controllerDragTarget =
-        AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _controllerScore = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
+    _controllerDragTarget = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
   }
 
   @override
@@ -150,11 +150,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           transitionDuration: Duration(milliseconds: 300),
-          transitionsBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation, Widget child) =>
-              new FadeTransition(
-                  opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                  child: child),
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                  Widget child) =>
+              new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
           pageBuilder: (BuildContext context, _, __) {
             return NewLevelDialog(
               score: score,
@@ -201,8 +199,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
   void pageScroll(int index) {
     setState(() {
       pageIndex = index;
-      _pageController.animateToPage(index,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+      _pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -239,8 +236,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           "${snapshot.data}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                         );
                       } else {
                         return SizedBox();
@@ -281,14 +277,12 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           "Olá, ${snapshot.data}",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       } else {
                         return Text(
                           "Bem-vindo...",
-                          style: TextStyle(
-                              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         );
                       }
                     },
@@ -296,8 +290,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                   SizedBox(height: 4),
                   Text(
                     "${LevelControl.getLevelText(score)}",
-                    style:
-                        TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
                   ),
                 ],
               ),
@@ -318,8 +311,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -354,8 +346,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                     if (snapshot.data) {
                       return Container(
                         width: 10,
-                        decoration:
-                            BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorHabitMix),
                       );
                     }
                   }
@@ -419,15 +410,59 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                 width: double.maxFinite,
                 height: 75,
                 alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(top: 12, left: 12),
-                child: IconButton(
-                  tooltip: "Menu",
-                  icon: Icon(
-                    Icons.menu,
-                  ),
-                  onPressed: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
+                padding: const EdgeInsets.only(top: 12, left: 12),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      tooltip: "Menu",
+                      icon: Icon(
+                        Icons.menu,
+                      ),
+                      onPressed: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      },
+                    ),
+                    Spacer(),
+                    FutureBuilder<bool>(
+                        future: Util.checkUpdatedVersion(),
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          return !snapshot.data ? IconButton(
+                            tooltip: "News",
+                            icon: new Hero(
+                              tag: "newsRelease",
+                              child: Icon(
+                                Icons.new_releases,
+                              ),
+                            ),
+                            onPressed: () {
+                              Util.dialogNavigator(
+                                  context,
+                                  TutorialDialog(
+                                    hero: "newsRelease",
+                                    icon: Icons.new_releases,
+                                    texts: [
+                                      TextSpan(
+                                        text: "  A pontuação do hábito mudou!",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1.2),
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            " Agora a cada dia completado você ganha 2km.\n\n E ao completar a frequência na semana (por exemplo: 3 vezes na semana ou segunda, quarta e sexta) os dias passam a valer 3km, tanto os dias dessa semana que ja foi marcado quanto os que marcar!",
+                                        style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+                                      ),
+                                    ],
+                                  )).then((data) async {
+                                int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
+                                SharedPref().setVersion(version);
+                              });
+                            },
+                          ) : Container();
+                        }),
+                  ],
                 ),
               ),
               GestureDetector(
@@ -461,9 +496,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin, Widg
                           Text(LevelControl.getLevelText(score)),
                           ScoreWidget(
                             color: AppColors.colorHabitMix,
-                            animation: IntTween(begin: previousScore, end: score).animate(
-                                CurvedAnimation(
-                                    parent: _controllerScore, curve: Curves.fastOutSlowIn)),
+                            animation: IntTween(begin: previousScore, end: score)
+                                .animate(CurvedAnimation(parent: _controllerScore, curve: Curves.fastOutSlowIn)),
                           ),
                         ],
                       ),
@@ -546,8 +580,7 @@ class _TodayHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
-                              orElse: () => null);
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
                             showDragTarget: showDragTarget,
@@ -606,8 +639,7 @@ class _AllHabitsPage extends StatelessWidget {
                       child: Wrap(
                         alignment: WrapAlignment.center,
                         children: habits.map((habit) {
-                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id,
-                              orElse: () => null);
+                          DayDone done = dones.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                           return HabitCardItem(
                             habit: habit,
                             showDragTarget: showDragTarget,
@@ -676,8 +708,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration:
-                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(
@@ -713,8 +744,7 @@ class _BottomNavigationBar extends StatelessWidget {
                     height: 4,
                     width: 25,
                     margin: const EdgeInsets.only(top: 4),
-                    decoration:
-                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
                 IconButton(

@@ -1,10 +1,10 @@
-import 'package:habit/model/CompetitionPresentation.dart';
+import 'package:altitude/model/CompetitionPresentation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/model/Frequency.dart';
-import 'package:habit/model/DayDone.dart';
-import 'package:habit/model/Reminder.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/model/DayDone.dart';
+import 'package:altitude/model/Reminder.dart';
 
 class DatabaseService {
   static final DatabaseService _singleton = new DatabaseService._internal();
@@ -241,7 +241,7 @@ class DatabaseService {
   }
 
   /// Retorna a frequência do hábito.
-  Future<dynamic> getFrequency(int id) async {
+  Future<Frequency> getFrequency(int id) async {
     final db = await database;
 
     var resultDayWeek =
@@ -251,9 +251,9 @@ class DatabaseService {
         await db.rawQuery('SELECT * FROM freq_weekly WHERE habit_id=$id;');
 
     if (resultDayWeek.isNotEmpty) {
-      return FreqDayWeek.fromJson(resultDayWeek.first);
+      return DayWeek.fromJson(resultDayWeek.first);
     } else if (resultWeekly.isNotEmpty) {
-      return FreqWeekly.fromJson(resultWeekly.first);
+      return Weekly.fromJson(resultWeekly.first);
     } else {
       return null;
     }
@@ -374,8 +374,8 @@ class DatabaseService {
   Future<bool> addFrequency(int id, dynamic frequency) async {
     final db = await database;
 
-    if (frequency.runtimeType == FreqDayWeek) {
-      FreqDayWeek freq = frequency;
+    if (frequency.runtimeType == DayWeek) {
+      DayWeek freq = frequency;
       await db.rawInsert(
           '''INSERT INTO freq_day_week (monday, tuesday, wednesday, thursday, friday, saturday, sunday, habit_id) VALUES (${freq.monday},
                                                                                                                           ${freq.tuesday},
@@ -385,8 +385,8 @@ class DatabaseService {
                                                                                                                           ${freq.saturday},
                                                                                                                           ${freq.sunday},
                                                                                                                           $id);''');
-    } else if (frequency.runtimeType == FreqWeekly) {
-      FreqWeekly freq = frequency;
+    } else if (frequency.runtimeType == Weekly) {
+      Weekly freq = frequency;
       await db.rawInsert(
           'INSERT INTO freq_weekly (days_time, habit_id) VALUES (${freq.daysTime}, $id);');
     }
@@ -427,8 +427,8 @@ class DatabaseService {
 
     if (frequency.runtimeType == typeOldFreq) {
       switch (frequency.runtimeType) {
-        case FreqDayWeek:
-          FreqDayWeek freq = frequency;
+        case DayWeek:
+          DayWeek freq = frequency;
           await db.rawUpdate('''UPDATE freq_day_week SET monday=${freq.monday},
                                                        tuesday=${freq.tuesday},
                                                        wednesday=${freq.wednesday},
@@ -437,19 +437,19 @@ class DatabaseService {
                                                        saturday=${freq.saturday},
                                                        sunday=${freq.sunday} WHERE habit_id=$id;''');
           break;
-        case FreqWeekly:
-          FreqWeekly freq = frequency;
+        case Weekly:
+          Weekly freq = frequency;
           await db.rawUpdate(
               '''UPDATE freq_weekly SET days_time=${freq.daysTime} WHERE habit_id=$id;''');
           break;
       }
     } else {
       switch (typeOldFreq) {
-        case FreqDayWeek:
+        case DayWeek:
           await db
               .rawDelete('''DELETE FROM freq_day_week WHERE habit_id=$id;''');
           break;
-        case FreqWeekly:
+        case Weekly:
           await db.rawDelete('''DELETE FROM freq_weekly WHERE habit_id=$id;''');
           break;
       }
