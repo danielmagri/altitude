@@ -1,13 +1,14 @@
 import 'dart:async';
+import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/core/bloc/BlocBase.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/enums/DonePageType.dart';
+import 'package:altitude/model/Frequency.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/utils/Util.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/controllers/CompetitionsControl.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/core/bloc/BlocBase.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/enums/DonePageType.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/services/FireAnalytics.dart';
-import 'package:habit/utils/Util.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
@@ -33,9 +34,9 @@ class HabitDeatilsBloc extends BlocBase {
   Stream<Habit> get habitDataStream => _habitDataStreamController.stream;
 
   //Frequency Data
-  dynamic frequency;
-  StreamController<dynamic> _frequencyDataStreamController = StreamController.broadcast();
-  Stream<dynamic> get frequencyDataStream => _frequencyDataStreamController.stream;
+  Frequency frequency;
+  StreamController<Frequency> _frequencyDataStreamController = StreamController.broadcast();
+  Stream<Frequency> get frequencyDataStream => _frequencyDataStreamController.stream;
 
   //Days Done Data
   Map<DateTime, List> daysDone;
@@ -81,7 +82,7 @@ class HabitDeatilsBloc extends BlocBase {
   void getData() async {
     try {
       habit = await HabitsControl().getHabit(id);
-      frequency = HabitsControl().getFrequency(id);
+      frequency = await HabitsControl().getFrequency(id);
       daysDone = await HabitsControl()
           .getDaysDone(id, startDate: Util.getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
       competitions = await CompetitionsControl().listCompetitionsIds(id);

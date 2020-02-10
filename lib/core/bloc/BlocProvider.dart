@@ -1,6 +1,7 @@
+import 'package:altitude/enums/BlocProviderType.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/core/bloc/BlocBase.dart';
-import 'package:habit/enums/BlocProviderType.dart';
+
+import 'BlocBase.dart';
 
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
   BlocProvider(

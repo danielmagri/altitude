@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:habit/controllers/UserControl.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/services/FireFunctions.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Color.dart';
+import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Color.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, @required this.isCompetitionPage}) : super(key: key);

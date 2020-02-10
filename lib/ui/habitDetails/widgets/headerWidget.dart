@@ -1,10 +1,10 @@
+import 'package:altitude/core/Constants.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/ui/habitDetails/widgets/SkyScene.dart';
+import 'package:altitude/ui/widgets/ScoreTextAnimated.dart';
+import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/ui/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:habit/ui/habitDetails/widgets/SkyScene.dart';
-import 'package:habit/ui/widgets/ScoreTextAnimated.dart';
-import 'package:habit/ui/widgets/generic/Skeleton.dart';
-import 'package:habit/utils/Util.dart';
 
 class HeaderWidget extends StatelessWidget {
   HeaderWidget({Key key, @required this.bloc}) : super(key: key);
@@ -13,8 +13,8 @@ class HeaderWidget extends StatelessWidget {
 
   double _setRocketForce() {
     double force;
-    int cycleDays = Util.getDaysCycle(bloc.data.frequency);
-    int timesDays = Util.getTimesDays(bloc.data.frequency);
+    int cycleDays = CYCLE_DAYS;
+    int timesDays = bloc.data.frequency.daysCount();
     List<DateTime> dates = bloc.data.daysDone.keys.toList();
 
     int daysDoneLastCycle =

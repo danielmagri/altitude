@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:habit/utils/Util.dart';
+import 'package:altitude/utils/Util.dart';
 import 'dart:math';
 
 enum RocketState { ON_FIRE, STOPPED }

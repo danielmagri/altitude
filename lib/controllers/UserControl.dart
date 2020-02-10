@@ -1,9 +1,9 @@
-import 'package:habit/model/Person.dart';
-import 'package:habit/services/Database.dart';
-import 'package:habit/services/FireAnalytics.dart';
-import 'package:habit/services/FireAuth.dart';
-import 'package:habit/services/FireFunctions.dart';
-import 'package:habit/services/SharedPref.dart';
+import 'package:altitude/model/Person.dart';
+import 'package:altitude/services/Database.dart';
+import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/services/FireAuth.dart';
+import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/services/SharedPref.dart';
 
 class UserControl {
   Future<bool> isLogged() async {

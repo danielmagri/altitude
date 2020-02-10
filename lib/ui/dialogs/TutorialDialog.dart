@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class TutorialDialog extends StatelessWidget {
   final String hero;
   final List<TextSpan> texts;
+  final IconData icon;
 
   TutorialDialog({
     @required this.texts,
     @required this.hero,
+    this.icon = Icons.help_outline
   });
 
   @override
@@ -44,8 +46,8 @@ class TutorialDialog extends StatelessWidget {
                     height: 50,
                     child: new Hero(
                       tag: hero,
-                      child: Icon(
-                        Icons.help_outline,
+                      child: Icon( 
+                        icon,
                         size: 42,
                       ),
                     ),

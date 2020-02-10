@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:habit/model/Reminder.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/controllers/HabitsControl.dart';
-import 'package:habit/ui/widgets/generic/Loading.dart';
-import 'package:habit/services/FireAnalytics.dart';
+import 'package:altitude/model/Reminder.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/services/FireAnalytics.dart';
 
 class EditAlarmDialog extends StatefulWidget {
   EditAlarmDialog({Key key, @required this.closeBottomSheet}) : super(key: key);

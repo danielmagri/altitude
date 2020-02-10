@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:habit/ui/widgets/generic/Toast.dart';
-import 'package:habit/utils/Util.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/utils/Suggestions.dart';
+import 'package:altitude/ui/widgets/generic/Toast.dart';
+import 'package:altitude/utils/Util.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:habit/ui/dialogs/TutorialDialog.dart';
-import 'package:habit/datas/dataHabitCreation.dart';
-import 'package:habit/services/SharedPref.dart';
+import 'package:altitude/ui/dialogs/TutorialDialog.dart';
+import 'package:altitude/datas/dataHabitCreation.dart';
+import 'package:altitude/services/SharedPref.dart';
 
 class HabitWidget extends StatefulWidget {
-  HabitWidget({Key key, this.color, this.controller, this.keyboard})
-      : super(key: key);
+  HabitWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);
 
   final Color color;
   final TextEditingController controller;
@@ -81,24 +80,15 @@ class _HabitWidgetState extends State<HabitWidget> {
             TextSpan(
               text:
                   "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano e depois com que frequência deseja realizá-lo.",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w300,
-                  height: 1.2),
+              style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
             TextSpan(
               text: "\n\n  O segredo para conseguir construir um hábito é ",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w300,
-                  height: 1.2),
+              style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
             TextSpan(
               text: "criar um ritual e sempre fazer a mesma coisa.",
-              style:
-                  TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+              style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
             ),
           ],
         ));
@@ -110,8 +100,8 @@ class _HabitWidgetState extends State<HabitWidget> {
     String habit = widget.controller.text.toLowerCase();
 
     for (int i = 0; i < data.length; i++) {
-      if (data[i][1].toLowerCase().contains(habit) &&
-          data[i][1].toLowerCase() != habit) {
+      String word = data[i].trim().toLowerCase();
+      if (word.contains(habit) && word != habit) {
         result.add(data[i]);
       }
     }
@@ -157,8 +147,7 @@ class _HabitWidgetState extends State<HabitWidget> {
               children: <Widget>[
                 Text(
                   "Qual será seu hábito?",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w300),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                 ),
                 IconButton(
                   icon: new Hero(
@@ -174,16 +163,11 @@ class _HabitWidgetState extends State<HabitWidget> {
           ),
           AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  bottomLeft: Radius.circular(20)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
               color: validated ? widget.color : AppColors.disableHabitCreation,
-              boxShadow: <BoxShadow>[
-                BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))
-              ],
+              boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
             ),
             child: Column(
               children: <Widget>[
@@ -195,8 +179,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                   style: TextStyle(color: Colors.white, fontSize: 18.0),
                   decoration: InputDecoration(
                     hintText: "Escreva seu hábito aqui",
-                    hintStyle: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w300),
+                    hintStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
                     border: InputBorder.none,
                   ),
                 ),
@@ -210,9 +193,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                     : Container(),
                 ListView.builder(
                   shrinkWrap: true,
-                  padding: suggestion.length != 0
-                      ? EdgeInsets.only(top: 12, bottom: 8)
-                      : EdgeInsets.all(0),
+                  padding: suggestion.length != 0 ? EdgeInsets.only(top: 12, bottom: 8) : EdgeInsets.all(0),
                   physics: BouncingScrollPhysics(),
                   itemCount: suggestion.length < 5 ? suggestion.length : 5,
                   itemBuilder: (context, position) {
@@ -220,8 +201,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                       onTap: () {
                         String text = suggestion[position];
 
-                        widget.controller.value =
-                            new TextEditingValue(text: text);
+                        widget.controller.value = new TextEditingValue(text: text);
 
                         _validate();
                       },
@@ -229,10 +209,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Text(
                           suggestion[position],
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w300),
+                          style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w300),
                         ),
                       ),
                     );

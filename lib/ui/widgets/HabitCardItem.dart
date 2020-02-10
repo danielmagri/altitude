@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/utils/Util.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/utils/Util.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
 
 class HabitCardItem extends StatelessWidget {
   HabitCardItem({Key key, this.habit, this.showDragTarget, this.done}) : super(key: key);

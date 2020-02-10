@@ -18,3 +18,4 @@ abstract class BlocBase {
         fontSize: 16.0);
   }
 }
+

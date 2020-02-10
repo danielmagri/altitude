@@ -1,8 +1,8 @@
+import 'package:altitude/model/Habit.dart';
+import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
-import 'package:habit/datas/dataHabitDetail.dart';
-import 'package:habit/model/Habit.dart';
-import 'package:habit/ui/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:habit/ui/widgets/generic/Skeleton.dart';
+import 'package:altitude/datas/dataHabitDetail.dart';
 
 class CueWidget extends StatelessWidget {
   CueWidget({Key key, @required this.bloc}) : super(key: key);

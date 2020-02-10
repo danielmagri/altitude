@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:habit/ui/widgets/generic/DotsIndicator.dart';
-import 'package:habit/utils/Validator.dart';
-import 'package:habit/main.dart';
-import 'package:habit/services/SharedPref.dart';
-import 'package:habit/utils/Color.dart';
-import 'package:habit/ui/widgets/generic/Rocket.dart';
+import 'package:altitude/ui/widgets/generic/DotsIndicator.dart';
+import 'package:altitude/utils/Validator.dart';
+import 'package:altitude/main.dart';
+import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
+import 'package:package_info/package_info.dart';
 
 class TutorialPage extends StatefulWidget {
   TutorialPage({Key key, this.showNameTab = true}) : super(key: key);
@@ -27,8 +28,7 @@ class _TutorialPageState extends State<TutorialPage> {
   initState() {
     super.initState();
 
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
   }
 
   @override
@@ -43,6 +43,8 @@ class _TutorialPageState extends State<TutorialPage> {
 
       if (result == null) {
         await SharedPref().setName(_nameTextController.text);
+        int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
+        SharedPref().setVersion(version);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -91,11 +93,8 @@ class _TutorialPageState extends State<TutorialPage> {
                     margin: const EdgeInsets.only(left: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))
-                      ],
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
                     ),
                     child: TextField(
                       controller: _nameTextController,
@@ -191,9 +190,7 @@ class Initial extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: Color.fromARGB(255, 250, 250, 250),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                    ]),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: SizedBox(
                   width: 200,
                   height: 190,
@@ -241,8 +238,8 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
 
   @override
   void initState() {
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 0.03);
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 0.03);
     _controller.addListener(() {
       setState(() {});
     });
@@ -283,9 +280,7 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                    ]),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: LayoutBuilder(builder: (context, constraint) {
                   return Align(
                     alignment: Alignment(1.15 + _controller.value, 1.55 + _controller.value),
@@ -430,22 +425,19 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                    ]),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: LayoutBuilder(builder: (context, constraint) {
                   final sizeRocket = 0.29;
                   return Stack(
                     children: <Widget>[
                       Align(
-                        alignment: Alignment(
-                            positionXRocketAnimation.value, positionYRocketAnimation.value),
+                        alignment: Alignment(positionXRocketAnimation.value, positionYRocketAnimation.value),
                         child: SizedBox(
                           height: constraint.biggest.width * sizeRocket,
                           width: (constraint.biggest.width * sizeRocket) + 10,
                           child: Rocket(
-                            size: Size((constraint.biggest.width * sizeRocket) + 10,
-                                constraint.biggest.width * sizeRocket),
+                            size: Size(
+                                (constraint.biggest.width * sizeRocket) + 10, constraint.biggest.width * sizeRocket),
                             color: AppColors.habitsColor[3],
                             state: RocketState.ON_FIRE,
                             fireForce: 1,
@@ -453,8 +445,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                         ),
                       ),
                       Align(
-                        alignment: Alignment(
-                            positionXFingerAnimation.value, positionYFingerAnimation.value),
+                        alignment: Alignment(positionXFingerAnimation.value, positionYFingerAnimation.value),
                         child: Image.asset(
                           "assets/finger.png",
                           fit: BoxFit.contain,
@@ -556,19 +547,13 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))
-                    ]),
+                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: Align(
                   alignment: Alignment(0, -0.41),
                   child: Text(
                     scoreAnimation.value.toInt().toString(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 47,
-                        fontWeight: FontWeight.bold,
-                        height: 0.2,
-                        color: Colors.black),
+                    style: TextStyle(fontSize: 47, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
                   ),
                 ),
               ),
