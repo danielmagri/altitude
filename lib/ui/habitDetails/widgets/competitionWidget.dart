@@ -1,19 +1,18 @@
+import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/datas/dataHabitDetail.dart';
 import 'dart:math';
 
-import 'package:altitude/services/FireAnalytics.dart';
-
 class CompetitionWidget extends StatelessWidget {
-  CompetitionWidget({Key key, @required this.goCompetition}) : super(key: key);
+  CompetitionWidget({Key key, this.bloc}) : super(key: key);
 
-  final Function goCompetition;
+  final HabitDeatilsBloc bloc;
+
   int index = 0;
 
   String _setTex() {
     index = Random().nextInt(2);
 
-    switch(index) {
+    switch (index) {
       case 0:
         return "Competir com os amigos é uma ótima forma de criar hábitos.";
       case 1:
@@ -23,9 +22,8 @@ class CompetitionWidget extends StatelessWidget {
     }
   }
 
-  void onClicked() {
-    FireAnalytics().sendGoCompetition(index.toString());
-    goCompetition();
+  void onClicked(BuildContext context) {
+    bloc.goCompetition(context, index);
   }
 
   @override
@@ -36,7 +34,7 @@ class CompetitionWidget extends StatelessWidget {
         margin: const EdgeInsets.all(12),
         elevation: 4,
         child: InkWell(
-          onTap: onClicked,
+          onTap: () => onClicked(context),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
@@ -46,14 +44,13 @@ class CompetitionWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
-                    color: DataHabitDetail().getColor(),
+                    color: bloc.habitColor,
                   ),
                 ),
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(_setTex(),
-                        textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
+                    child: Text(_setTex(), textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
                   ),
                 ),
               ],

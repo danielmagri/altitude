@@ -10,6 +10,7 @@ import 'package:altitude/model/DayDone.dart';
 import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/services/FireFunctions.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class HabitsControl {
   static final HabitsControl _singleton = new HabitsControl._internal();
@@ -169,11 +170,11 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {Frequency freq, bool add = true}) async {
-    Frequency frequency = freq != null ? freq : await getFrequency(id);
+  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {bool add = true}) async {
+    Frequency frequency = await getFrequency(id);
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
-    DateTime endDate = date.add(Duration(days: 6 - weekDay));
+    DateTime endDate = date.lastWeekDay();
     int score;
 
     List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);

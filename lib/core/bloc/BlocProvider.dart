@@ -1,44 +1,26 @@
-import 'package:altitude/enums/BlocProviderType.dart';
-import 'package:flutter/material.dart';
-
+import 'package:flutter/widgets.dart';
 import 'BlocBase.dart';
 
 class BlocProvider<T extends BlocBase> extends StatefulWidget {
-  BlocProvider(
-      {Key key,
-      @required this.widget,
-      @required this.bloc,
-      this.type = BlocProviderType.Normal})
-      : super(key: key);
+  BlocProvider({Key key, @required this.widget, @required this.bloc}) : super(key: key);
 
-  final BlocProviderType type;
   final T bloc;
   final Widget widget;
 
   @override
-  BlocBaseState createState() {
-    switch (type) {
-      case BlocProviderType.Normal:
-        return _BlocProviderState();
-      case BlocProviderType.SingleAnimation:
-        final state = _BlocProviderSingleAnimationState();
-        bloc.tickerProvider = state;
-        return state;
-      case BlocProviderType.MultiAnimation:
-        final state = _BlocProviderAnimationState();
-        bloc.tickerProvider = state;
-        return state;
-      default:
-        return _BlocProviderState();
-    }
+  _BlocProviderState<T> createState() => _BlocProviderState<T>();
+
+  static T of<T extends BlocBase>(BuildContext context) {
+    BlocProvider<T> provider = context.findAncestorWidgetOfExactType();
+    return provider.bloc;
   }
 }
 
-abstract class BlocBaseState extends State<BlocProvider<BlocBase>> {
+class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
   @override
-  initState() {
+  void didChangeDependencies() {
     widget.bloc.initialize();
-    super.initState();
+    super.didChangeDependencies();
   }
 
   @override
@@ -48,13 +30,7 @@ abstract class BlocBaseState extends State<BlocProvider<BlocBase>> {
   }
 
   @override
-  Widget build(BuildContext context) => widget.widget;
+  Widget build(BuildContext context) {
+    return widget.widget;
+  }
 }
-
-class _BlocProviderState<T> extends BlocBaseState {}
-
-class _BlocProviderSingleAnimationState<T> extends BlocBaseState
-    with SingleTickerProviderStateMixin {}
-
-class _BlocProviderAnimationState<T> extends BlocBaseState
-    with TickerProviderStateMixin {}

@@ -2,7 +2,6 @@ import 'package:altitude/model/Habit.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
 import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/datas/dataHabitDetail.dart';
 
 class CoolDataWidget extends StatelessWidget {
   CoolDataWidget({Key key, @required this.bloc}) : super(key: key);
@@ -12,15 +11,9 @@ class CoolDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Habit>(
-        stream: bloc.habitDataStream,
+        stream: bloc.habitStream,
         builder: (BuildContext context, AsyncSnapshot<Habit> snapshot) {
-          if (!snapshot.hasData) {
-            return Skeleton(
-              width: double.maxFinite,
-              height: 130,
-              margin: EdgeInsets.symmetric(horizontal: 8),
-            );
-          } else {
+          if (snapshot.hasData) {
             return Container(
               width: double.infinity,
               child: Column(
@@ -30,7 +23,7 @@ class CoolDataWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6, bottom: 6, left: 8),
                     child: Text("Informações Legais",
                         style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold, color: DataHabitDetail().getColor())),
+                            fontSize: 20.0, fontWeight: FontWeight.bold, color: bloc.habitColor)),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -64,6 +57,14 @@ class CoolDataWidget extends StatelessWidget {
                   ),
                 ],
               ),
+            );
+          } else if (snapshot.hasError) {
+            return SizedBox();
+          } else {
+            return Skeleton(
+              width: double.maxFinite,
+              height: 130,
+              margin: EdgeInsets.symmetric(horizontal: 8),
             );
           }
         });

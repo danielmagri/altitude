@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class BlocBase {
-  TickerProvider tickerProvider;
 
   void initialize() {}
   void dispose();
 
+  @protected
   void showToast(String message) {
     Fluttertoast.showToast(
         msg: message,
@@ -17,5 +17,13 @@ abstract class BlocBase {
         textColor: Colors.black,
         fontSize: 16.0);
   }
-}
 
+  @protected
+  Future<T> navigatePushToPage<T>(BuildContext context, Widget page, [String name = ""]) {
+    return Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) {
+          return page;
+        },
+        settings: RouteSettings(name: name)));
+  }
+}
