@@ -68,7 +68,7 @@ class _AddHabitPageState extends State<AddHabitPage> {
         if (widget.backTo) {
           Navigator.pop(context, result);
         } else {
-          Util.goDetailsPage(context, habit.id, pushReplacement: true);
+          Util.goDetailsPage(context, habit.id, habit.color, pushReplacement: true);
           showToast("O hábito foi criado com sucesso!");
         }
       }).catchError((error) {

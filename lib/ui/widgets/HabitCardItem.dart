@@ -15,7 +15,7 @@ class HabitCardItem extends StatelessWidget {
     return done
         ? InkWell(
             borderRadius: BorderRadius.circular(100),
-            onTap: () => Util.goDetailsPage(context, habit.id),
+            onTap: () => Util.goDetailsPage(context, habit.id, habit.color),
             child: Container(
               padding: const EdgeInsets.all(4),
               width: 118,
@@ -76,7 +76,7 @@ class HabitCardItem extends StatelessWidget {
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(100),
-              onTap: () => Util.goDetailsPage(context, habit.id),
+              onTap: () => Util.goDetailsPage(context, habit.id, habit.color),
               child: Container(
                 padding: const EdgeInsets.all(4),
                 width: 118,

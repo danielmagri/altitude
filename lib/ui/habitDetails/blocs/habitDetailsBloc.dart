@@ -2,108 +2,134 @@ import 'dart:async';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
-import 'package:altitude/datas/dataHabitDetail.dart';
+import 'package:altitude/core/bloc/model/LoadableData.dart';
+import 'package:altitude/core/bloc/stream/LoadableStreamController.dart';
 import 'package:altitude/enums/DonePageType.dart';
 import 'package:altitude/model/Frequency.dart';
 import 'package:altitude/model/Habit.dart';
+import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/services/FireAnalytics.dart';
-import 'package:altitude/utils/Util.dart';
-import 'package:flutter/material.dart';
+import 'package:altitude/ui/competition/competitionPage.dart';
+import 'package:altitude/ui/habitDetails/enums/BottomSheetType.dart';
+import 'package:altitude/utils/Color.dart';
+import 'package:flutter/material.dart' show ScrollController, Color, BuildContext;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class HabitDeatilsBloc extends BlocBase {
-  HabitDeatilsBloc(this.id);
+  HabitDeatilsBloc(this._id, this._color);
 
-  final int id;
+  final int _id;
+  final int _color;
+
+  Color get habitColor => AppColors.habitsColor[_color];
 
   ScrollController scrollController = new ScrollController();
   PanelController panelController = new PanelController();
-  AnimationController controllerScore; // Pensar numa forma diferente de implementar o score
-  int previousScore = 0;
-
-  DataHabitDetail data = DataHabitDetail(); // Remover singleton
 
   CalendarController calendarController = new CalendarController();
-  bool isEditingCalendar = false;
 
-  //Habit Data
-  Habit habit;
-  StreamController<Habit> _habitDataStreamController = StreamController.broadcast();
-  Stream<Habit> get habitDataStream => _habitDataStreamController.stream;
+  // Datas
+  Habit _habit;
+  Frequency _frequency;
+  List<Reminder> _reminders;
+  Map<DateTime, List> _daysDone;
+  List<String> _competitions;
 
-  //Frequency Data
-  Frequency frequency;
-  StreamController<Frequency> _frequencyDataStreamController = StreamController.broadcast();
-  Stream<Frequency> get frequencyDataStream => _frequencyDataStreamController.stream;
+  Habit get habit => _habit;
 
-  //Days Done Data
-  Map<DateTime, List> daysDone;
-  StreamController<Map<DateTime, List>> _daysDoneDataStreamController = StreamController.broadcast();
-  Stream<Map<DateTime, List>> get daysDoneDataStream => _daysDoneDataStreamController.stream;
+  // Bottom Sheet
+  StreamController<BottomSheetType> _bottomSheetStreamController = StreamController();
+  Stream<BottomSheetType> get bottomSheetStream => _bottomSheetStreamController.stream;
 
-  //Competition Data
-  List<String> competitions;
-  StreamController<List<String>> _competitionDataStreamController = StreamController();
-  Stream<List<String>> get competitionDataStream => _competitionDataStreamController.stream;
+  // Habit
+  StreamController<Habit> _habitStreamController = StreamController.broadcast();
+  Stream<Habit> get habitStream => _habitStreamController.stream;
 
-  //Edit Calendar
-  StreamController<bool> _editCalendarStreamController = StreamController();
-  Stream<bool> get editCalendarStream => _editCalendarStreamController.stream;
-  StreamController<bool> _loadingCalendarStreamController = StreamController();
-  Stream<bool> get loadingCalendarStream => _loadingCalendarStreamController.stream;
+  // Reminder Button
+  StreamController<int> _reminderButtonController = StreamController();
+  Stream<int> get reminderButtonStream => _reminderButtonController.stream;
 
-  //Bottom Sheet
-  StreamController<int> _bottomSheetStreamController = StreamController();
-  Stream<int> get bottomSheetStream => _bottomSheetStreamController.stream;
+  // Complete Button
+  LoadableStreamController<bool> _completeButtonStreamController = LoadableStreamController();
+  Stream<LoadableData<bool>> get completeButtonStram => _completeButtonStreamController.stream;
+
+  // Frequency Text
+  StreamController<Frequency> _frequencyTextStreamController = StreamController();
+  Stream<Frequency> get frequencyTextStream => _frequencyTextStreamController.stream;
+
+  // Cue Text
+  StreamController<String> _cueTextStreamController = StreamController();
+  Stream<String> get cueTextStream => _cueTextStreamController.stream;
+
+  // Calendar Widget
+  LoadableStreamController<Map<DateTime, List>> _calendarWidgetStreamController = LoadableStreamController();
+  Stream<LoadableData<Map<DateTime, List>>> get calendarWidgetStreamcontroller =>
+      _calendarWidgetStreamController.stream;
+
+  // Competition List
+  StreamController<List<String>> _competitionListStreamController = StreamController();
+  Stream<List<String>> get competitionListStream => _competitionListStreamController.stream;
 
   @override
   void initialize() {
-    controllerScore = AnimationController(duration: const Duration(milliseconds: 1000), vsync: tickerProvider);
-
-    animateScore();
-
-    getData();
+    fetchData();
   }
 
   @override
   void dispose() {
-    controllerScore.dispose();
-    _editCalendarStreamController.close();
-    _habitDataStreamController.close();
-    _competitionDataStreamController.close();
-    _daysDoneDataStreamController.close();
-    _frequencyDataStreamController.close();
+    _habitStreamController.close();
+    _reminderButtonController.close();
     _bottomSheetStreamController.close();
-    _loadingCalendarStreamController.close();
+    _calendarWidgetStreamController.close();
+    _completeButtonStreamController.close();
+    _frequencyTextStreamController.close();
+    _cueTextStreamController.close();
+    _competitionListStreamController.close();
+
+    scrollController.dispose();
+    calendarController.dispose();
   }
 
-  void getData() async {
-    try {
-      habit = await HabitsControl().getHabit(id);
-      frequency = await HabitsControl().getFrequency(id);
-      daysDone = await HabitsControl()
-          .getDaysDone(id, startDate: Util.getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
-      competitions = await CompetitionsControl().listCompetitionsIds(id);
+  void goCompetition(BuildContext context, int index) {
+    FireAnalytics().sendGoCompetition(index.toString());
+    navigatePushToPage(context, CompetitionPage(), "Competitor page");
+  }
 
-      _habitDataStreamController.sink.add(habit);
-      _frequencyDataStreamController.sink.add(frequency);
-      _daysDoneDataStreamController.sink.add(daysDone);
-      _competitionDataStreamController.sink.add(competitions);
+  void fetchData() async {
+    try {
+      _habit = await HabitsControl().getHabit(_id);
+      _reminders = await HabitsControl().getReminders(_id);
+      _frequency = await HabitsControl().getFrequency(_id);
+      _daysDone = await HabitsControl().getDaysDone(_id,
+          startDate: DateTime.now().lastDayOfPreviousMonth().subtract(Duration(days: 6)),
+          endDate: DateTime.now().today.add(Duration(days: 7)));
+      _competitions = await CompetitionsControl().listCompetitionsIds(_id);
+
+      _habitStreamController.sink.add(_habit);
+      _reminderButtonController.sink.add(_reminders.length);
+      _completeButtonStreamController.success(_daysDone.containsKey(DateTime.now().today));
+      _frequencyTextStreamController.sink.add(_frequency);
+      _cueTextStreamController.sink.add(_habit.cue);
+      _calendarWidgetStreamController.success(_daysDone);
+      _competitionListStreamController.sink.add(_competitions);
     } catch (error) {
-      _habitDataStreamController.addError(error);
-      _frequencyDataStreamController.addError(error);
-      _daysDoneDataStreamController.addError(error);
-      _competitionDataStreamController.addError(error);
+      _habitStreamController.addError(error);
+      _completeButtonStreamController.error(error);
+      _frequencyTextStreamController.sink.addError(error);
+      _cueTextStreamController.sink.addError(error);
+      _calendarWidgetStreamController.error(error);
+      _competitionListStreamController.addError(error);
 
       showToast("Ocorreu um erro");
     }
   }
 
-  void openBottomSheet(int index) {
-    _bottomSheetStreamController.sink.add(index);
-    if (index == 0) FireAnalytics().sendReadCue();
+  void openBottomSheet(BottomSheetType type) {
+    _bottomSheetStreamController.sink.add(type);
+    if (type == BottomSheetType.CUE) FireAnalytics().sendReadCue();
 
     panelController.open();
   }
@@ -112,77 +138,92 @@ class HabitDeatilsBloc extends BlocBase {
     panelController.close();
   }
 
-  void animateScore() {
-    if (previousScore != data.habit.score) {
-      controllerScore.reset();
-      controllerScore.forward().orCancel.whenComplete(() {
-        previousScore = data.habit.score;
-      });
-    }
+  void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) {
+    _calendarWidgetStreamController.loading();
+    HabitsControl()
+        .getDaysDone(_id, startDate: start.subtract(Duration(days: 1)), endDate: end.add(Duration(days: 1)))
+        .then((map) {
+      _daysDone = map;
+      _calendarWidgetStreamController.success(map);
+    });
   }
 
   void editCalendarClick() {
-    _editCalendarStreamController.sink.add(!isEditingCalendar);
-    isEditingCalendar = !isEditingCalendar;
+    // onPressed: () {
+    //   setState(() {
+    //     _editing = !_editing;
+    //   });
+
+    //   if (!_editing) {
+    //     //widget.showSuggestionsDialog(suggestionsType.SET_ALARM);
+    //   }
+    // },
   }
 
   void dayCalendarClick(DateTime date, List events) {
-    if (isEditingCalendar) {
-      _loadingCalendarStreamController.sink.add(true);
-      DateTime day = new DateTime(date.year, date.month, date.day);
-      bool add = events.length == 0 ? true : false;
+    DateTime day = DateTime(date.year, date.month, date.day);
+    bool add = events.length == 0;
 
-      HabitsControl()
-          .setHabitDoneAndScore(day, id, DonePageType.Calendar, freq: frequency, add: add)
-          .then((earnedScore) {
-        Vibration.hasVibrator().then((resp) {
-          if (resp != null && resp == true) {
-            Vibration.vibrate(duration: 100);
-          }
-        });
+    completeHabit(add, day, DonePageType.Calendar);
+  }
 
-        habit?.score += earnedScore;
-        if (add) {
-          habit?.daysDone++;
-        } else {
-          habit?.daysDone--;
-        }
-
-        bool yesterday = daysDone.containsKey(day.subtract(Duration(days: 1)));
-        bool tomorrow = daysDone.containsKey(day.add(Duration(days: 1)));
-
-        if (!add) {
-          // Remover dia
-          daysDone?.remove(day);
-          if (yesterday) {
-            daysDone?.update(day.subtract(Duration(days: 1)), (old) => [old[0], false]);
-          }
-
-          if (tomorrow) {
-            daysDone?.update(day.add(Duration(days: 1)), (old) => [false, old[1]]);
-          }
-        } else {
-          // Adicionar dia
-          daysDone?.putIfAbsent(day, () => [yesterday, tomorrow]);
-          if (yesterday) {
-            daysDone?.update(day.subtract(Duration(days: 1)), (old) => [old[0], true]);
-          }
-
-          if (tomorrow) {
-            daysDone?.update(day.add(Duration(days: 1)), (old) => [true, old[1]]);
-          }
-        }
-
-        _daysDoneDataStreamController.sink.add(daysDone);
-        _habitDataStreamController.sink.add(habit);
-        _loadingCalendarStreamController.sink.add(false);
-      });
+  void completeHabit(bool add, DateTime date, DonePageType donePageType) {
+    _calendarWidgetStreamController.loading();
+    if (!_completeButtonStreamController.lastDataSend) {
+      _completeButtonStreamController.loading();
     }
+
+    HabitsControl().setHabitDoneAndScore(date, _id, donePageType, add: add).then((earnedScore) {
+      Vibration.hasVibrator().then((resp) {
+        if (resp != null && resp == true) {
+          Vibration.vibrate(duration: 100);
+        }
+      });
+
+      _habit?.score += earnedScore;
+      if (add) {
+        _habit?.daysDone++;
+      } else {
+        _habit?.daysDone--;
+      }
+
+      bool yesterday = _daysDone.containsKey(date.subtract(Duration(days: 1)));
+      bool tomorrow = _daysDone.containsKey(date.add(Duration(days: 1)));
+
+      if (!add) {
+        // Remover dia
+        _daysDone?.remove(date);
+        if (yesterday) {
+          _daysDone?.update(date.subtract(Duration(days: 1)), (old) => [old[0], false]);
+        }
+
+        if (tomorrow) {
+          _daysDone?.update(date.add(Duration(days: 1)), (old) => [false, old[1]]);
+        }
+      } else {
+        // Adicionar dia
+        _daysDone?.putIfAbsent(date, () => [yesterday, tomorrow]);
+        if (yesterday) {
+          _daysDone?.update(date.subtract(Duration(days: 1)), (old) => [old[0], true]);
+        }
+
+        if (tomorrow) {
+          _daysDone?.update(date.add(Duration(days: 1)), (old) => [true, old[1]]);
+        }
+      }
+
+      _calendarWidgetStreamController.success(_daysDone);
+      _habitStreamController.sink.add(_habit);
+      if (date.isAtSameMomentAs(DateTime.now().today)) {
+        _completeButtonStreamController.success(add);
+      } else {
+        _completeButtonStreamController.loading(false);
+      }
+    });
   }
 }
 
-//atualizar score ao completar um dia e quantidade de dias feito
-// swipe entrte meses
+// ações do Panel do gatilho e reminder
 // Exibição dos tutoriais
-// Panel do gatilho e reminder
-// cor do habito
+// Alterar fogo do foguete
+// pesquisar vantagens e destavantagens dos tipos de navegação

@@ -1,3 +1,8 @@
+abstract class Frequency {
+  int daysCount();
+  String frequencyText();
+}
+
 class DayWeek extends Frequency {
   int habitId;
   int monday, tuesday, wednesday, thursday, friday, saturday, sunday;
@@ -37,6 +42,65 @@ class DayWeek extends Frequency {
     return days;
   }
 
+  @override
+  String frequencyText() {
+    String text = "";
+    bool hasOne = false;
+    int count = daysCount();
+
+    if (monday == 1) {
+      text += "Segunda";
+      hasOne = true;
+      count--;
+    }
+    if (tuesday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Terça";
+      hasOne = true;
+      count--;
+    }
+    if (wednesday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Quarta";
+      hasOne = true;
+      count--;
+    }
+    if (thursday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Quinta";
+      hasOne = true;
+      count--;
+    }
+    if (friday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Sexta";
+      hasOne = true;
+      count--;
+    }
+    if (saturday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Sábado";
+      hasOne = true;
+      count--;
+    }
+    if (sunday == 1) {
+      text += _frequencyTextSeparator(hasOne, count);
+      text += "Domingo";
+    }
+    return text;
+  }
+
+  String _frequencyTextSeparator(bool hasOne, int count) {
+    if (hasOne) {
+      if (count == 1) {
+        return " e ";
+      } else {
+        return ", ";
+      }
+    }
+    return "";
+  }
+
   bool isADoneDay(DateTime day) {
     if (monday == 1 && day.weekday == 1) return true;
     if (tuesday == 1 && day.weekday == 2) return true;
@@ -70,15 +134,16 @@ class Weekly extends Frequency {
   factory Weekly.fromJson(Map<String, dynamic> json) =>
       new Weekly(habitId: json["habit_id"], daysTime: json["days_time"]);
 
+  @override
+  int daysCount() => daysTime;
+
+  @override
+  String frequencyText() {
+    return daysCount().toString() + " vezes por semana";
+  }
+
   Map<String, dynamic> toJson() => {
         "habit_id": habitId,
         "days_time": daysTime,
       };
-
-  @override
-  int daysCount() => daysTime;
-}
-
-abstract class Frequency {
-  int daysCount();
 }

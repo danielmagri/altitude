@@ -19,7 +19,7 @@ class Habit {
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
       color: json["color"],
-      cue: json["cue_text"],
+      cue: json["cue_text"] == null ? "" : json["cue_text"],
       habit: json["habit_text"],
       score: json["score"],
       initialDate:

@@ -1,46 +1,22 @@
 import 'package:altitude/services/SharedPref.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
-import 'package:altitude/model/Habit.dart';
-import 'package:altitude/model/Reminder.dart';
-import 'package:altitude/controllers/HabitsControl.dart';
-import 'package:altitude/ui/widgets/generic/Loading.dart';
-import 'package:altitude/datas/dataHabitDetail.dart';
 import 'package:package_info/package_info.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id, {bool pushReplacement = false}) async {
-    Loading.showLoading(context);
-
-    Habit data = await HabitsControl().getHabit(id);
-    List<Reminder> reminders = await HabitsControl().getReminders(id);
-    dynamic frequency = await HabitsControl().getFrequency(id);
-    Map<DateTime, List> daysDone = await HabitsControl()
-        .getDaysDone(id, startDate: getLastDayMonthBehind(DateTime.now()), endDate: DateTime.now());
-    List<String> competitions = await CompetitionsControl().listCompetitionsIds(id);
-
-    Loading.closeLoading(context);
-    if (data != null && data.id != null && frequency != null && reminders != null) {
-      DataHabitDetail().habit = data;
-      DataHabitDetail().reminders = reminders;
-      DataHabitDetail().frequency = frequency;
-      DataHabitDetail().daysDone = daysDone;
-      DataHabitDetail().competitions = competitions;
-
-      if (pushReplacement) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-          return HabitDetailsPage.newinstance(id);
-        }));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) {
-                  return HabitDetailsPage.newinstance(id);
-                },
-                settings: RouteSettings(name: "Habit Details Page")));
-      }
+  static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
+    if (pushReplacement) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+        return HabitDetailsPage.newInstance(id, color);
+      }));
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) {
+                return HabitDetailsPage.newInstance(id, color);
+              },
+              settings: RouteSettings(name: "Habit Details Page")));
     }
   }
 
@@ -57,8 +33,6 @@ abstract class Util {
   }
 
   static Future<bool> checkUpdatedVersion() async {
-    print(await SharedPref().getVersion());
-    print(int.parse((await PackageInfo.fromPlatform()).buildNumber));
     return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
   }
 
@@ -79,10 +53,5 @@ abstract class Util {
     else if (b < 0) b = 0;
 
     return Color.fromARGB(color.alpha, r, g, b);
-  }
-
-  /// Retorna o ultimo dia do mês anterior
-  static DateTime getLastDayMonthBehind(DateTime date) {
-    return new DateTime(DateTime.now().year, DateTime.now().month, 1).subtract(Duration(days: 2));
   }
 }

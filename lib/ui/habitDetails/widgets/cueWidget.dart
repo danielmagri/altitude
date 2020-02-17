@@ -1,8 +1,7 @@
-import 'package:altitude/model/Habit.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/ui/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/datas/dataHabitDetail.dart';
 
 class CueWidget extends StatelessWidget {
   CueWidget({Key key, @required this.bloc}) : super(key: key);
@@ -10,7 +9,7 @@ class CueWidget extends StatelessWidget {
   final HabitDeatilsBloc bloc;
 
   Widget _setCueWidget(String cue) {
-    if (cue == null) {
+    if (cue.isEmpty) {
       return Text("Se você quer ter sucesso no hábito então você precisa ter um gatilho inicial!",
           textAlign: TextAlign.center, style: TextStyle(fontSize: 16));
     } else {
@@ -20,23 +19,17 @@ class CueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Habit>(
-      stream: bloc.habitDataStream,
-      builder: (BuildContext context, AsyncSnapshot<Habit> snapshot) {
-        if (!snapshot.hasData) {
-          return Skeleton(
-            width: double.maxFinite,
-            height: 130,
-            margin: EdgeInsets.symmetric(horizontal: 8),
-          );
-        } else {
+    return StreamBuilder<String>(
+      stream: bloc.cueTextStream,
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
           return SizedBox(
             height: 130,
             child: Card(
               margin: const EdgeInsets.all(12),
               elevation: 4,
               child: InkWell(
-                onTap: () => bloc.openBottomSheet(0),
+                onTap: () => bloc.openBottomSheet(BottomSheetType.CUE),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
@@ -46,13 +39,13 @@ class CueWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
-                          color: DataHabitDetail().getColor(),
+                          color: bloc.habitColor,
                         ),
                       ),
                       Expanded(
                         child: Align(
                           alignment: Alignment.center,
-                          child: _setCueWidget(snapshot.data.cue),
+                          child: _setCueWidget(snapshot.data),
                         ),
                       ),
                     ],
@@ -60,6 +53,14 @@ class CueWidget extends StatelessWidget {
                 ),
               ),
             ),
+          );
+        } else if (snapshot.hasError) {
+          return SizedBox();
+        } else {
+          return Skeleton(
+            width: double.maxFinite,
+            height: 130,
+            margin: EdgeInsets.symmetric(horizontal: 8),
           );
         }
       },
