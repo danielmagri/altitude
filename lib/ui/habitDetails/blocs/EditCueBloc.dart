@@ -4,6 +4,7 @@ import 'package:altitude/core/bloc/BlocBase.dart';
 import 'package:altitude/model/Habit.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
+import 'package:altitude/utils/Validator.dart';
 import 'package:flutter/gestures.dart' show TapGestureRecognizer;
 import 'package:flutter/material.dart' show TextEditingController, Color, ScrollController, Curves;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
@@ -17,7 +18,7 @@ class EditCueBloc extends BlocBase {
 
   KeyboardVisibilityNotification keyboardVisibilityNotification = new KeyboardVisibilityNotification();
   ScrollController scrollController = new ScrollController();
-  TextEditingController textEditingController;
+  TextEditingController textEditingController = new TextEditingController();
   TapGestureRecognizer tapGestureRecognizer = new TapGestureRecognizer();
 
   // Cue Text Show
@@ -30,28 +31,24 @@ class EditCueBloc extends BlocBase {
 
   @override
   void initialize() {
-    textEditingController = new TextEditingController();
     // Seta o gatilho no textField
-    textEditingController.text = "fsdf";
+    textEditingController.text = habit.cue;
 
-    // Listener no texto
-    //textEditingController.addListener(onTextChanged);
-
-    //   keyboardVisibilityNotification.addNewListener(
-    //   onChange: (bool visible) {
-    //     if (visible) {
-    //       scrollController.animateTo(
-    //           scrollController.position.maxScrollExtent,
-    //           duration: Duration(milliseconds: 300),
-    //           curve: Curves.easeOut);
-    //     }
-    //   },
-    // );
+      keyboardVisibilityNotification.addNewListener(
+      onChange: (bool visible) {
+        if (visible) {
+          scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut);
+        }
+      },
+    );
 
     // Ao clicar em "Saiba mais"
     tapGestureRecognizer.onTap = showAllCueText;
 
-    fetchSuggestions();
+    fetchSuggestions(habit.cue);
   }
 
   @override
@@ -70,16 +67,16 @@ class EditCueBloc extends BlocBase {
   }
 
   void onTextChanged(String text) {
-    fetchSuggestions();
+    fetchSuggestions(text);
   }
 
   void onTextDone() {
     saveCue();
   }
 
-  void fetchSuggestions() {
+  void fetchSuggestions(String text) {
     List<String> result = new List();
-    String cue = textEditingController.text.toLowerCase().trim();
+    String cue = text.toLowerCase().trim();
 
     for (String text in Suggestions.getCues()) {
       if (text.toLowerCase().contains(cue) && text.toLowerCase() != cue) {
@@ -91,16 +88,17 @@ class EditCueBloc extends BlocBase {
   }
 
   void saveCue() {
-    //     String result = Validate.cueTextValidate(_controller.text);
+        String result = Validate.cueTextValidate(textEditingController.text);
+        print(textEditingController.text);
 
-//     if (result == null) {
-//       await HabitsControl().updateCue(DataHabitDetail().habit.id,
-//           DataHabitDetail().habit.habit, _controller.text);
-//       DataHabitDetail().habit.cue = _controller.text;
-//       widget.closeBottomSheet();
-//     } else {
-//       showToast(result);
-//     }
+    // if (result == null) {
+    //   await HabitsControl().updateCue(DataHabitDetail().habit.id,
+    //       DataHabitDetail().habit.habit, _controller.text);
+    //   DataHabitDetail().habit.cue = _controller.text;
+    //   widget.closeBottomSheet();
+    // } else {
+    //   showToast(result);
+    // }
   }
 
   void removeCue() {

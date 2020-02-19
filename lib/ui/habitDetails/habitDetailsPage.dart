@@ -1,4 +1,5 @@
 import 'package:altitude/core/bloc/BlocProvider.dart';
+import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/enums/DonePageType.dart';
 import 'package:altitude/model/Frequency.dart';
@@ -17,11 +18,13 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
-class HabitDetailsPage extends StatelessWidget {
-  HabitDetailsPage({Key key}) : super(key: key);
+class HabitDetailsPage extends BlocWidget<HabitDeatilsBloc> {
 
-  static Widget newInstance(int habitId, int color) {
-    return BlocProvider<HabitDeatilsBloc>(bloc: HabitDeatilsBloc(habitId, color), widget: HabitDetailsPage());
+  static Widget instance(int habitId, int color) {
+    return BlocProvider<HabitDeatilsBloc>(
+      bloc: HabitDeatilsBloc(habitId, color),
+      widget: HabitDetailsPage(),
+    );
   }
 
   // Future<bool> onBackPress() async {
@@ -35,7 +38,7 @@ class HabitDetailsPage extends StatelessWidget {
   Widget _bottomSheetBuilder(BottomSheetType type, HabitDeatilsBloc bloc) {
     switch (type) {
       case BottomSheetType.CUE:
-        return EditCueDialog.newInstance(bloc.habit);
+        return EditCueDialog.instance(bloc.habit);
       case BottomSheetType.REMINDER:
         return EditAlarmDialog(closeBottomSheet: bloc.closeBottomSheet);
       default:
@@ -44,8 +47,7 @@ class HabitDetailsPage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final HabitDeatilsBloc bloc = BlocProvider.of<HabitDeatilsBloc>(context);
+  Widget build(BuildContext context, HabitDeatilsBloc bloc) {
     return WillPopScope(
       onWillPop: () => Future.value(true), //onBackPress,
       child: Scaffold(
