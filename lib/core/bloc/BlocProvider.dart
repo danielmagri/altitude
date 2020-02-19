@@ -1,3 +1,4 @@
+import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:flutter/widgets.dart';
 import 'BlocBase.dart';
 
@@ -5,18 +6,17 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   BlocProvider({Key key, @required this.widget, @required this.bloc}) : super(key: key);
 
   final T bloc;
-  final Widget widget;
+  final BlocWidget widget;
 
   @override
-  _BlocProviderState<T> createState() => _BlocProviderState<T>();
-
-  static T of<T extends BlocBase>(BuildContext context) {
-    BlocProvider<T> provider = context.findAncestorWidgetOfExactType();
-    return provider.bloc;
-  }
+  _BlocProviderState<T> createState() => _BlocProviderState<T>(bloc);
 }
 
 class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
+  _BlocProviderState(this.bloc);
+
+  final T bloc;
+
   @override
   void didChangeDependencies() {
     widget.bloc.initialize();
@@ -31,6 +31,6 @@ class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.widget;
+    return widget.widget.build(context, bloc);
   }
 }

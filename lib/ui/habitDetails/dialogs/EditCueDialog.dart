@@ -1,19 +1,20 @@
 import 'package:altitude/core/bloc/BlocProvider.dart';
+import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/model/Habit.dart';
 import 'package:altitude/ui/habitDetails/blocs/EditCueBloc.dart';
 import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
-class EditCueDialog extends StatelessWidget {
+class EditCueDialog extends BlocWidget<EditCueBloc> {
 
-  static Widget newInstance(Habit habit) {
+  static Widget instance(Habit habit) {
     return BlocProvider<EditCueBloc>(
       bloc: EditCueBloc(habit),
       widget: EditCueDialog(),
     );
   }
 
-  List<TextSpan> _texts(bool showAll) {
+  List<TextSpan> _texts(EditCueBloc bloc, bool showAll) {
     if (showAll) {
       return [
         TextSpan(
@@ -43,7 +44,7 @@ class EditCueDialog extends StatelessWidget {
         ),
         TextSpan(
           text: "Continuar lendo...",
-          //recognizer: bloc.tapGestureRecognizer,
+          recognizer: bloc.tapGestureRecognizer,
           style: TextStyle(color: Colors.black, fontSize: 18.0, decoration: TextDecoration.underline),
         ),
       ];
@@ -51,8 +52,7 @@ class EditCueDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final EditCueBloc bloc = BlocProvider.of<EditCueBloc>(context);
+  Widget build(BuildContext context, EditCueBloc bloc) {
     return SingleChildScrollView(
       controller: bloc.scrollController,
       physics: BouncingScrollPhysics(),
@@ -75,7 +75,7 @@ class EditCueDialog extends StatelessWidget {
                 return RichText(
                   textAlign: TextAlign.justify,
                   text: TextSpan(
-                    children: _texts(snapshot.data),
+                    children: _texts(bloc, snapshot.data),
                   ),
                 );
               }),

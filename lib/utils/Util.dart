@@ -7,14 +7,14 @@ abstract class Util {
   static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
     if (pushReplacement) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-        return HabitDetailsPage.newInstance(id, color);
+        return HabitDetailsPage.instance(id, color);
       }));
     } else {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (_) {
-                return HabitDetailsPage.newInstance(id, color);
+                return HabitDetailsPage.instance(id, color);
               },
               settings: RouteSettings(name: "Habit Details Page")));
     }
