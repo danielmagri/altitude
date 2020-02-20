@@ -8,7 +8,7 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 class CalendarWidget extends StatelessWidget {
   CalendarWidget({Key key, @required this.bloc}) : super(key: key);
 
-  final HabitDeatilsBloc bloc;
+  final HabitDetailsBloc bloc;
 
   Widget _todayDayBuilder(context, date, list) {
     return Container(

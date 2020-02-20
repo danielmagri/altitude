@@ -5,7 +5,7 @@ import 'dart:math';
 class CompetitionWidget extends StatelessWidget {
   CompetitionWidget({Key key, this.bloc}) : super(key: key);
 
-  final HabitDeatilsBloc bloc;
+  final HabitDetailsBloc bloc;
 
   int index = 0;
 

@@ -18,27 +18,26 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
-class HabitDetailsPage extends BlocWidget<HabitDeatilsBloc> {
-
+class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
   static Widget instance(int habitId, int color) {
-    return BlocProvider<HabitDeatilsBloc>(
-      bloc: HabitDeatilsBloc(habitId, color),
+    return BlocProvider<HabitDetailsBloc>(
+      bloc: HabitDetailsBloc(habitId, color),
       widget: HabitDetailsPage(),
     );
   }
 
-  // Future<bool> onBackPress() async {
-  //   if (bloc.panelController.isPanelOpen()) {
-  //     bloc.closeBottomSheet();
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  Future<bool> onBackPress(HabitDetailsBloc bloc) {
+    if (bloc.panelController.isPanelOpen()) {
+      bloc.closeBottomSheet();
+      return Future.value(false);
+    }
+    return Future.value(true);
+  }
 
-  Widget _bottomSheetBuilder(BottomSheetType type, HabitDeatilsBloc bloc) {
+  Widget _bottomSheetBuilder(BottomSheetType type, HabitDetailsBloc bloc) {
     switch (type) {
       case BottomSheetType.CUE:
-        return EditCueDialog.instance(bloc.habit);
+        return EditCueDialog.instance(bloc.habit, bloc.editCueCallback);
       case BottomSheetType.REMINDER:
         return EditAlarmDialog(closeBottomSheet: bloc.closeBottomSheet);
       default:
@@ -47,9 +46,9 @@ class HabitDetailsPage extends BlocWidget<HabitDeatilsBloc> {
   }
 
   @override
-  Widget build(BuildContext context, HabitDeatilsBloc bloc) {
+  Widget build(BuildContext context, HabitDetailsBloc bloc) {
     return WillPopScope(
-      onWillPop: () => Future.value(true), //onBackPress,
+      onWillPop: () => onBackPress(bloc),
       child: Scaffold(
         body: SlidingUpPanel(
           controller: bloc.panelController,
@@ -57,6 +56,7 @@ class HabitDetailsPage extends BlocWidget<HabitDeatilsBloc> {
           backdropEnabled: true,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           minHeight: 0,
+          onPanelClosed: bloc.emptyBottomSheet,
           panel: StreamBuilder<BottomSheetType>(
             stream: bloc.bottomSheetStream,
             builder: (BuildContext context, AsyncSnapshot<BottomSheetType> snapshot) =>

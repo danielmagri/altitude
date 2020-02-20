@@ -6,10 +6,9 @@ import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
 class EditCueDialog extends BlocWidget<EditCueBloc> {
-
-  static Widget instance(Habit habit) {
+  static Widget instance(Habit habit, Function(String) callback) {
     return BlocProvider<EditCueBloc>(
-      bloc: EditCueBloc(habit),
+      bloc: EditCueBloc(habit, callback),
       widget: EditCueDialog(),
     );
   }
@@ -89,7 +88,7 @@ class EditCueDialog extends BlocWidget<EditCueBloc> {
                   controller: bloc.textEditingController,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.go,
-                  onEditingComplete: bloc.onTextDone,
+                  onSubmitted: (text) => bloc.saveCue(context),
                   onChanged: bloc.onTextChanged,
                   minLines: 1,
                   maxLines: 2,
@@ -134,7 +133,7 @@ class EditCueDialog extends BlocWidget<EditCueBloc> {
                   children: <Widget>[
                     bloc.habit.cue.isNotEmpty
                         ? FlatButton(
-                            onPressed: bloc.removeCue,
+                            onPressed: () => bloc.removeCue(context),
                             child: Text(
                               "Remover",
                               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
@@ -142,7 +141,7 @@ class EditCueDialog extends BlocWidget<EditCueBloc> {
                           )
                         : SizedBox(),
                     FlatButton(
-                      onPressed: bloc.saveCue,
+                      onPressed: () => bloc.saveCue(context),
                       child: Text(
                         "Salvar",
                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: bloc.habitColor),

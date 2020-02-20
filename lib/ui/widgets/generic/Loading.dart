@@ -1,4 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        StatelessWidget,
+        Widget,
+        Center,
+        CircularProgressIndicator,
+        BuildContext,
+        Navigator,
+        PageRouteBuilder,
+        Colors,
+        Animation,
+        FadeTransition,
+        CurvedAnimation,
+        Curves,
+        WillPopScope;
 
 abstract class Loading {
   static bool loading = false;
@@ -10,9 +24,9 @@ abstract class Loading {
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
           transitionDuration: Duration(milliseconds: 100),
-          transitionsBuilder:
-              (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) =>
-          new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+                  Widget child) =>
+              new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
           pageBuilder: (BuildContext context, _, __) {
             return LoadingWidget();
           }));
@@ -28,11 +42,8 @@ abstract class Loading {
   }
 }
 
-
 class LoadingWidget extends StatelessWidget {
-  LoadingWidget({Key key}) : super(key: key);
-
   Widget build(BuildContext context) {
-    return Center(child: CircularProgressIndicator());
+    return WillPopScope(onWillPop: () => Future.value(false), child: Center(child: CircularProgressIndicator()));
   }
 }

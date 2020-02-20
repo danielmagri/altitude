@@ -18,8 +18,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
-class HabitDeatilsBloc extends BlocBase {
-  HabitDeatilsBloc(this._id, this._color);
+class HabitDetailsBloc extends BlocBase {
+  HabitDetailsBloc(this._id, this._color);
 
   final int _id;
   final int _color;
@@ -138,6 +138,10 @@ class HabitDeatilsBloc extends BlocBase {
     panelController.close();
   }
 
+  void emptyBottomSheet() {
+    _bottomSheetStreamController.sink.add(BottomSheetType.NONE);
+  }
+
   void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) {
     _calendarWidgetStreamController.loading();
     HabitsControl()
@@ -221,9 +225,22 @@ class HabitDeatilsBloc extends BlocBase {
       }
     });
   }
+
+  void editCueCallback(String cue) {
+    if (cue == null) {
+      // Removido
+      _habit.cue = "";
+    } else {
+      // Alterado
+      _habit.cue = cue;
+    }
+
+    _cueTextStreamController.sink.add(_habit.cue);
+    closeBottomSheet();
+  }
 }
 
-// ações do Panel do gatilho e reminder
+// ações do Panel do reminder
 // Exibição dos tutoriais
 // Alterar fogo do foguete
 // pesquisar vantagens e destavantagens dos tipos de navegação
