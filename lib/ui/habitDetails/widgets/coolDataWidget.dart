@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CoolDataWidget extends StatelessWidget {
   CoolDataWidget({Key key, @required this.bloc}) : super(key: key);
 
-  final HabitDeatilsBloc bloc;
+  final HabitDetailsBloc bloc;
 
   @override
   Widget build(BuildContext context) {

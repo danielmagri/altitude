@@ -6,13 +6,14 @@ import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:altitude/utils/Validator.dart';
 import 'package:flutter/gestures.dart' show TapGestureRecognizer;
-import 'package:flutter/material.dart' show TextEditingController, Color, ScrollController, Curves;
+import 'package:flutter/material.dart' show TextEditingController, Color, ScrollController, Curves, BuildContext;
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueBloc extends BlocBase {
-  EditCueBloc(this.habit);
+  EditCueBloc(this.habit, this.callback);
 
   final Habit habit;
+  final Function(String) callback;
 
   Color get habitColor => AppColors.habitsColor[habit.color];
 
@@ -34,13 +35,11 @@ class EditCueBloc extends BlocBase {
     // Seta o gatilho no textField
     textEditingController.text = habit.cue;
 
-      keyboardVisibilityNotification.addNewListener(
+    keyboardVisibilityNotification.addNewListener(
       onChange: (bool visible) {
         if (visible) {
-          scrollController.animateTo(
-              scrollController.position.maxScrollExtent,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeOut);
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300), curve: Curves.easeOut);
         }
       },
     );
@@ -70,10 +69,6 @@ class EditCueBloc extends BlocBase {
     fetchSuggestions(text);
   }
 
-  void onTextDone() {
-    saveCue();
-  }
-
   void fetchSuggestions(String text) {
     List<String> result = new List();
     String cue = text.toLowerCase().trim();
@@ -87,24 +82,31 @@ class EditCueBloc extends BlocBase {
     _suggestionListStreamController.sink.add(result);
   }
 
-  void saveCue() {
-        String result = Validate.cueTextValidate(textEditingController.text);
-        print(textEditingController.text);
+  void saveCue(BuildContext context) async {
+    String validate = Validate.cueTextValidate(textEditingController.text);
 
-    // if (result == null) {
-    //   await HabitsControl().updateCue(DataHabitDetail().habit.id,
-    //       DataHabitDetail().habit.habit, _controller.text);
-    //   DataHabitDetail().habit.cue = _controller.text;
-    //   widget.closeBottomSheet();
-    // } else {
-    //   showToast(result);
-    // }
+    if (validate == null)  {
+      showLoading(context);
+      HabitsControl().updateCue(habit.id, habit.habit, textEditingController.text).then((result) {
+        hideLoading(context);
+        callback(textEditingController.text);
+      }).catchError((error) {
+        hideLoading(context);
+        showToast("Ocorreu um erro");
+      });
+    } else {
+      showToast(validate);
+    }
   }
 
-  void removeCue() {
-    // await HabitsControl().updateCue(
-    //     habit.id, habit.habit, null);
-    // DataHabitDetail().habit.cue = null;
-    // widget.closeBottomSheet();
+  void removeCue(BuildContext context) {
+    showLoading(context);
+    HabitsControl().updateCue(habit.id, habit.habit, null).then((result) {
+      hideLoading(context);
+      callback(null);
+    }).catchError((error) {
+      hideLoading(context);
+      showToast("Ocorreu um erro");
+    });
   }
 }

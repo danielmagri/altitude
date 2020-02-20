@@ -1,1 +1,1 @@
-enum BottomSheetType { CUE, REMINDER }
+enum BottomSheetType { NONE, CUE, REMINDER }

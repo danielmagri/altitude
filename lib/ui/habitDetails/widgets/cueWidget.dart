@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CueWidget extends StatelessWidget {
   CueWidget({Key key, @required this.bloc}) : super(key: key);
 
-  final HabitDeatilsBloc bloc;
+  final HabitDetailsBloc bloc;
 
   Widget _setCueWidget(String cue) {
     if (cue.isEmpty) {

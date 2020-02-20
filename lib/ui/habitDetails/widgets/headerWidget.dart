@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class HeaderWidget extends StatelessWidget {
   HeaderWidget({Key key, @required this.bloc, this.color}) : super(key: key);
 
-  final HabitDeatilsBloc bloc;
+  final HabitDetailsBloc bloc;
   final Color color;
 
   double _setRocketForce() {
