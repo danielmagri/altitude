@@ -238,6 +238,11 @@ class HabitDetailsBloc extends BlocBase {
     _cueTextStreamController.sink.add(_habit.cue);
     closeBottomSheet();
   }
+
+  void editAlarmCallback(int remindersCount) {
+    _reminderButtonController.sink.add(remindersCount);
+    closeBottomSheet();
+  }
 }
 
 // ações do Panel do reminder
