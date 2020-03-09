@@ -9,8 +9,6 @@ import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color, BuildContext;
 
 class EditAlarmBloc extends BlocBase {
-  EditAlarmBloc(this.habit, this.callback);
-
   final Habit habit;
   final Function(int) callback;
 
@@ -29,8 +27,7 @@ class EditAlarmBloc extends BlocBase {
   StreamController<List<String>> _suggestionListStreamController = StreamController();
   Stream<List<String>> get suggestionListStream => _suggestionListStreamController.stream;
 
-  @override
-  void initialize() {}
+  EditAlarmBloc(this.habit, this.callback);
 
   @override
   void dispose() {

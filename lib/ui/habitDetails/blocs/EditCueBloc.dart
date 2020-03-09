@@ -10,8 +10,6 @@ import 'package:flutter/material.dart' show TextEditingController, Color, Scroll
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueBloc extends BlocBase {
-  EditCueBloc(this.habit, this.callback);
-
   final Habit habit;
   final Function(String) callback;
 
@@ -30,8 +28,7 @@ class EditCueBloc extends BlocBase {
   StreamController<List<String>> _suggestionListStreamController = StreamController();
   Stream<List<String>> get suggestionListStream => _suggestionListStreamController.stream;
 
-  @override
-  void initialize() {
+  EditCueBloc(this.habit, this.callback) {
     // Seta o gatilho no textField
     textEditingController.text = habit.cue;
 
@@ -85,7 +82,7 @@ class EditCueBloc extends BlocBase {
   void saveCue(BuildContext context) async {
     String validate = Validate.cueTextValidate(textEditingController.text);
 
-    if (validate == null)  {
+    if (validate == null) {
       showLoading(context);
       HabitsControl().updateCue(habit.id, habit.habit, textEditingController.text).then((result) {
         hideLoading(context);

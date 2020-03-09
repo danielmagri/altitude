@@ -6,9 +6,9 @@ import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
 class EditCueDialog extends BlocWidget<EditCueBloc> {
-  static Widget instance(Habit habit, Function(String) callback) {
+  static StatefulWidget instance(Habit habit, Function(String) callback) {
     return BlocProvider<EditCueBloc>(
-      bloc: EditCueBloc(habit, callback),
+      blocCreator: () => EditCueBloc(habit, callback),
       widget: EditCueDialog(),
     );
   }

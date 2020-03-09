@@ -2,35 +2,32 @@ import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:flutter/widgets.dart';
 import 'BlocBase.dart';
 
-class BlocProvider<T extends BlocBase> extends StatefulWidget {
-  BlocProvider({Key key, @required this.widget, @required this.bloc}) : super(key: key);
+typedef T BlocCreator<T extends BlocBase>();
 
-  final T bloc;
+class BlocProvider<T extends BlocBase> extends StatefulWidget {
+  BlocProvider({Key key, @required this.widget, @required this.blocCreator}) : super(key: key);
+
+  final BlocCreator blocCreator;
   final BlocWidget widget;
 
   @override
-  _BlocProviderState<T> createState() => _BlocProviderState<T>(bloc);
+  _BlocProviderState<T> createState() => _BlocProviderState<T>(blocCreator(), widget);
 }
 
-class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
-  _BlocProviderState(this.bloc);
+class _BlocProviderState<T extends BlocBase> extends State<BlocProvider<BlocBase>> {
+  _BlocProviderState(this.bloc, this.child);
 
   final T bloc;
-
-  @override
-  void didChangeDependencies() {
-    widget.bloc.initialize();
-    super.didChangeDependencies();
-  }
+  final BlocWidget child;
 
   @override
   void dispose() {
-    widget.bloc.dispose();
+    bloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.widget.build(context, bloc);
+    return child.build(context, bloc);
   }
 }

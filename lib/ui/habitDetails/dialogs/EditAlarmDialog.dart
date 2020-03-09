@@ -9,9 +9,9 @@ import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
 class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
-  static Widget instance(Habit habit, Function(int) callback) {
+  static StatefulWidget instance(Habit habit, Function(int) callback) {
     return BlocProvider<EditAlarmBloc>(
-      bloc: EditAlarmBloc(habit, callback),
+      blocCreator: () => EditAlarmBloc(habit, callback),
       widget: EditAlarmDialog(),
     );
   }

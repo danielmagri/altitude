@@ -5,8 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class BlocBase {
   static bool _loading = false;
-
-  void initialize() {}
+  
   void dispose();
 
   @protected
