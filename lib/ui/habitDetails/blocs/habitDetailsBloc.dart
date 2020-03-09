@@ -19,7 +19,6 @@ import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class HabitDetailsBloc extends BlocBase {
-  HabitDetailsBloc(this._id, this._color);
 
   final int _id;
   final int _color;
@@ -73,8 +72,7 @@ class HabitDetailsBloc extends BlocBase {
   StreamController<List<String>> _competitionListStreamController = StreamController();
   Stream<List<String>> get competitionListStream => _competitionListStreamController.stream;
 
-  @override
-  void initialize() {
+  HabitDetailsBloc(this._id, this._color) {
     fetchData();
   }
 

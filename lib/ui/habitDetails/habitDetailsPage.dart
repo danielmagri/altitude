@@ -19,9 +19,9 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
-  static Widget instance(int habitId, int color) {
+  static StatefulWidget instance(int habitId, int color) {
     return BlocProvider<HabitDetailsBloc>(
-      bloc: HabitDetailsBloc(habitId, color),
+      blocCreator: () => HabitDetailsBloc(habitId, color),
       widget: HabitDetailsPage(),
     );
   }
