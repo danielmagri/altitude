@@ -38,6 +38,7 @@ class HabitDetailsBloc extends BlocBase {
   List<String> _competitions;
 
   Habit get habit => _habit;
+  List<Reminder> get reminders => _reminders;
 
   // Bottom Sheet
   StreamController<BottomSheetType> _bottomSheetStreamController = StreamController();
@@ -237,8 +238,9 @@ class HabitDetailsBloc extends BlocBase {
     closeBottomSheet();
   }
 
-  void editAlarmCallback(int remindersCount) {
-    _reminderButtonController.sink.add(remindersCount);
+  void editAlarmCallback(List<Reminder> newReminders) {
+    _reminders = newReminders;
+    _reminderButtonController.sink.add(newReminders.length);
     closeBottomSheet();
   }
 }

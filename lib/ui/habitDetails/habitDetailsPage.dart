@@ -39,7 +39,7 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
       case BottomSheetType.CUE:
         return EditCueDialog.instance(bloc.habit, bloc.editCueCallback);
       case BottomSheetType.REMINDER:
-        return EditAlarmDialog.instance(bloc.habit, bloc.editAlarmCallback);
+        return EditAlarmDialog.instance(bloc.habit, bloc.reminders, bloc.editAlarmCallback);
       default:
         return SizedBox();
     }
