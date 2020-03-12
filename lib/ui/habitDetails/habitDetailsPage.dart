@@ -111,7 +111,7 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
                     ],
                   ),
                 ),
-                HeaderWidget(bloc: bloc, color: bloc.habitColor),
+                HeaderWidget(bloc: bloc),
                 Container(
                   margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
                   width: double.maxFinite,

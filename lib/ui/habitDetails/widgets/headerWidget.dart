@@ -2,30 +2,14 @@ import 'package:altitude/model/Habit.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
 import 'package:altitude/ui/habitDetails/widgets/SkyScene.dart';
 import 'package:altitude/ui/widgets/Score.dart';
+import 'package:altitude/ui/widgets/generic/Rocket.dart';
 import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, @required this.bloc, this.color}) : super(key: key);
+  HeaderWidget({Key key, @required this.bloc}) : super(key: key);
 
   final HabitDetailsBloc bloc;
-  final Color color;
-
-  double _setRocketForce() {
-    // double force;
-    // int cycleDays = CYCLE_DAYS;
-    // int timesDays = bloc.data.frequency.daysCount();
-    // List<DateTime> dates = bloc.data.daysDone.keys.toList();
-
-    // int daysDoneLastCycle =
-    //     dates.where((date) => date.isAfter(DateTime.now().subtract(Duration(days: cycleDays + 1)))).length;
-
-    // force = daysDoneLastCycle / timesDays;
-
-    // if (force > 1.3) force = 1.3;
-    // return force;
-    return 1;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +19,26 @@ class HeaderWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            child: SkyScene(
-              size: const Size(140, 140),
-              color: color,
-              force: _setRocketForce(),
+            child: StreamBuilder<double>(
+              stream: bloc.rocketForceStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SkyScene(
+                    size: const Size(140, 140),
+                    color: bloc.habitColor,
+                    force: snapshot.data,
+                  );
+                } else if (snapshot.hasError) {
+                  return SizedBox();
+                } else {
+                  return Skeleton.custom(
+                    child: Rocket(
+                      size: const Size(140, 140),
+                      color: bloc.habitColor,
+                    ),
+                  );
+                }
+              },
             ),
           ),
           Expanded(
@@ -58,7 +58,7 @@ class HeaderWidget extends StatelessWidget {
                         maxLines: 2,
                         style: TextStyle(fontSize: 19),
                       ),
-                      Score(color: color, score: snapshot.data.score),
+                      Score(color: bloc.habitColor, score: snapshot.data.score),
                     ],
                   );
                 } else if (snapshot.hasError) {
