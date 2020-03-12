@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/core/Constants.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/core/bloc/stream/LoadableStreamController.dart';
@@ -19,7 +20,6 @@ import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class HabitDetailsBloc extends BlocBase {
-
   final int _id;
   final int _color;
 
@@ -34,11 +34,15 @@ class HabitDetailsBloc extends BlocBase {
   Habit _habit;
   Frequency _frequency;
   List<Reminder> _reminders;
-  Map<DateTime, List> _daysDone;
+  Map<DateTime, List> _currentMonthDaysDone;
   List<String> _competitions;
 
   Habit get habit => _habit;
   List<Reminder> get reminders => _reminders;
+
+  // Rocket Widget
+  StreamController<double> _rocketForceStreamController = StreamController();
+  Stream<double> get rocketForceStream => _rocketForceStreamController.stream;
 
   // Bottom Sheet
   StreamController<BottomSheetType> _bottomSheetStreamController = StreamController();
@@ -79,6 +83,7 @@ class HabitDetailsBloc extends BlocBase {
 
   @override
   void dispose() {
+    _rocketForceStreamController.close();
     _habitStreamController.close();
     _reminderButtonController.close();
     _bottomSheetStreamController.close();
@@ -102,17 +107,19 @@ class HabitDetailsBloc extends BlocBase {
       _habit = await HabitsControl().getHabit(_id);
       _reminders = await HabitsControl().getReminders(_id);
       _frequency = await HabitsControl().getFrequency(_id);
-      _daysDone = await HabitsControl().getDaysDone(_id,
+      _currentMonthDaysDone = await HabitsControl().getDaysDone(_id,
           startDate: DateTime.now().lastDayOfPreviousMonth().subtract(Duration(days: 6)),
           endDate: DateTime.now().today.add(Duration(days: 7)));
       _competitions = await CompetitionsControl().listCompetitionsIds(_id);
 
+      calculateRocketForce();
+
       _habitStreamController.sink.add(_habit);
       _reminderButtonController.sink.add(_reminders.length);
-      _completeButtonStreamController.success(_daysDone.containsKey(DateTime.now().today));
+      _completeButtonStreamController.success(_currentMonthDaysDone.containsKey(DateTime.now().today));
       _frequencyTextStreamController.sink.add(_frequency);
       _cueTextStreamController.sink.add(_habit.cue);
-      _calendarWidgetStreamController.success(_daysDone);
+      _calendarWidgetStreamController.success(_currentMonthDaysDone);
       _competitionListStreamController.sink.add(_competitions);
     } catch (error) {
       _habitStreamController.addError(error);
@@ -141,12 +148,31 @@ class HabitDetailsBloc extends BlocBase {
     _bottomSheetStreamController.sink.add(BottomSheetType.NONE);
   }
 
+  void calculateRocketForce() async {
+    try {
+      double force;
+      int timesDays = _frequency.daysCount();
+      List<DateTime> dates = (await HabitsControl().getDaysDone(_id,
+              startDate: DateTime.now().today.subtract(Duration(days: CYCLE_DAYS)), endDate: DateTime.now().today))
+          .keys
+          .toList();
+
+      int daysDoneLastCycle = dates.length;
+
+      force = daysDoneLastCycle / timesDays;
+
+      if (force > 1.3) force = 1.3;
+      _rocketForceStreamController.sink.add(force);
+    } catch (error) {
+      _rocketForceStreamController.addError(error);
+    }
+  }
+
   void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) {
     _calendarWidgetStreamController.loading();
     HabitsControl()
         .getDaysDone(_id, startDate: start.subtract(Duration(days: 1)), endDate: end.add(Duration(days: 1)))
         .then((map) {
-      _daysDone = map;
       _calendarWidgetStreamController.success(map);
     });
   }
@@ -190,32 +216,38 @@ class HabitDetailsBloc extends BlocBase {
         _habit?.daysDone--;
       }
 
-      bool yesterday = _daysDone.containsKey(date.subtract(Duration(days: 1)));
-      bool tomorrow = _daysDone.containsKey(date.add(Duration(days: 1)));
+      Map<DateTime, List> visibleMonthDays = _calendarWidgetStreamController.lastDataSend;
+
+      bool yesterday = visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
+      bool tomorrow = visibleMonthDays.containsKey(date.add(Duration(days: 1)));
 
       if (!add) {
         // Remover dia
-        _daysDone?.remove(date);
+        visibleMonthDays?.remove(date);
         if (yesterday) {
-          _daysDone?.update(date.subtract(Duration(days: 1)), (old) => [old[0], false]);
+          visibleMonthDays?.update(date.subtract(Duration(days: 1)), (old) => [old[0], false]);
         }
 
         if (tomorrow) {
-          _daysDone?.update(date.add(Duration(days: 1)), (old) => [false, old[1]]);
+          visibleMonthDays?.update(date.add(Duration(days: 1)), (old) => [false, old[1]]);
         }
       } else {
         // Adicionar dia
-        _daysDone?.putIfAbsent(date, () => [yesterday, tomorrow]);
+        visibleMonthDays?.putIfAbsent(date, () => [yesterday, tomorrow]);
         if (yesterday) {
-          _daysDone?.update(date.subtract(Duration(days: 1)), (old) => [old[0], true]);
+          visibleMonthDays?.update(date.subtract(Duration(days: 1)), (old) => [old[0], true]);
         }
 
         if (tomorrow) {
-          _daysDone?.update(date.add(Duration(days: 1)), (old) => [true, old[1]]);
+          visibleMonthDays?.update(date.add(Duration(days: 1)), (old) => [true, old[1]]);
         }
       }
 
-      _calendarWidgetStreamController.success(_daysDone);
+      if (date.isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
+        calculateRocketForce();
+      }
+
+      _calendarWidgetStreamController.success(visibleMonthDays);
       _habitStreamController.sink.add(_habit);
       if (date.isAtSameMomentAs(DateTime.now().today)) {
         _completeButtonStreamController.success(add);
@@ -245,7 +277,4 @@ class HabitDetailsBloc extends BlocBase {
   }
 }
 
-// ações do Panel do reminder
 // Exibição dos tutoriais
-// Alterar fogo do foguete
-// pesquisar vantagens e destavantagens dos tipos de navegação
