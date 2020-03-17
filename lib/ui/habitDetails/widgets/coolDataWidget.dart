@@ -1,6 +1,6 @@
-import 'package:altitude/model/Habit.dart';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
 
 class CoolDataWidget extends StatelessWidget {

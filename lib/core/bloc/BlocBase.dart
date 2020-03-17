@@ -1,4 +1,4 @@
-import 'package:altitude/ui/widgets/generic/Loading.dart';
+import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:flutter/material.dart' show Colors, MaterialPageRoute;
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';

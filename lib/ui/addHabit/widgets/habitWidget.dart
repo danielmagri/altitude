@@ -1,5 +1,5 @@
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:altitude/utils/Util.dart';
 import 'package:altitude/utils/Validator.dart';
 import 'package:altitude/utils/Color.dart';

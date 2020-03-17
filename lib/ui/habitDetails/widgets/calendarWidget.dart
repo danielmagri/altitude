@@ -1,6 +1,6 @@
+import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';

@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
-import 'package:altitude/model/Habit.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:altitude/utils/Validator.dart';

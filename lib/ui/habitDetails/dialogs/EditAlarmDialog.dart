@@ -1,12 +1,12 @@
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/core/bloc/BlocProvider.dart';
 import 'package:altitude/core/bloc/BlocWidget.dart';
-import 'package:altitude/model/Habit.dart';
-import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/ui/habitDetails/blocs/EditAlarmBloc.dart';
 import 'package:altitude/ui/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/ui/habitDetails/model/ReminderCard.dart';
 import 'package:altitude/ui/habitDetails/model/ReminderWeekday.dart';
-import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
 class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {

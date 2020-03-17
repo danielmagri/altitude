@@ -1,12 +1,12 @@
+import 'package:altitude/common/view/generic/DotsIndicator.dart';
+import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:altitude/ui/widgets/generic/DotsIndicator.dart';
 import 'package:altitude/utils/Validator.dart';
 import 'package:altitude/main.dart';
 import 'package:altitude/services/SharedPref.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/ui/widgets/generic/Rocket.dart';
 import 'package:package_info/package_info.dart';
 
 class TutorialPage extends StatefulWidget {

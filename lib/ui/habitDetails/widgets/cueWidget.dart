@@ -1,6 +1,6 @@
+import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/ui/habitDetails/blocs/habitDetailsBloc.dart';
 import 'package:altitude/ui/habitDetails/enums/BottomSheetType.dart';
-import 'package:altitude/ui/widgets/generic/Skeleton.dart';
 import 'package:flutter/material.dart';
 
 class CueWidget extends StatelessWidget {

@@ -1,7 +1,7 @@
+import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:altitude/model/Competition.dart';
-import 'package:altitude/model/Competitor.dart';
-import 'package:altitude/model/Person.dart';
 import 'package:altitude/services/FireMenssaging.dart';
 
 class FireFunctions {

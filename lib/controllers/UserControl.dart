@@ -1,4 +1,4 @@
-import 'package:altitude/model/Person.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/services/Database.dart';
 import 'package:altitude/services/FireAnalytics.dart';
 import 'package:altitude/services/FireAuth.dart';

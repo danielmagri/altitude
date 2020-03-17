@@ -1,8 +1,8 @@
+import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/ui/helpPage.dart';
-import 'package:altitude/ui/widgets/generic/Loading.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:altitude/utils/Validator.dart';
 import 'package:altitude/ui/tutorialPage.dart';
 

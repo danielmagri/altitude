@@ -1,8 +1,8 @@
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/core/bloc/BlocProvider.dart';
 import 'package:altitude/core/bloc/BlocWidget.dart';
-import 'package:altitude/model/Habit.dart';
 import 'package:altitude/ui/habitDetails/blocs/EditCueBloc.dart';
-import 'package:altitude/ui/widgets/generic/BottomSheetLine.dart';
 import 'package:flutter/material.dart';
 
 class EditCueDialog extends BlocWidget<EditCueBloc> {
