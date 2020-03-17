@@ -1,5 +1,7 @@
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/model/Habit.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/ui/addHabit/widgets/colorWidget.dart';
 import 'package:altitude/ui/addHabit/widgets/habitWidget.dart';
@@ -9,8 +11,6 @@ import 'package:altitude/utils/Color.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:altitude/utils/Validator.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
-import 'package:altitude/ui/widgets/generic/Loading.dart';
 import 'package:altitude/utils/Util.dart';
 
 class AddHabitPage extends StatefulWidget {

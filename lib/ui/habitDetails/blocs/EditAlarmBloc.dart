@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
-import 'package:altitude/model/Habit.dart';
-import 'package:altitude/model/Reminder.dart';
 import 'package:altitude/services/FireAnalytics.dart';
 import 'package:altitude/ui/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/ui/habitDetails/model/ReminderCard.dart';

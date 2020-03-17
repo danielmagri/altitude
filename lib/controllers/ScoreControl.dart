@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:altitude/common/model/DayDone.dart';
+import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/model/DayDone.dart';
-import 'package:altitude/model/Frequency.dart';
 import 'package:altitude/services/Database.dart';
 import 'package:altitude/services/FireFunctions.dart';
 import 'package:altitude/services/SharedPref.dart';

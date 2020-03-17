@@ -1,9 +1,9 @@
+import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/model/CompetitionPresentation.dart';
+import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/model/Competition.dart';
-import 'package:altitude/model/CompetitionPresentation.dart';
-import 'package:altitude/model/Competitor.dart';
-import 'package:altitude/model/Habit.dart';
 import 'package:altitude/services/Database.dart';
 import 'package:altitude/services/FireAnalytics.dart';
 import 'package:altitude/services/FireFunctions.dart';

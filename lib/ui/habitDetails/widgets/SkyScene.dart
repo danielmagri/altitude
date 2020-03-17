@@ -1,6 +1,6 @@
+import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:altitude/ui/widgets/generic/Rocket.dart';
 import 'package:altitude/utils/Color.dart';
 
 class SkyScene extends StatelessWidget {

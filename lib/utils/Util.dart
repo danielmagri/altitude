@@ -1,6 +1,6 @@
 import 'package:altitude/services/SharedPref.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/ui/habitDetails/habitDetailsPage.dart';
+import 'package:altitude/ui/habitDetails/page/habitDetailsPage.dart';
 import 'package:package_info/package_info.dart';
 
 abstract class Util {

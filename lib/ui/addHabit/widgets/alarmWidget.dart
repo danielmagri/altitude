@@ -1,10 +1,10 @@
+import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/model/Frequency.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
-import 'package:altitude/model/Reminder.dart';
 
 class AlarmWidget extends StatefulWidget {
   AlarmWidget({Key key, this.color}) : super(key: key);

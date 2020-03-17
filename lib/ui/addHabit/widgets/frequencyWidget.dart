@@ -1,7 +1,7 @@
+import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/model/Frequency.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 

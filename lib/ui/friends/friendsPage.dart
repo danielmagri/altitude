@@ -1,15 +1,15 @@
+import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/generic/IconButtonStatus.dart';
+import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/ScoreControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/model/Person.dart';
 import 'package:altitude/ui/friends/addFriendPage.dart';
 import 'package:altitude/ui/friends/pendingFriendsPage.dart';
 import 'package:altitude/ui/dialogs/BaseDialog.dart';
 import 'package:altitude/ui/loginPage.dart';
-import 'package:altitude/ui/widgets/generic/IconButtonStatus.dart';
-import 'package:altitude/ui/widgets/generic/Loading.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
 

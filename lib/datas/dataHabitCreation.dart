@@ -1,6 +1,6 @@
 import 'dart:math';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/model/Reminder.dart';
 
 class DataHabitCreation {
   static final DataHabitCreation _singleton = new DataHabitCreation._internal();

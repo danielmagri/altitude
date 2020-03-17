@@ -1,9 +1,9 @@
+import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/model/Person.dart';
-import 'package:altitude/ui/widgets/generic/Loading.dart';
-import 'package:altitude/ui/widgets/generic/Toast.dart';
 import 'package:altitude/utils/Color.dart';
 
 class AddFriendPage extends StatefulWidget {

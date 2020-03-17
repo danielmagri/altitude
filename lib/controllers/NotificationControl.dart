@@ -1,7 +1,7 @@
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/model/Habit.dart';
-import 'package:altitude/model/Reminder.dart';
 
 class NotificationControl {
   static final NotificationControl _singleton =
