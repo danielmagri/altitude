@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class BlocBase {
   static bool _loading = false;
-  
+
   void dispose();
 
   @protected
@@ -21,12 +21,31 @@ abstract class BlocBase {
   }
 
   @protected
-  Future<T> navigatePushToPage<T>(BuildContext context, Widget page, [String name = ""]) {
-    return Navigator.of(context).push(MaterialPageRoute(
+  bool navigatePop<T>(BuildContext context, [T data]) {
+    return Navigator.of(context).pop<T>(data);
+  }
+
+  @protected
+  Future<T> navigatePush<T>(BuildContext context, Widget page, [String name = ""]) {
+    return Navigator.of(context).push<T>(MaterialPageRoute(
         builder: (_) {
           return page;
         },
         settings: RouteSettings(name: name)));
+  }
+
+  @protected
+  Future navigatePushReplacement(BuildContext context, Widget page, [String name = ""]) {
+    return Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (_) {
+          return page;
+        },
+        settings: RouteSettings(name: name)));
+  }
+
+  @protected
+  void navigatePopUntil(BuildContext context, bool Function(Route<dynamic>) predicate) {
+    return Navigator.of(context).popUntil(predicate);
   }
 
   @protected
