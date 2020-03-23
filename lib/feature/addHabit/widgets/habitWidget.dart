@@ -79,7 +79,7 @@ class _HabitWidgetState extends State<HabitWidget> {
           texts: [
             TextSpan(
               text:
-                  "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano e depois com que frequência deseja realizá-lo.",
+                  "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.",
               style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
             TextSpan(
