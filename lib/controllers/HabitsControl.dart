@@ -6,9 +6,9 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/controllers/ScoreControl.dart';
 import 'package:altitude/controllers/NotificationControl.dart';
-import 'package:altitude/services/Database.dart';
-import 'package:altitude/services/FireAnalytics.dart';
-import 'package:altitude/services/FireFunctions.dart';
+import 'package:altitude/common/services/Database.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:altitude/common/services/FireFunctions.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 

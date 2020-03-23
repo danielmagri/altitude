@@ -1,4 +1,4 @@
-import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/feature/habitDetails/page/habitDetailsPage.dart';
 import 'package:package_info/package_info.dart';
@@ -7,14 +7,14 @@ abstract class Util {
   static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
     if (pushReplacement) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-        return HabitDetailsPage.instance(id, color);
+        return HabitDetailsPage(id, color);
       }));
     } else {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (_) {
-                return HabitDetailsPage.instance(id, color);
+                return HabitDetailsPage(id, color);
               },
               settings: RouteSettings(name: "Habit Details Page")));
     }

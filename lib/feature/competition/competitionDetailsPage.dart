@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/feature/dialogs/TutorialDialog.dart';
 import 'package:altitude/utils/Color.dart';

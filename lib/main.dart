@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/services/FireMenssaging.dart';
+import 'package:altitude/common/services/FireMenssaging.dart';
 import 'package:altitude/feature/competition/competitionPage.dart';
 import 'package:altitude/feature/friends/friendsPage.dart';
 import 'dart:ui';
@@ -21,7 +21,7 @@ import 'package:altitude/feature/addHabit/addHabitPage.dart';
 import 'package:altitude/feature/settingsPage.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/feature/tutorialPage.dart';
-import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,7 +29,7 @@ import 'package:vibration/vibration.dart';
 import 'package:altitude/controllers/LevelControl.dart';
 import 'package:altitude/feature/dialogs/newLevelDialog.dart';
 import 'package:altitude/feature/allLevelsPage.dart';
-import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
 
 void main() async {
   bool showTutorial = false;

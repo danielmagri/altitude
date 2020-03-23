@@ -1,8 +1,6 @@
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/bloc/BlocProvider.dart';
-import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/feature/editHabit/page/EditHabitPage.dart';
 import 'package:altitude/feature/habitDetails/dialogs/EditAlarmDialog.dart';
@@ -18,15 +16,29 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
-class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
-  static StatefulWidget instance(int habitId, int color) {
-    return BlocProvider<HabitDetailsBloc>(
-      blocCreator: () => HabitDetailsBloc(habitId, color),
-      widget: HabitDetailsPage(),
-    );
+class HabitDetailsPage extends StatefulWidget {
+  HabitDetailsPage(this.habitId, this.color);
+
+  final int habitId;
+  final int color;
+
+  @override
+  _HabitDetailsPageState createState() => _HabitDetailsPageState();
+}
+
+class _HabitDetailsPageState extends State<HabitDetailsPage> {
+  HabitDetailsBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bloc = HabitDetailsBloc(widget.habitId, widget.color);
+
+    bloc.showInitialTutorial(context);
   }
 
-  Future<bool> onBackPress(HabitDetailsBloc bloc) {
+  Future<bool> onBackPress() {
     if (bloc.panelController.isPanelOpen()) {
       bloc.closeBottomSheet();
       return Future.value(false);
@@ -34,21 +46,21 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
     return Future.value(true);
   }
 
-  Widget _bottomSheetBuilder(BottomSheetType type, HabitDetailsBloc bloc) {
+  Widget _bottomSheetBuilder(BottomSheetType type) {
     switch (type) {
       case BottomSheetType.CUE:
-        return EditCueDialog.instance(bloc.habit, bloc.editCueCallback);
+        return EditCueDialog(bloc.habit, bloc.editCueCallback);
       case BottomSheetType.REMINDER:
-        return EditAlarmDialog.instance(bloc.habit, bloc.reminders, bloc.editAlarmCallback);
+        return EditAlarmDialog(bloc.habit, bloc.reminders, bloc.editAlarmCallback);
       default:
         return SizedBox();
     }
   }
 
   @override
-  Widget build(BuildContext context, HabitDetailsBloc bloc) {
+  Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => onBackPress(bloc),
+      onWillPop: onBackPress,
       child: Scaffold(
         body: SlidingUpPanel(
           controller: bloc.panelController,
@@ -60,7 +72,7 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
           panel: StreamBuilder<BottomSheetType>(
             stream: bloc.bottomSheetStream,
             builder: (BuildContext context, AsyncSnapshot<BottomSheetType> snapshot) =>
-                _bottomSheetBuilder(snapshot.data, bloc),
+                _bottomSheetBuilder(snapshot.data),
           ),
           body: SingleChildScrollView(
             controller: bloc.scrollController,
@@ -108,7 +120,7 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) {
-                                          return EditHabitPage.instance(bloc.habit, bloc.frequency, bloc.reminders);
+                                          return EditHabitPage(bloc.habit, bloc.frequency, bloc.reminders);
                                         },
                                         settings: RouteSettings(name: "Edit Habit Page")));
                               },
@@ -143,7 +155,7 @@ class HabitDetailsPage extends BlocWidget<HabitDetailsBloc> {
                           elevation: 5.0,
                           onPressed: () {
                             if (!snapshot.data.data)
-                              bloc.completeHabit(true, DateTime.now().today, DonePageType.Detail);
+                              bloc.completeHabit(context, true, DateTime.now().today, DonePageType.Detail);
                           },
                           child: snapshot.data.loading
                               ? SizedBox(

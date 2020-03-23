@@ -1,9 +1,9 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/services/Database.dart';
-import 'package:altitude/services/FireAnalytics.dart';
-import 'package:altitude/services/FireAuth.dart';
-import 'package:altitude/services/FireFunctions.dart';
-import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/common/services/Database.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:altitude/common/services/FireAuth.dart';
+import 'package:altitude/common/services/FireFunctions.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 
 class UserControl {
   Future<bool> isLogged() async {

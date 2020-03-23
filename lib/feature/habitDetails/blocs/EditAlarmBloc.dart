@@ -3,7 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
-import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderWeekday.dart';

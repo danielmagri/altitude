@@ -2,7 +2,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:altitude/services/FireMenssaging.dart';
+import 'package:altitude/common/services/FireMenssaging.dart';
 
 class FireFunctions {
   Future<bool> newUser(String name, String email, int score) async {
