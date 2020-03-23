@@ -42,7 +42,7 @@ class CalendarWidget extends StatelessWidget {
                     CalendarFormat.month: '',
                   },
                   onDaySelected: null,
-                  onDayLongPressed: bloc.dayCalendarClick,
+                  onDayLongPressed: (date, events) => bloc.dayCalendarClick(context, date, events),
                   onVisibleDaysChanged: bloc.calendarMonthSwipe,
                   daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {
                     switch (date.weekday) {

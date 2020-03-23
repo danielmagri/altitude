@@ -1,19 +1,29 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
-import 'package:altitude/core/bloc/BlocProvider.dart';
-import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/feature/habitDetails/blocs/EditCueBloc.dart';
 import 'package:flutter/material.dart';
 
-class EditCueDialog extends BlocWidget<EditCueBloc> {
-  static StatefulWidget instance(Habit habit, Function(String) callback) {
-    return BlocProvider<EditCueBloc>(
-      blocCreator: () => EditCueBloc(habit, callback),
-      widget: EditCueDialog(),
-    );
+class EditCueDialog extends StatefulWidget {
+  EditCueDialog(this.habit, this.callback);
+
+  final Habit habit;
+  final Function(String) callback;
+
+  @override
+  _EditCueDialogState createState() => _EditCueDialogState();
+}
+
+class _EditCueDialogState extends State<EditCueDialog> {
+  EditCueBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bloc = EditCueBloc(widget.habit, widget.callback);
   }
 
-  List<TextSpan> _texts(EditCueBloc bloc, bool showAll) {
+  List<TextSpan> _texts(bool showAll) {
     if (showAll) {
       return [
         TextSpan(
@@ -51,7 +61,7 @@ class EditCueDialog extends BlocWidget<EditCueBloc> {
   }
 
   @override
-  Widget build(BuildContext context, EditCueBloc bloc) {
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: bloc.scrollController,
       physics: BouncingScrollPhysics(),
@@ -74,7 +84,7 @@ class EditCueDialog extends BlocWidget<EditCueBloc> {
                 return RichText(
                   textAlign: TextAlign.justify,
                   text: TextSpan(
-                    children: _texts(bloc, snapshot.data),
+                    children: _texts(snapshot.data),
                   ),
                 );
               }),

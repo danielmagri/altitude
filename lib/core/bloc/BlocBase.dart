@@ -49,6 +49,16 @@ abstract class BlocBase {
   }
 
   @protected
+  Future<dynamic> navigateSmooth(BuildContext context, Widget page) {
+    return Navigator.of(context).push(PageRouteBuilder(
+        opaque: false,
+        transitionDuration: Duration(milliseconds: 300),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+        pageBuilder: (_, __, ___) => page));
+  }
+
+  @protected
   void showLoading(BuildContext context) {
     if (!_loading) {
       Navigator.of(context).push(new PageRouteBuilder(

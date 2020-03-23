@@ -1,24 +1,35 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/core/bloc/BlocProvider.dart';
-import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/feature/editHabit/bloc/EditHabitBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/feature/addHabit/widgets/colorWidget.dart';
 import 'package:altitude/feature/addHabit/widgets/habitWidget.dart';
 import 'package:altitude/feature/addHabit/widgets/frequencyWidget.dart';
 
-class EditHabitPage extends BlocWidget<EditHabitBloc> {
-  static StatefulWidget instance(Habit habit, Frequency frequency, List<Reminder> reminders) {
-    return BlocProvider<EditHabitBloc>(
-      blocCreator: () => EditHabitBloc(habit, frequency, reminders),
-      widget: EditHabitPage(),
-    );
+class EditHabitPage extends StatefulWidget {
+  EditHabitPage(this.habit, this.frequency, this.reminders);
+
+  final Habit habit;
+  final Frequency frequency;
+  final List<Reminder> reminders;
+
+  @override
+  _EditHabitPageState createState() => _EditHabitPageState();
+}
+
+class _EditHabitPageState extends State<EditHabitPage> {
+  EditHabitBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bloc = EditHabitBloc(widget.habit, widget.frequency, widget.reminders);
   }
 
   @override
-  Widget build(BuildContext context, EditHabitBloc bloc) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),

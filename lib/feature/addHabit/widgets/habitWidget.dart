@@ -7,7 +7,7 @@ import 'package:altitude/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:altitude/feature/dialogs/TutorialDialog.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
-import 'package:altitude/services/SharedPref.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 
 class HabitWidget extends StatefulWidget {
   HabitWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);

@@ -1,23 +1,34 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
-import 'package:altitude/core/bloc/BlocProvider.dart';
-import 'package:altitude/core/bloc/BlocWidget.dart';
 import 'package:altitude/feature/habitDetails/blocs/EditAlarmBloc.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderWeekday.dart';
 import 'package:flutter/material.dart';
 
-class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
-  static StatefulWidget instance(Habit habit, List<Reminder> reminders, Function(List<Reminder>) callback) {
-    return BlocProvider<EditAlarmBloc>(
-      blocCreator: () => EditAlarmBloc(habit, reminders, callback),
-      widget: EditAlarmDialog(),
-    );
+class EditAlarmDialog extends StatefulWidget {
+  EditAlarmDialog(this.habit, this.reminders, this.callback);
+
+  final Habit habit;
+  final List<Reminder> reminders;
+  final Function(List<Reminder>) callback;
+
+  @override
+  _EditAlarmDialogState createState() => _EditAlarmDialogState();
+}
+
+class _EditAlarmDialogState extends State<EditAlarmDialog> {
+  EditAlarmBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bloc = EditAlarmBloc(widget.habit, widget.reminders, widget.callback);
   }
 
-  Widget _reminderCard(EditAlarmBloc bloc, bool isSelected, ReminderCard item) => Expanded(
+  Widget _reminderCard(bool isSelected, ReminderCard item) => Expanded(
         child: Card(
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           elevation: 4,
@@ -50,7 +61,7 @@ class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
         ),
       );
 
-  Widget _reminderWeekday(EditAlarmBloc bloc, ReminderWeekday item) => Expanded(
+  Widget _reminderWeekday(ReminderWeekday item) => Expanded(
         child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(shape: BoxShape.circle, color: item.state ? bloc.habitColor : Colors.transparent),
@@ -66,7 +77,7 @@ class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
       );
 
   @override
-  Widget build(BuildContext context, EditAlarmBloc bloc) {
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Column(
@@ -95,8 +106,7 @@ class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
             stream: bloc.reminderCardTypeSelectedStream,
             builder: (context, snapshot) {
               return Row(
-                children:
-                    bloc.reminderCards.map((item) => _reminderCard(bloc, snapshot.data == item.type, item)).toList(),
+                children: bloc.reminderCards.map((item) => _reminderCard(snapshot.data == item.type, item)).toList(),
               );
             },
           ),
@@ -115,7 +125,7 @@ class EditAlarmDialog extends BlocWidget<EditAlarmBloc> {
             stream: bloc.reminderWeekdaySelectionStream,
             builder: (context, snapshot) {
               return Row(
-                children: snapshot.data.map((item) => _reminderWeekday(bloc, item)).toList(),
+                children: snapshot.data.map((item) => _reminderWeekday(item)).toList(),
               );
             },
           ),

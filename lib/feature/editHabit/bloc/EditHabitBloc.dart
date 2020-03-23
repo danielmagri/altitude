@@ -135,7 +135,7 @@ class EditHabitBloc extends BlocBase {
 
       hideLoading(context);
       navigatePop(context);
-      navigatePushReplacement(context, HabitDetailsPage.instance(_habit.id, color));
+      navigatePushReplacement(context, HabitDetailsPage(_habit.id, color));
       showToast("O hábito foi editado!");
     }
   }

@@ -3,17 +3,20 @@ import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/common/services/SharedPref.dart';
+import 'package:altitude/common/view/generic/TutorialWidget.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/core/Constants.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/core/bloc/stream/LoadableStreamController.dart';
-import 'package:altitude/services/FireAnalytics.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/feature/competition/competitionPage.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:flutter/material.dart' show ScrollController, Color, BuildContext;
+import 'package:flutter/material.dart'
+    show Alignment, BuildContext, Color, Curves, FontWeight, ScrollController, TextSpan, TextStyle, WidgetsBinding;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
@@ -98,6 +101,49 @@ class HabitDetailsBloc extends BlocBase {
     calendarController.dispose();
   }
 
+  void showInitialTutorial(BuildContext context) async {
+    if (!await SharedPref().getRocketTutorial()) {
+      Timer.run(() async {
+        await Future.delayed(Duration(milliseconds: 600));
+        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await navigateSmooth(
+          context,
+          TutorialWidget(
+            focusAlignment: Alignment(-0.55, -0.6),
+            focusRadius: 0.42,
+            textAlignment: Alignment(0, 0.5),
+            text: [
+              TextSpan(
+                  text: "Esse é seu hábito em forma de foguete..",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              TextSpan(text: "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+              TextSpan(
+                  text: "\n\nSiga a frequência certinho para ir ainda mais longe!",
+                  style: TextStyle(fontWeight: FontWeight.w300)),
+            ],
+            hasNext: true,
+          ),
+        );
+        await scrollController.animateTo(scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await navigateSmooth(
+          context,
+          TutorialWidget(
+            focusAlignment: Alignment(0.0, -0.35),
+            focusRadius: 0.45,
+            textAlignment: Alignment(0, 0.51),
+            text: [
+              TextSpan(
+                  text: "No calendario você tem o controle de todos os dias feitos!",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              TextSpan(text: "\n\nAo ficar pressionando um dia você consegue marcar como feito ou desmarcar."),
+            ],
+          ),
+        );
+      });
+      SharedPref().setRocketTutorial(true);
+    }
+  }
+
   void goCompetition(BuildContext context, int index) {
     FireAnalytics().sendGoCompetition(index.toString());
     navigatePush(context, CompetitionPage(), "Competitor page");
@@ -178,32 +224,20 @@ class HabitDetailsBloc extends BlocBase {
     });
   }
 
-  void editCalendarClick() {
-    // onPressed: () {
-    //   setState(() {
-    //     _editing = !_editing;
-    //   });
-
-    //   if (!_editing) {
-    //     //widget.showSuggestionsDialog(suggestionsType.SET_ALARM);
-    //   }
-    // },
-  }
-
-  void dayCalendarClick(DateTime date, List events) {
+  void dayCalendarClick(BuildContext context, DateTime date, List events) {
     DateTime day = DateTime(date.year, date.month, date.day);
     bool add = events.length == 0;
 
-    completeHabit(add, day, DonePageType.Calendar);
+    completeHabit(context, add, day, DonePageType.Calendar);
   }
 
-  void completeHabit(bool add, DateTime date, DonePageType donePageType) {
+  void completeHabit(BuildContext context, bool add, DateTime date, DonePageType donePageType) {
     _calendarWidgetStreamController.loading();
     if (!_completeButtonStreamController.lastDataSend) {
       _completeButtonStreamController.loading();
     }
 
-    HabitsControl().setHabitDoneAndScore(date, _id, donePageType, add: add).then((earnedScore) {
+    HabitsControl().setHabitDoneAndScore(date, _id, donePageType, add: add).then((earnedScore) async {
       Vibration.hasVibrator().then((resp) {
         if (resp != null && resp == true) {
           Vibration.vibrate(duration: 100);
@@ -255,6 +289,29 @@ class HabitDetailsBloc extends BlocBase {
       } else {
         _completeButtonStreamController.loading(false);
       }
+
+      if (donePageType == DonePageType.Calendar &&
+          add &&
+          await SharedPref().getAlarmTutorial() < 2 &&
+          _reminders.length == 0) {
+        await Future.delayed(Duration(milliseconds: 600));
+        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        navigateSmooth(
+          context,
+          TutorialWidget(
+            focusAlignment: Alignment(0.65, -0.85),
+            focusRadius: 0.15,
+            textAlignment: Alignment(0, 0),
+            text: [
+              TextSpan(
+                  text: "Esqueceu de marcar como feito o hábito?",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              TextSpan(text: "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
+            ],
+          ),
+        );
+        SharedPref().setAlarmTutorial();
+      }
     });
   }
 
@@ -277,5 +334,3 @@ class HabitDetailsBloc extends BlocBase {
     closeBottomSheet();
   }
 }
-
-// Exibição dos tutoriais
