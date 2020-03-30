@@ -28,10 +28,7 @@ class Skeleton extends StatelessWidget {
               width: width,
               height: height,
               margin: margin,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: new BorderRadius.circular(15),
-              ),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: new BorderRadius.circular(15)),
             ),
     );
   }

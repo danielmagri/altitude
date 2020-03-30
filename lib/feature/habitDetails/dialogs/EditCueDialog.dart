@@ -23,6 +23,12 @@ class _EditCueDialogState extends State<EditCueDialog> {
     bloc = EditCueBloc(widget.habit, widget.callback);
   }
 
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
   List<TextSpan> _texts(bool showAll) {
     if (showAll) {
       return [

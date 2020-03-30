@@ -226,7 +226,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                     ),
                   ),
                   FlatButton(
-                    color: AppColors.colorHabitMix,
+                    color: AppColors.colorAccent,
                     shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
                     onPressed: () async {
                       Loading.showLoading(context);

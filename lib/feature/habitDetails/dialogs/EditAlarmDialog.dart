@@ -28,6 +28,12 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
     bloc = EditAlarmBloc(widget.habit, widget.reminders, widget.callback);
   }
 
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
   Widget _reminderCard(bool isSelected, ReminderCard item) => Expanded(
         child: Card(
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),

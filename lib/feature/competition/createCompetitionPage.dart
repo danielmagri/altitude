@@ -181,7 +181,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
               ),
               alignment: Alignment.topCenter,
               child: FlatButton(
-                color: AppColors.colorHabitMix,
+                color: AppColors.colorAccent,
                 onPressed: () {
                   Navigator.push(
                           context,
@@ -236,7 +236,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
                       style: TextStyle(fontSize: 15),
                     ),
                     selected: selectedFriends.contains(friend),
-                    selectedColor: AppColors.colorHabitMix,
+                    selectedColor: AppColors.colorAccent,
                     onSelected: (selected) {
                       setState(() {
                         selected ? selectedFriends.add(friend) : selectedFriends.remove(friend);
@@ -250,7 +250,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
               margin: const EdgeInsets.only(top: 38, bottom: 28),
               alignment: Alignment.topCenter,
               child: RaisedButton(
-                color: AppColors.colorHabitMix,
+                color: AppColors.colorAccent,
                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
                 padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
                 elevation: 5.0,

@@ -38,6 +38,12 @@ class _HabitDetailsPageState extends State<HabitDetailsPage> {
     bloc.showInitialTutorial(context);
   }
 
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
   Future<bool> onBackPress() {
     if (bloc.panelController.isPanelOpen()) {
       bloc.closeBottomSheet();

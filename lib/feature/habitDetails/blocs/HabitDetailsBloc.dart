@@ -16,7 +16,7 @@ import 'package:altitude/feature/competition/competitionPage.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
-    show Alignment, BuildContext, Color, Curves, FontWeight, ScrollController, TextSpan, TextStyle, WidgetsBinding;
+    show Alignment, BuildContext, Color, Curves, FontWeight, ScrollController, TextSpan, TextStyle;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:vibration/vibration.dart';
@@ -146,7 +146,7 @@ class HabitDetailsBloc extends BlocBase {
 
   void goCompetition(BuildContext context, int index) {
     FireAnalytics().sendGoCompetition(index.toString());
-    navigatePush(context, CompetitionPage(), "Competitor page");
+    navigatePush(context, CompetitionPage(), "Competition page");
   }
 
   void fetchData() async {

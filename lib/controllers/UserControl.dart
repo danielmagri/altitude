@@ -4,10 +4,20 @@ import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/common/services/FireAuth.dart';
 import 'package:altitude/common/services/FireFunctions.dart';
 import 'package:altitude/common/services/SharedPref.dart';
+import 'package:altitude/feature/home/model/User.dart';
 
 class UserControl {
   Future<bool> isLogged() async {
     return await FireAuth().isLogged();
+  }
+
+  Future<User> getUserData() async {
+    String name = await getName();
+    String email = await FireAuth().getEmail();
+    String imageUrl = await FireAuth().getPhotoUrl();
+    int score = await SharedPref().getScore();
+
+    return User(name, email, score, imageUrl);
   }
 
   Future<String> getUid() async {
@@ -23,8 +33,7 @@ class UserControl {
     if (await FireAuth().isLogged()) {
       await SharedPref().setName(name);
       await FireAuth().setName(name);
-      return await FireFunctions()
-          .updateUser(await DatabaseService().listCompetitionsIds(), name: name);
+      return await FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(), name: name);
     } else {
       return await SharedPref().setName(name);
     }

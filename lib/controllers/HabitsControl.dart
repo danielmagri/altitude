@@ -33,32 +33,19 @@ class HabitsControl {
     return habits;
   }
 
-  /// Retorna todos os hábitos registrados e os já feitos hoje.
-  /// Ex: {0: todos_os_hábitos(Habit), 1: hábitos_feitos_hoje(DayDone)}
-  Future<Map<int, List>> getAllHabitsWithDoneDays() async {
-    List daysDone = await DatabaseService().getHabitsDoneToday();
-    List habits = await DatabaseService().getAllHabits();
-
-    return {0: habits, 1: daysDone};
+  /// Retorna todos os hábitos para serem feitos hoje.
+  Future<List<Habit>> getHabitsToday() async {
+    return await DatabaseService().getHabitsToday();
   }
 
-  /// Retorna uma lista com todas as cores
-  Future<List<int>> getAllHabitsColor() async {
-    return await DatabaseService().getAllHabitsColor();
+  /// Retorna todos os hábitos feitos hoje.
+  Future<List<DayDone>> getHabitsDoneToday() async {
+    return await DatabaseService().getHabitsDoneToday();
   }
 
   /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
     return await DatabaseService().getHabit(id);
-  }
-
-  /// Retorna todos os hábitos para serem feitos hoje e os já feitos hoje.
-  /// Ex: {0: hábitos_de_hoje(Habit), 1: hábitos_feitos_hoje(DayDone)}
-  Future<Map<int, List>> getHabitsToday() async {
-    List daysDone = await DatabaseService().getHabitsDoneToday();
-    List habits = await DatabaseService().getHabitsToday();
-
-    return {0: habits, 1: daysDone};
   }
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
