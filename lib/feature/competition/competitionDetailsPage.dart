@@ -495,7 +495,7 @@ class _AddCompetitorsDialogState extends State<AddCompetitorsDialog> {
                   style: TextStyle(fontSize: 15),
                 ),
                 selected: selectedFriends.contains(friend),
-                selectedColor: AppColors.colorHabitMix,
+                selectedColor: AppColors.colorAccent,
                 onSelected: widget.competitors.contains(friend.uid)
                     ? null
                     : (selected) {

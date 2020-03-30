@@ -305,9 +305,9 @@ class _FriendsPageState extends State<FriendsPage> {
                 })
           ],
           bottom: TabBar(
-            indicatorColor: AppColors.colorHabitMix,
+            indicatorColor: AppColors.colorAccent,
             unselectedLabelColor: Colors.black,
-            labelColor: AppColors.colorHabitMix,
+            labelColor: AppColors.colorAccent,
             labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             tabs: <Widget>[
               Tab(
@@ -328,7 +328,7 @@ class _FriendsPageState extends State<FriendsPage> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           heroTag: null,
-          backgroundColor: AppColors.colorHabitMix,
+          backgroundColor: AppColors.colorAccent,
           onPressed: () {
             Util.dialogNavigator(context, AddFriendPage()).then((data) {
               if (data is Person) {

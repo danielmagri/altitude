@@ -214,7 +214,7 @@ class DatabaseService {
   }
 
   /// Retorna os hábitos feitos hoje.
-  Future<List> getHabitsDoneToday() async {
+  Future<List<DayDone>> getHabitsDoneToday() async {
     DateTime now = new DateTime.now();
 
     final db = await database;

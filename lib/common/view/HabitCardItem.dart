@@ -8,7 +8,7 @@ class HabitCardItem extends StatelessWidget {
   HabitCardItem({Key key, this.habit, this.showDragTarget, this.done}) : super(key: key);
 
   final Habit habit;
-  final Function(bool show) showDragTarget;
+  final Function(bool) showDragTarget;
   final bool done;
 
   Widget build(BuildContext context) {

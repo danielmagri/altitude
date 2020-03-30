@@ -148,7 +148,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
                     style: TextStyle(fontSize: 16),
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.colorHabitMix)),
+                            borderSide: BorderSide(color: AppColors.colorAccent)),
                         hintText: "Escreva o email do seu amigo",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
