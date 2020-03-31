@@ -7,28 +7,57 @@ import 'package:altitude/utils/Color.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart'
-    show Alignment, AsyncSnapshot, BorderRadius, BoxDecoration, BoxShape, BuildContext, ClipRRect, Colors, Column, Container, CrossAxisAlignment, Drawer, EdgeInsets, FontWeight, FutureBuilder, Icon, Icons, Image, Key, ListTile, ListView, MediaQuery, Navigator, SizedBox, StatelessWidget, Text, TextOverflow, TextStyle, Widget;
+    show
+        Alignment,
+        AsyncSnapshot,
+        BorderRadius,
+        BoxDecoration,
+        BoxShape,
+        BuildContext,
+        ClipRRect,
+        Colors,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        Drawer,
+        EdgeInsets,
+        FontWeight,
+        FutureBuilder,
+        Icon,
+        Icons,
+        Image,
+        Key,
+        ListTile,
+        ListView,
+        MediaQuery,
+        Navigator,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextOverflow,
+        TextStyle,
+        Widget;
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({Key key}) : super(key: key);
 
   void goFriends(BuildContext context) {
-     Navigator.of(context).pop();
-    // navigatePush(context, FriendsPage(), "Friends Page");
+    Navigator.of(context).pop();
+    Navigator.pushNamed(context, 'friends');
   }
 
   void goCompetition(BuildContext context) {
-     Navigator.of(context).pop();
-    // navigatePush(context, CompetitionPage(), "Competition page");
+    Navigator.of(context).pop();
+    Navigator.pushNamed(context, 'competition');
   }
 
   void goSettings(BuildContext context) {
-     Navigator.of(context).pop();
-    // navigatePush(context, SettingsPage(), "Settings page");
+    Navigator.of(context).pop();
+    Navigator.pushNamed(context, 'settings');
   }
 
   void goRateApp(BuildContext context) async {
-     Navigator.of(context).pop();
+    Navigator.of(context).pop();
     //const APP_STORE_URL =
     //    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
     const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.magrizo.habit';

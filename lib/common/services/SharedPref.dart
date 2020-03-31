@@ -1,4 +1,4 @@
-import 'package:altitude/core/Constants.dart';
+import 'package:altitude/common/Constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPref {

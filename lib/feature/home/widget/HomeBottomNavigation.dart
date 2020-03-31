@@ -1,3 +1,4 @@
+import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/feature/home/viewmodel/HomeViewModel.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +10,11 @@ class HomebottomNavigation extends StatelessWidget {
   final Function(int) pageScroll;
 
   void _addHabitTap(BuildContext context) async {
-    // if (await HabitsControl().getAllHabitCount() < 9) {
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (_) {
-    //             return AddHabitPage();
-    //           },
-    //           settings: RouteSettings(name: "Add Habit Page")));
-    // } else {
-    //   showToast("Você atingiu o limite de 9 hábitos");
-    // }
+    if (await (Provider.of<HomeViewModel>(context).canAddHabit())) {
+      Navigator.pushNamed(context, 'addHabit');
+    } else {
+      showToast("Você atingiu o limite de 9 hábitos");
+    }
   }
 
   @override

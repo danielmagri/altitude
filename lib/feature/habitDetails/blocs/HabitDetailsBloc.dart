@@ -7,7 +7,7 @@ import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/view/generic/TutorialWidget.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
-import 'package:altitude/core/Constants.dart';
+import 'package:altitude/common/Constants.dart';
 import 'package:altitude/core/bloc/BlocBase.dart';
 import 'package:altitude/core/bloc/model/LoadableData.dart';
 import 'package:altitude/core/bloc/stream/LoadableStreamController.dart';

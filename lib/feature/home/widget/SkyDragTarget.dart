@@ -36,7 +36,7 @@ class SkyDragTarget extends StatefulWidget {
   SkyDragTarget({Key key, this.visibilty, this.setHabitDone}) : super(key: key);
 
   final bool visibilty;
-  final Function(int id) setHabitDone;
+  final Function(BuildContext context, int id) setHabitDone;
 
   @override
   _SkyDragTargetState createState() => _SkyDragTargetState();
@@ -156,7 +156,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
             },
             onAccept: (data) {
               hover = false;
-              widget.setHabitDone(data);
+              widget.setHabitDone(context, data);
             },
             onLeave: (data) {
               hover = false;

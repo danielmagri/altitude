@@ -1,3 +1,5 @@
+import 'package:altitude/common/Router.dart';
+import 'package:altitude/common/services/FireMenssaging.dart';
 import 'package:altitude/feature/home/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    FireMessaging().configure();
 
     return MaterialApp(
       theme: ThemeData(
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: showTutorial ? TutorialPage() : HomePage(),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: FireAnalytics().analytics)],
+      onGenerateRoute: Router.generateRoute,
     );
   }
 }

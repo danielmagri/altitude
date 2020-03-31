@@ -9,7 +9,7 @@ import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/core/Constants.dart';
+import 'package:altitude/common/Constants.dart';
 
 class PendingCompetitionsPage extends StatefulWidget {
   @override
