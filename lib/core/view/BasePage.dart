@@ -16,18 +16,24 @@ import 'package:flutter/material.dart'
         Widget,
         protected;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart' show Provider;
+import 'package:vibration/vibration.dart';
 
 abstract class BasePage<T extends ChangeNotifier> extends StatelessWidget {
   static bool _loading = false;
-  BuildContext getContext;
 
   T createViewModel();
 
   void onViewModelReady(T) {}
 
+  void didChangeDependencies() {}
+
   Widget builder(BuildContext context, T viewmodel);
 
   void dispose() {}
+
+  @protected
+  T getViewModel(BuildContext context) => Provider.of<T>(context, listen: false);
 
   @protected
   Future<dynamic> navigateSmooth(BuildContext context, Widget page) {
@@ -52,9 +58,9 @@ abstract class BasePage<T extends ChangeNotifier> extends StatelessWidget {
   }
 
   @protected
-  void showLoading(bool show) {
+  void showLoading(BuildContext context, bool show) {
     if (!_loading) {
-      Navigator.of(getContext).push(new PageRouteBuilder(
+      Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
@@ -68,14 +74,18 @@ abstract class BasePage<T extends ChangeNotifier> extends StatelessWidget {
           }));
       _loading = true;
     } else {
-      Navigator.of(getContext).pop();
+      Navigator.of(context).pop();
       _loading = false;
     }
   }
 
+  @protected
+  void vibratePhone({int duration = 100}) {
+    Vibration.hasVibrator().then((resp) => resp != null && resp == true ?? Vibration.vibrate(duration: duration));
+  }
+
   @override
   Widget build(BuildContext context) {
-    getContext = context;
     return ProviderPage<T>(
       viewModel: createViewModel,
       onViewModelReady: onViewModelReady,

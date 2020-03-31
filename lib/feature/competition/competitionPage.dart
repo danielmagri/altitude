@@ -12,7 +12,7 @@ import 'package:altitude/feature/competition/createCompetitionPage.dart';
 import 'package:altitude/feature/competition/pendingCompetitionsPage.dart';
 import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/core/Constants.dart';
+import 'package:altitude/common/Constants.dart';
 import 'package:altitude/utils/Util.dart';
 
 import '../loginPage.dart';

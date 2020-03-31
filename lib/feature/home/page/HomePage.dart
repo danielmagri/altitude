@@ -1,6 +1,7 @@
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BasePage.dart';
+import 'package:altitude/feature/home/dialogs/NewLevelDialog.dart';
 import 'package:altitude/feature/home/viewmodel/HomeViewModel.dart';
 import 'package:altitude/feature/home/widget/AllHabits.dart';
 import 'package:altitude/feature/home/widget/HomeBottomNavigation.dart';
@@ -10,7 +11,7 @@ import 'package:altitude/feature/home/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
-import 'package:vibration/vibration.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends BasePage<HomeViewModel> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -35,19 +36,6 @@ class HomePage extends BasePage<HomeViewModel> {
   //       systemNavigationBarIconBrightness: Brightness.dark));
 
   //   WidgetsBinding.instance.addObserver(this);
-  //   FireMessaging().configure();
-
-  //   // _controllerDragTarget = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-  // }
-
-  // @override
-  // void didChangeDependencies() {
-  //   // SharedPref().getScore().then((score) {
-  //   //   this.score = 0;
-  //   //   updateScore(score);
-  //   // });
-
-  //   super.didChangeDependencies();
   // }
 
   void showDrawer() {
@@ -65,42 +53,20 @@ class HomePage extends BasePage<HomeViewModel> {
   //   super.didChangeAppLifecycleState(state);
   // }
 
-  void updateScore(int earnedScore) async {
-    // setState(() {
-    //   score += earnedScore;
-    // });
-    // int newLevel = LevelControl.getLevel(score);
-    // if (newLevel > await SharedPref().getLevel()) {
-    //   FireAnalytics().sendNextLevel(LevelControl.getLevelText(score));
-    //   Navigator.of(context).push(new PageRouteBuilder(
-    //       opaque: false,
-    //       transitionDuration: Duration(milliseconds: 300),
-    //       transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
-    //               Widget child) =>
-    //           new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
-    //       pageBuilder: (BuildContext context, _, __) {
-    //         return NewLevelDialog(
-    //           score: score,
-    //         );
-    //       }));
-    // }
+  void setHabitDone(BuildContext context, id) {
+    showLoading(context, true);
 
-    // if (newLevel != await SharedPref().getLevel()) {
-    //   SharedPref().setLevel(newLevel);
-    // }
-  }
+    getViewModel(context).completeHabit(id).then((newScore) async {
+      showLoading(context, false);
+      vibratePhone();
 
-  void setHabitDone(id) {
-    showLoading(true);
-
-    
-
-      Vibration.hasVibrator().then((resp) => resp != null && resp == true ?? Vibration.vibrate(duration: 100));
-    // HabitsControl().setHabitDoneAndScore(today, id, DonePageType.Initial).then((earnedScore) {
-    //   Loading.closeLoading(context);
-
-    //   updateScore(earnedScore);
-    // });
+      if (await getViewModel(context).checkLevelUp(newScore)) {
+        navigateSmooth(context, NewLevelDialog(score: newScore));
+      }
+    }).catchError((error) {
+      showLoading(context, false);
+      showToast("Ocorreu um erro");
+    });
   }
 
   void pageScroll(int index) {
@@ -108,7 +74,7 @@ class HomePage extends BasePage<HomeViewModel> {
   }
 
   void goAllLevels(BuildContext context) {
-    // navigatePush(context, AllLevelsPage(score: _user.score), "All levels Page");
+    Navigator.pushNamed(context, 'allLevels', arguments: getViewModel(context).user.data.score);
   }
 
   @override
@@ -254,7 +220,7 @@ class HomePage extends BasePage<HomeViewModel> {
                   child: PageView(
                     controller: pageController,
                     physics: BouncingScrollPhysics(),
-                    onPageChanged: viewmodel.swipedPage,
+                    onPageChanged: Provider.of<HomeViewModel>(context, listen: false).swipedPage,
                     children: <Widget>[
                       const AllHabitsPage(),
                       const TodayHabits(),
@@ -263,7 +229,8 @@ class HomePage extends BasePage<HomeViewModel> {
                 ),
               ],
             ),
-            SkyDragTarget(visibilty: viewmodel.visibilty, setHabitDone: setHabitDone),
+            SkyDragTarget(
+                visibilty: Provider.of<HomeViewModel>(context, listen: false).visibilty, setHabitDone: setHabitDone),
           ],
         ),
         bottomNavigationBar: HomebottomNavigation(pageScroll: pageScroll));

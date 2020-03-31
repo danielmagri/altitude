@@ -1,7 +1,11 @@
+import 'package:altitude/common/Constants.dart' show MAX_HABITS;
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/controllers/LevelControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/feature/home/model/User.dart';
@@ -45,7 +49,6 @@ class HomeViewModel extends ChangeNotifier {
       _doneHabits.error = error;
 
       notifyListeners();
-      // showToast("Ocorreu um erro");
     }
   }
 
@@ -60,13 +63,31 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<int> completeHabit(int id) async {
-    HabitsControl().setHabitDoneAndScore(DateTime.now().today, id, DonePageType.Initial).then((score) {
-      _user.data.score += score;
-      notifyListeners();
-      return score;
-    }).catchError((error) {
-      // showToast("Ocorreu um erro");
-      throw error;
-    });
+    int earnedScore = await HabitsControl().setHabitDoneAndScore(DateTime.now().today, id, DonePageType.Initial);
+    _user.data.score += earnedScore;
+    _doneHabits.data.add(DayDone(dateDone: DateTime.now().today, habitId: id));
+    notifyListeners();
+    return _user.data.score;
+  }
+
+  Future<bool> checkLevelUp(int newScore) async {
+    int newLevel = LevelControl.getLevel(newScore);
+    int oldLevel = await SharedPref().getLevel();
+
+    if (newLevel != oldLevel) SharedPref().setLevel(newLevel);
+
+    if (newLevel > oldLevel) {
+      FireAnalytics().sendNextLevel(LevelControl.getLevelText(newScore));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> canAddHabit() async {
+    if (await HabitsControl().getAllHabitCount() < MAX_HABITS) {
+      return true;
+    }
+    return false;
   }
 }

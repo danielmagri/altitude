@@ -4,21 +4,24 @@ import 'package:provider/provider.dart' show ChangeNotifierProvider, Consumer;
 typedef T ViewModel<T extends ChangeNotifier>();
 
 class ProviderPage<T extends ChangeNotifier> extends StatefulWidget {
-  ProviderPage({this.viewModel, this.onViewModelReady, this.builder, this.dispose});
+  ProviderPage({this.viewModel, this.onViewModelReady, this.didChangeDependencies, this.builder, this.dispose});
 
   final ViewModel viewModel;
   final Function(T) onViewModelReady;
+  final Function didChangeDependencies;
   final Widget Function(BuildContext context, T model, Widget child) builder;
   final Function dispose;
 
   @override
-  _ProviderPageState createState() => _ProviderPageState<T>(viewModel());
+  _ProviderPageState createState() => _ProviderPageState<T>();
 }
 
 class _ProviderPageState<T extends ChangeNotifier> extends State<ProviderPage<T>> {
-  _ProviderPageState(this.viewmodel);
+  _ProviderPageState() {
+    viewmodel = widget.viewModel();
+  }
 
-  final T viewmodel;
+  T viewmodel;
 
   @override
   void initState() {

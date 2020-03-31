@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/feature/addHabit/addHabitPage.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/core/Constants.dart';
+import 'package:altitude/common/Constants.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
   CreateCompetitionPage({Key key, @required this.habits, @required this.friends}) : super(key: key);
