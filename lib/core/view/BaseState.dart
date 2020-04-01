@@ -1,10 +1,8 @@
 import 'package:altitude/common/view/generic/Loading.dart';
-import 'package:altitude/core/view/ProviderPage.dart';
 import 'package:flutter/material.dart'
     show
         Animation,
         BuildContext,
-        ChangeNotifier,
         Color,
         Colors,
         CurvedAnimation,
@@ -12,28 +10,15 @@ import 'package:flutter/material.dart'
         FadeTransition,
         Navigator,
         PageRouteBuilder,
-        StatelessWidget,
+        State,
+        StatefulWidget,
         Widget,
         protected;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart' show Provider;
 import 'package:vibration/vibration.dart';
 
-abstract class BasePage<T extends ChangeNotifier> extends StatelessWidget {
+abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
-
-  T createViewModel();
-
-  void onViewModelReady(T) {}
-
-  void didChangeDependencies() {}
-
-  Widget builder(BuildContext context, T viewmodel);
-
-  void dispose() {}
-
-  @protected
-  T getViewModel(BuildContext context) => Provider.of<T>(context, listen: false);
 
   @protected
   Future<dynamic> navigateSmooth(BuildContext context, Widget page) {
@@ -82,15 +67,5 @@ abstract class BasePage<T extends ChangeNotifier> extends StatelessWidget {
   @protected
   void vibratePhone({int duration = 100}) {
     Vibration.hasVibrator().then((resp) => resp != null && resp == true ?? Vibration.vibrate(duration: duration));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ProviderPage<T>(
-      viewModel: createViewModel,
-      onViewModelReady: onViewModelReady,
-      dispose: dispose,
-      builder: (BuildContext context, T viewmodel, Widget child) => builder(context, viewmodel),
-    );
   }
 }

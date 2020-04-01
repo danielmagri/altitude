@@ -9,65 +9,58 @@ import 'package:altitude/controllers/LevelControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/feature/home/model/User.dart';
-import 'package:flutter/material.dart' show ChangeNotifier;
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:mobx/mobx.dart';
+part 'HomeLogic.g.dart';
 
-class HomeViewModel extends ChangeNotifier {
-  DataState<User> _user = DataState();
-  DataState<User> get user => _user;
+class HomeLogic = _HomeLogicBase with _$HomeLogic;
 
-  DataState<List<Habit>> _todayHabits = DataState();
-  DataState<List<Habit>> get todayHabits => _todayHabits;
+abstract class _HomeLogicBase with Store {
+  DataState<User> user = DataState();
+  DataState<ObservableList<Habit>> todayHabits = DataState();
+  DataState<ObservableList<Habit>> allHabits = DataState();
 
-  DataState<List<Habit>> _allHabits = DataState();
-  DataState<List<Habit>> get allHabits => _allHabits;
+  @observable
+  ObservableList<DayDone> doneHabits;
 
-  DataState<List<DayDone>> _doneHabits = DataState();
-  DataState<List<DayDone>> get doneHabits => _doneHabits;
+  @observable
+  int pageIndex = 1;
 
-  int _pageIndex = 1;
-  int get pageIndex => _pageIndex;
-
+  @observable
   bool visibilty = false;
 
-  HomeViewModel() {
-    fetchData();
-  }
-
-  void fetchData() async {
+  @action
+  Future<void> fetchData() async {
     try {
-      _user.data = await UserControl().getUserData();
-      _todayHabits.data = await HabitsControl().getHabitsToday();
-      _allHabits.data = await HabitsControl().getAllHabits();
-      _doneHabits.data = await HabitsControl().getHabitsDoneToday();
-
-      notifyListeners();
+      user.setData(await UserControl().getUserData());
+      doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
+      todayHabits.setData((await HabitsControl().getHabitsToday()).asObservable());
+      allHabits.setData((await HabitsControl().getAllHabits()).asObservable());
     } catch (error) {
-      _user.error = error;
-      _todayHabits.error = error;
-      _allHabits.error = error;
-      _doneHabits.error = error;
-
-      notifyListeners();
+      user.setError(error);
+      todayHabits.setError(error);
+      allHabits.setError(error);
     }
   }
 
+  @action
   void swipeSkyWidget(bool show) {
     visibilty = show;
-    notifyListeners();
   }
 
+  @action
   void swipedPage(int index) {
-    _pageIndex = index;
-    notifyListeners();
+    pageIndex = index;
   }
 
+  @action
   Future<int> completeHabit(int id) async {
     int earnedScore = await HabitsControl().setHabitDoneAndScore(DateTime.now().today, id, DonePageType.Initial);
-    _user.data.score += earnedScore;
-    _doneHabits.data.add(DayDone(dateDone: DateTime.now().today, habitId: id));
-    notifyListeners();
-    return _user.data.score;
+    var newUser = user.data;
+    newUser.score += earnedScore;
+    user.setData(newUser);
+    doneHabits.add(DayDone(dateDone: DateTime.now().today, habitId: id));
+    return user.data.score;
   }
 
   Future<bool> checkLevelUp(int newScore) async {

@@ -2,7 +2,7 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/feature/home/viewmodel/HomeViewModel.dart';
+import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
@@ -25,14 +25,18 @@ import 'package:flutter/material.dart'
         Widget,
         Wrap,
         WrapAlignment;
-import 'package:provider/provider.dart' show Provider;
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class AllHabitsPage extends StatelessWidget {
-  const AllHabitsPage({Key key}) : super(key: key);
+  AllHabitsPage({Key key})
+      : controller = GetIt.I.get<HomeLogic>(),
+        super(key: key);
+
+  final HomeLogic controller;
 
   @override
   Widget build(BuildContext context) {
-    final viewmodel = Provider.of<HomeViewModel>(context);
     return Column(
       children: <Widget>[
         Container(
@@ -41,48 +45,50 @@ class AllHabitsPage extends StatelessWidget {
         ),
         Expanded(
           child: Center(
-            child: viewmodel.allHabits.handleState(
-              () {
-                return Skeleton.custom(
-                  child: SizedBox(
-                    width: 100,
-                    height: 100,
-                    child: Rocket(
-                      size: const Size(100, 100),
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              },
-              (data) {
-                if (data.isEmpty) {
-                  return Text(
-                    "Crie um novo hábito pelo botão \"+\" na tela principal.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
-                  );
-                } else {
-                  return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      children: data.map((habit) {
-                        DayDone done = viewmodel.doneHabits.data
-                            .firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
-                        return HabitCardItem(
-                          habit: habit,
-                          showDragTarget: viewmodel.swipeSkyWidget,
-                          done: done == null ? false : true,
-                        );
-                      }).toList(),
+            child: Observer(builder: (_) {
+              return controller.allHabits.handleState(
+                () {
+                  return Skeleton.custom(
+                    child: SizedBox(
+                      width: 100,
+                      height: 100,
+                      child: Rocket(
+                        size: const Size(100, 100),
+                        color: Colors.white,
+                      ),
                     ),
                   );
-                }
-              },
-              (error) {
-                return Text("Ocorreu um erro", textAlign: TextAlign.center);
-              },
-            ),
+                },
+                (data) {
+                  if (data.isEmpty) {
+                    return Text(
+                      "Crie um novo hábito pelo botão \"+\" na tela principal.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2)),
+                    );
+                  } else {
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: data.map((habit) {
+                          DayDone done = controller.doneHabits
+                              .firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
+                          return HabitCardItem(
+                            habit: habit,
+                            showDragTarget: controller.swipeSkyWidget,
+                            done: done == null ? false : true,
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                },
+                (error) {
+                  return Text("Ocorreu um erro", textAlign: TextAlign.center);
+                },
+              );
+            }),
           ),
         )
       ],
