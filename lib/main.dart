@@ -1,5 +1,6 @@
 import 'package:altitude/common/Router.dart';
 import 'package:altitude/common/services/FireMenssaging.dart';
+import 'package:altitude/core/GetIt.dart';
 import 'package:altitude/feature/home/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,13 @@ import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
 
 void main() async {
+  Getit.init();
+
   bool showTutorial = false;
   WidgetsFlutterBinding.ensureInitialized();
   if (await SharedPref().getName() == null) showTutorial = true;
 
-  runApp(MyApp(
-    showTutorial: showTutorial,
-  ));
+  runApp(MyApp(showTutorial: showTutorial));
 }
 
 class MyApp extends StatelessWidget {

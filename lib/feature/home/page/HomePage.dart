@@ -1,8 +1,8 @@
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/view/BasePage.dart';
+import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/dialogs/NewLevelDialog.dart';
-import 'package:altitude/feature/home/viewmodel/HomeViewModel.dart';
 import 'package:altitude/feature/home/widget/AllHabits.dart';
 import 'package:altitude/feature/home/widget/HomeBottomNavigation.dart';
 import 'package:altitude/feature/home/widget/HomeDrawer.dart';
@@ -11,32 +11,49 @@ import 'package:altitude/feature/home/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
-class HomePage extends BasePage<HomeViewModel> {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends BaseState<HomePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final PageController pageController = PageController(initialPage: 1);
 
+  HomeLogic controller = GetIt.I.get<HomeLogic>();
+  bool isPageActived = true;
+
   @override
-  HomeViewModel createViewModel() => HomeViewModel();
+  initState() {
+    super.initState();
+
+    controller.fetchData();
+
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    //     statusBarColor: Color.fromARGB(100, 250, 250, 250),
+    //     systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+    //     systemNavigationBarIconBrightness: Brightness.dark));
+
+    // WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    isPageActived = !isPageActived;
+    if (isPageActived) {
+      controller.fetchData();
+    }
+  }
 
   @override
   void dispose() {
     pageController.dispose();
     super.dispose();
   }
-
-  // @override
-  // initState() {
-  //   super.initState();
-
-  //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-  //       statusBarColor: Color.fromARGB(100, 250, 250, 250),
-  //       systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-  //       systemNavigationBarIconBrightness: Brightness.dark));
-
-  //   WidgetsBinding.instance.addObserver(this);
-  // }
 
   void showDrawer() {
     scaffoldKey.currentState.openDrawer();
@@ -56,11 +73,10 @@ class HomePage extends BasePage<HomeViewModel> {
   void setHabitDone(BuildContext context, id) {
     showLoading(context, true);
 
-    getViewModel(context).completeHabit(id).then((newScore) async {
+    controller.completeHabit(id).then((newScore) async {
       showLoading(context, false);
       vibratePhone();
-
-      if (await getViewModel(context).checkLevelUp(newScore)) {
+      if (await controller.checkLevelUp(newScore)) {
         navigateSmooth(context, NewLevelDialog(score: newScore));
       }
     }).catchError((error) {
@@ -74,14 +90,14 @@ class HomePage extends BasePage<HomeViewModel> {
   }
 
   void goAllLevels(BuildContext context) {
-    Navigator.pushNamed(context, 'allLevels', arguments: getViewModel(context).user.data.score);
+    Navigator.pushNamed(context, 'allLevels', arguments: controller.user.data.score);
   }
 
   @override
-  Widget builder(context, viewmodel) {
+  Widget build(context) {
     return Scaffold(
         key: scaffoldKey,
-        drawer: const HomeDrawer(),
+        drawer: HomeDrawer(),
         drawerScrimColor: Colors.black12,
         body: Stack(
           children: <Widget>[
@@ -155,63 +171,67 @@ class HomePage extends BasePage<HomeViewModel> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(width: 25),
-                        viewmodel.user.handleState(
-                          () {
-                            return Skeleton.custom(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    height: 20,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white, borderRadius: new BorderRadius.circular(15)),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Container(
-                                    width: 120,
-                                    height: 80,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white, borderRadius: new BorderRadius.circular(15)),
-                                  )
-                                ],
-                              ),
-                            );
-                          },
-                          (data) {
-                            return Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 3,
+                        Observer(builder: (_) {
+                          return controller.user.handleState(
+                            () {
+                              return Skeleton.custom(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 100,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white, borderRadius: new BorderRadius.circular(15)),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Container(
+                                      width: 120,
+                                      height: 80,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white, borderRadius: new BorderRadius.circular(15)),
+                                    )
+                                  ],
                                 ),
-                                Text(LevelControl.getLevelText(data.score)),
-                                Score(color: AppColors.colorAccent, score: data.score),
-                              ],
-                            );
-                          },
-                          (error) {
-                            return SizedBox();
-                          },
-                        ),
-                        viewmodel.user.handleState(
-                          () {
-                            return Skeleton(
-                              width: 25,
-                              height: 25,
-                              margin: const EdgeInsets.only(bottom: 4, right: 8),
-                            );
-                          },
-                          (data) {
-                            return Image.asset(
-                              LevelControl.getLevelImagePath(data.score),
-                              height: 25,
-                              width: 25,
-                            );
-                          },
-                          (error) {
-                            return SizedBox();
-                          },
-                        ),
+                              );
+                            },
+                            (data) {
+                              return Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(LevelControl.getLevelText(data.score)),
+                                  Score(color: AppColors.colorAccent, score: data.score),
+                                ],
+                              );
+                            },
+                            (error) {
+                              return SizedBox();
+                            },
+                          );
+                        }),
+                        Observer(builder: (_) {
+                          return controller.user.handleState(
+                            () {
+                              return Skeleton(
+                                width: 25,
+                                height: 25,
+                                margin: const EdgeInsets.only(bottom: 4, right: 8),
+                              );
+                            },
+                            (data) {
+                              return Image.asset(
+                                LevelControl.getLevelImagePath(data.score),
+                                height: 25,
+                                width: 25,
+                              );
+                            },
+                            (error) {
+                              return SizedBox();
+                            },
+                          );
+                        })
                       ],
                     ),
                   ),
@@ -220,17 +240,18 @@ class HomePage extends BasePage<HomeViewModel> {
                   child: PageView(
                     controller: pageController,
                     physics: BouncingScrollPhysics(),
-                    onPageChanged: Provider.of<HomeViewModel>(context, listen: false).swipedPage,
+                    onPageChanged: controller.swipedPage,
                     children: <Widget>[
-                      const AllHabitsPage(),
-                      const TodayHabits(),
+                      AllHabitsPage(),
+                      TodayHabits(),
                     ],
                   ),
                 ),
               ],
             ),
-            SkyDragTarget(
-                visibilty: Provider.of<HomeViewModel>(context, listen: false).visibilty, setHabitDone: setHabitDone),
+            Observer(builder: (_) {
+              return SkyDragTarget(visibilty: controller.visibilty, setHabitDone: setHabitDone);
+            }),
           ],
         ),
         bottomNavigationBar: HomebottomNavigation(pageScroll: pageScroll));

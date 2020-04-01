@@ -1,23 +1,32 @@
 import 'package:altitude/core/enums/StateType.dart';
 import 'package:flutter/material.dart' show Widget;
+import 'package:mobx/mobx.dart';
+part 'DataState.g.dart';
 
 typedef Widget Initial();
 typedef Widget Success<T>(T data);
 typedef Widget Error(dynamic error);
 
-class DataState<T> {
+class DataState<T> = _DataStateBase<T> with _$DataState;
+
+abstract class _DataStateBase<T> with Store {
+  @observable
   StateType state = StateType.INITIAL;
 
   T _data;
   T get data => _data;
-  set data(T data) {
+  
+  @action
+  void setData(T data) {
     state = StateType.SUCESS;
     _data = data;
   }
 
   dynamic _error;
   dynamic get error => _error;
-  set error(dynamic error) {
+  
+  @action
+  void setError(dynamic error) {
     state = StateType.ERROR;
     _error = error;
   }

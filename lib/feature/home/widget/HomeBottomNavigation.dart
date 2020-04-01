@@ -1,16 +1,18 @@
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/feature/home/viewmodel/HomeViewModel.dart';
+import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class HomebottomNavigation extends StatelessWidget {
-  const HomebottomNavigation({Key key, this.pageScroll}) : super(key: key);
+  HomebottomNavigation({Key key, this.pageScroll}) : super(key: key);
 
   final Function(int) pageScroll;
+  final HomeLogic controller = GetIt.I.get<HomeLogic>();
 
   void _addHabitTap(BuildContext context) async {
-    if (await (Provider.of<HomeViewModel>(context).canAddHabit())) {
+    if (await controller.canAddHabit()) {
       Navigator.pushNamed(context, 'addHabit');
     } else {
       showToast("Você atingiu o limite de 9 hábitos");
@@ -19,8 +21,6 @@ class HomebottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewmodel = Provider.of<HomeViewModel>(context);
-
     return BottomAppBar(
       color: Colors.transparent,
       elevation: 0.0,
@@ -39,16 +39,18 @@ class HomebottomNavigation extends StatelessWidget {
             Stack(
               alignment: Alignment.topCenter,
               children: <Widget>[
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 200),
-                  opacity: viewmodel.pageIndex == 0 ? 1 : 0,
-                  child: Container(
-                    height: 4,
-                    width: 25,
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                  ),
-                ),
+                Observer(builder: (_) {
+                  return AnimatedOpacity(
+                    duration: Duration(milliseconds: 200),
+                    opacity: controller.pageIndex == 0 ? 1 : 0,
+                    child: Container(
+                      height: 4,
+                      width: 25,
+                      margin: const EdgeInsets.only(top: 4),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    ),
+                  );
+                }),
                 IconButton(
                   tooltip: "Todos os hábitos",
                   icon: Icon(
@@ -58,7 +60,7 @@ class HomebottomNavigation extends StatelessWidget {
                   ),
                   onPressed: () {
                     pageScroll(0);
-                    viewmodel.swipedPage(0);
+                    controller.swipedPage(0);
                   },
                 ),
               ],
@@ -78,16 +80,18 @@ class HomebottomNavigation extends StatelessWidget {
             Stack(
               alignment: Alignment.topCenter,
               children: <Widget>[
-                AnimatedOpacity(
-                  duration: Duration(milliseconds: 200),
-                  opacity: viewmodel.pageIndex == 1 ? 1 : 0,
-                  child: Container(
-                    height: 4,
-                    width: 25,
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                  ),
-                ),
+                Observer(builder: (_) {
+                  return AnimatedOpacity(
+                    duration: Duration(milliseconds: 200),
+                    opacity: controller.pageIndex == 1 ? 1 : 0,
+                    child: Container(
+                      height: 4,
+                      width: 25,
+                      margin: const EdgeInsets.only(top: 4),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                    ),
+                  );
+                }),
                 IconButton(
                   tooltip: "Configurações",
                   icon: Icon(
@@ -97,7 +101,7 @@ class HomebottomNavigation extends StatelessWidget {
                   ),
                   onPressed: () {
                     pageScroll(1);
-                    viewmodel.swipedPage(1);
+                    controller.swipedPage(1);
                   },
                 ),
               ],
