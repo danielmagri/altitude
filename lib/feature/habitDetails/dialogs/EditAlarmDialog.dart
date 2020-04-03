@@ -1,9 +1,12 @@
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
-import 'package:altitude/feature/habitDetails/blocs/EditAlarmBloc.dart';
+import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
+import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderWeekday.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class EditAlarmDialog extends StatefulWidget {
   const EditAlarmDialog();
@@ -12,31 +15,72 @@ class EditAlarmDialog extends StatefulWidget {
   _EditAlarmDialogState createState() => _EditAlarmDialogState();
 }
 
-class _EditAlarmDialogState extends State<EditAlarmDialog> {
-  EditAlarmBloc bloc;
+class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
+  EditAlarmLogic controller = GetIt.I.get<EditAlarmLogic>();
 
   @override
   void initState() {
     super.initState();
-
-    // bloc = EditAlarmBloc(widget.habit, widget.reminders, widget.callback);
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    GetIt.I.resetLazySingleton<EditAlarmLogic>();
     super.dispose();
+  }
+
+  void switchReminderType(ReminderType type) {
+    if (type == ReminderType.CUE && controller.habitDetailsLogic.habit.data.cue == "") {
+      showToast("Adicione o gatilho primeiro");
+      return;
+    }
+    controller.switchReminderType(type);
+  }
+
+  void reminderTimeClick() {
+    showTimePicker(
+      initialTime: controller.reminderTime,
+      context: context,
+      builder: (BuildContext context, Widget child) {
+        return Theme(
+            data: ThemeData.light().copyWith(
+              accentColor: controller.habitColor,
+              primaryColor: controller.habitColor,
+            ),
+            child: child);
+      },
+    ).then(controller.updateReminderTime);
+  }
+
+  void save() {
+    if (!controller.reminderWeekdaySelection.any((item) => item.state)) {
+      showToast("Selecione pelo menos um dia");
+    } else {
+      showLoading(true);
+      controller.saveReminders().then((_) {
+        showToast("Alarme salvo");
+        showLoading(false);
+      }).catchError(handleError);
+    }
+  }
+
+  void remove() {
+    showLoading(true);
+    controller.removeReminders().then((_) {
+      showLoading(false);
+      showToast("Alarme removido");
+    }).catchError(handleError);
   }
 
   Widget _reminderCard(bool isSelected, ReminderCard item) => Expanded(
         child: Card(
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           elevation: 4,
-          color: isSelected ? bloc.habitColor : Colors.white,
+          color: isSelected ? controller.habitColor : Colors.white,
           child: SizedBox(
             height: 60,
             child: InkWell(
-              onTap: () => bloc.switchReminderType(item.type),
+              onTap: () => switchReminderType(item.type),
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(
@@ -45,7 +89,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
                       value: isSelected ? true : false,
                       groupValue: true,
                       activeColor: Colors.white,
-                      onChanged: (state) => bloc.switchReminderType(item.type),
+                      onChanged: (state) => switchReminderType(item.type),
                     ),
                     Expanded(
                       child: Text(
@@ -64,9 +108,10 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
   Widget _reminderWeekday(ReminderWeekday item) => Expanded(
         child: Container(
           padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(shape: BoxShape.circle, color: item.state ? bloc.habitColor : Colors.transparent),
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: item.state ? controller.habitColor : Colors.transparent),
           child: InkWell(
-            onTap: () => bloc.reminderWeekdayClick(item.id, !item.state),
+            onTap: () => controller.reminderWeekdayClick(item.id, !item.state),
             child: Text(
               item.title,
               textAlign: TextAlign.center,
@@ -82,70 +127,53 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Column(
         children: <Widget>[
-          BottomSheetLine(),
+          const BottomSheetLine(),
           Container(
             margin: const EdgeInsets.only(top: 18),
             height: 30,
-            child: Text(
-              "Alarme",
-              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: bloc.habitColor),
-            ),
+            child: Text("Alarme",
+                style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor)),
           ),
-          Spacer(
-            flex: 1,
-          ),
-          Padding(
+          const Spacer(flex: 1),
+          const Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(
-              "Você deseja ser lembrado do hábito ou do gatilho?",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-            ),
+            child: const Text("Você deseja ser lembrado do hábito ou do gatilho?",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
           ),
-          StreamBuilder<ReminderType>(
-            initialData: bloc.currentTypeSelected,
-            stream: bloc.reminderCardTypeSelectedStream,
-            builder: (context, snapshot) {
+          Observer(
+            builder: (_) {
               return Row(
-                children: bloc.reminderCards.map((item) => _reminderCard(snapshot.data == item.type, item)).toList(),
-              );
+                  children: controller.reminderCards
+                      .map((item) => _reminderCard(controller.cardTypeSelected == item.type, item))
+                      .toList());
             },
           ),
-          SizedBox(
-            height: 32,
-          ),
-          Padding(
+          const SizedBox(height: 32),
+          const Padding(
             padding: const EdgeInsets.all(8),
-            child: Text(
-              "Selecione os dias e o horário que deseja ser lembrado:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
-            ),
+            child: Text("Selecione os dias e o horário que deseja ser lembrado:",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
           ),
-          StreamBuilder<List<ReminderWeekday>>(
-            initialData: bloc.reminderWeekdays,
-            stream: bloc.reminderWeekdaySelectionStream,
-            builder: (context, snapshot) {
+          Observer(
+            builder: (_) {
               return Row(
-                children: snapshot.data.map((item) => _reminderWeekday(item)).toList(),
+                children: controller.reminderWeekdaySelection.map((item) => _reminderWeekday(item)).toList(),
               );
             },
           ),
           Container(
             margin: EdgeInsets.only(top: 24),
             child: InkWell(
-              onTap: () => bloc.reminderTimeClick(context),
-              child: StreamBuilder<TimeOfDay>(
-                initialData: bloc.reminderTime,
-                stream: bloc.reminderTimeStream,
-                builder: (context, snapshot) {
+              onTap: reminderTimeClick,
+              child: Observer(
+                builder: (_) {
                   return RichText(
                     text: TextSpan(
-                      style: TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
+                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
                       children: <TextSpan>[
                         TextSpan(
-                            text:
-                                "${snapshot.data.hour.toString().padLeft(2, '0')} : ${snapshot.data.minute.toString().padLeft(2, '0')}",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                        TextSpan(text: " hrs"),
+                            text: controller.timeText, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        const TextSpan(text: " hrs"),
                       ],
                     ),
                   );
@@ -153,33 +181,25 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
               ),
             ),
           ),
-          Spacer(
-            flex: 3,
-          ),
+          const Spacer(flex: 3),
           Container(
             margin: const EdgeInsets.only(bottom: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                bloc.reminders.length != 0
+                controller.reminders.length != 0
                     ? FlatButton(
-                        onPressed: () => bloc.remove(context),
-                        child: Text(
-                          "Remover",
-                          style: TextStyle(fontSize: 16),
-                        ),
+                        onPressed: remove,
+                        child: const Text("Remover", style: TextStyle(fontSize: 16)),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 RaisedButton(
-                  color: bloc.habitColor,
-                  shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                  color: controller.habitColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   elevation: 0,
-                  onPressed: () => bloc.save(context),
-                  child: const Text(
-                    "SALVAR",
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
+                  onPressed: save,
+                  child: const Text("SALVAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

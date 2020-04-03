@@ -166,9 +166,8 @@ abstract class _HabitDetailsLogicBase with Store {
     switchPanelType(BottomSheetType.NONE);
   }
 
-  void editAlarmCallback(List<Reminder> newReminders) {
-    // _reminders = newReminders;
-    // _reminderButtonController.sink.add(newReminders.length);
-    // closeBottomSheet();
+  void editAlarmCallback(ObservableList<Reminder> newReminders) {
+    reminders.setData(newReminders);
+    switchPanelType(BottomSheetType.NONE);
   }
 }

@@ -118,7 +118,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Column(
         children: <Widget>[
-          BottomSheetLine(),
+          const BottomSheetLine(),
           Container(
             margin: const EdgeInsets.only(top: 12, bottom: 4),
             height: 30,
