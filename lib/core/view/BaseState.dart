@@ -21,7 +21,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
 
   @protected
-  Future<dynamic> navigateSmooth(BuildContext context, Widget page) {
+  Future<dynamic> navigateSmooth(Widget page) {
     return Navigator.of(context).push(PageRouteBuilder(
         opaque: false,
         transitionDuration: Duration(milliseconds: 300),
@@ -43,8 +43,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  void showLoading(BuildContext context, bool show) {
-    if (!_loading) {
+  void showLoading(bool show) {
+    if (!_loading && show) {
       Navigator.of(context).push(new PageRouteBuilder(
           opaque: false,
           barrierColor: Colors.black.withOpacity(0.2),
@@ -58,7 +58,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
             return LoadingWidget();
           }));
       _loading = true;
-    } else {
+    } else if (_loading && !show) {
       Navigator.of(context).pop();
       _loading = false;
     }
@@ -66,6 +66,16 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void vibratePhone({int duration = 100}) {
-    Vibration.hasVibrator().then((resp) => resp != null && resp == true ?? Vibration.vibrate(duration: duration));
+    Vibration.hasVibrator().then((resp) {
+      if (resp != null && resp == true) {
+        Vibration.vibrate(duration: 100);
+      }
+    });
+  }
+
+  @protected
+  void handleError(dynamic error) {
+    showLoading(false);
+    showToast("Ocorreu um erro");
   }
 }

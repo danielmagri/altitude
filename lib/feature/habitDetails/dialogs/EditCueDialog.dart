@@ -1,32 +1,76 @@
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
-import 'package:altitude/feature/habitDetails/blocs/EditCueBloc.dart';
+import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueDialog extends StatefulWidget {
-  EditCueDialog(this.habit, this.callback);
-
-  final Habit habit;
-  final Function(String) callback;
+  const EditCueDialog();
 
   @override
   _EditCueDialogState createState() => _EditCueDialogState();
 }
 
-class _EditCueDialogState extends State<EditCueDialog> {
-  EditCueBloc bloc;
+class _EditCueDialogState extends BaseState<EditCueDialog> {
+  KeyboardVisibilityNotification keyboardVisibilityNotification = KeyboardVisibilityNotification();
+  ScrollController scrollController = ScrollController();
+  TextEditingController textEditingController = TextEditingController();
+  TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
+
+  EditCueLogic controller = GetIt.I.get<EditCueLogic>();
 
   @override
   void initState() {
     super.initState();
+    // Seta o gatilho no textField
+    textEditingController.text = controller.cue;
 
-    bloc = EditCueBloc(widget.habit, widget.callback);
+    keyboardVisibilityNotification.addNewListener(onChange: (bool visible) {
+      if (visible)
+        scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    });
+
+    // Ao clicar em "Saiba mais"
+    tapGestureRecognizer.onTap = controller.showAllCueText;
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    GetIt.I.resetLazySingleton<EditCueLogic>();
+    keyboardVisibilityNotification.dispose();
+    scrollController.dispose();
+    textEditingController.dispose();
+    tapGestureRecognizer.dispose();
     super.dispose();
+  }
+
+  void onTextChanged(String text) {
+    controller.fetchSuggestions(text);
+  }
+
+  void save() {
+    String validate = ValidationHandler.cueTextValidate(textEditingController.text);
+
+    if (validate == null) {
+      showLoading(true);
+      controller.saveCue(textEditingController.text).then((_) {
+        showLoading(false);
+      }).catchError(handleError);
+    } else {
+      showToast(validate);
+    }
+  }
+
+  void remove() {
+    showLoading(true);
+    controller.removeCue().then((_) {
+      showLoading(false);
+    }).catchError(handleError);
   }
 
   List<TextSpan> _texts(bool showAll) {
@@ -59,7 +103,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
         ),
         TextSpan(
           text: "Continuar lendo...",
-          recognizer: bloc.tapGestureRecognizer,
+          recognizer: tapGestureRecognizer,
           style: TextStyle(color: Colors.black, fontSize: 18.0, decoration: TextDecoration.underline),
         ),
       ];
@@ -69,7 +113,7 @@ class _EditCueDialogState extends State<EditCueDialog> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      controller: bloc.scrollController,
+      controller: scrollController,
       physics: BouncingScrollPhysics(),
       padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
       child: Column(
@@ -80,94 +124,82 @@ class _EditCueDialogState extends State<EditCueDialog> {
             height: 30,
             child: Text(
               "Gatilho",
-              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: bloc.habitColor),
+              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor),
             ),
           ),
-          StreamBuilder<bool>(
-              initialData: false,
-              stream: bloc.cueTextShowStream,
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                return RichText(
-                  textAlign: TextAlign.justify,
-                  text: TextSpan(
-                    children: _texts(snapshot.data),
-                  ),
-                );
-              }),
+          Observer(builder: (_) {
+            return RichText(
+              textAlign: TextAlign.justify,
+              text: TextSpan(children: _texts(controller.showAllTutorialText)),
+            );
+          }),
           Container(
             height: (MediaQuery.of(context).size.height * 0.8) - 140,
             width: double.maxFinite,
             child: Column(
               children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 TextField(
-                  controller: bloc.textEditingController,
+                  controller: textEditingController,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.go,
-                  onSubmitted: (text) => bloc.saveCue(context),
-                  onChanged: bloc.onTextChanged,
+                  onSubmitted: (text) => save(),
+                  onChanged: onTextChanged,
                   minLines: 1,
                   maxLines: 2,
                   style: TextStyle(fontSize: 19),
-                  cursorColor: bloc.habitColor,
+                  cursorColor: controller.habitColor,
                   decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: bloc.habitColor)),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: controller.habitColor)),
                       hintText: "Escreva aqui seu gatilho",
                       hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                 ),
-                StreamBuilder<List<String>>(
-                    initialData: [],
-                    stream: bloc.suggestionListStream,
-                    builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: snapshot.data.length != 0 ? EdgeInsets.only(top: 12, bottom: 8) : EdgeInsets.all(0),
-                        itemCount: snapshot.data.length < 3 ? snapshot.data.length : 3,
-                        itemBuilder: (context, position) {
-                          return GestureDetector(
-                            onTap: () {
-                              String text = snapshot.data[position];
-
-                              bloc.textEditingController.value = new TextEditingValue(text: text);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Text(
-                                snapshot.data[position],
-                                style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
-                              ),
-                            ),
-                          );
+                Observer(builder: (_) {
+                  var suggestions = controller.suggestions;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding:
+                        suggestions.isNotEmpty ? const EdgeInsets.only(top: 12, bottom: 8) : const EdgeInsets.all(0),
+                    itemCount: suggestions.length < 3 ? suggestions.length : 3,
+                    itemBuilder: (context, position) {
+                      return GestureDetector(
+                        onTap: () {
+                          String text = suggestions[position];
+                          textEditingController.value = new TextEditingValue(text: text);
                         },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Text(
+                            suggestions[position],
+                            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
+                          ),
+                        ),
                       );
-                    }),
-                Spacer(),
+                    },
+                  );
+                }),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    bloc.habit.cue.isNotEmpty
+                    controller.cue.isNotEmpty
                         ? FlatButton(
-                            onPressed: () => bloc.removeCue(context),
-                            child: Text(
-                              "Remover",
-                              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
-                            ),
+                            onPressed: remove,
+                            child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
                           )
                         : SizedBox(),
                     FlatButton(
-                      onPressed: () => bloc.saveCue(context),
+                      onPressed: save,
                       child: Text(
                         "Salvar",
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: bloc.habitColor),
+                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: controller.habitColor),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
               ],
             ),
           ),

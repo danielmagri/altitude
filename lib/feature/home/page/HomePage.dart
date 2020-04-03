@@ -52,6 +52,7 @@ class _HomePageState extends BaseState<HomePage> {
   @override
   void dispose() {
     pageController.dispose();
+    GetIt.I.resetLazySingleton<HomeLogic>();
     super.dispose();
   }
 
@@ -70,17 +71,17 @@ class _HomePageState extends BaseState<HomePage> {
   //   super.didChangeAppLifecycleState(state);
   // }
 
-  void setHabitDone(BuildContext context, id) {
-    showLoading(context, true);
+  void setHabitDone(id) {
+    showLoading(true);
 
     controller.completeHabit(id).then((newScore) async {
-      showLoading(context, false);
+      showLoading(false);
       vibratePhone();
       if (await controller.checkLevelUp(newScore)) {
-        navigateSmooth(context, NewLevelDialog(score: newScore));
+        navigateSmooth(NewLevelDialog(score: newScore));
       }
     }).catchError((error) {
-      showLoading(context, false);
+      showLoading(false);
       showToast("Ocorreu um erro");
     });
   }
@@ -89,7 +90,7 @@ class _HomePageState extends BaseState<HomePage> {
     pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
-  void goAllLevels(BuildContext context) {
+  void goAllLevels() {
     Navigator.pushNamed(context, 'allLevels', arguments: controller.user.data.score);
   }
 
@@ -161,7 +162,7 @@ class _HomePageState extends BaseState<HomePage> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => goAllLevels(context),
+                  onTap: goAllLevels,
                   child: Container(
                     color: Theme.of(context).canvasColor,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
