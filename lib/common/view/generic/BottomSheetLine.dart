@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BottomSheetLine extends StatelessWidget {
+  const BottomSheetLine();
+
   @override
   Widget build(BuildContext context) {
     return Container(
