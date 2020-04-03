@@ -1,15 +1,40 @@
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/feature/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/widgets/SkyScene.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        BorderRadius,
+        BoxDecoration,
+        BuildContext,
+        Colors,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        EdgeInsets,
+        Expanded,
+        Key,
+        MainAxisAlignment,
+        MainAxisSize,
+        Row,
+        Size,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextAlign,
+        TextOverflow,
+        TextStyle,
+        Widget;
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key, @required this.bloc}) : super(key: key);
+  HeaderWidget({Key key})
+      : controller = GetIt.I.get<HabitDetailsLogic>(),
+        super(key: key);
 
-  final HabitDetailsBloc bloc;
+  final HabitDetailsLogic controller;
 
   @override
   Widget build(BuildContext context) {
@@ -19,51 +44,31 @@ class HeaderWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<double>(
-              stream: bloc.rocketForceStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SkyScene(
-                    size: const Size(140, 140),
-                    color: bloc.habitColor,
-                    force: snapshot.data,
-                  );
-                } else if (snapshot.hasError) {
-                  return SizedBox();
-                } else {
+            child: Observer(
+              builder: (_) {
+                return controller.rocketForce.handleState(() {
                   return Skeleton.custom(
                     child: Rocket(
                       size: const Size(140, 140),
-                      color: bloc.habitColor,
+                      color: Colors.white,
                     ),
                   );
-                }
+                }, (data) {
+                  return SkyScene(
+                    size: const Size(140, 140),
+                    color: controller.habitColor,
+                    force: data,
+                  );
+                }, (error) {
+                  return const SizedBox();
+                });
               },
             ),
           ),
           Expanded(
-            child: StreamBuilder<Habit>(
-              stream: bloc.habitStream,
-              builder: (BuildContext context, AsyncSnapshot<Habit> snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        snapshot.data.habit,
-                        textAlign: TextAlign.center,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: TextStyle(fontSize: 19),
-                      ),
-                      Score(color: bloc.habitColor, score: snapshot.data.score),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return SizedBox();
-                } else {
+            child: Observer(
+              builder: (_) {
+                return controller.habit.handleState(() {
                   return Skeleton.custom(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -75,7 +80,7 @@ class HeaderWidget extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: new BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                         ),
                         Container(
@@ -90,11 +95,29 @@ class HeaderWidget extends StatelessWidget {
                       ],
                     ),
                   );
-                }
+                }, (data) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        data.habit,
+                        textAlign: TextAlign.center,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: const TextStyle(fontSize: 19),
+                      ),
+                      Score(color: controller.habitColor, score: data.score),
+                    ],
+                  );
+                }, (error) {
+                  return SizedBox();
+                });
               },
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
         ],
       ),
     );

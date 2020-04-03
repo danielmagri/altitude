@@ -1,11 +1,35 @@
-import 'package:altitude/feature/habitDetails/blocs/habitDetailsBloc.dart';
-import 'package:flutter/material.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
+import 'package:flutter/material.dart'
+    show
+        Align,
+        Alignment,
+        BuildContext,
+        Card,
+        Column,
+        EdgeInsets,
+        Expanded,
+        FontWeight,
+        InkWell,
+        Key,
+        Navigator,
+        Padding,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextAlign,
+        TextStyle,
+        Widget;
 import 'dart:math';
 
-class CompetitionWidget extends StatelessWidget {
-  CompetitionWidget({Key key, this.bloc}) : super(key: key);
+import 'package:get_it/get_it.dart';
 
-  final HabitDetailsBloc bloc;
+class CompetitionWidget extends StatelessWidget {
+  CompetitionWidget({Key key})
+      : controller = GetIt.I.get<HabitDetailsLogic>(),
+        super(key: key);
+
+  final HabitDetailsLogic controller;
 
   int index = 0;
 
@@ -23,7 +47,8 @@ class CompetitionWidget extends StatelessWidget {
   }
 
   void onClicked(BuildContext context) {
-    bloc.goCompetition(context, index);
+    FireAnalytics().sendGoCompetition(index.toString());
+    Navigator.pushNamed(context, 'competition');
   }
 
   @override
@@ -44,13 +69,13 @@ class CompetitionWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
-                    color: bloc.habitColor,
+                    color: controller.habitColor,
                   ),
                 ),
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(_setTex(), textAlign: TextAlign.center, style: TextStyle(fontSize: 16)),
+                    child: Text(_setTex(), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
                   ),
                 ),
               ],

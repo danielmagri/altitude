@@ -1,5 +1,3 @@
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/feature/habitDetails/blocs/EditAlarmBloc.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
@@ -8,11 +6,7 @@ import 'package:altitude/feature/habitDetails/model/ReminderWeekday.dart';
 import 'package:flutter/material.dart';
 
 class EditAlarmDialog extends StatefulWidget {
-  EditAlarmDialog(this.habit, this.reminders, this.callback);
-
-  final Habit habit;
-  final List<Reminder> reminders;
-  final Function(List<Reminder>) callback;
+  const EditAlarmDialog();
 
   @override
   _EditAlarmDialogState createState() => _EditAlarmDialogState();
@@ -25,7 +19,7 @@ class _EditAlarmDialogState extends State<EditAlarmDialog> {
   void initState() {
     super.initState();
 
-    bloc = EditAlarmBloc(widget.habit, widget.reminders, widget.callback);
+    // bloc = EditAlarmBloc(widget.habit, widget.reminders, widget.callback);
   }
 
   @override

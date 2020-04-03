@@ -1,39 +1,57 @@
+import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/bloc/model/LoadableData.dart';
-import 'package:altitude/feature/habitDetails/blocs/habitDetailsBloc.dart';
+import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class CalendarWidget extends StatelessWidget {
-  CalendarWidget({Key key, @required this.bloc}) : super(key: key);
+  CalendarWidget({Key key, @required this.calendarController, @required this.completeHabit})
+      : controller = GetIt.I.get<HabitDetailsLogic>(),
+        super(key: key);
 
-  final HabitDetailsBloc bloc;
+  final HabitDetailsLogic controller;
+  final Function(bool add, DateTime date, DonePageType donePageType) completeHabit;
+  final CalendarController calendarController;
+
+  void dayCalendarClick(DateTime date, List events) {
+    DateTime day = DateTime(date.year, date.month, date.day);
+    bool add = events.length == 0;
+
+    completeHabit(add, day, DonePageType.Calendar);
+  }
 
   Widget _todayDayBuilder(context, date, list) {
     return Container(
       child: Text(
         date.day.toString(),
       ),
-      alignment: Alignment(0.0, 0.0),
-      margin: EdgeInsets.all(5),
-      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: bloc.habitColor, width: 2)),
+      alignment: const Alignment(0.0, 0.0),
+      margin: const EdgeInsets.all(5),
+      decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: controller.habitColor, width: 2)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<LoadableData<Map<DateTime, List>>>(
-      stream: bloc.calendarWidgetStreamcontroller,
-      builder: (BuildContext context, AsyncSnapshot<LoadableData<Map<DateTime, List>>> snapshot) {
-        if (snapshot.hasData) {
+    return Observer(
+      builder: (_) {
+        return controller.calendarMonth.handleStateLoadable(() {
+          return Skeleton(
+            width: double.maxFinite,
+            height: 240,
+            margin: EdgeInsets.symmetric(horizontal: 8),
+          );
+        }, (data, loading) {
           return Container(
             width: double.maxFinite,
             child: Stack(
               children: <Widget>[
                 TableCalendar(
-                  calendarController: bloc.calendarController,
-                  events: snapshot.data.data,
+                  calendarController: calendarController,
+                  events: data,
                   formatAnimation: FormatAnimation.slide,
                   startingDayOfWeek: StartingDayOfWeek.sunday,
                   availableGestures: AvailableGestures.horizontalSwipe,
@@ -42,8 +60,8 @@ class CalendarWidget extends StatelessWidget {
                     CalendarFormat.month: '',
                   },
                   onDaySelected: null,
-                  onDayLongPressed: (date, events) => bloc.dayCalendarClick(context, date, events),
-                  onVisibleDaysChanged: bloc.calendarMonthSwipe,
+                  onDayLongPressed: dayCalendarClick,
+                  onVisibleDaysChanged: controller.calendarMonthSwipe,
                   daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {
                     switch (date.weekday) {
                       case 1:
@@ -69,7 +87,7 @@ class CalendarWidget extends StatelessWidget {
                   headerStyle: HeaderStyle(
                     formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
                     formatButtonDecoration: BoxDecoration(
-                      color: bloc.habitColor,
+                      color: controller.habitColor,
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                   ),
@@ -88,7 +106,7 @@ class CalendarWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.horizontal(
                                     left: event[0] ? Radius.circular(0) : Radius.circular(20),
                                     right: event[1] ? Radius.circular(0) : Radius.circular(20)),
-                                color: bloc.habitColor,
+                                color: controller.habitColor,
                               ))
                         ];
                       },
@@ -107,7 +125,7 @@ class CalendarWidget extends StatelessWidget {
                       },
                       todayDayBuilder: _todayDayBuilder),
                 ),
-                snapshot.data.loading
+                loading
                     ? Positioned.fill(
                         child: Container(
                           color: Colors.white54,
@@ -120,15 +138,9 @@ class CalendarWidget extends StatelessWidget {
               ],
             ),
           );
-        } else if (snapshot.hasError) {
-          return SizedBox();
-        } else {
-          return Skeleton(
-            width: double.maxFinite,
-            height: 240,
-            margin: EdgeInsets.symmetric(horizontal: 8),
-          );
-        }
+        }, (error) {
+          return const SizedBox();
+        });
       },
     );
   }
