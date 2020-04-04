@@ -1,17 +1,20 @@
+import 'dart:async';
 import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
+import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialDialog.dart';
 import 'package:altitude/core/view/BaseState.dart';
-import 'package:altitude/feature/habitDetails/dialogs/EditAlarmDialog.dart';
-import 'package:altitude/feature/habitDetails/dialogs/EditCueDialog.dart';
+import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
+import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:altitude/feature/habitDetails/widgets/calendarWidget.dart';
-import 'package:altitude/feature/habitDetails/widgets/competitionWidget.dart';
-import 'package:altitude/feature/habitDetails/widgets/coolDataWidget.dart';
-import 'package:altitude/feature/habitDetails/widgets/cueWidget.dart';
-import 'package:altitude/feature/habitDetails/widgets/headerWidget.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/competitionWidget.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/cueWidget.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/headerWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -20,72 +23,69 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:table_calendar/table_calendar.dart' show CalendarController;
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage(this.habitId, this.color);
+  HabitDetailsPage(this.arguments);
 
-  final int habitId;
-  final int color;
+  final HabitDetailsPageArguments arguments;
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
 class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
-  ScrollController scrollController = ScrollController();
-  PanelController panelController = PanelController();
-  CalendarController calendarController = CalendarController();
+  final ScrollController scrollController = ScrollController();
+  final PanelController panelController = PanelController();
+  final CalendarController calendarController = CalendarController();
 
-  HabitDetailsLogic controller = GetIt.I.get<HabitDetailsLogic>();
+  final HabitDetailsLogic controller = GetIt.I.get<HabitDetailsLogic>();
 
   @override
   void initState() {
     super.initState();
 
-    controller.fetchData(widget.habitId, widget.color);
+    controller.fetchData(widget.arguments.id, widget.arguments.color);
 
-    // bloc.showInitialTutorial(context);
+    showInitialTutorial();
   }
 
-  void showInitialTutorial(BuildContext context) async {
-    // if (!await SharedPref().getRocketTutorial()) {
-    //   Timer.run(() async {
-    //     await Future.delayed(Duration(milliseconds: 600));
-    //     // scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-    //     await navigateSmooth(
-    //       context,
-    //       TutorialWidget(
-    //         focusAlignment: Alignment(-0.55, -0.6),
-    //         focusRadius: 0.42,
-    //         textAlignment: Alignment(0, 0.5),
-    //         text: [
-    //           TextSpan(
-    //               text: "Esse é seu hábito em forma de foguete..",
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    //           TextSpan(text: "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
-    //           TextSpan(
-    //               text: "\n\nSiga a frequência certinho para ir ainda mais longe!",
-    //               style: TextStyle(fontWeight: FontWeight.w300)),
-    //         ],
-    //         hasNext: true,
-    //       ),
-    //     );
-    //     // await scrollController.animateTo(scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-    //     await navigateSmooth(
-    //       context,
-    //       TutorialWidget(
-    //         focusAlignment: Alignment(0.0, -0.35),
-    //         focusRadius: 0.45,
-    //         textAlignment: Alignment(0, 0.51),
-    //         text: [
-    //           TextSpan(
-    //               text: "No calendario você tem o controle de todos os dias feitos!",
-    //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    //           TextSpan(text: "\n\nAo ficar pressionando um dia você consegue marcar como feito ou desmarcar."),
-    //         ],
-    //       ),
-    //     );
-    //   });
-    //   SharedPref().setRocketTutorial(true);
-    // }
+  void showInitialTutorial() async {
+    if (!await SharedPref().getRocketTutorial()) {
+      Timer.run(() async {
+        await Future.delayed(Duration(milliseconds: 600));
+        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await navigateSmooth(
+          TutorialDialog(
+              focusAlignment: Alignment(-0.55, -0.6),
+              focusRadius: 0.42,
+              textAlignment: Alignment(0, 0.5),
+              text: [
+                TextSpan(
+                    text: "Esse é seu hábito em forma de foguete..",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                TextSpan(text: "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                TextSpan(
+                    text: "\n\nSiga a frequência certinho para ir ainda mais longe!",
+                    style: TextStyle(fontWeight: FontWeight.w300)),
+              ],
+              hasNext: true),
+        );
+        await scrollController.animateTo(scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await navigateSmooth(
+          TutorialDialog(
+            focusAlignment: Alignment(0.0, -0.35),
+            focusRadius: 0.45,
+            textAlignment: Alignment(0, 0.51),
+            text: [
+              TextSpan(
+                  text: "No calendario você tem o controle de todos os dias feitos!",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              TextSpan(text: "\n\nAo ficar pressionando um dia você consegue marcar como feito ou desmarcar."),
+            ],
+          ),
+        );
+      });
+      SharedPref().setRocketTutorial(true);
+    }
   }
 
   @override
@@ -138,6 +138,11 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
 
   void closeBottomSheet() {
     controller.switchPanelType(BottomSheetType.NONE);
+  }
+
+  void goEditHabitPage() {
+    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data);
+    Navigator.pushNamed(context, 'editHabit', arguments: arguments);
   }
 
   Widget _bottomSheetBuilder(BottomSheetType type) {
@@ -208,15 +213,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                           }, (data) {
                             return IconButton(
                               icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
-                              onPressed: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (_) {
-                                //           return EditHabitPage(controller.habit.data, bloc.frequency, bloc.reminders);
-                                //         },
-                                //         settings: RouteSettings(name: "Edit Habit Page")));
-                              },
+                              onPressed: goEditHabitPage,
                             );
                           }, (error) {
                             return SizedBox();

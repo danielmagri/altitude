@@ -1,7 +1,7 @@
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/feature/home/page/HomePage.dart';
+import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';

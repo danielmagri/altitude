@@ -1,22 +1,15 @@
+import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/services/SharedPref.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/feature/habitDetails/page/habitDetailsPage.dart';
 import 'package:package_info/package_info.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
+    HabitDetailsPageArguments arguments = HabitDetailsPageArguments(id, color);
     if (pushReplacement) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-        return HabitDetailsPage(id, color);
-      }));
+      Navigator.pushReplacementNamed(context, "habitDetails", arguments: arguments);
     } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) {
-                return HabitDetailsPage(id, color);
-              },
-              settings: RouteSettings(name: "Habit Details Page")));
+      Navigator.pushNamed(context, "habitDetails", arguments: arguments);
     }
   }
 
