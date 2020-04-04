@@ -1,7 +1,7 @@
-import 'package:altitude/common/Router.dart';
+import 'package:altitude/common/router/Router.dart';
 import 'package:altitude/common/services/FireMenssaging.dart';
 import 'package:altitude/core/GetIt.dart';
-import 'package:altitude/feature/home/page/HomePage.dart';
+import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

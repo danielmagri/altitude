@@ -1,10 +1,11 @@
+import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
 
 class AllLevelsPage extends StatefulWidget {
-  AllLevelsPage({Key key, this.score}) : super(key: key);
+  AllLevelsPage(this.arguments);
 
-  final int score;
+  final AllLevelsPageArguments arguments;
 
   @override
   _AllLevelsPageState createState() => _AllLevelsPageState();
@@ -39,7 +40,7 @@ class _AllLevelsPageState extends State<AllLevelsPage> {
     for (int i = 0; i < 10; i++) {
       widgets.add(
         Opacity(
-          opacity: LevelControl.getLevel(widget.score) >= i ? 1 : 0.3,
+          opacity: LevelControl.getLevel(widget.arguments.score) >= i ? 1 : 0.3,
           child: Container(
             padding: const EdgeInsets.all(8),
             height: 90,
@@ -67,8 +68,7 @@ class _AllLevelsPageState extends State<AllLevelsPage> {
                       ),
                       Text(
                         '${LevelControl.getMaxScore(i)} Km',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w300),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                       ),
                     ],
                   ),

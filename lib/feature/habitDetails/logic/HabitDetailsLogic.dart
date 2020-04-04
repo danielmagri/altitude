@@ -153,7 +153,6 @@ abstract class _HabitDetailsLogicBase with Store {
     return Future.value();
   }
 
-  @action
   void editCueCallback(String cue) {
     Habit newHabit = habit.data;
     if (cue == null) {
@@ -169,5 +168,14 @@ abstract class _HabitDetailsLogicBase with Store {
   void editAlarmCallback(ObservableList<Reminder> newReminders) {
     reminders.setData(newReminders);
     switchPanelType(BottomSheetType.NONE);
+  }
+
+  void updateHabitDetailsPageData(int color, String habitText, Frequency newFrequency) {
+    _color = color;
+    Habit newHabit = habit.data;
+    newHabit.color = color;
+    newHabit.habit = habitText;
+    habit.setData(newHabit);
+    frequency.setData(newFrequency);
   }
 }

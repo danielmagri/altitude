@@ -1,13 +1,14 @@
+import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
-import 'package:altitude/feature/home/dialogs/NewLevelDialog.dart';
-import 'package:altitude/feature/home/widget/AllHabits.dart';
-import 'package:altitude/feature/home/widget/HomeBottomNavigation.dart';
-import 'package:altitude/feature/home/widget/HomeDrawer.dart';
-import 'package:altitude/feature/home/widget/SkyDragTarget.dart';
-import 'package:altitude/feature/home/widget/TodayHabits.dart';
+import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
+import 'package:altitude/feature/home/view/widget/AllHabits.dart';
+import 'package:altitude/feature/home/view/widget/HomeBottomNavigation.dart';
+import 'package:altitude/feature/home/view/widget/HomeDrawer.dart';
+import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
+import 'package:altitude/feature/home/view/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
@@ -91,7 +92,8 @@ class _HomePageState extends BaseState<HomePage> {
   }
 
   void goAllLevels() {
-    Navigator.pushNamed(context, 'allLevels', arguments: controller.user.data.score);
+    var arguments = AllLevelsPageArguments(controller.user.data.score);
+    Navigator.pushNamed(context, 'allLevels', arguments: arguments);
   }
 
   @override

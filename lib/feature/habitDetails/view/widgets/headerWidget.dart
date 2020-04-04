@@ -2,7 +2,7 @@ import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:altitude/feature/habitDetails/widgets/SkyScene.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/SkyScene.dart';
 import 'package:flutter/material.dart'
     show
         BorderRadius,
