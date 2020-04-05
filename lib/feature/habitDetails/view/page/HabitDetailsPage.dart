@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
+import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialDialog.dart';
@@ -96,6 +97,12 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
     super.dispose();
   }
 
+  @override
+  void onPageBack(Object value) {
+    setState(() {});
+    super.onPageBack(value);
+  }
+
   Future<bool> onBackPress() {
     if (panelController.isPanelOpen()) {
       closeBottomSheet();
@@ -141,8 +148,14 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void goEditHabitPage() {
-    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data);
-    Navigator.pushNamed(context, 'editHabit', arguments: arguments);
+    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data,
+        controller.competitions.data.isNotEmpty);
+    navigatePush('editHabit', arguments: arguments);
+  }
+
+  void competition(int index) {
+    FireAnalytics().sendGoCompetition(index.toString());
+    navigatePush('competition');
   }
 
   Widget _bottomSheetBuilder(BottomSheetType type) {
@@ -297,7 +310,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       margin: EdgeInsets.symmetric(horizontal: 8),
                     );
                   }, (data) {
-                    return data.isEmpty ? CompetitionWidget() : SizedBox();
+                    return data.isEmpty ? CompetitionWidget(goCompetition: competition) : SizedBox();
                   }, (error) {
                     return const SizedBox();
                   });

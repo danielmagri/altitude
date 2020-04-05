@@ -24,16 +24,18 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         Wrap,
-        WrapAlignment;
+        WrapAlignment,
+        required;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class TodayHabits extends StatelessWidget {
-  TodayHabits({Key key})
+  TodayHabits({Key key, @required this.goHabitDetails})
       : controller = GetIt.I.get<HomeLogic>(),
         super(key: key);
 
   final HomeLogic controller;
+  final Function(int id, int color) goHabitDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +43,7 @@ class TodayHabits extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 40),
-          child: Text(
-            "HÁBITOS DE HOJE",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
-          ),
+          child: const Text("HÁBITOS DE HOJE", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w300)),
         ),
         Expanded(
           child: Center(
@@ -82,6 +81,7 @@ class TodayHabits extends StatelessWidget {
                                 .firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                             return HabitCardItem(
                               habit: habit,
+                              goHabitDetails: goHabitDetails,
                               showDragTarget: controller.swipeSkyWidget,
                               done: done == null ? false : true,
                             );

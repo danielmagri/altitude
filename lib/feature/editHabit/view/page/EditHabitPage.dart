@@ -1,8 +1,8 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
-import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
+import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/feature/addHabit/widgets/colorWidget.dart';
@@ -60,6 +60,51 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
     }
   }
 
+  void removeHabit() async {
+    if (widget.arguments.hasCompetition) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return BaseDialog(
+              title: "Opss",
+              body: "É preciso sair das competições que esse hábito faz parte para poder deletá-lo.",
+              action: <Widget>[
+                new FlatButton(
+                  child: new Text("Ok", style: TextStyle(fontSize: 17)),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            );
+          });
+    } else {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return BaseDialog(
+              title: "Deletar",
+              body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
+              subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
+              action: <Widget>[
+                FlatButton(
+                  child: Text("SIM", style: TextStyle(fontSize: 17)),
+                  onPressed: () {
+                    showLoading(true);
+                    controller.removeHabit().then((_) {
+                      showLoading(false);
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    }).catchError(handleError);
+                  },
+                ),
+                FlatButton(
+                  child: Text("NÃO", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            );
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +124,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
                     width: 50,
                     child: IconButton(
                       icon: Icon(Icons.delete),
-                      // onPressed: () => bloc.removeHabit(context),
+                      onPressed: removeHabit,
                     ),
                   ),
                 ],

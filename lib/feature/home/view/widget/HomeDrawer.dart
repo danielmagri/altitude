@@ -37,29 +37,18 @@ import 'package:flutter/material.dart'
         Text,
         TextOverflow,
         TextStyle,
-        Widget;
+        Widget,
+        required;
 
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key key})
+  HomeDrawer({Key key, @required this.goFriends, @required this.goCompetition, @required this.goSettings})
       : controller = GetIt.I.get<HomeLogic>(),
         super(key: key);
 
   final HomeLogic controller;
-
-  void goFriends(BuildContext context) {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(context, 'friends');
-  }
-
-  void goCompetition(BuildContext context) {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(context, 'competition');
-  }
-
-  void goSettings(BuildContext context) {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(context, 'settings');
-  }
+  final Function goFriends;
+  final Function goCompetition;
+  final Function goSettings;
 
   void goRateApp(BuildContext context) async {
     Navigator.of(context).pop();
@@ -129,27 +118,17 @@ class HomeDrawer extends StatelessWidget {
                         decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                         alignment: Alignment.center,
                         child: data.imageUrl.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(30),
-                                child: Image.network(data.imageUrl),
-                              )
-                            : Icon(
-                                Icons.person,
-                                size: 32,
-                              ),
+                            ? ClipRRect(borderRadius: BorderRadius.circular(30), child: Image.network(data.imageUrl))
+                            : Icon(Icons.person, size: 32),
                       ),
                       const SizedBox(height: 14),
-                      Text(
-                        "Olá, ${data.name}",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                      Text("Olá, ${data.name}",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text(
-                        "${LevelControl.getLevelText(data.score)}",
-                        style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
-                      ),
+                      Text("${LevelControl.getLevelText(data.score)}",
+                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300)),
                     ],
                   );
                 }, (error) {
@@ -158,7 +137,7 @@ class HomeDrawer extends StatelessWidget {
               }),
             ),
             ListTile(
-              title: Text('Amigos', style: TextStyle(fontSize: 16)),
+              title: Text('Amigos', style: const TextStyle(fontSize: 16)),
               leading: Icon(Icons.people, color: Colors.black),
               trailing: FutureBuilder(
                 future: UserControl().getPendingFriendsStatus(),
@@ -174,18 +153,11 @@ class HomeDrawer extends StatelessWidget {
                   return SizedBox();
                 },
               ),
-              onTap: () => goFriends(context),
+              onTap: goFriends,
             ),
             ListTile(
-              title: Text(
-                'Competição',
-                style: TextStyle(fontSize: 16),
-              ),
-              leading: Image.asset(
-                "assets/ic_award.png",
-                width: 25,
-                color: Colors.black,
-              ),
+              title: Text('Competição', style: const TextStyle(fontSize: 16)),
+              leading: Image.asset("assets/ic_award.png", width: 25, color: Colors.black),
               trailing: FutureBuilder(
                 future: CompetitionsControl().getPendingCompetitionsStatus(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -200,15 +172,15 @@ class HomeDrawer extends StatelessWidget {
                   return SizedBox();
                 },
               ),
-              onTap: () => goCompetition(context),
+              onTap: goCompetition,
             ),
             ListTile(
-              title: Text('Configurações', style: TextStyle(fontSize: 16)),
+              title: Text('Configurações', style: const TextStyle(fontSize: 16)),
               leading: Icon(Icons.settings, color: Colors.black),
-              onTap: () => goSettings(context),
+              onTap: goSettings,
             ),
             ListTile(
-              title: Text('Avalie o app', style: TextStyle(fontSize: 16)),
+              title: Text('Avalie o app', style: const TextStyle(fontSize: 16)),
               leading: Icon(Icons.star, color: Colors.black),
               onTap: () => goRateApp(context),
             ),

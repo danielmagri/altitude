@@ -24,24 +24,26 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         Wrap,
-        WrapAlignment;
+        WrapAlignment,
+        required;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class AllHabitsPage extends StatelessWidget {
-  AllHabitsPage({Key key})
+  AllHabitsPage({Key key, @required this.goHabitDetails})
       : controller = GetIt.I.get<HomeLogic>(),
         super(key: key);
 
   final HomeLogic controller;
+  final Function(int id, int color) goHabitDetails;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 40),
-          child: Text("TODOS OS HÁBITOS", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300)),
+          margin: const EdgeInsets.only(top: 40),
+          child: const Text("TODOS OS HÁBITOS", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w300)),
         ),
         Expanded(
           child: Center(
@@ -75,10 +77,10 @@ class AllHabitsPage extends StatelessWidget {
                           DayDone done = controller.doneHabits
                               .firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                           return HabitCardItem(
-                            habit: habit,
-                            showDragTarget: controller.swipeSkyWidget,
-                            done: done == null ? false : true,
-                          );
+                              habit: habit,
+                              goHabitDetails: goHabitDetails,
+                              showDragTarget: controller.swipeSkyWidget,
+                              done: done == null ? false : true);
                         }).toList(),
                       ),
                     );

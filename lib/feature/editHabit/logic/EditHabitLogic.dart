@@ -34,66 +34,8 @@ abstract class _EditHabitLogicBase with Store {
     color = index;
   }
 
-  Future<bool> validateSafeRemoveHabit() async {
-    // showLoading(context);
-    // var listCompetitions = await CompetitionsControl().listCompetitionsIds(_habit.id);
-    // hideLoading(context);
-    // if (listCompetitions.isEmpty) {
-    //   return true;
-    // } else {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return BaseDialog(
-    //         title: "Opss",
-    //         body: "É preciso sair das competições que esse hábito faz parte para poder deletá-lo.",
-    //         action: <Widget>[
-    //           new FlatButton(
-    //             child: new Text(
-    //               "Ok",
-    //               style: TextStyle(fontSize: 17),
-    //             ),
-    //             onPressed: () {
-    //               navigatePop(context);
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    //   return false;
-    // }
-  }
-
-  void removeHabit() async {
-    // if (await validateSafeRemoveHabit(context)) {
-    //   showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return BaseDialog(
-    //         title: "Deletar",
-    //         body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
-    //         subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
-    //         action: <Widget>[
-    //           FlatButton(
-    //             child: Text("SIM", style: TextStyle(fontSize: 17)),
-    //             onPressed: () {
-    //               HabitsControl().deleteHabit(_habit.id, _habit.habit, _habit.score, _reminders).then((status) {
-    //                 navigatePopUntil(context, (route) => route.isFirst);
-    //               });
-    //             },
-    //           ),
-    //           FlatButton(
-    //             child: Text("NÃO", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-    //             onPressed: () {
-    //               navigatePop(context);
-    //             },
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // }
+  Future<void> removeHabit() async {
+    return await HabitsControl().deleteHabit(_habit.id, _habit.habit, _habit.score, _reminders);
   }
 
   Future<void> updateHabit(String habit) async {
