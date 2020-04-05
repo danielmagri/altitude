@@ -20,6 +20,8 @@ import 'package:vibration/vibration.dart';
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
 
+  void onPageBack(Object value) {}
+
   @protected
   Future<dynamic> navigateSmooth(Widget page) {
     return Navigator.of(context).push(PageRouteBuilder(
@@ -28,6 +30,21 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
         transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
         pageBuilder: (_, __, ___) => page));
+  }
+
+  @protected
+  void navigatePush(String route, {Object arguments}) {
+    Navigator.pushNamed(context, route, arguments: arguments).then(onPageBack);
+  }
+
+  @protected
+  void navigatePopAndPush(String route, {Object arguments}) {
+    Navigator.popAndPushNamed(context, route, arguments: arguments);
+  }
+
+  @protected
+  void navigatePop({T result}) {
+    Navigator.pop(context, result);
   }
 
   @protected

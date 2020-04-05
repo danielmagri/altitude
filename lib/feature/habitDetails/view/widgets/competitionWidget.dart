@@ -1,4 +1,3 @@
-import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:flutter/material.dart'
     show
@@ -12,24 +11,25 @@ import 'package:flutter/material.dart'
         FontWeight,
         InkWell,
         Key,
-        Navigator,
         Padding,
         SizedBox,
         StatelessWidget,
         Text,
         TextAlign,
         TextStyle,
-        Widget;
+        Widget,
+        required;
 import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 
 class CompetitionWidget extends StatelessWidget {
-  CompetitionWidget({Key key})
+  CompetitionWidget({Key key, @required this.goCompetition})
       : controller = GetIt.I.get<HabitDetailsLogic>(),
         super(key: key);
 
   final HabitDetailsLogic controller;
+  final Function(int index) goCompetition;
 
   int index = 0;
 
@@ -46,11 +46,6 @@ class CompetitionWidget extends StatelessWidget {
     }
   }
 
-  void onClicked(BuildContext context) {
-    FireAnalytics().sendGoCompetition(index.toString());
-    Navigator.pushNamed(context, 'competition');
-  }
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -59,7 +54,7 @@ class CompetitionWidget extends StatelessWidget {
         margin: const EdgeInsets.all(12),
         elevation: 4,
         child: InkWell(
-          onTap: () => onClicked(context),
+          onTap: () => goCompetition(index),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Column(

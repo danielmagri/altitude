@@ -1,4 +1,5 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
+import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BaseState.dart';
@@ -42,12 +43,9 @@ class _HomePageState extends BaseState<HomePage> {
   }
 
   @override
-  void deactivate() {
-    super.deactivate();
-    isPageActived = !isPageActived;
-    if (isPageActived) {
-      controller.fetchData();
-    }
+  void onPageBack(Object value) {
+    controller.fetchData();
+    super.onPageBack(value);
   }
 
   @override
@@ -93,14 +91,31 @@ class _HomePageState extends BaseState<HomePage> {
 
   void goAllLevels() {
     var arguments = AllLevelsPageArguments(controller.user.data.score);
-    Navigator.pushNamed(context, 'allLevels', arguments: arguments);
+    navigatePush('allLevels', arguments: arguments);
+  }
+
+  void goHabitDetails(int id, int color) {
+    var arguments = HabitDetailsPageArguments(id, color);
+    navigatePush('habitDetails', arguments: arguments);
+  }
+
+  void goFriends() {
+    navigatePopAndPush('friends');
+  }
+
+  void goCompetition() {
+    navigatePopAndPush('competition');
+  }
+
+  void goSettings() {
+    navigatePopAndPush('settings');
   }
 
   @override
   Widget build(context) {
     return Scaffold(
         key: scaffoldKey,
-        drawer: HomeDrawer(),
+        drawer: HomeDrawer(goFriends: goFriends, goCompetition: goCompetition, goSettings: goSettings),
         drawerScrimColor: Colors.black12,
         body: Stack(
           children: <Widget>[
@@ -245,8 +260,8 @@ class _HomePageState extends BaseState<HomePage> {
                     physics: BouncingScrollPhysics(),
                     onPageChanged: controller.swipedPage,
                     children: <Widget>[
-                      AllHabitsPage(),
-                      TodayHabits(),
+                      AllHabitsPage(goHabitDetails: goHabitDetails),
+                      TodayHabits(goHabitDetails: goHabitDetails),
                     ],
                   ),
                 ),
