@@ -6,14 +6,15 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class HomebottomNavigation extends StatelessWidget {
-  HomebottomNavigation({Key key, this.pageScroll}) : super(key: key);
+  HomebottomNavigation({Key key, @required this.pageScroll, @required this.goAddHabit}) : super(key: key);
 
   final Function(int) pageScroll;
+  final Function goAddHabit;
   final HomeLogic controller = GetIt.I.get<HomeLogic>();
 
-  void _addHabitTap(BuildContext context) async {
+  void _addHabitTap() async {
     if (await controller.canAddHabit()) {
-      Navigator.pushNamed(context, 'addHabit');
+      goAddHabit();
     } else {
       showToast("Você atingiu o limite de 9 hábitos");
     }
@@ -66,7 +67,7 @@ class HomebottomNavigation extends StatelessWidget {
               ],
             ),
             InkWell(
-              onTap: () => _addHabitTap(context),
+              onTap: _addHabitTap,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),

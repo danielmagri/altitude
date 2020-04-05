@@ -35,7 +35,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void navigatePopAndPush(String route, {Object arguments}) {
-    Navigator.popAndPushNamed(context, route, arguments: arguments);
+    Navigator.popAndPushNamed(context, route, arguments: arguments).then(onPageBack);
   }
 
   @protected
