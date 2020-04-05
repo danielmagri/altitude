@@ -5,7 +5,7 @@ import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart'
 import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/common/view/generic/TutorialDialog.dart';
+import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
@@ -54,7 +54,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         await navigateSmooth(
-          TutorialDialog(
+          TutorialPresentation(
               focusAlignment: Alignment(-0.55, -0.6),
               focusRadius: 0.42,
               textAlignment: Alignment(0, 0.5),
@@ -72,13 +72,13 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
         await scrollController.animateTo(scrollController.position.maxScrollExtent,
             duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         await navigateSmooth(
-          TutorialDialog(
+          TutorialPresentation(
             focusAlignment: Alignment(0.0, -0.35),
             focusRadius: 0.45,
             textAlignment: Alignment(0, 0.51),
             text: [
               TextSpan(
-                  text: "No calendario você tem o controle de todos os dias feitos!",
+                  text: "No calendário você tem o controle de todos os dias feitos!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               TextSpan(text: "\n\nAo ficar pressionando um dia você consegue marcar como feito ou desmarcar."),
             ],
@@ -121,7 +121,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         navigateSmooth(
-          TutorialDialog(
+          TutorialPresentation(
             focusAlignment: Alignment(0.65, -0.85),
             focusRadius: 0.15,
             textAlignment: Alignment(0, 0),
@@ -317,7 +317,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 }),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
-                const SizedBox(height: 32),
+                const SizedBox(height: 48),
               ],
             ),
           ),

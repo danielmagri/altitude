@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
@@ -8,7 +9,6 @@ import 'package:altitude/controllers/ScoreControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/feature/friends/addFriendPage.dart';
 import 'package:altitude/feature/friends/pendingFriendsPage.dart';
-import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/feature/loginPage.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';

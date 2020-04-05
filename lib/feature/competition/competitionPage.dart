@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/CompetitionPresentation.dart';
+import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
@@ -10,7 +11,6 @@ import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/feature/competition/competitionDetailsPage.dart';
 import 'package:altitude/feature/competition/createCompetitionPage.dart';
 import 'package:altitude/feature/competition/pendingCompetitionsPage.dart';
-import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/common/Constants.dart';
 import 'package:altitude/utils/Util.dart';

@@ -1,5 +1,6 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
+import 'package:altitude/common/view/RainbowAnimated.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BaseState.dart';
@@ -13,6 +14,7 @@ import 'package:altitude/feature/home/view/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -34,12 +36,10 @@ class _HomePageState extends BaseState<HomePage> {
 
     controller.fetchData();
 
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    //     statusBarColor: Color.fromARGB(100, 250, 250, 250),
-    //     systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-    //     systemNavigationBarIconBrightness: Brightness.dark));
-
-    // WidgetsBinding.instance.addObserver(this);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Color.fromARGB(100, 250, 250, 250),
+        systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+        systemNavigationBarIconBrightness: Brightness.dark));
   }
 
   @override
@@ -58,17 +58,6 @@ class _HomePageState extends BaseState<HomePage> {
   void showDrawer() {
     scaffoldKey.currentState.openDrawer();
   }
-
-  // @override
-  // didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-  //         statusBarColor: Color.fromARGB(100, 250, 250, 250),
-  //         systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-  //         systemNavigationBarIconBrightness: Brightness.dark));
-  //   }
-  //   super.didChangeAppLifecycleState(state);
-  // }
 
   void setHabitDone(id) {
     showLoading(true);
@@ -111,6 +100,10 @@ class _HomePageState extends BaseState<HomePage> {
     navigatePopAndPush('settings');
   }
 
+  void goBuyBook() {
+    navigatePush('buyBook');
+  }
+
   @override
   Widget build(context) {
     return Scaffold(
@@ -124,8 +117,7 @@ class _HomePageState extends BaseState<HomePage> {
                 Container(
                   width: double.maxFinite,
                   height: 75,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(top: 12, left: 12),
+                  padding: const EdgeInsets.only(top: 20, left: 12, right: 8),
                   child: Row(
                     children: <Widget>[
                       IconButton(
@@ -134,47 +126,10 @@ class _HomePageState extends BaseState<HomePage> {
                         onPressed: showDrawer,
                       ),
                       Spacer(),
-                      // FutureBuilder<bool>(
-                      //     future: Util.checkUpdatedVersion(),
-                      //     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                      //       return !snapshot.data
-                      //           ? IconButton(
-                      //               tooltip: "News",
-                      //               icon: new Hero(
-                      //                 tag: "newsRelease",
-                      //                 child: Icon(
-                      //                   Icons.new_releases,
-                      //                 ),
-                      //               ),
-                      //               onPressed: () {
-                      //                 Util.dialogNavigator(
-                      //                     context,
-                      //                     TutorialDialog(
-                      //                       hero: "newsRelease",
-                      //                       icon: Icons.new_releases,
-                      //                       texts: [
-                      //                         TextSpan(
-                      //                           text: "  A pontuação do hábito mudou!",
-                      //                           style: TextStyle(
-                      //                               color: Colors.black,
-                      //                               fontSize: 18.0,
-                      //                               fontWeight: FontWeight.bold,
-                      //                               height: 1.2),
-                      //                         ),
-                      //                         TextSpan(
-                      //                           text:
-                      //                               " Agora a cada dia completado você ganha 2km.\n\n E ao completar a frequência na semana (por exemplo: 3 vezes na semana ou segunda, quarta e sexta) os dias passam a valer 3km, tanto os dias dessa semana que ja foi marcado quanto os que marcar!",
-                      //                           style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
-                      //                         ),
-                      //                       ],
-                      //                     )).then((data) async {
-                      //                   int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
-                      //                   SharedPref().setVersion(version);
-                      //                 });
-                      //               },
-                      //             )
-                      //           : Container();
-                      //     }),
+                      IconButton(
+                          icon: RainbowAnimated(child: (color) => Icon(Icons.new_releases, color: color)),
+                          iconSize: 28,
+                          onPressed: goBuyBook),
                     ],
                   ),
                 ),

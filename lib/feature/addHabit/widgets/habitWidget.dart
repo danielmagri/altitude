@@ -1,3 +1,4 @@
+import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:altitude/utils/Util.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:altitude/feature/dialogs/TutorialDialog.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:altitude/common/services/SharedPref.dart';
 
@@ -150,7 +150,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                 ),
                 IconButton(
-                  icon: new Hero(
+                  icon: Hero(
                     tag: "helpHabit",
                     child: Icon(
                       Icons.help_outline,

@@ -1,4 +1,5 @@
 import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class CalendarWidget extends StatelessWidget {
   CalendarWidget({Key key, @required this.calendarController, @required this.completeHabit})
@@ -21,6 +23,22 @@ class CalendarWidget extends StatelessWidget {
     bool add = events.length == 0;
 
     completeHabit(add, day, DonePageType.Calendar);
+  }
+
+  void calendarHelp(BuildContext context) {
+    Navigator.of(context).smooth(TutorialDialog(
+      hero: "helpCalendar",
+      texts: [
+        TextSpan(
+          text: "  No calendário você tem o controle de todos os dias feitos!",
+          style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+        ),
+        TextSpan(
+          text: "\n\nPressione no dia desejado para marcar como feito ou desmarcar.",
+          style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+        ),
+      ],
+    ));
   }
 
   Widget _todayDayBuilder(context, date, list) {
@@ -125,6 +143,13 @@ class CalendarWidget extends StatelessWidget {
                       },
                       todayDayBuilder: _todayDayBuilder),
                 ),
+                Positioned(
+                    right: 40,
+                    top: 8,
+                    child: IconButton(
+                        icon: Hero(tag: "helpCalendar", child: Icon(Icons.help_outline)),
+                        iconSize: 20,
+                        onPressed: () => calendarHelp(context))),
                 loading
                     ? Positioned.fill(
                         child: Container(
