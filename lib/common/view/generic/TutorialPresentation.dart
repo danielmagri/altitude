@@ -26,8 +26,8 @@ import 'package:flutter/material.dart'
         Widget,
         required;
 
-class TutorialDialog extends StatelessWidget {
-  TutorialDialog(
+class TutorialPresentation extends StatelessWidget {
+  TutorialPresentation(
       {@required this.focusAlignment,
       @required this.focusRadius,
       @required this.textAlignment,

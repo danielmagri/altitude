@@ -2,6 +2,7 @@ import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/feature/addHabit/addHabitPage.dart';
+import 'package:altitude/feature/advertisement/view/page/BuyBookPage.dart';
 import 'package:altitude/feature/allLevelsPage.dart';
 import 'package:altitude/feature/competition/competitionPage.dart';
 import 'package:altitude/feature/editHabit/view/page/EditHabitPage.dart';
@@ -33,6 +34,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => EditHabitPage(arguments));
       case 'settings':
         return MaterialPageRoute(builder: (_) => SettingsPage());
+      case 'buyBook':
+        return MaterialPageRoute(builder: (_) => BuyBookPage());
       default:
         return MaterialPageRoute(builder: (_) {
           return Scaffold(

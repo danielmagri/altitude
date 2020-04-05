@@ -1,4 +1,7 @@
 import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:vibration/vibration.dart';
+import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
     show
         Animation,
@@ -14,8 +17,6 @@ import 'package:flutter/material.dart'
         StatefulWidget,
         Widget,
         protected;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:vibration/vibration.dart';
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
@@ -24,12 +25,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   Future<dynamic> navigateSmooth(Widget page) {
-    return Navigator.of(context).push(PageRouteBuilder(
-        opaque: false,
-        transitionDuration: Duration(milliseconds: 300),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
-        pageBuilder: (_, __, ___) => page));
+    return Navigator.of(context).smooth(page);
   }
 
   @protected

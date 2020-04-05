@@ -1,8 +1,8 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
+import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
-import 'package:altitude/feature/dialogs/BaseDialog.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/feature/addHabit/widgets/colorWidget.dart';

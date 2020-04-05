@@ -1,6 +1,24 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart' show Colors;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart'
+    show
+        Animation,
+        AnimationController,
+        BuildContext,
+        Color,
+        Colors,
+        Column,
+        FontWeight,
+        IntTween,
+        Key,
+        SingleTickerProviderStateMixin,
+        SizedBox,
+        State,
+        StatefulWidget,
+        Text,
+        TextStyle,
+        Widget,
+        required;
 import 'package:intl/intl.dart';
 
 class Score extends StatefulWidget {
@@ -62,23 +80,13 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 40),
         AutoSizeText(
           '${formatNumber.format(_animation.value)}',
-          style: TextStyle(
-            fontSize: 70,
-            fontWeight: FontWeight.bold,
-            color: widget.color,
-            height: 0.2,
-          ),
+          style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold, color: widget.color, height: 0.2),
           maxLines: 1,
         ),
-        Text(
-          "QUILÔMETROS",
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
-        ),
+        const Text("QUILÔMETROS", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
       ],
     );
   }

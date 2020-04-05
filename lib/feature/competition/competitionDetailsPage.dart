@@ -1,6 +1,8 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
@@ -10,8 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/common/services/SharedPref.dart';
-import 'package:altitude/feature/dialogs/BaseDialog.dart';
-import 'package:altitude/feature/dialogs/TutorialDialog.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
 
