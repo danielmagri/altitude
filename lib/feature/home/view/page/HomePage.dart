@@ -44,7 +44,9 @@ class _HomePageState extends BaseState<HomePage> {
 
   @override
   void onPageBack(Object value) {
-    controller.fetchData();
+    controller.fetchData().then((_) {
+      hasLevelUp(controller.user.data.score);
+    });
     super.onPageBack(value);
   }
 
@@ -61,17 +63,20 @@ class _HomePageState extends BaseState<HomePage> {
 
   void setHabitDone(id) {
     showLoading(true);
-
     controller.completeHabit(id).then((newScore) async {
       showLoading(false);
       vibratePhone();
-      if (await controller.checkLevelUp(newScore)) {
-        navigateSmooth(NewLevelDialog(score: newScore));
-      }
+      hasLevelUp(newScore);
     }).catchError((error) {
       showLoading(false);
       showToast("Ocorreu um erro");
     });
+  }
+
+  void hasLevelUp(int score) async {
+    if (await controller.checkLevelUp(score)) {
+      navigateSmooth(NewLevelDialog(score: score));
+    }
   }
 
   void pageScroll(int index) {
@@ -81,6 +86,10 @@ class _HomePageState extends BaseState<HomePage> {
   void goAllLevels() {
     var arguments = AllLevelsPageArguments(controller.user.data.score);
     navigatePush('allLevels', arguments: arguments);
+  }
+
+  void goAddHabit() {
+    navigatePush('addHabit');
   }
 
   void goHabitDetails(int id, int color) {
@@ -227,6 +236,6 @@ class _HomePageState extends BaseState<HomePage> {
             }),
           ],
         ),
-        bottomNavigationBar: HomebottomNavigation(pageScroll: pageScroll));
+        bottomNavigationBar: HomebottomNavigation(pageScroll: pageScroll, goAddHabit: goAddHabit));
   }
 }
