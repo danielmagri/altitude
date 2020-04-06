@@ -35,7 +35,7 @@ class _FriendsPageState extends State<FriendsPage> {
   void getData() async {
     if (await UserControl().isLogged()) {
       Loading.showLoading(context);
-      pendingStatus = await UserControl().getPendingFriendsStatus();
+      pendingStatus = UserControl().getPendingFriendsStatus();
       UserControl().getFriends().then((friends) async {
         if (friends.length == 0) {
           isEmpty = true;
@@ -46,7 +46,7 @@ class _FriendsPageState extends State<FriendsPage> {
           personsOrdened.add(new Person(
               name: await UserControl().getName(),
               email: await UserControl().getEmail(),
-              score: await ScoreControl().getScore(),
+              score: ScoreControl().score,
               you: true));
           sortLists();
         }
@@ -60,7 +60,11 @@ class _FriendsPageState extends State<FriendsPage> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        Util.dialogNavigator(context, LoginPage(isCompetitionPage: false,)).then((res) {
+        Util.dialogNavigator(
+            context,
+            LoginPage(
+              isCompetitionPage: false,
+            )).then((res) {
           if (res != null) {
             getData();
           }
@@ -120,8 +124,7 @@ class _FriendsPageState extends State<FriendsPage> {
                               UserControl().removeFriend(persons[index].uid).then((_) {
                                 Loading.closeLoading(context);
                                 Navigator.of(context).pop();
-                                personsOrdened
-                                    .removeWhere((person) => person.uid == persons[index].uid);
+                                personsOrdened.removeWhere((person) => person.uid == persons[index].uid);
                                 persons.removeAt(index);
                                 setState(() {});
                               }).catchError((error) {
@@ -219,9 +222,7 @@ class _FriendsPageState extends State<FriendsPage> {
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          decoration: personsOrdened[index].you
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
+                          decoration: personsOrdened[index].you ? TextDecoration.underline : TextDecoration.none,
                         ),
                       ),
                     ),

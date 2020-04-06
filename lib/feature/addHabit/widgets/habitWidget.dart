@@ -1,3 +1,4 @@
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
@@ -7,7 +8,6 @@ import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 
 class HabitWidget extends StatefulWidget {
   HabitWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);
@@ -52,9 +52,9 @@ class _HabitWidgetState extends State<HabitWidget> {
     widget.controller.addListener(_onTextChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await SharedPref().getHabitTutorial()) {
+      if (!SharedPref.instance.habitTutorial) {
         await showTutorial();
-        await SharedPref().setHabitTutorial(true);
+        SharedPref.instance.habitTutorial = true;
       }
     });
 
@@ -78,8 +78,7 @@ class _HabitWidgetState extends State<HabitWidget> {
           hero: "helpHabit",
           texts: [
             TextSpan(
-              text:
-                  "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.",
+              text: "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.",
               style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
             TextSpan(
@@ -150,12 +149,7 @@ class _HabitWidgetState extends State<HabitWidget> {
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
                 ),
                 IconButton(
-                  icon: Hero(
-                    tag: "helpHabit",
-                    child: Icon(
-                      Icons.help_outline,
-                    ),
-                  ),
+                  icon: Hero(tag: "helpHabit", child: Icon(Icons.help_outline)),
                   onPressed: showTutorial,
                 ),
               ],

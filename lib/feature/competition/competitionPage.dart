@@ -1,3 +1,4 @@
+import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
@@ -12,7 +13,6 @@ import 'package:altitude/feature/competition/competitionDetailsPage.dart';
 import 'package:altitude/feature/competition/createCompetitionPage.dart';
 import 'package:altitude/feature/competition/pendingCompetitionsPage.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/common/Constants.dart';
 import 'package:altitude/utils/Util.dart';
 
 import '../loginPage.dart';
@@ -33,7 +33,11 @@ class _CompetitionPageState extends State<CompetitionPage> {
   void getData() async {
     if (!await UserControl().isLogged()) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
-        Util.dialogNavigator(context, LoginPage(isCompetitionPage: true,)).then((res) {
+        Util.dialogNavigator(
+            context,
+            LoginPage(
+              isCompetitionPage: true,
+            )).then((res) {
           if (res != null) {
             getData();
           }
@@ -77,28 +81,17 @@ class _CompetitionPageState extends State<CompetitionPage> {
                   Spacer(),
                   SizedBox(
                     width: 50,
-                    child: FutureBuilder(
-                      future: CompetitionsControl().getPendingCompetitionsStatus(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        bool pending = false;
-                        if (snapshot.hasData) {
-                          if (snapshot.data) {
-                            pending = snapshot.data;
-                          }
-                        }
-                        return IconButtonStatus(
-                          icon: Icon(Icons.group_add),
-                          status: pending,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) {
-                                      return PendingCompetitionsPage();
-                                    },
-                                    settings: RouteSettings(name: "Pending Competition Page")));
-                          },
-                        );
+                    child: IconButtonStatus(
+                      icon: Icon(Icons.group_add),
+                      status: CompetitionsControl().getPendingCompetitionsStatus(),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) {
+                                  return PendingCompetitionsPage();
+                                },
+                                settings: RouteSettings(name: "Pending Competition Page")));
                       },
                     ),
                   ),
@@ -230,8 +223,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                     shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
                     onPressed: () async {
                       Loading.showLoading(context);
-                      if ((await CompetitionsControl().listCompetitions()).length >=
-                          MAX_COMPETITIONS) {
+                      if ((await CompetitionsControl().listCompetitions()).length >= MAX_COMPETITIONS) {
                         showToast("Você atingiu o número máximo de competições.");
                         Loading.closeLoading(context);
                         return;
@@ -298,8 +290,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                                         Loading.showLoading(context);
 
                                         CompetitionsControl()
-                                            .removeCompetitor(competitions[index].id,
-                                                await UserControl().getUid())
+                                            .removeCompetitor(competitions[index].id, await UserControl().getUid())
                                             .then((res) {
                                           Loading.closeLoading(context);
                                           Navigator.of(context).pop();
@@ -328,15 +319,12 @@ class _CompetitionPageState extends State<CompetitionPage> {
                           },
                           onTap: () {
                             Loading.showLoading(context);
-                            CompetitionsControl()
-                                .getCompetitionDetail(competitions[index].id)
-                                .then((competition) {
+                            CompetitionsControl().getCompetitionDetail(competitions[index].id).then((competition) {
                               Loading.closeLoading(context);
 
                               if (competition != null) {
                                 if (competition.title != competitions[index].title) {
-                                  CompetitionsControl().updateCompetitionDB(
-                                      competitions[index].id, competition.title);
+                                  CompetitionsControl().updateCompetitionDB(competitions[index].id, competition.title);
                                 }
 
                                 Navigator.push(

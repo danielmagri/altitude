@@ -7,17 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:altitude/feature/tutorialPage.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:get_it/get_it.dart';
+import 'common/sharedPref/SharedPref.dart';
 
 void main() async {
   Getit.init();
-
-  bool showTutorial = false;
   WidgetsFlutterBinding.ensureInitialized();
-  if (await SharedPref().getName() == null) showTutorial = true;
 
-  runApp(MyApp(showTutorial: showTutorial));
+  await GetIt.I.isReady<SharedPref>();
+  runApp(MyApp(showTutorial: GetIt.I.get<SharedPref>().name == null));
 }
 
 class MyApp extends StatelessWidget {

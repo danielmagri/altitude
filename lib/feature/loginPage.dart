@@ -1,3 +1,4 @@
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/common/services/FireFunctions.dart';
 import 'package:altitude/utils/Color.dart';
 
@@ -29,14 +29,13 @@ class _LoginPageState extends State<LoginPage> {
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         Loading.showLoading(context);
-        AuthCredential credential =
-            FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
+        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
 
         try {
           AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
 
-          if (!await FireFunctions().newUser(
-              fireResult.user.displayName, fireResult.user.email, await SharedPref().getScore())) {
+          if (!await FireFunctions()
+              .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
             await UserControl().logout();
             Loading.closeLoading(context);
             showToast("Ocorreu um erro");
@@ -65,12 +64,12 @@ class _LoginPageState extends State<LoginPage> {
       Loading.showLoading(context);
       var result = await googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth = await result.authentication;
-      AuthCredential credential = GoogleAuthProvider.getCredential(
-          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      AuthCredential credential =
+          GoogleAuthProvider.getCredential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
       AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      if (!await FireFunctions().newUser(
-          fireResult.user.displayName, fireResult.user.email, await SharedPref().getScore())) {
+      if (!await FireFunctions()
+          .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
         await UserControl().logout();
         showToast("Ocorreu um erro");
         Loading.closeLoading(context);
@@ -132,10 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                         widget.isCompetitionPage ? competitionText : friendText,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: 20,
-                            height: 1.25,
-                            color: AppColors.colorAccent,
-                            fontWeight: FontWeight.bold),
+                            fontSize: 20, height: 1.25, color: AppColors.colorAccent, fontWeight: FontWeight.bold),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -150,8 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.maxFinite,
                       child: RaisedButton(
                         color: Color.fromARGB(255, 59, 89, 152),
-                        shape:
-                            new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         onPressed: loginWithFacebook,
                         child: Text(
@@ -165,8 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.maxFinite,
                       child: RaisedButton(
                         color: Color.fromARGB(255, 218, 67, 54),
-                        shape:
-                            new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
+                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(8)),
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         onPressed: loginWithGoogle,
                         child: Text(

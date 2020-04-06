@@ -1,9 +1,9 @@
-import 'package:altitude/common/Constants.dart' show MAX_HABITS;
+import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/common/services/SharedPref.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/controllers/LevelControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
@@ -65,9 +65,9 @@ abstract class _HomeLogicBase with Store {
 
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelControl.getLevel(newScore);
-    int oldLevel = await SharedPref().getLevel();
+    int oldLevel = SharedPref.instance.level;
 
-    if (newLevel != oldLevel) SharedPref().setLevel(newLevel);
+    if (newLevel != oldLevel) SharedPref.instance.level = newLevel;
 
     if (newLevel > oldLevel) {
       FireAnalytics().sendNextLevel(LevelControl.getLevelText(newScore));

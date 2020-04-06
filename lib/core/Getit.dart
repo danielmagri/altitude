@@ -1,3 +1,4 @@
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
@@ -9,6 +10,7 @@ class Getit {
   static init() {
     var getIt = GetIt.instance;
 
+    getIt.registerSingletonAsync<SharedPref>(() => SharedPref.initialize());
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());
     getIt.registerLazySingleton<HabitDetailsLogic>(() => HabitDetailsLogic());
     getIt.registerLazySingleton<EditCueLogic>(() => EditCueLogic());
