@@ -3,7 +3,7 @@ import 'package:altitude/common/services/Database.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/common/services/FireAuth.dart';
 import 'package:altitude/common/services/FireFunctions.dart';
-import 'package:altitude/common/services/SharedPref.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/feature/home/model/User.dart';
 
 class UserControl {
@@ -15,7 +15,7 @@ class UserControl {
     String name = await getName();
     String email = await FireAuth().getEmail();
     String imageUrl = await FireAuth().getPhotoUrl();
-    int score = await SharedPref().getScore();
+    int score = SharedPref.instance.score;
 
     return User(name, email, score, imageUrl);
   }
@@ -26,16 +26,17 @@ class UserControl {
 
   Future<String> getName() async {
     String name = await FireAuth().getName();
-    return name != "" ? name : SharedPref().getName();
+    return name != "" ? name : SharedPref.instance.name;
   }
 
   Future<bool> setName(String name) async {
     if (await FireAuth().isLogged()) {
-      await SharedPref().setName(name);
+      SharedPref.instance.name = name;
       await FireAuth().setName(name);
       return await FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(), name: name);
     } else {
-      return await SharedPref().setName(name);
+      SharedPref.instance.name = name;
+      return true;
     }
   }
 
@@ -55,12 +56,12 @@ class UserControl {
     return await FireFunctions().getPendingFriends();
   }
 
-  Future<bool> getPendingFriendsStatus() async {
-    return await SharedPref().getPendingFriends();
+  bool getPendingFriendsStatus() {
+    return SharedPref.instance.pendingFriends;
   }
 
-  Future<void> setPendingFriendsStatus(bool value) async {
-    return await SharedPref().setPendingFriends(value);
+  void setPendingFriendsStatus(bool value) {
+    SharedPref.instance.pendingFriends = value;
   }
 
   Future<List<Person>> searchEmail(String email) async {

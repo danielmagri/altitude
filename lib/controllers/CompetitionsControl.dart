@@ -2,17 +2,16 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/common/services/Database.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
 import 'package:altitude/common/services/FireFunctions.dart';
 import 'package:altitude/common/services/FireMenssaging.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 
 class CompetitionsControl {
-  static final CompetitionsControl _singleton =
-      new CompetitionsControl._internal();
+  static final CompetitionsControl _singleton = new CompetitionsControl._internal();
 
   factory CompetitionsControl() {
     return _singleton;
@@ -20,12 +19,11 @@ class CompetitionsControl {
 
   CompetitionsControl._internal();
 
-  Future<bool> createCompetition(String title, int habitId,
-      List<String> invitations, List<String> invitationsToken) async {
+  Future<bool> createCompetition(
+      String title, int habitId, List<String> invitations, List<String> invitationsToken) async {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
-      DateTime date = new DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime date = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
       Competitor competitor = Competitor(
           name: await UserControl().getName(),
@@ -33,28 +31,23 @@ class CompetitionsControl {
           color: habit.color,
           score: await HabitsControl().getHabitScore(habitId, date));
 
-      String id = await FireFunctions().createCompetition(
-          title,
-          date.millisecondsSinceEpoch,
-          competitor,
-          invitations,
-          invitationsToken);
+      String id = await FireFunctions()
+          .createCompetition(title, date.millisecondsSinceEpoch, competitor, invitations, invitationsToken);
 
       FireAnalytics().sendCreateCompetition(title, habit.habit, invitations.length);
 
-      return await DatabaseService()
-          .createCompetitition(id, title, habitId, date);
+      return await DatabaseService().createCompetitition(id, title, habitId, date);
     } catch (e) {
       throw e;
     }
   }
 
-  Future<bool> getPendingCompetitionsStatus() async {
-    return await SharedPref().getPendingCompetitions();
+  bool getPendingCompetitionsStatus() {
+    return SharedPref.instance.pendingCompetition;
   }
 
-  Future<void> setPendingCompetitionsStatus(bool value) async {
-    return await SharedPref().setPendingCompetitions(value);
+  void setPendingCompetitionsStatus(bool value) {
+    SharedPref.instance.pendingCompetition = value;
   }
 
   Future<List<String>> listCompetitionsIds(int habitId) async {
@@ -82,10 +75,8 @@ class CompetitionsControl {
     return await FireFunctions().getCompetitionDetail(id);
   }
 
-  Future<bool> addCompetitor(String id, String name, List<String> invitations,
-      List<String> invitationsToken) async {
-    return await FireFunctions()
-        .addCompetitor(id, name, invitations, invitationsToken);
+  Future<bool> addCompetitor(String id, String name, List<String> invitations, List<String> invitationsToken) async {
+    return await FireFunctions().addCompetitor(id, name, invitations, invitationsToken);
   }
 
   Future<bool> removeCompetitor(String id, String uidCompetitor) async {
@@ -102,20 +93,14 @@ class CompetitionsControl {
     return await FireFunctions().getPendingCompetitions();
   }
 
-  Future<void> acceptCompetitionRequest(
-      String id, String title, DateTime date, int habitId) async {
+  Future<void> acceptCompetitionRequest(String id, String title, DateTime date, int habitId) async {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
 
-      await FireFunctions().acceptCompetitionRequest(
-          id,
-          await UserControl().getName(),
-          await FireMessaging().getToken(),
-          habit.color,
-          await HabitsControl().getHabitScore(habitId, date));
+      await FireFunctions().acceptCompetitionRequest(id, await UserControl().getName(),
+          await FireMessaging().getToken(), habit.color, await HabitsControl().getHabitScore(habitId, date));
 
-      return await DatabaseService()
-          .createCompetitition(id, title, habitId, date);
+      return await DatabaseService().createCompetitition(id, title, habitId, date);
     } catch (e) {
       throw e;
     }

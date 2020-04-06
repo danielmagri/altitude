@@ -1,4 +1,4 @@
-import 'package:altitude/common/Constants.dart';
+import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';

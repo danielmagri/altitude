@@ -1,3 +1,4 @@
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
@@ -5,7 +6,6 @@ import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:package_info/package_info.dart';
 
@@ -42,9 +42,9 @@ class _TutorialPageState extends State<TutorialPage> {
       String result = ValidationHandler.nameTextValidate(_nameTextController.text);
 
       if (result == null) {
-        await SharedPref().setName(_nameTextController.text);
         int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
-        SharedPref().setVersion(version);
+        SharedPref.instance.name = _nameTextController.text;
+        SharedPref.instance.version = version;
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

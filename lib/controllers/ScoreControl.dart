@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/controllers/UserControl.dart';
 import 'package:altitude/common/services/Database.dart';
 import 'package:altitude/common/services/FireFunctions.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 enum ScoreType { ADD, SUBTRACT }
@@ -12,6 +12,8 @@ enum ScoreType { ADD, SUBTRACT }
 class ScoreControl {
   static const int DAY_DONE_POINT = 2;
   static const int CYCLE_DONE_POINT = 1;
+
+  int get score => SharedPref.instance.score;
 
   /// Calcula os pontos a ser adicionado ou retirado
   /// frequency: frequência do hábito
@@ -96,16 +98,12 @@ class ScoreControl {
     return true;
   }
 
-  Future<int> getScore() async {
-    return await SharedPref().getScore();
-  }
-
   Future<bool> setScore(int id, int score, DateTime date) async {
-    bool result1 = await SharedPref().setScore(score);
-    bool result2 = await DatabaseService().updateScore(id, score, date);
+    SharedPref.instance.addscore(score);
+    bool result = await DatabaseService().updateScore(id, score, date);
     if (await UserControl().isLogged()) {
-      FireFunctions().setScore(await SharedPref().getScore(), await DatabaseService().listHabitCompetitions(id, date));
+      FireFunctions().setScore(score, await DatabaseService().listHabitCompetitions(id, date));
     }
-    return result1 && result2 ? true : false;
+    return result ? true : false;
   }
 }

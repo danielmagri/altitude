@@ -1,7 +1,5 @@
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 
 abstract class Util {
   static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
@@ -25,9 +23,9 @@ abstract class Util {
         }));
   }
 
-  static Future<bool> checkUpdatedVersion() async {
-    return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
-  }
+  // static Future<bool> checkUpdatedVersion() async {
+  //   return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
+  // }
 
   /// Clareia a cor de acordo com o 'value' de 0 a 255
   static Color setWhitening(Color color, int value) {

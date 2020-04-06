@@ -139,39 +139,23 @@ class HomeDrawer extends StatelessWidget {
             ListTile(
               title: Text('Amigos', style: const TextStyle(fontSize: 16)),
               leading: Icon(Icons.people, color: Colors.black),
-              trailing: FutureBuilder(
-                future: UserControl().getPendingFriendsStatus(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data) {
-                      return Container(
-                        width: 10,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
-                      );
-                    }
-                  }
-                  return SizedBox();
-                },
-              ),
+              trailing: UserControl().getPendingFriendsStatus()
+                  ? Container(
+                      width: 10,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
+                    )
+                  : const SizedBox(),
               onTap: goFriends,
             ),
             ListTile(
               title: Text('Competição', style: const TextStyle(fontSize: 16)),
               leading: Image.asset("assets/ic_award.png", width: 25, color: Colors.black),
-              trailing: FutureBuilder(
-                future: CompetitionsControl().getPendingCompetitionsStatus(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data) {
-                      return Container(
-                        width: 10,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
-                      );
-                    }
-                  }
-                  return SizedBox();
-                },
-              ),
+              trailing: CompetitionsControl().getPendingCompetitionsStatus()
+                  ? Container(
+                      width: 10,
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
+                    )
+                  : const SizedBox(),
               onTap: goCompetition,
             ),
             ListTile(

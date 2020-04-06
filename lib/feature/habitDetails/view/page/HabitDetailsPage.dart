@@ -3,7 +3,7 @@ import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/common/services/SharedPref.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/view/BaseState.dart';
@@ -49,7 +49,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void showInitialTutorial() async {
-    if (!await SharedPref().getRocketTutorial()) {
+    if (!SharedPref.instance.rocketTutorial) {
       Timer.run(() async {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -85,7 +85,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
           ),
         );
       });
-      SharedPref().setRocketTutorial(true);
+      SharedPref.instance.rocketTutorial = true;
     }
   }
 
@@ -116,7 +116,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
       vibratePhone();
       if (donePageType == DonePageType.Calendar &&
           add &&
-          await SharedPref().getAlarmTutorial() < 2 &&
+          SharedPref.instance.alarmTutorial < 2 &&
           controller.reminders.data.isEmpty) {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
@@ -133,7 +133,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
             ],
           ),
         );
-        SharedPref().setAlarmTutorial();
+        SharedPref.instance.addAlarmTutorial();
       }
     }).catchError(handleError);
   }

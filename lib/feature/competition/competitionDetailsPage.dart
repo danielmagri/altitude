@@ -1,6 +1,7 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/common/services/SharedPref.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
 
@@ -36,9 +36,9 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     title = widget.data.title;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!await SharedPref().getCompetitionTutorial()) {
+      if (!SharedPref.instance.competitionTutorial) {
         await showTutorial();
-        await SharedPref().setCompetitionTutorial(true);
+        SharedPref.instance.competitionTutorial = true;
       }
     });
   }
@@ -56,19 +56,13 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
           hero: "",
           texts: [
             TextSpan(
-              text:
-                  "  E que comece a competição! Qual de vocês consegue ir mais longe?",
-              style:
-                  TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
+              text: "  E que comece a competição! Qual de vocês consegue ir mais longe?",
+              style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
             ),
             TextSpan(
               text:
                   "\n\n  Ao iniciar uma competição a quilometragem do hábito começa a ser contada a partir da semana do início da competição. Mas fique tranquilo o seu progresso pessoal não será perdido.",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w300,
-                  height: 1.2),
+              style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
             ),
           ],
         ));
@@ -112,9 +106,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
 
     if (result == null) {
       Loading.showLoading(context);
-      CompetitionsControl()
-          .updateCompetition(widget.data.id, _titleTextController.text)
-          .then((res) {
+      CompetitionsControl().updateCompetition(widget.data.id, _titleTextController.text).then((res) {
         Loading.closeLoading(context);
         Navigator.of(context).pop();
 
@@ -142,8 +134,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     if (friends == null) {
       showToast("Ocorreu um erro");
     } else {
-      List<String> competitors =
-          widget.data.competitors.map((competitor) => competitor.uid).toList();
+      List<String> competitors = widget.data.competitors.map((competitor) => competitor.uid).toList();
 
       showDialog(
           context: context,
@@ -173,10 +164,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
               onPressed: () async {
                 Loading.showLoading(context);
 
-                CompetitionsControl()
-                    .removeCompetitor(
-                        widget.data.id, await UserControl().getUid())
-                    .then((res) {
+                CompetitionsControl().removeCompetitor(widget.data.id, await UserControl().getUid()).then((res) {
                   Loading.closeLoading(context);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -209,7 +197,8 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
       builder: (BuildContext context) {
         return BaseDialog(
           title: "Sobre",
-          body: "Data de início: ${widget.data.initialDate.day.toString().padLeft(2, '0')}/${widget.data.initialDate.month.toString().padLeft(2, '0')}/${widget.data.initialDate.year}",
+          body:
+              "Data de início: ${widget.data.initialDate.day.toString().padLeft(2, '0')}/${widget.data.initialDate.month.toString().padLeft(2, '0')}/${widget.data.initialDate.year}",
           action: <Widget>[
             new FlatButton(
               child: new Text(
@@ -257,8 +246,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                 top: 70,
                 bottom: 0,
                 width: 25,
-                child: Image.asset("assets/smoke.png",
-                    repeat: ImageRepeat.repeatY),
+                child: Image.asset("assets/smoke.png", repeat: ImageRepeat.repeatY),
               ),
               Rocket(
                 size: Size(100, 100),
@@ -276,9 +264,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: competitor.you
-                            ? TextStyle(fontWeight: FontWeight.bold)
-                            : null),
+                        style: competitor.you ? TextStyle(fontWeight: FontWeight.bold) : null),
                   ),
                 ),
               ),
@@ -331,8 +317,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
                           break;
                       }
                     },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<int>>[
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
                       const PopupMenuItem<int>(
                         value: 1,
                         child: Text('Alterar título'),
@@ -409,8 +394,7 @@ class Metrics extends StatelessWidget {
     return Container(
       height: height,
       alignment: Alignment.topCenter,
-      decoration:
-          BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+      decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
       child: Text(value),
     );
   }
@@ -430,11 +414,7 @@ class Metrics extends StatelessWidget {
 }
 
 class AddCompetitorsDialog extends StatefulWidget {
-  AddCompetitorsDialog(
-      {Key key,
-      @required this.id,
-      @required this.friends,
-      @required this.competitors})
+  AddCompetitorsDialog({Key key, @required this.id, @required this.friends, @required this.competitors})
       : super(key: key);
 
   final String id;
@@ -450,16 +430,13 @@ class _AddCompetitorsDialogState extends State<AddCompetitorsDialog> {
 
   void _addCompetitors() async {
     if (selectedFriends.isNotEmpty) {
-      List<String> invitations =
-          selectedFriends.map((person) => person.uid).toList();
-      List<String> invitationsToken =
-          selectedFriends.map((person) => person.fcmToken).toList();
+      List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+      List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
 
       Loading.showLoading(context);
 
       CompetitionsControl()
-          .addCompetitor(widget.id, await UserControl().getName(), invitations,
-              invitationsToken)
+          .addCompetitor(widget.id, await UserControl().getName(), invitations, invitationsToken)
           .then((res) {
         Loading.closeLoading(context);
         Navigator.of(context).pop();
@@ -500,9 +477,7 @@ class _AddCompetitorsDialogState extends State<AddCompetitorsDialog> {
                     ? null
                     : (selected) {
                         setState(() {
-                          selected
-                              ? selectedFriends.add(friend)
-                              : selectedFriends.remove(friend);
+                          selected ? selectedFriends.add(friend) : selectedFriends.remove(friend);
                         });
                       },
               );
