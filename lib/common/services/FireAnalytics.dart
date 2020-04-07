@@ -183,4 +183,14 @@ class FireAnalytics {
       print(e);
     }
   }
+
+  void sendBuyButtonClicked() {
+    try {
+      analytics.logEvent(
+        name: 'buy_button_clicked',
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 }

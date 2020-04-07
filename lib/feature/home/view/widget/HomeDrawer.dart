@@ -10,7 +10,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
-        AsyncSnapshot,
         BorderRadius,
         BoxDecoration,
         BoxShape,
@@ -23,7 +22,6 @@ import 'package:flutter/material.dart'
         Drawer,
         EdgeInsets,
         FontWeight,
-        FutureBuilder,
         Icon,
         Icons,
         Image,

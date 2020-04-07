@@ -44,27 +44,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/first.png
-    - assets/second.png
-    - assets/third.png
-    - assets/ic_award.png
-    - assets/smoke.png
-    - assets/cloud1.png
-    - assets/cloud2.png
-    - assets/finger.png
-    - assets/createHabit.png
-    - assets/completeHabit.png
-    - assets/score.png
-    - assets/level/gold1.png
-    - assets/level/gold2.png
-    - assets/level/gold3.png
-    - assets/level/silver1.png
-    - assets/level/silver2.png
-    - assets/level/silver3.png
-    - assets/level/bronze0.png
-    - assets/level/bronze1.png
-    - assets/level/bronze2.png
-    - assets/level/bronze3.png
+    - assets/
+    - assets/level/
 
   fonts:
       - family: Montserrat
