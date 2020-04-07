@@ -39,8 +39,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  void navigatePop({T result}) {
-    Navigator.pop(context, result);
+  void navigatePop<R>({R result}) {
+    Navigator.pop<R>(context, result);
   }
 
   @protected
