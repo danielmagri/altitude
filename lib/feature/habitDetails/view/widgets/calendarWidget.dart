@@ -34,7 +34,7 @@ class CalendarWidget extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
         ),
         TextSpan(
-          text: "\n\nPressione no dia desejado para marcar como feito ou desmarcar.",
+          text: "\n\nMantenha pressionado no dia desejado para marcar como feito ou desmarcar.",
           style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
         ),
       ],

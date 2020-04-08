@@ -80,7 +80,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
               TextSpan(
                   text: "No calendário você tem o controle de todos os dias feitos!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              TextSpan(text: "\n\nAo ficar pressionando um dia você consegue marcar como feito ou desmarcar."),
+              TextSpan(text: "\n\nAo manter pressionado um dia você consegue marcar como feito ou desmarcar."),
             ],
           ),
         );
