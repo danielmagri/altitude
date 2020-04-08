@@ -58,7 +58,7 @@ class _BuyBookPageState extends BaseState<BuyBookPage> {
                           "?\n\n  Nós, do Altitude, te trazemos a oportunidade de comprar o livro com ótimo preço e ainda ajudar a nossa plataforma a ",
                     ),
                     TextSpan(text: "mudar a vida", style: const TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: "? de muitas outras pessoas."),
+                    TextSpan(text: " de muitas outras pessoas."),
                   ],
                 ),
               ),

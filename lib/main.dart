@@ -29,6 +29,11 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     FireMessaging().configure();
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Color.fromARGB(100, 250, 250, 250),
+        systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+        systemNavigationBarIconBrightness: Brightness.dark));
+
     return MaterialApp(
       theme: ThemeData(
         fontFamily: 'Montserrat',

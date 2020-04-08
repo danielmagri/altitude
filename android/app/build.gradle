@@ -13,12 +13,12 @@ if (flutterRoot == null) {
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
-    flutterVersionCode = '3026'
+    flutterVersionCode = '3027'
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '2.1.6'
+    flutterVersionName = '2.1.6+1'
 }
 
 apply plugin: 'com.android.application'
@@ -64,7 +64,6 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled true
             useProguard true
-
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

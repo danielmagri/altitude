@@ -14,7 +14,6 @@ import 'package:altitude/feature/home/view/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/LevelControl.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -35,11 +34,6 @@ class _HomePageState extends BaseState<HomePage> {
     super.initState();
 
     controller.fetchData();
-
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Color.fromARGB(100, 250, 250, 250),
-        systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-        systemNavigationBarIconBrightness: Brightness.dark));
   }
 
   @override
