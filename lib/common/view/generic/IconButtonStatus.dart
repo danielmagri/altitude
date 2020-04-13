@@ -1,7 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        Alignment,
+        BoxDecoration,
+        BoxShape,
+        Color,
+        Colors,
+        Container,
+        Icon,
+        IconButton,
+        SizedBox,
+        Stack,
+        StatelessWidget,
+        Widget,
+        required;
 
 class IconButtonStatus extends StatelessWidget {
-  IconButtonStatus({this.status, this.icon, this.onPressed, this.color});
+  IconButtonStatus({@required this.status, @required this.icon, @required this.onPressed, this.color});
 
   final Icon icon;
   final Function onPressed;
@@ -9,23 +23,25 @@ class IconButtonStatus extends StatelessWidget {
   final bool status;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return Stack(
-      alignment: Alignment(0.35, 0.4),
+      alignment: const Alignment(0.5, -0.4),
       children: <Widget>[
         IconButton(icon: icon, onPressed: onPressed),
         status
             ? Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: color == null ? Colors.red : color),
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Colors.white),
               )
-            : SizedBox(
-                height: 10,
+            : const SizedBox(height: 10, width: 10),
+        status
+            ? Container(
                 width: 10,
-              ),
+                height: 10,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Colors.orange),
+              )
+            : const SizedBox(height: 10, width: 10),
       ],
     );
   }

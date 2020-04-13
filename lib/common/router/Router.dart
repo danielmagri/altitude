@@ -6,7 +6,8 @@ import 'package:altitude/feature/advertisement/view/page/BuyBookPage.dart';
 import 'package:altitude/feature/allLevelsPage.dart';
 import 'package:altitude/feature/competition/competitionPage.dart';
 import 'package:altitude/feature/editHabit/view/page/EditHabitPage.dart';
-import 'package:altitude/feature/friends/friendsPage.dart';
+import 'package:altitude/feature/friends/view/page/FriendsPage.dart';
+import 'package:altitude/feature/friends/view/page/PendingFriendsPage.dart';
 import 'package:altitude/feature/habitDetails/view/page/HabitDetailsPage.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:altitude/feature/settingsPage.dart';
@@ -24,6 +25,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => AllLevelsPage(arguments));
       case 'friends':
         return MaterialPageRoute(builder: (_) => FriendsPage());
+      case 'pendingFriends':
+        return MaterialPageRoute(builder: (_) => PendingFriendsPage());
       case 'competition':
         return MaterialPageRoute(builder: (_) => CompetitionPage());
       case 'habitDetails':

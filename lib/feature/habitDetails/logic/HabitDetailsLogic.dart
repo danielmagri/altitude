@@ -34,7 +34,7 @@ abstract class _HabitDetailsLogicBase with Store {
   @observable
   BottomSheetType panelType = BottomSheetType.NONE;
 
-  void fetchData(int habitId, int color) async {
+  Future<void> fetchData(int habitId, int color) async {
     _id = habitId;
     _color = color;
 
@@ -60,6 +60,7 @@ abstract class _HabitDetailsLogicBase with Store {
       frequency.setError(error);
       competitions.setError(error);
       reminders.setError(error);
+      throw error;
     }
   }
 

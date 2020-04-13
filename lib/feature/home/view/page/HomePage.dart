@@ -123,11 +123,7 @@ class _HomePageState extends BaseState<HomePage> {
                   padding: const EdgeInsets.only(top: 20, left: 12, right: 8),
                   child: Row(
                     children: <Widget>[
-                      IconButton(
-                        tooltip: "Menu",
-                        icon: Icon(Icons.menu),
-                        onPressed: showDrawer,
-                      ),
+                      IconButton(tooltip: "Menu", icon: Icon(Icons.menu), onPressed: showDrawer),
                       Spacer(),
                       IconButton(
                           icon: RainbowAnimated(child: (color) => Icon(Icons.new_releases, color: color)),

@@ -5,6 +5,7 @@ import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
+import 'package:altitude/feature/login/view/page/loginPage.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/controllers/CompetitionsControl.dart';
 import 'package:altitude/controllers/HabitsControl.dart';
@@ -14,8 +15,6 @@ import 'package:altitude/feature/competition/createCompetitionPage.dart';
 import 'package:altitude/feature/competition/pendingCompetitionsPage.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
-
-import '../loginPage.dart';
 
 class CompetitionPage extends StatefulWidget {
   @override

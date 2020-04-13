@@ -24,8 +24,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   void onPageBack(Object value) {}
 
   @protected
-  Future<dynamic> navigateSmooth(Widget page) {
-    return Navigator.of(context).smooth(page);
+  Future<R> navigateSmooth<R>(Widget page) {
+    return Navigator.of(context).smooth<R>(page);
   }
 
   @protected
