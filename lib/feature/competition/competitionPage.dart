@@ -5,7 +5,7 @@ import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/feature/login/view/page/loginPage.dart';
+import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
@@ -34,7 +34,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         Util.dialogNavigator(
             context,
-            LoginPage(
+            LoginDialog(
               isCompetitionPage: true,
             )).then((res) {
           if (res != null) {

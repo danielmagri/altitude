@@ -7,6 +7,7 @@ import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:get_it/get_it.dart';
 
 class Getit {
@@ -19,6 +20,7 @@ class Getit {
     getIt.registerLazySingleton<EditCueLogic>(() => EditCueLogic());
     getIt.registerLazySingleton<EditAlarmLogic>(() => EditAlarmLogic());
     getIt.registerLazySingleton<EditHabitLogic>(() => EditHabitLogic());
+    getIt.registerLazySingleton<LoginLogic>(() => LoginLogic());
     getIt.registerLazySingleton<FriendsLogic>(() => FriendsLogic());
     getIt.registerLazySingleton<PendingFriendsLogic>(() => PendingFriendsLogic());
     getIt.registerLazySingleton<AddFriendLogic>(() => AddFriendLogic());

@@ -32,13 +32,18 @@ abstract class _FriendsLogicBase with Store {
 
       friends.setData(_friends);
       ranking.setData(_ranking);
-      pendingStatus = UserControl().getPendingFriendsStatus();
+      checkPendingFriendsStatus();
     } catch (error) {
       friends.setError(error);
       ranking.setError(error);
 
       throw error;
     }
+  }
+
+  @action
+  void checkPendingFriendsStatus() {
+    pendingStatus = UserControl().getPendingFriendsStatus();
   }
 
   void setEmptyData() {
