@@ -7,6 +7,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        setTheme(R.style.AppTheme)
         GeneratedPluginRegistrant.registerWith(flutterEngine);
     }
 }

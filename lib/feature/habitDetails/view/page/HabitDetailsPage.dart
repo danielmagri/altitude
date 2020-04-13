@@ -43,7 +43,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void initState() {
     super.initState();
 
-    controller.fetchData(widget.arguments.id, widget.arguments.color);
+    controller.fetchData(widget.arguments.id, widget.arguments.color).catchError(handleError);
 
     showInitialTutorial();
   }

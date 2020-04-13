@@ -78,19 +78,13 @@ class HeaderWidget extends StatelessWidget {
                           width: double.maxFinite,
                           height: 30,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                         ),
                         Container(
                           width: 120,
                           height: 80,
                           margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: new BorderRadius.circular(15),
-                          ),
+                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
                         )
                       ],
                     ),
