@@ -6,7 +6,7 @@ import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:altitude/feature/friends/view/dialog/AddFriendDialog.dart';
 import 'package:altitude/feature/friends/view/widget/FriendsList.dart';
 import 'package:altitude/feature/friends/view/widget/RankingList.dart';
-import 'package:altitude/feature/login/view/page/loginPage.dart';
+import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
@@ -33,7 +33,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
       getData();
     } else {
       Timer.run(() async {
-        navigateSmooth(LoginPage(isCompetitionPage: false)).then((value) {
+        navigateSmooth(LoginDialog(isCompetitionPage: false)).then((value) {
           if (value != null) getData();
         });
         controller.setEmptyData();
@@ -56,6 +56,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
     if (value is List<Person>) {
       controller.addPersons(value);
     }
+    controller.checkPendingFriendsStatus();
     super.onPageBack(value);
   }
 
