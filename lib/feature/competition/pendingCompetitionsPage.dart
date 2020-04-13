@@ -6,9 +6,9 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/CompetitionsControl.dart';
-import 'package:altitude/controllers/HabitsControl.dart';
-import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/common/controllers/CompetitionsControl.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/utils/Color.dart';
 
 class PendingCompetitionsPage extends StatefulWidget {

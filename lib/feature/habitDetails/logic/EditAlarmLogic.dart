@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';

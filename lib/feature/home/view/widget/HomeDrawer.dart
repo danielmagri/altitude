@@ -1,7 +1,7 @@
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/controllers/CompetitionsControl.dart';
-import 'package:altitude/controllers/LevelControl.dart';
-import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/common/controllers/CompetitionsControl.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';

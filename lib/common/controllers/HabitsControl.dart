@@ -4,11 +4,11 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/controllers/ScoreControl.dart';
-import 'package:altitude/controllers/NotificationControl.dart';
-import 'package:altitude/common/services/Database.dart';
-import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/common/services/FireFunctions.dart';
+import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/controllers/NotificationControl.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
+import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 

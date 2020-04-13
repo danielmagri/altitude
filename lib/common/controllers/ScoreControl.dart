@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/common/services/Database.dart';
-import 'package:altitude/common/services/FireFunctions.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 enum ScoreType { ADD, SUBTRACT }

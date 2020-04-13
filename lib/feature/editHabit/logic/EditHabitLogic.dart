@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Color.dart';

@@ -13,7 +13,7 @@ import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
 import 'package:altitude/feature/home/view/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/LevelControl.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 

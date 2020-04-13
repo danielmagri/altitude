@@ -1,6 +1,6 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/LevelControl.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
 
 class AllLevelsPage extends StatefulWidget {
   AllLevelsPage(this.arguments);
