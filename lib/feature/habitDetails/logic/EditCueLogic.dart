@@ -1,4 +1,4 @@
-import 'package:altitude/controllers/HabitsControl.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:flutter/material.dart' show Color;

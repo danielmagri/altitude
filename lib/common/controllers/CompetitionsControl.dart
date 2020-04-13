@@ -3,12 +3,12 @@ import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/controllers/HabitsControl.dart';
-import 'package:altitude/controllers/UserControl.dart';
-import 'package:altitude/common/services/Database.dart';
-import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/common/services/FireFunctions.dart';
-import 'package:altitude/common/services/FireMenssaging.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
+import 'package:altitude/core/services/FireFunctions.dart';
+import 'package:altitude/core/services/FireMenssaging.dart';
 
 class CompetitionsControl {
   static final CompetitionsControl _singleton = new CompetitionsControl._internal();

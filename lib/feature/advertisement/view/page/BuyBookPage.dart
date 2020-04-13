@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/common/services/FireAnalytics.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';

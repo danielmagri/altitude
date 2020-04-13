@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/controllers/ScoreControl.dart';
-import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:mobx/mobx.dart';
 part 'FriendsLogic.g.dart';

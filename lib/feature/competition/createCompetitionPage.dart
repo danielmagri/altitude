@@ -7,7 +7,7 @@ import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/CompetitionsControl.dart';
+import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/feature/addHabit/addHabitPage.dart';
 import 'package:altitude/utils/Color.dart';
 

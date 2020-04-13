@@ -10,8 +10,8 @@ import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/CompetitionsControl.dart';
-import 'package:altitude/controllers/UserControl.dart';
+import 'package:altitude/common/controllers/CompetitionsControl.dart';
+import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
 

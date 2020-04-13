@@ -1,8 +1,8 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/services/Database.dart';
-import 'package:altitude/common/services/FireAnalytics.dart';
-import 'package:altitude/common/services/FireAuth.dart';
-import 'package:altitude/common/services/FireFunctions.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
+import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/feature/home/model/User.dart';
 

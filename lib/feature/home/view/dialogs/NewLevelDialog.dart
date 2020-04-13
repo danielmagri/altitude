@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:altitude/controllers/LevelControl.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/utils/Color.dart';
 
 class NewLevelDialog extends StatelessWidget {
