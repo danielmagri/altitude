@@ -16,7 +16,6 @@ abstract class _FriendsLogicBase with Store {
 
   Future<bool> get isLogged async => await UserControl().isLogged();
 
-  @action
   Future<void> fetchData() async {
     try {
       var _friends = (await UserControl().getFriends()).asObservable();

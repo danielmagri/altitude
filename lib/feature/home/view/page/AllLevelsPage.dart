@@ -1,4 +1,5 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
+import 'package:altitude/core/view/BaseState.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 
@@ -11,9 +12,9 @@ class AllLevelsPage extends StatefulWidget {
   _AllLevelsPageState createState() => _AllLevelsPageState();
 }
 
-class _AllLevelsPageState extends State<AllLevelsPage> {
+class _AllLevelsPageState extends BaseState<AllLevelsPage> {
   List<Widget> _setLevelsWidget() {
-    List<Widget> widgets = new List();
+    List<Widget> widgets = List();
     widgets.add(
       Container(
         margin: EdgeInsets.only(top: 40, bottom: 16),

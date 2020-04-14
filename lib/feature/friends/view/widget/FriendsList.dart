@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:flutter/material.dart'
@@ -44,7 +44,7 @@ class FriendsList extends StatelessWidget {
   final Function(String) removeFriend;
 
   void friendLongClick(BuildContext context, Person person) {
-    Navigator.of(context).smooth(BaseDialog(
+    Navigator.of(context).smooth(BaseTextDialog(
       title: "Desfazer amizade",
       body: "Tem certeza que deseja desfazer amizade com ${person.name}?",
       action: <Widget>[

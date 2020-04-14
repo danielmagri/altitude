@@ -23,11 +23,13 @@ import 'package:flutter/material.dart'
         Widget,
         required;
 
-class BaseDialog extends StatelessWidget {
-  BaseDialog({Key key, @required this.title, @required this.body, @required this.action}) : super(key: key);
+class BaseTextDialog extends StatelessWidget {
+  BaseTextDialog({Key key, @required this.title, @required this.body, this.subBody, @required this.action})
+      : super(key: key);
 
   final String title;
-  final Widget body;
+  final String body;
+  final String subBody;
   final List<Widget> action;
 
   Widget build(_) {
@@ -53,7 +55,19 @@ class BaseDialog extends StatelessWidget {
                 style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
-              body,
+              Text(
+                body,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18, height: 1.1),
+              ),
+              const SizedBox(height: 4),
+              subBody != null
+                  ? Text(
+                      subBody,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300, height: 1.1),
+                    )
+                  : SizedBox(),
               const SizedBox(height: 18),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,

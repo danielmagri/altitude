@@ -2,7 +2,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
@@ -152,7 +152,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return BaseDialog(
+        return BaseTextDialog(
           title: "Largar competição",
           body: "Tem certeza que deseja sair da competição?",
           action: <Widget>[
@@ -195,7 +195,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return BaseDialog(
+        return BaseTextDialog(
           title: "Sobre",
           body:
               "Data de início: ${widget.data.initialDate.day.toString().padLeft(2, '0')}/${widget.data.initialDate.month.toString().padLeft(2, '0')}/${widget.data.initialDate.year}",
