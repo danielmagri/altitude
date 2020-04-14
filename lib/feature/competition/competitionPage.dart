@@ -1,6 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/model/CompetitionPresentation.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
@@ -276,7 +276,7 @@ class _CompetitionPageState extends State<CompetitionPage> {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return BaseDialog(
+                                return BaseTextDialog(
                                   title: "Largar competição",
                                   body: "Tem certeza que deseja sair da competição?",
                                   action: <Widget>[

@@ -1,5 +1,5 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
@@ -65,7 +65,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return BaseDialog(
+            return BaseTextDialog(
               title: "Opss",
               body: "É preciso sair das competições que esse hábito faz parte para poder deletá-lo.",
               action: <Widget>[
@@ -80,7 +80,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return BaseDialog(
+            return BaseTextDialog(
               title: "Deletar",
               body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
               subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
