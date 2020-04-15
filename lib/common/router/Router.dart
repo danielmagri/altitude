@@ -1,10 +1,15 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
+import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
+import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/feature/addHabit/addHabitPage.dart';
 import 'package:altitude/feature/advertisement/view/page/BuyBookPage.dart';
+import 'package:altitude/feature/competition/view/page/CreateCompetitionPage.dart';
+import 'package:altitude/feature/competition/view/page/competitionDetailsPage.dart';
+import 'package:altitude/feature/competition/view/page/pendingCompetitionPage.dart';
 import 'package:altitude/feature/home/view/page/AllLevelsPage.dart';
-import 'package:altitude/feature/competition/competitionPage.dart';
+import 'package:altitude/feature/competition/view/page/competitionPage.dart';
 import 'package:altitude/feature/editHabit/view/page/EditHabitPage.dart';
 import 'package:altitude/feature/friends/view/page/FriendsPage.dart';
 import 'package:altitude/feature/friends/view/page/PendingFriendsPage.dart';
@@ -30,6 +35,14 @@ class Router {
         return MaterialPageRoute(builder: (_) => PendingFriendsPage());
       case 'competition':
         return MaterialPageRoute(builder: (_) => CompetitionPage());
+      case 'createCompetition':
+        CreateCompetitionPageArguments arguments = settings.arguments as CreateCompetitionPageArguments;
+        return MaterialPageRoute(builder: (_) => CreateCompetitionPage(arguments));
+      case 'competitionDetails':
+        CompetitionDetailsPageArguments arguments = settings.arguments as CompetitionDetailsPageArguments;
+        return MaterialPageRoute(builder: (_) => CompetitionDetailsPage(arguments));
+      case 'pendingCompetition':
+        return MaterialPageRoute(builder: (_) => PendingCompetitionPage());
       case 'habitDetails':
         HabitDetailsPageArguments arguments = settings.arguments as HabitDetailsPageArguments;
         return MaterialPageRoute(builder: (_) => HabitDetailsPage(arguments));

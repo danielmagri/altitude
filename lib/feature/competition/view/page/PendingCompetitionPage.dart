@@ -11,13 +11,13 @@ import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/utils/Color.dart';
 
-class PendingCompetitionsPage extends StatefulWidget {
+class PendingCompetitionPage extends StatefulWidget {
   @override
-  _PendingCompetitionsPageState createState() =>
-      _PendingCompetitionsPageState();
+  _PendingCompetitionPageState createState() =>
+      _PendingCompetitionPageState();
 }
 
-class _PendingCompetitionsPageState extends State<PendingCompetitionsPage> {
+class _PendingCompetitionPageState extends State<PendingCompetitionPage> {
   bool isEmpty = false;
   List<Competition> pendingCompetitions = [];
 

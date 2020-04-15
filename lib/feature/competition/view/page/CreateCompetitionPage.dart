@@ -1,10 +1,12 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/core/view/BaseState.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
@@ -12,16 +14,15 @@ import 'package:altitude/feature/addHabit/addHabitPage.dart';
 import 'package:altitude/utils/Color.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
-  CreateCompetitionPage({Key key, @required this.habits, @required this.friends}) : super(key: key);
+  CreateCompetitionPage(this.arguments);
 
-  final List<Habit> habits;
-  final List<Person> friends;
+  final CreateCompetitionPageArguments arguments;
 
   @override
   _CreateCompetitionPageState createState() => _CreateCompetitionPageState();
 }
 
-class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
+class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
   Habit selectedHabit;
   List<Habit> habits;
   List<Person> selectedFriends = [];
@@ -30,7 +31,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
 
   @override
   void initState() {
-    habits = widget.habits;
+    habits = widget.arguments.habits;
     super.initState();
   }
 
@@ -229,7 +230,7 @@ class _CreateCompetitionPageState extends State<CreateCompetitionPage> {
                 runSpacing: 6,
                 spacing: 10,
                 alignment: WrapAlignment.center,
-                children: widget.friends.map((friend) {
+                children: widget.arguments.friends.map((friend) {
                   return ChoiceChip(
                     label: Text(
                       friend.name,
