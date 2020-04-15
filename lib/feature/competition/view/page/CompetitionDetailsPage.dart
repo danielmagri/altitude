@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
@@ -16,9 +16,9 @@ import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Util.dart';
 
 class CompetitionDetailsPage extends StatefulWidget {
-  CompetitionDetailsPage({Key key, @required this.data}) : super(key: key);
+  CompetitionDetailsPage(this.arguments);
 
-  final Competition data;
+  final CompetitionDetailsPageArguments arguments;
 
   @override
   _CompetitionDetailsPageState createState() => _CompetitionDetailsPageState();
@@ -33,7 +33,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
   initState() {
     super.initState();
 
-    title = widget.data.title;
+    title = widget.arguments.competition.title;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!SharedPref.instance.competitionTutorial) {
@@ -106,7 +106,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
 
     if (result == null) {
       Loading.showLoading(context);
-      CompetitionsControl().updateCompetition(widget.data.id, _titleTextController.text).then((res) {
+      CompetitionsControl().updateCompetition(widget.arguments.competition.id, _titleTextController.text).then((res) {
         Loading.closeLoading(context);
         Navigator.of(context).pop();
 
@@ -134,13 +134,13 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
     if (friends == null) {
       showToast("Ocorreu um erro");
     } else {
-      List<String> competitors = widget.data.competitors.map((competitor) => competitor.uid).toList();
+      List<String> competitors = widget.arguments.competition.competitors.map((competitor) => competitor.uid).toList();
 
       showDialog(
           context: context,
           builder: (context) {
             return AddCompetitorsDialog(
-              id: widget.data.id,
+              id: widget.arguments.competition.id,
               friends: friends,
               competitors: competitors,
             );
@@ -164,7 +164,9 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
               onPressed: () async {
                 Loading.showLoading(context);
 
-                CompetitionsControl().removeCompetitor(widget.data.id, await UserControl().getUid()).then((res) {
+                CompetitionsControl()
+                    .removeCompetitor(widget.arguments.competition.id, await UserControl().getUid())
+                    .then((res) {
                   Loading.closeLoading(context);
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -198,7 +200,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
         return BaseTextDialog(
           title: "Sobre",
           body:
-              "Data de início: ${widget.data.initialDate.day.toString().padLeft(2, '0')}/${widget.data.initialDate.month.toString().padLeft(2, '0')}/${widget.data.initialDate.year}",
+              "Data de início: ${widget.arguments.competition.initialDate.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.year}",
           action: <Widget>[
             new FlatButton(
               child: new Text(
@@ -218,8 +220,8 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    if (widget.data.competitors != null && widget.data.competitors.isNotEmpty) {
-      height = (widget.data.competitors[0].score * 10.0) + 200;
+    if (widget.arguments.competition.competitors != null && widget.arguments.competition.competitors.isNotEmpty) {
+      height = (widget.arguments.competition.competitors[0].score * 10.0) + 200;
     }
 
     if (height < MediaQuery.of(context).size.height) {
@@ -234,7 +236,7 @@ class _CompetitionDetailsPageState extends State<CompetitionDetailsPage> {
 
     widgets.add(Metrics(height: getMaxHeight(context)));
 
-    for (Competitor competitor in widget.data.competitors) {
+    for (Competitor competitor in widget.arguments.competition.competitors) {
       widgets.add(Expanded(
         child: SizedBox(
           height: (competitor.score * 10.0) + 60,
