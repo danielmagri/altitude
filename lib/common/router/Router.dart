@@ -25,9 +25,10 @@ class Router {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePage());
       case 'addHabit':
-        return MaterialPageRoute(builder: (_) => AddHabitPage());
+        var arguments = settings.arguments as bool;
+        return MaterialPageRoute(builder: (_) => AddHabitPage(backTo: arguments ?? false));
       case 'allLevels':
-        AllLevelsPageArguments arguments = settings.arguments as AllLevelsPageArguments;
+        var arguments = settings.arguments as AllLevelsPageArguments;
         return MaterialPageRoute(builder: (_) => AllLevelsPage(arguments));
       case 'friends':
         return MaterialPageRoute(builder: (_) => FriendsPage());
@@ -36,18 +37,18 @@ class Router {
       case 'competition':
         return MaterialPageRoute(builder: (_) => CompetitionPage());
       case 'createCompetition':
-        CreateCompetitionPageArguments arguments = settings.arguments as CreateCompetitionPageArguments;
+        var arguments = settings.arguments as CreateCompetitionPageArguments;
         return MaterialPageRoute(builder: (_) => CreateCompetitionPage(arguments));
       case 'competitionDetails':
-        CompetitionDetailsPageArguments arguments = settings.arguments as CompetitionDetailsPageArguments;
+        var arguments = settings.arguments as CompetitionDetailsPageArguments;
         return MaterialPageRoute(builder: (_) => CompetitionDetailsPage(arguments));
       case 'pendingCompetition':
         return MaterialPageRoute(builder: (_) => PendingCompetitionPage());
       case 'habitDetails':
-        HabitDetailsPageArguments arguments = settings.arguments as HabitDetailsPageArguments;
+        var arguments = settings.arguments as HabitDetailsPageArguments;
         return MaterialPageRoute(builder: (_) => HabitDetailsPage(arguments));
       case 'editHabit':
-        EditHabitPageArguments arguments = settings.arguments as EditHabitPageArguments;
+        var arguments = settings.arguments as EditHabitPageArguments;
         return MaterialPageRoute(builder: (_) => EditHabitPage(arguments));
       case 'settings':
         return MaterialPageRoute(builder: (_) => SettingsPage());
