@@ -1,7 +1,6 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +16,6 @@ class _PendingFriendsPageState extends BaseState<PendingFriendsPage> {
   @override
   void initState() {
     super.initState();
-
     controller.fetchData().catchError(handleError);
   }
 
@@ -31,32 +29,14 @@ class _PendingFriendsPageState extends BaseState<PendingFriendsPage> {
     showLoading(true);
     controller.acceptRequest(person).then((_) {
       showLoading(false);
-    }).catchError((error) {
-      showLoading(false);
-      if (error is CloudFunctionsException) {
-        if (error.details == true) {
-          showToast(error.message);
-          return;
-        }
-      }
-      showToast("Ocorreu um erro");
-    });
+    }).catchError(handleError);
   }
 
   void declineRequest(Person person) {
     showLoading(true);
     controller.declineRequest(person).then((_) {
       showLoading(false);
-    }).catchError((error) {
-      showLoading(false);
-      if (error is CloudFunctionsException) {
-        if (error.details == true) {
-          showToast(error.message);
-          return;
-        }
-      }
-      showToast("Ocorreu um erro");
-    });
+    }).catchError(handleError);
   }
 
   Widget actionButton(IconData icon, Color color, Function action) {
@@ -163,7 +143,7 @@ class _PendingFriendsPageState extends BaseState<PendingFriendsPage> {
                     },
                   );
               }, (error) {
-                return SizedBox();
+                return const SizedBox();
               });
             }),
           ],

@@ -19,7 +19,6 @@ abstract class _PendingFriendsLogicBase with Store {
       pendingFriends.setData(_pendingFriends);
     } catch (error) {
       pendingFriends.setError(error);
-
       throw error;
     }
   }

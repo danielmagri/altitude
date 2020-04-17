@@ -7,7 +7,6 @@ import 'package:altitude/feature/friends/view/dialog/AddFriendDialog.dart';
 import 'package:altitude/feature/friends/view/widget/FriendsList.dart';
 import 'package:altitude/feature/friends/view/widget/RankingList.dart';
 import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -77,16 +76,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
 
     controller.removeFriend(uid).then((_) {
       showLoading(false);
-    }).catchError((error) {
-      showLoading(false);
-      if (error is CloudFunctionsException) {
-        if (error.details == true) {
-          showToast(error.message);
-          return;
-        }
-      }
-      showToast("Ocorreu um erro");
-    });
+    }).catchError(handleError);
   }
 
   @override
