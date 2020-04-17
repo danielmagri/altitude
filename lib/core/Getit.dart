@@ -1,5 +1,6 @@
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
+import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
 import 'package:altitude/feature/competition/logic/PendingCompetitionLogic.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:altitude/feature/friends/logic/AddFriendLogic.dart';
@@ -28,6 +29,7 @@ class Getit {
     getIt.registerLazySingleton<PendingFriendsLogic>(() => PendingFriendsLogic());
     getIt.registerLazySingleton<AddFriendLogic>(() => AddFriendLogic());
     getIt.registerLazySingleton<CompetitionLogic>(() => CompetitionLogic());
+    getIt.registerLazySingleton<CreateCompetitionLogic>(() => CreateCompetitionLogic());
     getIt.registerLazySingleton<PendingCompetitionLogic>(() => PendingCompetitionLogic());
     getIt.registerLazySingleton<SettingsLogic>(() => SettingsLogic());
   }
