@@ -140,7 +140,7 @@ class HomeDrawer extends StatelessWidget {
               trailing: UserControl().getPendingFriendsStatus()
                   ? Container(
                       width: 10,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
                     )
                   : const SizedBox(),
               onTap: goFriends,
@@ -151,7 +151,7 @@ class HomeDrawer extends StatelessWidget {
               trailing: CompetitionsControl().getPendingCompetitionsStatus()
                   ? Container(
                       width: 10,
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
                     )
                   : const SizedBox(),
               onTap: goCompetition,

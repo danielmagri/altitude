@@ -2,7 +2,6 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/friends/logic/AddFriendLogic.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -43,31 +42,20 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
         showLoading(false);
         showToast("Pedido de amizade enviado.");
         Navigator.of(context).pop();
-      }).catchError(handleRequestError);
+      }).catchError(handleError);
     } else if (person.state == 2) {
       showLoading(true);
       controller.cancelFriendRequest(person.uid).then((_) {
         showLoading(false);
         Navigator.of(context).pop();
-      }).catchError(handleRequestError);
+      }).catchError(handleError);
     } else if (person.state == 3) {
       showLoading(true);
       controller.acceptFriendRequest(person.uid).then((_) {
         showLoading(false);
         Navigator.of(context).pop(person);
-      }).catchError(handleRequestError);
+      }).catchError(handleError);
     }
-  }
-
-  void handleRequestError(dynamic error) {
-    showLoading(false);
-    if (error is CloudFunctionsException) {
-      if (error.details == true) {
-        showToast(error.message);
-        return;
-      }
-    }
-    showToast("Ocorreu um erro");
   }
 
   void search() {

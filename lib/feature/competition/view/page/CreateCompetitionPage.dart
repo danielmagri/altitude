@@ -7,7 +7,6 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/feature/addHabit/addHabitPage.dart';
@@ -61,17 +60,7 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
           .then((state) {
         Loading.closeLoading(context);
         Navigator.pop(context);
-      }).catchError((error) {
-        Loading.closeLoading(context);
-
-        if (error is CloudFunctionsException) {
-          if (error.details == true) {
-            showToast(error.message);
-            return;
-          }
-        }
-        showToast("Ocorreu um erro");
-      });
+      }).catchError(handleError);
     }
   }
 
