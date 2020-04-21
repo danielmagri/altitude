@@ -10,7 +10,6 @@ import 'package:altitude/feature/addHabit/widgets/habitWidget.dart';
 import 'package:altitude/feature/addHabit/widgets/frequencyWidget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage(this.arguments);
@@ -22,7 +21,6 @@ class EditHabitPage extends StatefulWidget {
 }
 
 class _EditHabitPageState extends BaseState<EditHabitPage> {
-  final keyboardVisibility = KeyboardVisibilityNotification();
   final habitTextController = TextEditingController();
 
   final EditHabitLogic controller = GetIt.I.get<EditHabitLogic>();
@@ -137,7 +135,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
             const SizedBox(height: 20),
             Observer(builder: (_) {
               return HabitWidget(
-                  color: controller.habitColor, controller: habitTextController, keyboard: keyboardVisibility);
+                  color: controller.habitColor, controller: habitTextController);
             }),
             Observer(builder: (_) {
               return FrequencyWidget(color: controller.habitColor);

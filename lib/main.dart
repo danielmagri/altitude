@@ -5,7 +5,6 @@ import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:get_it/get_it.dart';
