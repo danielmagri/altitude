@@ -1,3 +1,4 @@
+import 'dart:async' show StreamSubscription;
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
@@ -6,15 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:altitude/utils/Util.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/utils/Suggestions.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 
 class HabitWidget extends StatefulWidget {
-  HabitWidget({Key key, this.color, this.controller, this.keyboard}) : super(key: key);
+  HabitWidget({Key key, this.color, this.controller}) : super(key: key);
 
   final Color color;
   final TextEditingController controller;
-  final KeyboardVisibilityNotification keyboard;
 
   @override
   _HabitWidgetState createState() => new _HabitWidgetState();
@@ -23,7 +23,7 @@ class HabitWidget extends StatefulWidget {
 class _HabitWidgetState extends State<HabitWidget> {
   FocusNode _focusNode;
   List suggestion;
-  int _keyboardVisibilitySubscriberId;
+  StreamSubscription<bool> keyboardVisibility;
 
   bool validated = false;
 
@@ -34,14 +34,12 @@ class _HabitWidgetState extends State<HabitWidget> {
     _focusNode = FocusNode();
     suggestion = getSuggestions();
 
-    _keyboardVisibilitySubscriberId = widget.keyboard.addNewListener(
-      onChange: (bool visible) {
-        if (!visible && DataHabitCreation().lastTextEdited == 0) {
+    keyboardVisibility = KeyboardVisibility.onChange.listen((visible) {
+      if (!visible && DataHabitCreation().lastTextEdited == 0) {
           _focusNode.unfocus();
           _validate();
         }
-      },
-    );
+    });
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
@@ -66,7 +64,7 @@ class _HabitWidgetState extends State<HabitWidget> {
   @override
   void dispose() {
     _focusNode.dispose();
-    widget.keyboard.removeListener(_keyboardVisibilitySubscriberId);
+    keyboardVisibility.cancel();
     widget.controller.removeListener(_onTextChanged);
     super.dispose();
   }

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 
 class FriendsPage extends StatefulWidget {
   @override
@@ -53,7 +54,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
   @override
   void onPageBack(Object value) {
     if (value is List<Person>) {
-      controller.addPersons(value);
+      controller.addPersons(value.asObservable());
     }
     controller.checkPendingFriendsStatus();
     super.onPageBack(value);
@@ -66,7 +67,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
   void addNewFriend() {
     navigateSmooth(AddFriendDialog()).then((value) {
       if (value is Person) {
-        controller.addPersons([value]);
+        controller.addPersons([value].asObservable());
       }
     });
   }

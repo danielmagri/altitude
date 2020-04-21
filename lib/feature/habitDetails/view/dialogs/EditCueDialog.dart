@@ -1,12 +1,13 @@
+import 'dart:async' show StreamSubscription;
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class EditCueDialog extends StatefulWidget {
   const EditCueDialog();
@@ -16,7 +17,7 @@ class EditCueDialog extends StatefulWidget {
 }
 
 class _EditCueDialogState extends BaseState<EditCueDialog> {
-  KeyboardVisibilityNotification keyboardVisibilityNotification = KeyboardVisibilityNotification();
+  StreamSubscription<bool> keyboardVisibility;
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
@@ -29,7 +30,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
     // Seta o gatilho no textField
     textEditingController.text = controller.cue;
 
-    keyboardVisibilityNotification.addNewListener(onChange: (bool visible) {
+    keyboardVisibility = KeyboardVisibility.onChange.listen((visible) {
       if (visible)
         scrollController.animateTo(scrollController.position.maxScrollExtent,
             duration: Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -42,7 +43,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
   @override
   void dispose() {
     GetIt.I.resetLazySingleton<EditCueLogic>();
-    keyboardVisibilityNotification.dispose();
+    keyboardVisibility.cancel();
     scrollController.dispose();
     textEditingController.dispose();
     tapGestureRecognizer.dispose();

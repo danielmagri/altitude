@@ -9,7 +9,6 @@ import 'package:altitude/feature/addHabit/widgets/habitWidget.dart';
 import 'package:altitude/feature/addHabit/widgets/frequencyWidget.dart';
 import 'package:altitude/feature/addHabit/widgets/alarmWidget.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:altitude/utils/Util.dart';
 
@@ -23,9 +22,6 @@ class AddHabitPage extends StatefulWidget {
 }
 
 class _AddHabitPageState extends State<AddHabitPage> {
-  KeyboardVisibilityNotification _keyboardVisibility =
-      new KeyboardVisibilityNotification();
-
   final habitController = TextEditingController();
 
   @override
@@ -121,7 +117,6 @@ class _AddHabitPageState extends State<AddHabitPage> {
             HabitWidget(
               color: AppColors.habitsColor[DataHabitCreation().indexColor],
               controller: habitController,
-              keyboard: _keyboardVisibility,
             ),
             FrequencyWidget(
               color: AppColors.habitsColor[DataHabitCreation().indexColor],

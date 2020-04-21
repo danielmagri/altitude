@@ -46,11 +46,11 @@ abstract class _FriendsLogicBase with Store {
   }
 
   void setEmptyData() {
-    friends.setData(List<Person>());
-    ranking.setData(List<Person>());
+    friends.setData(ObservableList<Person>());
+    ranking.setData(ObservableList<Person>());
   }
 
-  void addPersons(List<Person> persons) {
+  void addPersons(ObservableList<Person> persons) {
     friends.data.addAll(persons);
     ranking.data.addAll(persons);
 
