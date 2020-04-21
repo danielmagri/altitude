@@ -6,7 +6,25 @@ import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        Colors,
+        Container,
+        CrossAxisAlignment,
+        DropdownButton,
+        DropdownMenuItem,
+        EdgeInsets,
+        FlatButton,
+        FontWeight,
+        Key,
+        Row,
+        Size,
+        SizedBox,
+        StatefulWidget,
+        Text,
+        TextStyle,
+        Widget,
+        required;
 
 class ChooseHabit extends StatefulWidget {
   ChooseHabit({Key key, @required this.competition, @required this.habits}) : super(key: key);
@@ -37,7 +55,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return BaseDialog(
       title: 'Escolha o hábito para competir',
       body: Container(

@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show Timer;
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
@@ -58,7 +58,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
               focusAlignment: Alignment(-0.55, -0.6),
               focusRadius: 0.42,
               textAlignment: Alignment(0, 0.5),
-              text: [
+              text: const [
                 TextSpan(
                     text: "Esse é seu hábito em forma de foguete..",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
@@ -76,7 +76,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
             focusAlignment: Alignment(0.0, -0.35),
             focusRadius: 0.45,
             textAlignment: Alignment(0, 0.51),
-            text: [
+            text: const [
               TextSpan(
                   text: "No calendário você tem o controle de todos os dias feitos!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
