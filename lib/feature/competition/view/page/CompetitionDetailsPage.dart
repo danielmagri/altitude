@@ -11,6 +11,7 @@ import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/view/dialog/AddCompetitorsDialog.dart';
+import 'package:altitude/feature/competition/view/dialog/CompetitorDetailsDialog.dart';
 import 'package:altitude/feature/competition/view/widget/Metrics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -173,6 +174,10 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
     );
   }
 
+  void showCompetitorDetails(Competitor competitor) {
+    navigateSmooth(CompetitorDetailsDialog(competitor: competitor));
+  }
+
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
@@ -206,11 +211,16 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
                 width: 25,
                 child: Image.asset("assets/smoke.png", repeat: ImageRepeat.repeatY),
               ),
-              Rocket(
-                size: const Size(100, 100),
-                color: AppColors.habitsColor[competitor.color],
-                state: RocketState.ON_FIRE,
-                fireForce: 2,
+              InkWell(
+                onTap: () => showCompetitorDetails(competitor),
+                splashColor: AppColors.sky,
+                highlightColor: AppColors.sky,
+                child: Rocket(
+                  size: const Size(100, 100),
+                  color: AppColors.habitsColor[competitor.color],
+                  state: RocketState.ON_FIRE,
+                  fireForce: 2,
+                ),
               ),
               Transform.rotate(
                 angle: -1.57,
