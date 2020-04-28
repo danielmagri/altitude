@@ -1,5 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:mobx/mobx.dart';
@@ -35,7 +36,7 @@ abstract class _CreateCompetitionLogicBase with Store {
     return (await CompetitionsControl().listCompetitionsIds(selectedHabit.id)).length < MAX_HABIT_COMPETITIONS;
   }
 
-  Future<bool> createCompetition(String title) {
+  Future<Competition> createCompetition(String title) {
     List<String> invitations = selectedFriends.map((person) => person.uid).toList();
     List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
 

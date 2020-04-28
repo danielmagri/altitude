@@ -34,20 +34,20 @@ class DatabaseService {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // 2.1.0
-    if (oldVersion < 6) {
-      await db.execute('''
-          CREATE TABLE competition (
-            id VARCHAR(45) NOT NULL,
-            title VARCHAR(45) NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            initial_date DATE NOT NULL,
-            habit_id INTEGER NOT NULL,
-            CONSTRAINT fk_competition_habit_id
-              FOREIGN KEY (habit_id)
-              REFERENCES habit(id)
-              ON DELETE CASCADE
-              ON UPDATE CASCADE);''');
-    }
+    // if (oldVersion < 6) {
+    //   await db.execute('''
+    //       CREATE TABLE competition (
+    //         id VARCHAR(45) NOT NULL,
+    //         title VARCHAR(45) NOT NULL,
+    //         score INTEGER NOT NULL DEFAULT 0,
+    //         initial_date DATE NOT NULL,
+    //         habit_id INTEGER NOT NULL,
+    //         CONSTRAINT fk_competition_habit_id
+    //           FOREIGN KEY (habit_id)
+    //           REFERENCES habit(id)
+    //           ON DELETE CASCADE
+    //           ON UPDATE CASCADE);''');
+    // }
   }
 
   Future _onCreate(Database db, int version) async {
@@ -518,6 +518,15 @@ class DatabaseService {
     List<CompetitionPresentation> list =
         result.isNotEmpty ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList() : [];
     return list;
+  }
+
+  /// Retorna a quantidade de competições registrados.
+  Future<int> getCompetitionsCount() async {
+    final db = await database;
+    var result = await db.rawQuery('SELECT COUNT(*) as qtd FROM competition;');
+
+    int qtd = result.first["qtd"] != null ? result.first["qtd"] : 0;
+    return qtd;
   }
 
   /// Listar competições por id do hábito

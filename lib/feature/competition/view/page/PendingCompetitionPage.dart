@@ -1,5 +1,6 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/competition/logic/PendingCompetitionLogic.dart';
 import 'package:altitude/feature/competition/view/widget/ChooseHabit.dart';
@@ -62,7 +63,8 @@ class _PendingCompetitionPageState extends BaseState<PendingCompetitionPage> {
   }
 
   Future<bool> onBackPressed() {
-    Navigator.pop(context, controller.addedCompetitions);
+    var result = BackDataItem.added(controller.addedCompetitions);
+    Navigator.pop(context, result);
     return Future.value(false);
   }
 

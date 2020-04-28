@@ -148,7 +148,7 @@ class HomeDrawer extends StatelessWidget {
             ListTile(
               title: Text('Competição', style: const TextStyle(fontSize: 16)),
               leading: Image.asset("assets/ic_award.png", width: 25, color: Colors.black),
-              trailing: CompetitionsControl().getPendingCompetitionsStatus()
+              trailing: CompetitionsControl().pendingCompetitionsStatus
                   ? Container(
                       width: 10,
                       decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.orange),

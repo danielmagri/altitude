@@ -3,8 +3,20 @@ import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/GetIt.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart'
+    show
+        Brightness,
+        BuildContext,
+        Color,
+        Colors,
+        MaterialApp,
+        StatelessWidget,
+        ThemeData,
+        Widget,
+        WidgetsFlutterBinding,
+        required,
+        runApp;
+import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome, SystemUiOverlayStyle;
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:get_it/get_it.dart';

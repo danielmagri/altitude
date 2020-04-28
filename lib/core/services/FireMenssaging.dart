@@ -5,8 +5,7 @@ import 'package:altitude/common/controllers/UserControl.dart';
 
 class FireMessaging {
   void configure() {
-    FirebaseMessaging().configure(
-        onMessage: (Map<String, dynamic> message) async {
+    FirebaseMessaging().configure(onMessage: (Map<String, dynamic> message) async {
       if (message.containsKey('data')) {
         final LinkedHashMap<dynamic, dynamic> data = message['data'];
         isNewFriendRequest(data);
@@ -33,7 +32,7 @@ class FireMessaging {
       UserControl().setPendingFriendsStatus(true);
     }
     if (data.containsKey('new_competition')) {
-      CompetitionsControl().setPendingCompetitionsStatus(true);
+      CompetitionsControl().pendingCompetitionsStatus = true;
     }
   }
 }

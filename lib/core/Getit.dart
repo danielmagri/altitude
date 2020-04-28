@@ -20,6 +20,7 @@ class Getit {
     var getIt = GetIt.instance;
 
     getIt.registerSingletonAsync<SharedPref>(() => SharedPref.initialize());
+
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());
     getIt.registerLazySingleton<HabitDetailsLogic>(() => HabitDetailsLogic());
     getIt.registerLazySingleton<EditCueLogic>(() => EditCueLogic());

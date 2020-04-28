@@ -17,7 +17,7 @@ abstract class _PendingCompetitionLogicBase with Store {
     try {
       var _pendingCompetition = (await CompetitionsControl().getPendingCompetitions()).asObservable();
 
-      CompetitionsControl().setPendingCompetitionsStatus(_pendingCompetition.isNotEmpty);
+      CompetitionsControl().pendingCompetitionsStatus = _pendingCompetition.isNotEmpty;
 
       pendingCompetition.setData(_pendingCompetition);
     } catch (error) {
@@ -27,7 +27,7 @@ abstract class _PendingCompetitionLogicBase with Store {
   }
 
   Future<bool> checkCreateCompetition() async {
-    return (await CompetitionsControl().listCompetitions()).length < MAX_COMPETITIONS;
+    return (await CompetitionsControl().competitionsCount) < MAX_COMPETITIONS;
   }
 
   Future<List<Habit>> getAllHabits() async {
@@ -37,13 +37,13 @@ abstract class _PendingCompetitionLogicBase with Store {
   void acceptedCompetitionRequest(Competition competition) {
     pendingCompetition.data.removeWhere((item) => item.id == competition.id);
     addedCompetitions.add(competition);
-    if (pendingCompetition.data.isEmpty) CompetitionsControl().setPendingCompetitionsStatus(false);
+    if (pendingCompetition.data.isEmpty) CompetitionsControl().pendingCompetitionsStatus = false;
   }
 
   Future<void> declineCompetitionRequest(String id) async {
     await CompetitionsControl().declineCompetitionRequest(id);
     pendingCompetition.data.removeWhere((item) => item.id == id);
 
-    if (pendingCompetition.data.isEmpty) CompetitionsControl().setPendingCompetitionsStatus(false);
+    if (pendingCompetition.data.isEmpty) CompetitionsControl().pendingCompetitionsStatus = false;
   }
 }

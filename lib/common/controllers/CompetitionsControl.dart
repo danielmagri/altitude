@@ -9,21 +9,19 @@ import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/services/FireMenssaging.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class CompetitionsControl {
-  static final CompetitionsControl _singleton = new CompetitionsControl._internal();
+  bool get pendingCompetitionsStatus => SharedPref.instance.pendingCompetition;
+  set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
 
-  factory CompetitionsControl() {
-    return _singleton;
-  }
+  Future<int> get competitionsCount => DatabaseService().getCompetitionsCount();
 
-  CompetitionsControl._internal();
-
-  Future<bool> createCompetition(
+  Future<Competition> createCompetition(
       String title, int habitId, List<String> invitations, List<String> invitationsToken) async {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
-      DateTime date = new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      DateTime date = DateTime.now().today;
 
       Competitor competitor = Competitor(
           name: await UserControl().getName(),
@@ -35,19 +33,15 @@ class CompetitionsControl {
           .createCompetition(title, date.millisecondsSinceEpoch, competitor, invitations, invitationsToken);
 
       FireAnalytics().sendCreateCompetition(title, habit.habit, invitations.length);
-
-      return await DatabaseService().createCompetitition(id, title, habitId, date);
+      await DatabaseService().createCompetitition(id, title, habitId, date);
+      return Competition(id: id, title: title, initialDate: date, competitors: [competitor]);
     } catch (e) {
       throw e;
     }
   }
 
-  bool getPendingCompetitionsStatus() {
-    return SharedPref.instance.pendingCompetition;
-  }
-
-  void setPendingCompetitionsStatus(bool value) {
-    SharedPref.instance.pendingCompetition = value;
+  Future<List<CompetitionPresentation>> fetchCompetitions() async {
+    return await DatabaseService().listCompetitions();
   }
 
   Future<List<String>> listCompetitionsIds(int habitId) async {
@@ -65,10 +59,6 @@ class CompetitionsControl {
 
   Future<bool> updateCompetitionDB(String id, String title) async {
     return await DatabaseService().updateCompetition(id, title);
-  }
-
-  Future<List<CompetitionPresentation>> listCompetitions() async {
-    return await DatabaseService().listCompetitions();
   }
 
   Future<Competition> getCompetitionDetail(String id) async {

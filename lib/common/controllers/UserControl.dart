@@ -95,6 +95,10 @@ class UserControl {
     return await FireFunctions().removeFriend(uid);
   }
 
+  Future<List<Person>> rankingFriends() async {
+    return await FireFunctions().rankingFriends(3);
+  }
+
   Future<void> logout() async {
     await FireAuth().logout();
   }

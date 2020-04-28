@@ -1,5 +1,1 @@
-enum StateType {
-  INITIAL,
-  SUCESS,
-  ERROR
-}
+enum StateType { INITIAL, SUCESS, ERROR }

@@ -7,6 +7,7 @@ import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/view/dialog/AddCompetitorsDialog.dart';
@@ -129,7 +130,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
       context: context,
       builder: (BuildContext context) {
         return BaseTextDialog(
-          title: "Largar competição",
+          title: "Sair da competição",
           body: "Tem certeza que deseja sair da competição?",
           action: <Widget>[
             FlatButton(
@@ -139,7 +140,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
                 controller.leaveCompetition(widget.arguments.competition.id).then((res) {
                   showLoading(false);
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(BackDataItem.removed(widget.arguments.competition));
                 }).catchError(handleError);
               },
             ),
