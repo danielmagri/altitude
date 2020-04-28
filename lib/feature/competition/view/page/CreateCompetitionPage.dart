@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
 import 'package:flutter/material.dart';
@@ -57,9 +58,9 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
       showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
-      controller.createCompetition(textEditingController.text).then((state) {
+      controller.createCompetition(textEditingController.text).then((res) {
         showLoading(false);
-        navigatePop();
+        navigatePop(result: BackDataItem.added(res));
       }).catchError(handleError);
     }
   }

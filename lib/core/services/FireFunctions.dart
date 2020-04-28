@@ -1,24 +1,18 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_functions/cloud_functions.dart' show CloudFunctions, CloudFunctionsException, HttpsCallableResult;
 import 'package:altitude/core/services/FireMenssaging.dart';
 
 class FireFunctions {
   Future<bool> newUser(String name, String email, int score) async {
-    Person person = new Person(
-        name: name,
-        email: email,
-        score: score,
-        fcmToken: await FireMessaging().getToken());
+    Person person = new Person(name: name, email: email, score: score, fcmToken: await FireMessaging().getToken());
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'newUser')
-          .call(person.toJson());
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'newUser').call(person.toJson());
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("newUser: ${e.message}");
+    } catch (error) {
+      handleError(error, from: "newUser");
       return false;
     }
   }
@@ -29,66 +23,52 @@ class FireFunctions {
     map.putIfAbsent("competitions", () => competitions);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'updateUser')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateUser').call(map);
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("updateUser: ${e.message}");
+    } catch (error) {
+      handleError(error, from: "setScore");
       return false;
     }
   }
 
-  Future<bool> updateUser(List<String> competitions,
-      {String name, int color}) async {
+  Future<bool> updateUser(List<String> competitions, {String name, int color}) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent("display_name", () => name);
     map.putIfAbsent("color", () => color);
     map.putIfAbsent("competitions", () => competitions);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'updateUser')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateUser').call(map);
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("updateUser: ${e.message}");
+    } catch (error) {
+      handleError(error, from: "updateUser");
       return false;
     }
   }
 
   Future<List<Person>> getFriends() async {
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'getFriends')
-          .call();
+      HttpsCallableResult result = await CloudFunctions.instance.getHttpsCallable(functionName: 'getFriends').call();
 
       List data = result.data;
 
       return data.map((c) => Person.fromJson(c)).toList();
-    } on CloudFunctionsException catch (e) {
-      print("getFriends: ${e.message}");
-      return null;
-    } on Exception catch (e) {
-      print("getFriends: $e");
+    } catch (error) {
+      handleError(error, from: "getFriends");
       return null;
     }
   }
 
   Future<List<Person>> getPendingFriends() async {
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'getPendingFriends')
-          .call();
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'getPendingFriends').call();
 
       List data = result.data;
 
       return data.map((c) => Person.fromJson(c)).toList();
-    } on CloudFunctionsException catch (e) {
-      print("getPendingFriends: ${e.message}");
-      return null;
-    } on Exception catch (e) {
-      print("getPendingFriends: $e");
+    } catch (error) {
+      handleError(error, from: "getPendingFriends");
       return null;
     }
   }
@@ -96,18 +76,14 @@ class FireFunctions {
   Future<List<Person>> searchEmail(String email) async {
     Person person = new Person(email: email);
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'searchEmail')
-          .call(person.toJson());
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'searchEmail').call(person.toJson());
 
       List data = result.data;
 
       return data.map((c) => Person.fromJson(c)).toList();
-    } on CloudFunctionsException catch (e) {
-      print("searchEmail: ${e.message}");
-      return null;
-    } on Exception catch (e) {
-      print("searchEmail: $e");
+    } catch (error) {
+      handleError(error, from: "searchEmail");
       return null;
     }
   }
@@ -115,82 +91,73 @@ class FireFunctions {
   Future<void> friendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'friendRequest')
-          .call(person.toJson());
-    } on CloudFunctionsException catch (e) {
-      print("friendRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("friendRequest: $e");
-      return null;
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'friendRequest').call(person.toJson());
+    } catch (error) {
+      handleError(error, from: "friendRequest");
+      throw error;
     }
   }
 
   Future<void> acceptRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'acceptRequest')
-          .call(person.toJson());
-    } on CloudFunctionsException catch (e) {
-      print("acceptRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("acceptRequest: $e");
-      return null;
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'acceptRequest').call(person.toJson());
+    } catch (error) {
+      handleError(error, from: "acceptRequest");
+      throw error;
     }
   }
 
   Future<void> declineRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'declineRequest')
-          .call(person.toJson());
-    } on CloudFunctionsException catch (e) {
-      print("declineRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("declineRequest: $e");
-      return null;
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'declineRequest').call(person.toJson());
+    } catch (error) {
+      handleError(error, from: "declineRequest");
+      throw error;
     }
   }
 
   Future<void> cancelFriendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'cancelFriendRequest')
-          .call(person.toJson());
-    } on CloudFunctionsException catch (e) {
-      print("cancelFriendRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("cancelFriendRequest: $e");
-      return null;
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'cancelFriendRequest').call(person.toJson());
+    } catch (error) {
+      handleError(error, from: "cancelFriendRequest");
+      throw error;
     }
   }
 
   Future<void> removeFriend(String uid) async {
     Person person = new Person(uid: uid);
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'removeFriend')
-          .call(person.toJson());
-    } on CloudFunctionsException catch (e) {
-      print("removeFriend: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("removeFriend: $e");
-      return null;
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'removeFriend').call(person.toJson());
+    } catch (error) {
+      handleError(error, from: "removeFriend");
+      throw error;
+    }
+  }
+
+  Future<List<Person>> rankingFriends(int limit) async {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent("limit", () => limit);
+
+    try {
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'rankingFriends').call(map);
+
+      List data = result.data;
+      return data.map((c) => Person.fromJson(c)).toList();
+    } catch (error) {
+      handleError(error, from: "getFriends");
+      throw error;
     }
   }
 
   // Competition
 
-  Future<String> createCompetition(String title, int initialDate, Competitor competitor,
-      List<String> invitations, List<String> invitationsToken) async {
+  Future<String> createCompetition(String title, int initialDate, Competitor competitor, List<String> invitations,
+      List<String> invitationsToken) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent(Competition.TITLE, () => title);
     map.putIfAbsent(Competition.INITIAL_DATE, () => initialDate);
@@ -202,17 +169,26 @@ class FireFunctions {
     map.putIfAbsent("invitations_token", () => invitationsToken);
 
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'createCompetition')
-          .call(map);
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'createCompetition').call(map);
 
       return result.data;
-    } on CloudFunctionsException catch (e) {
-      print("createCompetition: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("createCompetition: $e");
-      throw e;
+    } catch (error) {
+      handleError(error, from: "createCompetition");
+      throw error;
+    }
+  }
+
+  Future<List<Competition>> fetchCompetitions() async {
+    try {
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'getCompetitions').call();
+
+      List data = result.data;
+      return data.map((c) => Competition.fromLinkedJson(c)).toList();
+    } catch (error) {
+      handleError(error, from: "fetchCompetitions");
+      throw error;
     }
   }
 
@@ -222,17 +198,12 @@ class FireFunctions {
     map.putIfAbsent("title", () => title);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'updateCompetition')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateCompetition').call(map);
 
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("updateCompetition: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("updateCompetition: $e");
-      throw e;
+    } catch (error) {
+      handleError(error, from: "updateCompetition");
+      throw error;
     }
   }
 
@@ -241,22 +212,17 @@ class FireFunctions {
     map.putIfAbsent("id", () => id);
 
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'getCompetitionDetail')
-          .call(map);
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'getCompetitionDetail').call(map);
 
       return Competition.fromLinkedJson(result.data);
-    } on CloudFunctionsException catch (e) {
-      print("getCompetitionDetail: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("getCompetitionDetail: $e");
-      throw e;
+    } catch (error) {
+      handleError(error, from: "getCompetitionDetail");
+      throw error;
     }
   }
 
-  Future<bool> addCompetitor(String id, String name, List<String> invitations,
-      List<String> invitationsToken) async {
+  Future<bool> addCompetitor(String id, String name, List<String> invitations, List<String> invitationsToken) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent("id", () => id);
     map.putIfAbsent("display_name", () => name);
@@ -264,17 +230,12 @@ class FireFunctions {
     map.putIfAbsent("invitations_token", () => invitationsToken);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'addCompetitor')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'addCompetitor').call(map);
 
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("addCompetitor: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("addCompetitor: $e");
-      throw e;
+    } catch (error) {
+      handleError(error, from: "addCompetitor");
+      throw error;
     }
   }
 
@@ -284,34 +245,25 @@ class FireFunctions {
     map.putIfAbsent("uid", () => uidCompetitor);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'removeCompetitor')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'removeCompetitor').call(map);
 
       return true;
-    } on CloudFunctionsException catch (e) {
-      print("removeCompetitor: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("removeCompetitor: $e");
-      throw e;
+    } catch (error) {
+      handleError(error, from: "removeCompetitor");
+      throw error;
     }
   }
 
   Future<List<Competition>> getPendingCompetitions() async {
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'getPendingCompetitions')
-          .call();
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'getPendingCompetitions').call();
 
       List data = result.data;
 
       return data.map((c) => Competition.fromLinkedJson(c)).toList();
-    } on CloudFunctionsException catch (e) {
-      print("getPendingCompetitions: ${e.message}");
-      return null;
-    } on Exception catch (e) {
-      print("getPendingCompetitions: $e");
+    } catch (error) {
+      handleError(error, from: "getPendingCompetitions");
       return null;
     }
   }
@@ -325,17 +277,13 @@ class FireFunctions {
     map.putIfAbsent(Competitor.COLOR, () => color);
 
     try {
-      HttpsCallableResult result = await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'acceptCompetitionRequest')
-          .call(map);
+      HttpsCallableResult result =
+          await CloudFunctions.instance.getHttpsCallable(functionName: 'acceptCompetitionRequest').call(map);
 
       return result.data;
-    } on CloudFunctionsException catch (e) {
-      print("acceptCompetitionRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("acceptCompetitionRequest: $e");
-      return null;
+    } catch (error) {
+      handleError(error, from: "declineCompetitionRequest");
+      throw error;
     }
   }
 
@@ -344,16 +292,18 @@ class FireFunctions {
     map.putIfAbsent(Competition.ID, () => id);
 
     try {
-      await CloudFunctions.instance
-          .getHttpsCallable(functionName: 'declineCompetitionRequest')
-          .call(map);
+      await CloudFunctions.instance.getHttpsCallable(functionName: 'declineCompetitionRequest').call(map);
+    } catch (error) {
+      handleError(error, from: "declineCompetitionRequest");
+      throw error;
+    }
+  }
 
-    } on CloudFunctionsException catch (e) {
-      print("declineCompetitionRequest: ${e.message}");
-      throw e;
-    } on Exception catch (e) {
-      print("declineCompetitionRequest: $e");
-      return null;
+  void handleError(Object error, {String from = "Error"}) {
+    if (error is CloudFunctionsException) {
+      print("$from: ${error.message}");
+    } else {
+      print("$from: $error");
     }
   }
 }

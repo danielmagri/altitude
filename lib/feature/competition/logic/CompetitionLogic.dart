@@ -1,6 +1,7 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
+import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/CompetitionPresentation.dart';
@@ -17,28 +18,47 @@ abstract class _CompetitionLogicBase with Store {
   @observable
   bool pendingStatus = false;
 
+  DataState<List<Person>> ranking = DataState();
   DataState<ObservableList<CompetitionPresentation>> competitions = DataState();
 
   Future<bool> get isLogged async => await UserControl().isLogged();
 
   Future<void> fetchData() async {
-    try {
-      var _competitions = (await CompetitionsControl().listCompetitions()).asObservable();
+    checkPendingFriendsStatus();
 
-      checkPendingFriendsStatus();
-      competitions.setData(_competitions);
-    } catch (error) {
+    fetchCompetitions();
+
+    UserControl().rankingFriends().then((value) async {
+      value.add(Person(
+          name: await UserControl().getName(),
+          email: await UserControl().getEmail(),
+          score: ScoreControl().score,
+          you: true));
+      value.sort((a, b) => -a.score.compareTo(b.score));
+      if (value.length > 3) {
+        value.removeAt(3);
+      }
+      ranking.setData(value);
+    }).catchError((error) {
+      ranking.setError(error);
+    });
+  }
+
+  void fetchCompetitions() {
+    CompetitionsControl().fetchCompetitions().then((value) {
+      competitions.setData(value.asObservable());
+    }).catchError((error) {
       competitions.setError(error);
-    }
+    });
   }
 
   @action
   void checkPendingFriendsStatus() {
-    pendingStatus = CompetitionsControl().getPendingCompetitionsStatus();
+    pendingStatus = CompetitionsControl().pendingCompetitionsStatus;
   }
 
   Future<bool> checkCreateCompetition() async {
-    return (await CompetitionsControl().listCompetitions()).length < MAX_COMPETITIONS;
+    return (await CompetitionsControl().competitionsCount) < MAX_COMPETITIONS;
   }
 
   Future<Pair<List<Habit>, List<Person>>> getCreationData() async {
@@ -59,7 +79,6 @@ abstract class _CompetitionLogicBase with Store {
   @action
   Future<bool> exitCompetition(String id) async {
     var res = await CompetitionsControl().removeCompetitor(id, await UserControl().getUid());
-
     if (res) competitions.data.removeWhere((element) => element.id == id);
 
     return res;
