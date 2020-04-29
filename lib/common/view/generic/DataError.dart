@@ -5,6 +5,7 @@ import 'package:flutter/material.dart'
         EdgeInsets,
         FontWeight,
         Key,
+        MainAxisSize,
         Padding,
         SizedBox,
         StatelessWidget,
@@ -24,6 +25,7 @@ class DataError extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const SizedBox(height: 16),
           Text(message,

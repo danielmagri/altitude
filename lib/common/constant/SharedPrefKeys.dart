@@ -4,6 +4,7 @@ const VERSION = "VERSION";
 const String NAME = "USER_NAME";
 const String SCORE = "USER_SCORE";
 const String LEVEL = "USER_LEVEL";
+const String HABIT_FILTERS = "USER_HABIT_FILTERS";
 const String PENDING_FRIENDS = "USER_PENDING_FRIENDS";
 const String COMPETITION_FRIENDS = "USER_COMPETITION_FRIENDS";
 // Tutorials

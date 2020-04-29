@@ -27,6 +27,10 @@ class SharedPref extends SharedPrefHandler {
   int get level => getInt(LEVEL) ?? 0;
   set level(int value) => saveInt(LEVEL, value);
 
+  // Habit filters
+  int get habitFilters => getInt(HABIT_FILTERS) ?? 1;
+  set habitFilters(int value) => saveInt(HABIT_FILTERS, value);
+
   // Pending Friends
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
   set pendingFriends(bool value) => saveBool(PENDING_FRIENDS, value);

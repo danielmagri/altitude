@@ -1,3 +1,4 @@
+import 'package:altitude/common/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/RainbowAnimated.dart';
@@ -6,11 +7,10 @@ import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
-import 'package:altitude/feature/home/view/widget/AllHabits.dart';
+import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
 import 'package:altitude/feature/home/view/widget/HomeBottomNavigation.dart';
 import 'package:altitude/feature/home/view/widget/HomeDrawer.dart';
 import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
-import 'package:altitude/feature/home/view/widget/TodayHabits.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
@@ -25,7 +25,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final PageController pageController = PageController(initialPage: 1);
 
   HomeLogic controller = GetIt.I.get<HomeLogic>();
   bool isPageActived = true;
@@ -47,7 +46,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    pageController.dispose();
     GetIt.I.resetLazySingleton<HomeLogic>();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -58,9 +56,9 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Color.fromARGB(100, 250, 250, 250),
-        systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-        systemNavigationBarIconBrightness: Brightness.dark));
+          statusBarColor: Color.fromARGB(100, 250, 250, 250),
+          systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
+          systemNavigationBarIconBrightness: Brightness.dark));
     }
   }
 
@@ -86,10 +84,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  void pageScroll(int index) {
-    pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
-  }
-
   void goAllLevels() {
     var arguments = AllLevelsPageArguments(controller.user.data.score);
     navigatePush('allLevels', arguments: arguments);
@@ -104,12 +98,18 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     navigatePush('habitDetails', arguments: arguments);
   }
 
-  void goFriends() {
-    navigatePopAndPush('friends');
+  void goFriends(bool pop) {
+    if (pop)
+      navigatePopAndPush('friends');
+    else
+      navigatePush('friends');
   }
 
-  void goCompetition() {
-    navigatePopAndPush('competition');
+  void goCompetition(bool pop) {
+    if (pop)
+      navigatePopAndPush('competition');
+    else
+      navigatePush('competition');
   }
 
   void goSettings() {
@@ -132,12 +132,11 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
               children: <Widget>[
                 Container(
                   width: double.maxFinite,
-                  height: 75,
-                  padding: const EdgeInsets.only(top: 20, left: 12, right: 8),
+                  padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
                   child: Row(
                     children: <Widget>[
-                      IconButton(tooltip: "Menu", icon: Icon(Icons.menu), onPressed: showDrawer),
-                      Spacer(),
+                      IconButton(tooltip: "Menu", icon: const Icon(Icons.menu), onPressed: showDrawer),
+                      const Spacer(),
                       IconButton(
                           icon: RainbowAnimated(child: (color) => Icon(Icons.new_releases, color: color)),
                           iconSize: 28,
@@ -150,95 +149,66 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                   child: Container(
                     color: Theme.of(context).canvasColor,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(width: 25),
-                        Observer(builder: (_) {
-                          return controller.user.handleState(
-                            () {
-                              return Skeleton.custom(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 100,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white, borderRadius: new BorderRadius.circular(15)),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Container(
-                                      width: 120,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white, borderRadius: new BorderRadius.circular(15)),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                            (data) {
-                              return Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(LevelControl.getLevelText(data.score)),
-                                  Score(color: AppColors.colorAccent, score: data.score),
-                                ],
-                              );
-                            },
-                            (error) {
-                              return SizedBox();
-                            },
+                    child: Observer(builder: (_) {
+                      return controller.user.handleState(
+                        () {
+                          return Skeleton.custom(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                    width: 100,
+                                    height: 20,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15))),
+                                const SizedBox(height: 4),
+                                Container(
+                                    width: 120,
+                                    height: 70,
+                                    decoration:
+                                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)))
+                              ],
+                            ),
                           );
-                        }),
-                        Observer(builder: (_) {
-                          return controller.user.handleState(
-                            () {
-                              return Skeleton(
-                                width: 25,
-                                height: 25,
-                                margin: const EdgeInsets.only(bottom: 4, right: 8),
-                              );
-                            },
-                            (data) {
-                              return Image.asset(
-                                LevelControl.getLevelImagePath(data.score),
-                                height: 25,
-                                width: 25,
-                              );
-                            },
-                            (error) {
-                              return SizedBox();
-                            },
-                          );
-                        })
-                      ],
+                        },
+                        (data) {
+                          return Column(children: <Widget>[
+                            Text(LevelControl.getLevelText(data.score)),
+                            const SizedBox(height: 4),
+                            Score(color: AppColors.colorAccent, score: data.score),
+                          ]);
+                        },
+                        (error) {
+                          return const SizedBox();
+                        },
+                      );
+                    }),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 12, top: 24),
+                  child: Observer(
+                    builder: (_) => PopupMenuButton<HabitFiltersType>(
+                      initialValue: controller.filterSelected,
+                      onSelected: controller.selectFilter,
+                      itemBuilder: (_) => HabitFiltersType.values
+                          .map((type) => PopupMenuItem(value: type, child: Text(type.title)))
+                          .toList(),
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Text(controller.filterSelected.title, style: TextStyle(color: AppColors.popupMenuButtonHome)),
+                        Icon(Icons.arrow_drop_down, color: AppColors.popupMenuButtonHome),
+                      ]),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: PageView(
-                    controller: pageController,
-                    physics: BouncingScrollPhysics(),
-                    onPageChanged: controller.swipedPage,
-                    children: <Widget>[
-                      AllHabitsPage(goHabitDetails: goHabitDetails),
-                      TodayHabits(goHabitDetails: goHabitDetails),
-                    ],
-                  ),
-                ),
+                Expanded(child: HabitsPanel(goHabitDetails: goHabitDetails)),
               ],
             ),
-            Observer(builder: (_) {
-              return SkyDragTarget(visibilty: controller.visibilty, setHabitDone: setHabitDone);
-            }),
+            Observer(builder: (_) => SkyDragTarget(visibilty: controller.visibilty, setHabitDone: setHabitDone)),
           ],
         ),
-        bottomNavigationBar: HomebottomNavigation(pageScroll: pageScroll, goAddHabit: goAddHabit));
+        bottomNavigationBar:
+            HomebottomNavigation(goAddHabit: goAddHabit, goFriends: goFriends, goCompetition: goCompetition));
   }
 }
