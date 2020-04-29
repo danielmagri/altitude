@@ -47,18 +47,9 @@ class HeaderWidget extends StatelessWidget {
             child: Observer(
               builder: (_) {
                 return controller.rocketForce.handleState(() {
-                  return Skeleton.custom(
-                    child: Rocket(
-                      size: const Size(140, 140),
-                      color: Colors.white,
-                    ),
-                  );
+                  return Skeleton.custom(child: Rocket(size: const Size(140, 140), color: Colors.white));
                 }, (data) {
-                  return SkyScene(
-                    size: const Size(140, 140),
-                    color: controller.habitColor,
-                    force: data,
-                  );
+                  return SkyScene(size: const Size(140, 140), color: controller.habitColor, force: data);
                 }, (error) {
                   return const SizedBox();
                 });

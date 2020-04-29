@@ -241,7 +241,6 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
         ),
       ));
     }
-
     return widgets;
   }
 

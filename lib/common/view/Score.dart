@@ -86,7 +86,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
           style: TextStyle(fontSize: 70, fontWeight: FontWeight.bold, color: widget.color, height: 0.2),
           maxLines: 1,
         ),
-        const Text("QUILÔMETROS", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300)),
+        const Text("QUILÔMETROS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300)),
       ],
     );
   }

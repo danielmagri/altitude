@@ -1,5 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/enums/HabitFiltersType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
@@ -17,14 +18,13 @@ class HomeLogic = _HomeLogicBase with _$HomeLogic;
 
 abstract class _HomeLogicBase with Store {
   DataState<User> user = DataState();
-  DataState<ObservableList<Habit>> todayHabits = DataState();
-  DataState<ObservableList<Habit>> allHabits = DataState();
+  DataState<ObservableList<Habit>> habits = DataState();
 
   @observable
   ObservableList<DayDone> doneHabits;
 
   @observable
-  int pageIndex = 1;
+  HabitFiltersType filterSelected;
 
   @observable
   bool visibilty = false;
@@ -32,14 +32,28 @@ abstract class _HomeLogicBase with Store {
   @action
   Future<void> fetchData() async {
     try {
+      filterSelected = HabitFiltersType.values[SharedPref.instance.habitFilters];
       user.setData(await UserControl().getUserData());
       doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
-      todayHabits.setData((await HabitsControl().getHabitsToday()).asObservable());
-      allHabits.setData((await HabitsControl().getAllHabits()).asObservable());
+      await fetchHabits();
     } catch (error) {
       user.setError(error);
-      todayHabits.setError(error);
-      allHabits.setError(error);
+    }
+  }
+
+  Future<void> fetchHabits() async {
+    try {
+      habits.setInitial();
+      switch (filterSelected) {
+        case HabitFiltersType.TODAY_HABITS:
+          habits.setData((await HabitsControl().getHabitsToday()).asObservable());
+          break;
+        case HabitFiltersType.ALL_HABITS:
+          habits.setData((await HabitsControl().getAllHabits()).asObservable());
+          break;
+      }
+    } catch (error) {
+      habits.setError(error);
     }
   }
 
@@ -49,8 +63,12 @@ abstract class _HomeLogicBase with Store {
   }
 
   @action
-  void swipedPage(int index) {
-    pageIndex = index;
+  void selectFilter(HabitFiltersType type) {
+    if (type != filterSelected) {
+      filterSelected = type;
+      SharedPref.instance.habitFilters = type.index;
+      fetchHabits();
+    }
   }
 
   @action

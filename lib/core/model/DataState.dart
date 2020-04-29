@@ -12,7 +12,7 @@ class DataState<T> = _DataStateBase<T> with _$DataState;
 
 abstract class _DataStateBase<T> with Store {
   @observable
-  StateType state = StateType.INITIAL;
+  StateType _state = StateType.INITIAL;
 
   @observable
   bool _loading = false;
@@ -23,6 +23,12 @@ abstract class _DataStateBase<T> with Store {
   dynamic _error;
   dynamic get error => _error;
 
+   @action
+  void setInitial() {
+    _state = StateType.INITIAL;
+    _loading = false;
+  }
+
   @action
   void setLoading({bool loading = true}) {
     _loading = loading;
@@ -30,20 +36,20 @@ abstract class _DataStateBase<T> with Store {
 
   @action
   void setData(T data) {
-    state = StateType.SUCESS;
+    _state = StateType.SUCESS;
     _loading = false;
     _data = data;
   }
 
   @action
   void setError(dynamic error) {
-    state = StateType.ERROR;
+    _state = StateType.ERROR;
     _loading = false;
     _error = error;
   }
 
   Widget handleState(Initial initial, Success<T> success, Error error) {
-    switch (state) {
+    switch (_state) {
       case StateType.INITIAL:
         return initial();
       case StateType.ERROR:
@@ -54,7 +60,7 @@ abstract class _DataStateBase<T> with Store {
   }
 
   Widget handleStateLoadable(Initial initial, SuccessLoadable<T> successLoadable, Error error) {
-    switch (state) {
+    switch (_state) {
       case StateType.INITIAL:
         return initial();
       case StateType.ERROR:
