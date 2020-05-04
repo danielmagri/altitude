@@ -1,6 +1,9 @@
+import 'package:altitude/feature/addHabit/enums/FrquencyType.dart';
+
 abstract class Frequency {
   int daysCount();
   String frequencyText();
+  FrequencyType frequencyType();
 }
 
 class DayWeek extends Frequency {
@@ -113,6 +116,9 @@ class DayWeek extends Frequency {
     return false;
   }
 
+  @override
+  FrequencyType frequencyType() => FrequencyType.DAYWEEK;
+
   Map<String, dynamic> toJson() => {
         "habit_id": habitId,
         "monday": monday,
@@ -139,8 +145,14 @@ class Weekly extends Frequency {
 
   @override
   String frequencyText() {
-    return daysCount().toString() + " vezes por semana";
+    if (daysCount() == 1)
+      return "1 vez por semana";
+    else
+      return daysCount().toString() + " vezes por semana";
   }
+
+  @override
+  FrequencyType frequencyType() => FrequencyType.WEEKLY;
 
   Map<String, dynamic> toJson() => {
         "habit_id": habitId,

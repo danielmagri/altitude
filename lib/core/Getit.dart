@@ -1,4 +1,5 @@
 import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
 import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
@@ -22,6 +23,7 @@ class Getit {
     getIt.registerSingletonAsync<SharedPref>(() => SharedPref.initialize());
 
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());
+    getIt.registerLazySingleton<AddHabitLogic>(() => AddHabitLogic());
     getIt.registerLazySingleton<HabitDetailsLogic>(() => HabitDetailsLogic());
     getIt.registerLazySingleton<EditCueLogic>(() => EditCueLogic());
     getIt.registerLazySingleton<EditAlarmLogic>(() => EditAlarmLogic());

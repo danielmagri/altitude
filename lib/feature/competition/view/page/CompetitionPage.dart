@@ -2,6 +2,7 @@ import 'dart:async' show Timer;
 import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
@@ -145,27 +146,16 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 40, bottom: 16),
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 50, child: BackButton()),
-                  const Spacer(),
-                  const Text("COMPETIÇÕES", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  const Spacer(),
-                  SizedBox(
-                    width: 50,
-                    child: Observer(builder: (_) {
-                      return IconButtonStatus(
-                        icon: Icon(Icons.mail),
-                        status: controller.pendingStatus,
-                        onPressed: () => navigatePush('pendingCompetition'),
-                      );
-                    }),
-                  ),
-                ],
-              ),
-            ),
+            Header(
+                title: "COMPETIÇÕES",
+                button: Observer(builder: (_) {
+                  return IconButtonStatus(
+                    icon: Icon(Icons.mail),
+                    status: controller.pendingStatus,
+                    onPressed: () => navigatePush('pendingCompetition'),
+                  );
+                })),
+            const SizedBox(height: 20),
             Observer(
               builder: (_) => controller.ranking.handleState(() {
                 return Skeleton(

@@ -1,4 +1,4 @@
-import 'package:altitude/common/enums/HabitFiltersType.dart';
+import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/DataError.dart';

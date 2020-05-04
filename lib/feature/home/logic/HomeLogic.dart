@@ -1,6 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
-import 'package:altitude/common/enums/HabitFiltersType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
@@ -9,6 +9,7 @@ import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
+import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/feature/home/model/User.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:mobx/mobx.dart';
@@ -28,6 +29,12 @@ abstract class _HomeLogicBase with Store {
 
   @observable
   bool visibilty = false;
+
+  @observable
+  bool pendingCompetitionStatus = false;
+
+  @observable
+  bool pendingFriendStatus = false;
 
   @action
   Future<void> fetchData() async {
@@ -55,6 +62,12 @@ abstract class _HomeLogicBase with Store {
     } catch (error) {
       habits.setError(error);
     }
+  }
+
+  @action
+  void fetchPendingStatus() {
+    pendingCompetitionStatus = CompetitionsControl().pendingCompetitionsStatus;
+    pendingFriendStatus = UserControl().getPendingFriendsStatus();
   }
 
   @action

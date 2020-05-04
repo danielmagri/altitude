@@ -2,7 +2,6 @@ import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
-import 'package:altitude/datas/dataHabitCreation.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color;
@@ -13,43 +12,52 @@ part 'EditHabitLogic.g.dart';
 class EditHabitLogic = _EditHabitLogicBase with _$EditHabitLogic;
 
 abstract class _EditHabitLogicBase with Store {
-  Habit _habit;
-  Frequency _frequency;
-  List<Reminder> _reminders;
-
-  @computed
-  Color get habitColor => AppColors.habitsColor[color];
+  Habit initialHabit;
+  Frequency initialFrequency;
+  List<Reminder> initialReminders;
 
   @observable
   int color;
 
+  @observable
+  Frequency frequency;
+
+  @computed
+  Color get habitColor => AppColors.habitsColor[color];
+
   void setData(Habit habit, Frequency frequency, List<Reminder> reminders) {
-    _habit = habit;
-    _frequency = frequency;
-    _reminders = reminders;
+    initialHabit = habit;
+    initialFrequency = frequency;
+    this.frequency = frequency;
+    initialReminders = reminders;
   }
 
   @action
-  void switchColor(int index) {
+  void selectColor(int index) {
     color = index;
   }
 
+  @action
+  void selectFrequency(Frequency value) {
+    frequency = value;
+  }
+
   Future<void> removeHabit() async {
-    return await HabitsControl().deleteHabit(_habit.id, _habit.habit, _habit.score, _reminders);
+    return await HabitsControl().deleteHabit(initialHabit.id, initialHabit.habit, initialHabit.score, initialReminders);
   }
 
   Future<void> updateHabit(String habit) async {
-    Habit editedHabit = Habit(id: _habit.id, color: color, habit: habit);
+    Habit editedHabit = Habit(id: initialHabit.id, color: color, habit: habit);
 
-    if (editedHabit.color != _habit.color || editedHabit.habit.compareTo(_habit.habit) != 0) {
-      await HabitsControl().updateHabit(editedHabit, _habit, _reminders);
+    if (editedHabit.color != initialHabit.color || editedHabit.habit.compareTo(initialHabit.habit) != 0) {
+      await HabitsControl().updateHabit(editedHabit, initialHabit, initialReminders);
     }
 
-    if (!compareFrequency(_frequency, DataHabitCreation().frequency)) {
-      await HabitsControl().updateFrequency(editedHabit.id, DataHabitCreation().frequency, _frequency.runtimeType);
+    if (!compareFrequency(initialFrequency, frequency)) {
+      await HabitsControl().updateFrequency(editedHabit.id, frequency, initialFrequency.runtimeType);
     }
 
-    GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, DataHabitCreation().frequency);
+    GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, frequency);
   }
 
   bool compareFrequency(dynamic f1, dynamic f2) {

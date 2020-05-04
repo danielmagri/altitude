@@ -1,8 +1,6 @@
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -167,7 +165,7 @@ class HomeDrawer extends StatelessWidget {
             ListTile(
               title: const Text('Competição', style: TextStyle(fontSize: 16)),
               leading: Image.asset("assets/ic_award.png", width: 25, color: Colors.black),
-              trailing: CompetitionsControl().pendingCompetitionsStatus
+              trailing: controller.pendingCompetitionStatus
                   ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
               onTap: () => goCompetition(true),
@@ -175,7 +173,7 @@ class HomeDrawer extends StatelessWidget {
             ListTile(
               title: const Text('Amigos', style: const TextStyle(fontSize: 16)),
               leading: const Icon(Icons.people, color: Colors.black),
-              trailing: UserControl().getPendingFriendsStatus()
+              trailing: controller.pendingFriendStatus
                   ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
               onTap: () => goFriends(true),

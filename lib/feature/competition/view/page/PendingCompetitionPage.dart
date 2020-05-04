@@ -1,5 +1,6 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/competition/logic/PendingCompetitionLogic.dart';
@@ -76,21 +77,8 @@ class _PendingCompetitionPageState extends BaseState<PendingCompetitionPage> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 40, bottom: 16),
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 50, child: BackButton()),
-                  Expanded(
-                    child: const Text("Solicitações de competição",
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  ),
-                  const SizedBox(width: 50),
-                ],
-              ),
-            ),
+            const Header(title: "Solicitações de competição"),
+            const SizedBox(height: 16),
             Observer(builder: (_) {
               return controller.pendingCompetition.handleState(() {
                 return Column(

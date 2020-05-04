@@ -28,7 +28,7 @@ abstract class ValidationHandler {
   static String habitTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
-      return "Por favor preencha o campo.";
+      return "Por favor preencha o nome do hábito.";
     } else if (treatedText.length < 3) {
       return "O hábito precisa ser maior que 3 letras.";
     } else if (treatedText.length > 30) {

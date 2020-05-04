@@ -1,5 +1,5 @@
 abstract class Suggestions {
-  static const List _habits = [
+  static const List<String> _habits = [
     "Ler",
     "Ir na academia",
     "Estudar inglês",
@@ -14,7 +14,7 @@ abstract class Suggestions {
     "Natação",
   ];
 
-  static List getHabits() {
+  static List<String> getHabits() {
     return _habits;
   }
 

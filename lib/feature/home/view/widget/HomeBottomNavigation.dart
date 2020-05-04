@@ -1,3 +1,4 @@
+import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/utils/Color.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/material.dart'
         Container,
         EdgeInsets,
         Icon,
-        IconButton,
         Icons,
         Image,
         InkWell,
@@ -22,6 +22,7 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Widget,
         required;
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class HomebottomNavigation extends StatelessWidget {
@@ -48,17 +49,17 @@ class HomebottomNavigation extends StatelessWidget {
       elevation: 0.0,
       child: Container(
         height: 55,
-        margin: const EdgeInsets.only(bottom: 8, right: 16, left: 16),
+        margin: const EdgeInsets.only(bottom: 8, right: 24, left: 24),
         decoration: BoxDecoration(color: AppColors.colorAccent, borderRadius: BorderRadius.circular(22)),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-              tooltip: "Amigos",
-              icon: const Icon(Icons.people, color: Colors.white, size: 28),
-              onPressed: () => goFriends(false),
-            ),
+            Observer(
+                builder: (_) => IconButtonStatus(
+                    status: controller.pendingFriendStatus,
+                    icon: const Icon(Icons.people, color: Colors.white, size: 28),
+                    onPressed: () => goFriends(false))),
             InkWell(
               onTap: _addHabitTap,
               child: Container(
@@ -67,11 +68,12 @@ class HomebottomNavigation extends StatelessWidget {
                 child: Icon(Icons.add, color: AppColors.colorAccent, size: 28),
               ),
             ),
-            IconButton(
-              tooltip: "Competição",
-              icon: Image.asset("assets/ic_award.png", width: 28, color: Colors.white),
-              onPressed: () => goCompetition(false),
-            ),
+            Observer(
+                builder: (_) => IconButtonStatus(
+                      status: controller.pendingCompetitionStatus,
+                      icon: Image.asset("assets/ic_award.png", width: 28, color: Colors.white),
+                      onPressed: () => goCompetition(false),
+                    )),
           ],
         ),
       ),

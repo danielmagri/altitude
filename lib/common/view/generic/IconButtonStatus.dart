@@ -17,7 +17,7 @@ import 'package:flutter/material.dart'
 class IconButtonStatus extends StatelessWidget {
   IconButtonStatus({@required this.status, @required this.icon, @required this.onPressed, this.color});
 
-  final Icon icon;
+  final Widget icon;
   final Function onPressed;
   final Color color;
   final bool status;
@@ -25,7 +25,7 @@ class IconButtonStatus extends StatelessWidget {
   @override
   Widget build(_) {
     return Stack(
-      alignment: const Alignment(0.5, -0.4),
+      alignment: const Alignment(0.55, -0.4),
       children: <Widget>[
         IconButton(icon: icon, onPressed: onPressed),
         status

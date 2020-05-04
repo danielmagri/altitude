@@ -1,3 +1,4 @@
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
@@ -103,18 +104,8 @@ class _SettingsPageState extends BaseState<SettingsPage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(children: <Widget>[
-          Container(
-            margin: const EdgeInsets.only(top: 40, bottom: 16),
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 50, child: BackButton()),
-                const Spacer(),
-                const Text("CONFIGURAÇÕES", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                const Spacer(),
-                const SizedBox(width: 50),
-              ],
-            ),
-          ),
+          const Header(title: "CONFIGURAÇÕES"),
+          const SizedBox(height: 16),
           ListTile(
             title: const Text("Seu nome"),
             trailing: Observer(builder: (_) {

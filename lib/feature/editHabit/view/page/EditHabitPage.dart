@@ -1,13 +1,13 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/view/BaseState.dart';
-import 'package:altitude/datas/dataHabitCreation.dart';
+import 'package:altitude/feature/addHabit/view/widget/HabitText.dart';
+import 'package:altitude/feature/addHabit/view/widget/SelectColor.dart';
+import 'package:altitude/feature/addHabit/view/widget/SelectFrequency.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/feature/addHabit/widgets/colorWidget.dart';
-import 'package:altitude/feature/addHabit/widgets/habitWidget.dart';
-import 'package:altitude/feature/addHabit/widgets/frequencyWidget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -33,7 +33,6 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
 
     controller.color = widget.arguments.habit.color;
     habitTextController.text = widget.arguments.habit.habit;
-    DataHabitCreation().frequency = widget.arguments.frequency;
   }
 
   @override
@@ -46,7 +45,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
     String habitValidation = ValidationHandler.habitTextValidate(habitTextController.text);
     if (habitValidation != null) {
       showToast(habitValidation);
-    } else if (DataHabitCreation().frequency == null) {
+    } else if (controller.frequency == null) {
       showToast("Escolha qual será a frequência.");
     } else {
       showLoading(true);
@@ -67,8 +66,8 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
               title: "Opss",
               body: "É preciso sair das competições que esse hábito faz parte para poder deletá-lo.",
               action: <Widget>[
-                new FlatButton(
-                  child: new Text("Ok", style: TextStyle(fontSize: 17)),
+                FlatButton(
+                  child: const Text("Ok", style: TextStyle(fontSize: 17)),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -84,7 +83,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
               subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
               action: <Widget>[
                 FlatButton(
-                  child: Text("SIM", style: TextStyle(fontSize: 17)),
+                  child: const Text("Sim", style: TextStyle(fontSize: 17)),
                   onPressed: () {
                     showLoading(true);
                     controller.removeHabit().then((_) {
@@ -94,7 +93,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
                   },
                 ),
                 FlatButton(
-                  child: Text("NÃO", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                  child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -110,35 +109,20 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
         physics: BouncingScrollPhysics(),
         child: Column(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 40),
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 50, child: BackButton()),
-                  const Spacer(),
-                  const Text("EDITAR HÁBITO", style: const TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold)),
-                  const Spacer(),
-                  SizedBox(
-                    width: 50,
-                    child: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: removeHabit,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            Header(title: "EDITAR HÁBITO", button: IconButton(icon: Icon(Icons.delete), onPressed: removeHabit)),
             const SizedBox(height: 10),
             Observer(builder: (_) {
-              return ColorWidget(currentColor: controller.color, changeColor: controller.switchColor);
+              return SelectColor(currentColor: controller.color, onSelectColor: controller.selectColor);
             }),
             const SizedBox(height: 20),
             Observer(builder: (_) {
-              return HabitWidget(
-                  color: controller.habitColor, controller: habitTextController);
+              return HabitText(color: controller.habitColor, controller: habitTextController);
             }),
             Observer(builder: (_) {
-              return FrequencyWidget(color: controller.habitColor);
+              return SelectFrequency(
+                  color: controller.habitColor,
+                  currentFrequency: controller.frequency,
+                  selectFrequency: controller.selectFrequency);
             }),
             Observer(builder: (_) {
               return Container(

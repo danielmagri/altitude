@@ -1,4 +1,4 @@
-import 'package:altitude/common/enums/HabitFiltersType.dart';
+import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/RainbowAnimated.dart';
@@ -33,6 +33,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   initState() {
     super.initState();
     controller.fetchData();
+    controller.fetchPendingStatus();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -41,6 +42,8 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     controller.fetchData().then((_) {
       hasLevelUp(controller.user.data.score);
     });
+
+    controller.fetchPendingStatus();
     super.onPageBack(value);
   }
 
@@ -55,6 +58,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
+      controller.fetchPendingStatus();
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
           statusBarColor: Color.fromARGB(100, 250, 250, 250),
           systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
