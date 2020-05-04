@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart';
 import 'package:flutter/material.dart';
@@ -57,21 +58,8 @@ class _PendingFriendsPageState extends BaseState<PendingFriendsPage> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 40, bottom: 16),
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 50, child: BackButton()),
-                  Expanded(
-                    child: const Text("Solicitações de amizade",
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  ),
-                  const SizedBox(width: 50),
-                ],
-              ),
-            ),
+            const Header(title: "Solicitações de amizade"),
+            const SizedBox(height: 16),
             Observer(builder: (_) {
               return controller.pendingFriends.handleState(() {
                 return Column(

@@ -3,7 +3,7 @@ import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/feature/addHabit/addHabitPage.dart';
+import 'package:altitude/feature/addHabit/view/AddHabitPage.dart';
 import 'package:altitude/feature/advertisement/view/page/BuyBookPage.dart';
 import 'package:altitude/feature/competition/view/page/CreateCompetitionPage.dart';
 import 'package:altitude/feature/competition/view/page/competitionDetailsPage.dart';

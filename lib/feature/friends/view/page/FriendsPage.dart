@@ -92,7 +92,7 @@ class _FriendsPageState extends BaseState<FriendsPage> {
           brightness: Brightness.light,
           iconTheme: const IconThemeData(color: Colors.black),
           title: const Text("Amigos",
-              style: const TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+              style: const TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
           actions: <Widget>[
             Observer(builder: (_) {
               return IconButtonStatus(

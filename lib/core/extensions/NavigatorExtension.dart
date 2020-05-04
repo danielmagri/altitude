@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart'
     show CurvedAnimation, Curves, FadeTransition, NavigatorState, PageRouteBuilder, Widget;
 
 extension navigatorState on NavigatorState {
-  /// Retorna a data de hoje, sem as horas
   Future<T> smooth<T>(Widget child) {
     return this.push(PageRouteBuilder(
         opaque: false,

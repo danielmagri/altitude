@@ -35,6 +35,11 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
+  void navigatePushReplacement(String route, {Object arguments}) {
+    Navigator.pushReplacementNamed(context, route, arguments: arguments).then(onPageBack);
+  }
+
+  @protected
   void navigatePopAndPush(String route, {Object arguments}) {
     Navigator.popAndPushNamed(context, route, arguments: arguments).then(onPageBack);
   }
@@ -91,11 +96,11 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   void handleError(dynamic error) {
     showLoading(false);
     if (error is CloudFunctionsException) {
-        if (error.details == true) {
-          showToast(error.message);
-          return;
-        }
+      if (error.details == true) {
+        showToast(error.message);
+        return;
       }
+    }
     showToast("Ocorreu um erro");
   }
 }

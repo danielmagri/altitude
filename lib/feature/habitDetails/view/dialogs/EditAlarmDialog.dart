@@ -1,9 +1,9 @@
+import 'package:altitude/common/view/ReminderDay.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';
-import 'package:altitude/feature/habitDetails/model/ReminderWeekday.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -105,22 +105,6 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
         ),
       );
 
-  Widget _reminderWeekday(ReminderWeekday item) => Expanded(
-        child: Container(
-          padding: const EdgeInsets.all(4),
-          decoration:
-              BoxDecoration(shape: BoxShape.circle, color: item.state ? controller.habitColor : Colors.transparent),
-          child: InkWell(
-            onTap: () => controller.reminderWeekdayClick(item.id, !item.state),
-            child: Text(
-              item.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, color: item.state ? Colors.white : Colors.black),
-            ),
-          ),
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -157,12 +141,18 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
           Observer(
             builder: (_) {
               return Row(
-                children: controller.reminderWeekdaySelection.map((item) => _reminderWeekday(item)).toList(),
+                children: controller.reminderWeekdaySelection
+                    .map((item) => ReminderDay(
+                        day: item.title,
+                        state: item.state,
+                        color: controller.habitColor,
+                        onTap: () => controller.reminderWeekdayClick(item.id, !item.state)))
+                    .toList(),
               );
             },
           ),
           Container(
-            margin: EdgeInsets.only(top: 24),
+            margin: const EdgeInsets.only(top: 24),
             child: InkWell(
               onTap: reminderTimeClick,
               child: Observer(

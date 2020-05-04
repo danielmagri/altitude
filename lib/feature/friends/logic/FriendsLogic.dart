@@ -18,6 +18,8 @@ abstract class _FriendsLogicBase with Store {
 
   Future<void> fetchData() async {
     try {
+      checkPendingFriendsStatus();
+      
       var _friends = (await UserControl().getFriends()).asObservable();
       var _ranking = _friends.toList().asObservable();
 
@@ -31,7 +33,6 @@ abstract class _FriendsLogicBase with Store {
 
       friends.setData(_friends);
       ranking.setData(_ranking);
-      checkPendingFriendsStatus();
     } catch (error) {
       friends.setError(error);
       ranking.setError(error);

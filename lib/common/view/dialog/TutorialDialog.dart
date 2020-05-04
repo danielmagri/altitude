@@ -79,7 +79,10 @@ class TutorialDialog extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       child: RichText(
                         textAlign: TextAlign.justify,
-                        text: TextSpan(children: texts),
+                        text: TextSpan(
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 18, height: 1.2, fontFamily: "Montserrat"),
+                            children: texts),
                       ),
                     ),
                   ),

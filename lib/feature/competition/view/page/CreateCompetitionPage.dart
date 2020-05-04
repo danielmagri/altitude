@@ -1,6 +1,7 @@
 import 'package:altitude/common/constant/Constants.dart' show MAX_HABIT_COMPETITIONS;
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
+import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
@@ -77,18 +78,7 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 40),
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 50, child: BackButton()),
-                  const Spacer(),
-                  const Text("CRIAR COMPETIÇÃO", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  const Spacer(),
-                  const SizedBox(width: 50),
-                ],
-              ),
-            ),
+            const Header(title: "CRIAR COMPETIÇÃO"),
             const SizedBox(height: 32),
             const Padding(
               padding: const EdgeInsets.only(right: 16, left: 16),

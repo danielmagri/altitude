@@ -1,28 +1,6 @@
-import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:flutter/material.dart';
 
 abstract class Util {
-  static void goDetailsPage(BuildContext context, int id, int color, {bool pushReplacement = false}) async {
-    HabitDetailsPageArguments arguments = HabitDetailsPageArguments(id, color);
-    if (pushReplacement) {
-      Navigator.pushReplacementNamed(context, "habitDetails", arguments: arguments);
-    } else {
-      Navigator.pushNamed(context, "habitDetails", arguments: arguments);
-    }
-  }
-
-  static Future<dynamic> dialogNavigator(BuildContext context, dynamic dialog) async {
-    return Navigator.of(context).push(new PageRouteBuilder(
-        opaque: false,
-        transitionDuration: Duration(milliseconds: 300),
-        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
-                Widget child) =>
-            new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
-        pageBuilder: (BuildContext context, _, __) {
-          return dialog;
-        }));
-  }
-
   // static Future<bool> checkUpdatedVersion() async {
   //   return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
   // }
