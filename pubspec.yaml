@@ -1,7 +1,7 @@
 name: altitude
 description: A new Flutter project.
 
-version: 2.1.8
+version: 2.1.9
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
