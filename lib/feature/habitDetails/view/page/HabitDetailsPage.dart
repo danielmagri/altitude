@@ -1,16 +1,19 @@
 import 'dart:async' show Timer;
 import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
+import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
+import 'package:altitude/feature/habitDetails/view/widgets/AdvertisementBox.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/competitionWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
@@ -153,6 +156,11 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
     navigatePush('editHabit', arguments: arguments);
   }
 
+  void goBuyBook() {
+    var arguments = BuyBookPageArguments(FireConfig.instance.copyBook1);
+    navigatePush('buyBook', arguments: arguments);
+  }
+
   void competition(int index) {
     FireAnalytics().sendGoCompetition(index.toString());
     navigatePush('competition');
@@ -195,43 +203,30 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                     children: [
                       BackButton(color: controller.habitColor),
                       const Spacer(),
-                      Observer(builder: (_) {
-                        return controller.reminders.handleState(() {
-                          return Skeleton(
+                      Observer(
+                        builder: (_) => controller.reminders.handleState(
+                          () =>
+                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                          (data) => IconButton(
+                              icon: Icon(data.isNotEmpty ? Icons.alarm_on : Icons.add_alarm,
+                                  size: 25, color: controller.habitColor),
+                              onPressed: () => openBottomSheet(BottomSheetType.REMINDER)),
+                          (error) => const SizedBox(),
+                        ),
+                      ),
+                      Observer(
+                        builder: (_) => controller.habit.handleState(
+                          () => const Skeleton(
                             width: 40,
                             height: 40,
                             margin: const EdgeInsets.only(bottom: 4, right: 8),
-                          );
-                        }, (data) {
-                          return IconButton(
-                            icon: Icon(
-                              data.isNotEmpty ? Icons.alarm_on : Icons.add_alarm,
-                              size: 25,
-                              color: controller.habitColor,
-                            ),
-                            onPressed: () => openBottomSheet(BottomSheetType.REMINDER),
-                          );
-                        }, (error) {
-                          return SizedBox();
-                        });
-                      }),
-                      Observer(
-                        builder: (_) {
-                          return controller.habit.handleState(() {
-                            return Skeleton(
-                              width: 40,
-                              height: 40,
-                              margin: const EdgeInsets.only(bottom: 4, right: 8),
-                            );
-                          }, (data) {
-                            return IconButton(
-                              icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
-                              onPressed: goEditHabitPage,
-                            );
-                          }, (error) {
-                            return SizedBox();
-                          });
-                        },
+                          ),
+                          (data) => IconButton(
+                            icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
+                            onPressed: goEditHabitPage,
+                          ),
+                          (error) => const SizedBox(),
+                        ),
                       ),
                     ],
                   ),
@@ -242,79 +237,64 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                   width: double.maxFinite,
                   height: 50,
                   child: Observer(
-                    builder: (_) {
-                      return controller.isHabitDone.handleStateLoadable(() {
-                        return Skeleton(
-                          width: double.maxFinite,
-                          height: 50,
-                        );
-                      }, (data, loading) {
-                        return RaisedButton(
-                          color: data ? controller.habitColor : Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          elevation: 5.0,
-                          onPressed: () {
-                            if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
-                          },
-                          child: loading
-                              ? SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor:
-                                          AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
-                              : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: data ? Colors.white : controller.habitColor,
-                                      fontWeight: FontWeight.bold)),
-                        );
-                      }, (error) {
-                        return const SizedBox();
-                      });
-                    },
+                    builder: (_) => controller.isHabitDone.handleStateLoadable(
+                      () => const Skeleton(width: double.maxFinite, height: 50),
+                      (data, loading) => RaisedButton(
+                        color: data ? controller.habitColor : Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        elevation: 5.0,
+                        onPressed: () {
+                          if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
+                        },
+                        child: loading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor:
+                                        AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
+                            : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: data ? Colors.white : controller.habitColor,
+                                    fontWeight: FontWeight.bold)),
+                      ),
+                      (error) => const SizedBox(),
+                    ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 20),
                   child: Observer(
-                    builder: (_) {
-                      return controller.frequency.handleState(() {
-                        return Skeleton(
-                          width: 200,
-                          height: 20,
-                        );
-                      }, (data) {
-                        return Text(
-                          data.frequencyText(),
+                    builder: (_) => controller.frequency.handleState(
+                      () => const Skeleton(width: 200, height: 20),
+                      (data) => Text(data.frequencyText(),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54),
-                        );
-                      }, (error) {
-                        return const SizedBox();
-                      });
-                    },
+                          style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54)),
+                      (error) => const SizedBox(),
+                    ),
                   ),
                 ),
                 CueWidget(openBottomSheet: openBottomSheet),
                 const SizedBox(height: 16),
+                AdvertisementBox(
+                    color: controller.habitColor,
+                    title: controller.bookAdvertisement.title,
+                    message: controller.bookAdvertisement.subtitle,
+                    onTap: goBuyBook),
+                const SizedBox(height: 16),
                 CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
                 const SizedBox(height: 16),
-                Observer(builder: (_) {
-                  return controller.competitions.handleState(() {
-                    return Skeleton(
-                      width: double.maxFinite,
-                      height: 130,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                    );
-                  }, (data) {
-                    return data.isEmpty ? CompetitionWidget(goCompetition: competition) : SizedBox();
-                  }, (error) {
-                    return const SizedBox();
-                  });
-                }),
+                Observer(
+                  builder: (_) => controller.competitions.handleState(
+                    () => const Skeleton(
+                        width: double.maxFinite, height: 130, margin: EdgeInsets.symmetric(horizontal: 8)),
+                    (data) => data.isEmpty ? CompetitionWidget(goCompetition: competition) : const SizedBox(),
+                    (error) => const SizedBox(),
+                  ),
+                ),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
                 const SizedBox(height: 48),

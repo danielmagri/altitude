@@ -5,6 +5,7 @@ abstract class AppColors {
   static Color colorAccent = Color.fromARGB(255, 51, 51, 51);
   static const Color sky = Color.fromARGB(255, 139, 216, 240);
   static const Color popupMenuButtonHome = Color.fromARGB(255, 130, 130, 130);
+  static const Color lightGrey = Color.fromARGB(255, 211, 211, 211);
 
   static const List<Color> habitsColor = [
     Color.fromARGB(255, 244, 67, 54),

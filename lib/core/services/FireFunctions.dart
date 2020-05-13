@@ -17,10 +17,11 @@ class FireFunctions {
     }
   }
 
-  Future<bool> setScore(int score, Map<String, int> competitions) async {
+  Future<bool> setScore(int score, Map<String, int> competitions, Map<String, int> oldScores) async {
     Map<String, dynamic> map = new Map();
     map.putIfAbsent("score", () => score);
     map.putIfAbsent("competitions", () => competitions);
+    map.putIfAbsent("old_scores", () => oldScores);
 
     try {
       await CloudFunctions.instance.getHttpsCallable(functionName: 'updateUser').call(map);

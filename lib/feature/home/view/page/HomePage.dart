@@ -1,7 +1,8 @@
+import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
+import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/view/RainbowAnimated.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/view/BaseState.dart';
@@ -121,7 +122,8 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   }
 
   void goBuyBook() {
-    navigatePush('buyBook');
+    var arguments = BuyBookPageArguments(FireConfig.instance.copyBook1);
+    navigatePush('buyBook', arguments: arguments);
   }
 
   @override
@@ -141,10 +143,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                     children: <Widget>[
                       IconButton(tooltip: "Menu", icon: const Icon(Icons.menu), onPressed: showDrawer),
                       const Spacer(),
-                      IconButton(
-                          icon: RainbowAnimated(child: (color) => Icon(Icons.new_releases, color: color)),
-                          iconSize: 28,
-                          onPressed: goBuyBook),
+                      IconButton(icon: Icon(Icons.new_releases), iconSize: 28, onPressed: goBuyBook),
                     ],
                   ),
                 ),
