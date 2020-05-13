@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
@@ -68,7 +69,8 @@ class HabitsControl {
   /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit, Habit oldHabit, List<Reminder> reminders) async {
     if (habit.color != oldHabit.color) {
-      FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id), color: habit.color);
+      if (await UserControl().isLogged())
+        FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id), color: habit.color);
     }
 
     for (Reminder reminder in reminders) {

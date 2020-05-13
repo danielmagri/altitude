@@ -5,7 +5,6 @@ import 'package:flutter/material.dart'
     show
         BorderSide,
         Color,
-        Colors,
         Column,
         CrossAxisAlignment,
         EdgeInsets,

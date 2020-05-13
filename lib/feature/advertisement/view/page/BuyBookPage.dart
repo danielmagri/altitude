@@ -1,10 +1,15 @@
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BuyBookPage extends StatefulWidget {
+  const BuyBookPage(this.arguments);
+
+  final BuyBookPageArguments arguments;
+
   @override
   _BuyBookPageState createState() => _BuyBookPageState();
 }
@@ -22,7 +27,7 @@ class _BuyBookPageState extends BaseState<BuyBookPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: <Widget>[
             Container(
@@ -33,34 +38,18 @@ class _BuyBookPageState extends BaseState<BuyBookPage> {
             ),
             Container(
               color: Colors.orange.withAlpha(100),
+              width: double.maxFinite,
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text("  Entenda de uma vez por todas porque você não consegue mudar seus hábitos.",
+              child: Text(widget.arguments.book.title,
                   textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12, bottom: 20),
+              padding: const EdgeInsets.only(left: 12, right: 12, bottom: 20, top: 32),
               child: RichText(
                 textAlign: TextAlign.justify,
                 text: TextSpan(
-                  style: TextStyle(color: Colors.black, fontSize: 16, height: 1.15, fontFamily: "Montserrat"),
-                  children: [
-                    TextSpan(
-                      text:
-                          "\n\n  O livro “O Poder do Hábito” do autor Charles Duhigg, que foi a inspiração do Altitude, revela o ",
-                    ),
-                    TextSpan(text: "segredo dos hábitos", style: const TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                        text:
-                            " para você tomar o controle de sua vida rumo aos seus maiores desejos.\n\n  Quer aprender de vez como usar seu cotidiano para alcançar "),
-                    TextSpan(text: "uma vida melhor", style: const TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(
-                      text:
-                          "?\n\n  Nós, do Altitude, te trazemos a oportunidade de comprar o livro com ótimo preço e ainda ajudar a nossa plataforma a ",
-                    ),
-                    TextSpan(text: "mudar a vida", style: const TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: " de muitas outras pessoas."),
-                  ],
-                ),
+                    style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.2, fontFamily: "Montserrat"),
+                    children: widget.arguments.book.body),
               ),
             ),
             Row(

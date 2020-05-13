@@ -46,11 +46,8 @@ class CueWidget extends StatelessWidget {
     return Observer(
       builder: (_) {
         return controller.habit.handleState(() {
-          return Skeleton(
-            width: double.maxFinite,
-            height: 130,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-          );
+          return const Skeleton(
+              width: double.maxFinite, height: 130, margin: const EdgeInsets.symmetric(horizontal: 8));
         }, (data) {
           return SizedBox(
             height: 130,

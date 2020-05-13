@@ -100,9 +100,10 @@ class ScoreControl {
 
   Future<bool> setScore(int id, int score, DateTime date) async {
     SharedPref.instance.addscore(score);
+    var oldScore = await DatabaseService().listHabitCompetitions(id, date);
     bool result = await DatabaseService().updateScore(id, score, date);
     if (await UserControl().isLogged()) {
-      FireFunctions().setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date));
+      FireFunctions().setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date), oldScore);
     }
     return result ? true : false;
   }

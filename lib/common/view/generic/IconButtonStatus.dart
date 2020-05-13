@@ -6,7 +6,6 @@ import 'package:flutter/material.dart'
         Color,
         Colors,
         Container,
-        Icon,
         IconButton,
         SizedBox,
         Stack,

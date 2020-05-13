@@ -1,4 +1,5 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
+import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
@@ -55,7 +56,8 @@ class Router {
       case 'help':
         return MaterialPageRoute(builder: (_) => HelpPage());
       case 'buyBook':
-        return MaterialPageRoute(builder: (_) => BuyBookPage());
+        var arguments = settings.arguments as BuyBookPageArguments;
+        return MaterialPageRoute(builder: (_) => BuyBookPage(arguments));
       default:
         return MaterialPageRoute(builder: (_) {
           return Scaffold(
