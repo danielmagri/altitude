@@ -43,13 +43,14 @@ import 'package:flutter/material.dart'
         required;
 
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key key, @required this.goFriends, @required this.goCompetition, @required this.goSettings})
+  HomeDrawer({Key key, @required this.goFriends, @required this.goLearn, @required this.goCompetition, @required this.goSettings})
       : controller = GetIt.I.get<HomeLogic>(),
         super(key: key);
 
   final HomeLogic controller;
   final Function(bool) goFriends;
   final Function(bool) goCompetition;
+  final Function goLearn;
   final Function goSettings;
 
   void goRateApp(BuildContext context) async {
@@ -177,6 +178,15 @@ class HomeDrawer extends StatelessWidget {
                   ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
               onTap: () => goFriends(true),
+            ),
+            Divider(),
+            ListTile(
+              title: const Text('Altitude Learn', style: const TextStyle(fontSize: 16)),
+              leading: const Icon(Icons.local_library, color: Colors.black),
+              trailing: controller.pendingLearnStatus
+                  ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
+                  : const SizedBox(),
+              onTap: goLearn,
             ),
             Divider(),
             ListTile(

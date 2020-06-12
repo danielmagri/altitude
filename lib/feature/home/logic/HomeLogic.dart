@@ -1,3 +1,4 @@
+import 'package:altitude/common/constant/Books.dart';
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
@@ -36,6 +37,9 @@ abstract class _HomeLogicBase with Store {
   @observable
   bool pendingFriendStatus = false;
 
+  @observable
+  bool pendingLearnStatus = false;
+
   @action
   Future<void> fetchData() async {
     try {
@@ -68,6 +72,7 @@ abstract class _HomeLogicBase with Store {
   void fetchPendingStatus() {
     pendingCompetitionStatus = CompetitionsControl().pendingCompetitionsStatus;
     pendingFriendStatus = UserControl().getPendingFriendsStatus();
+    pendingLearnStatus = BOOKS.length != SharedPref.instance.pendingLearn ? true : false;
   }
 
   @action

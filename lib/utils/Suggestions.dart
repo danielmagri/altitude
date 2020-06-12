@@ -21,11 +21,11 @@ abstract class Suggestions {
   static const List _cues = [
     "Colocar livro ao lado da cama",
     "Deixar roupa do exercício do lado da cama",
-    "Deixar garrafa em cima da mesa",
+    "Arrumar tapete do alongamento",
     "Levar roupa do exercício para o trabalho",
+    "Deixar garrafa em cima da mesa",
     "Levar livro para o trabalho",
     "Deixar o óculos de leitura por perto",
-    "Arrumar tapete do alongamento",
     "Colocar uma música",
   ];
 

@@ -35,9 +35,13 @@ class SharedPref extends SharedPrefHandler {
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
   set pendingFriends(bool value) => saveBool(PENDING_FRIENDS, value);
 
-  // Pending Friends
+  // Pending Competition
   bool get pendingCompetition => getBool(COMPETITION_FRIENDS) ?? false;
   set pendingCompetition(bool value) => saveBool(COMPETITION_FRIENDS, value);
+
+  // Pending Learn
+  int get pendingLearn => getInt(NEW_LEARN_TEXT) ?? 0;
+  set pendingLearn(int value) => saveInt(NEW_LEARN_TEXT, value);
 
   // Habit Tutorial
   bool get habitTutorial => getBool(HABIT_TUTORIAL) ?? false;

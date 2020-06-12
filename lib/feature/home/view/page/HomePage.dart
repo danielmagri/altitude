@@ -1,5 +1,4 @@
-import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
-import 'package:altitude/core/services/FireConfig.dart';
+import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
@@ -117,20 +116,20 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
       navigatePush('competition');
   }
 
-  void goSettings() {
-    navigatePopAndPush('settings');
+  void goLearn() {
+    navigatePopAndPush('learn');
   }
 
-  void goBuyBook() {
-    var arguments = BuyBookPageArguments(FireConfig.instance.copyBook1);
-    navigatePush('buyBook', arguments: arguments);
+  void goSettings() {
+    navigatePopAndPush('settings');
   }
 
   @override
   Widget build(context) {
     return Scaffold(
         key: scaffoldKey,
-        drawer: HomeDrawer(goFriends: goFriends, goCompetition: goCompetition, goSettings: goSettings),
+        drawer:
+            HomeDrawer(goFriends: goFriends, goCompetition: goCompetition, goLearn: goLearn, goSettings: goSettings),
         drawerScrimColor: Colors.black12,
         body: Stack(
           children: <Widget>[
@@ -141,9 +140,12 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                   padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
                   child: Row(
                     children: <Widget>[
-                      IconButton(tooltip: "Menu", icon: const Icon(Icons.menu), onPressed: showDrawer),
+                      Observer(
+                          builder: (_) => IconButtonStatus(
+                              icon: const Icon(Icons.menu),
+                              onPressed: showDrawer,
+                              status: controller.pendingLearnStatus)),
                       const Spacer(),
-                      IconButton(icon: Icon(Icons.new_releases), iconSize: 28, onPressed: goBuyBook),
                     ],
                   ),
                 ),

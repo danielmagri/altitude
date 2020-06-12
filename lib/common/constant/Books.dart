@@ -1,38 +1,172 @@
+import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/model/Book.dart';
-import 'package:flutter/material.dart' show TextSpan, TextStyle, FontWeight;
+import 'package:flutter/material.dart'
+    show Colors, EdgeInsets, FontWeight, Image, Padding, RichText, TextAlign, TextSpan, TextStyle;
 
-const BOOKS = const [
-  Book("Segredo revelado sobre os hábitos!", "Entenda de uma vez por todas porque você não consegue mudar seus hábitos.", [
-    TextSpan(text: "O livro “O Poder do Hábito” do autor Charles Duhigg, que foi a inspiração do Altitude, revela o "),
-    TextSpan(text: "segredo dos hábitos", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(
-        text:
-            " para você tomar o controle de sua vida rumo aos seus maiores desejos.\n\nQuer aprender de vez como usar seu cotidiano para alcançar "),
-    TextSpan(text: "uma vida melhor", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(
-        text:
-            "?\n\nNós, do Altitude, te trazemos a oportunidade de comprar o livro com ótimo preço e ainda ajudar a nossa plataforma a "),
-    TextSpan(text: "mudar a vida", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(text: " de muitas outras pessoas."),
-  ]),
-  Book("2 coisas que você precisa muito saber!", "A segunda vai transformar a maneira como enxergar seus hábitos.", [
-    TextSpan(
-        text:
-            "Se você está usando o Altitude é sinal que também deseja criar novos hábitos e melhorar sua qualidade de vida, certo? Pois saiba que tenho "),
-    TextSpan(text: "duas ótimas notícias para você!", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(text: "\n\nA primeira é que você já fez a parte mais difícil de todas: "),
-    TextSpan(text: "dar o primeiro passo", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(
-        text:
-            " para a mudança quando começou a usar o Altitude.\n\nA segunda notícia é que para você conseguir uma mudança permanente dos hábitos, você precisa saber como eles realmente funcionam. Você não sabe? Calma, pra isso também temos uma solução: o livro “"),
-    TextSpan(text: "O poder do hábito", style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(text: "” explica tudo isso de forma muito simples e ainda te "),
-    TextSpan(
-        text: "ensina passo a passo como mudar qualquer hábito da sua vida",
-        style: const TextStyle(fontWeight: FontWeight.bold)),
-    TextSpan(text: ".\n\nSaiba mais acessando o livro pela Amazon no botão abaixo e comece a ler agora mesmo!"),
-    TextSpan(
-        text: "\n\nComprando por esse link você nos ajuda a manter nossa comunidade do Altitude!",
-        style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 14)),
-  ]),
+var BOOKS = [
+  Book(
+      "O que você precisa saber para mudar seus hábitos",
+      "assets/loop_smoke.png",
+      4,
+      [
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "   Você sabia que em 1900 escovar os dentes não era algo comum entre as pessoas? Apenas 7% da população dos Estados Unidos tinha o hábito da escovação. E foi nesse período que uma empresa dental teve uma "),
+                  TextSpan(text: "ideia genial", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          ", ela adicionou um ingrediente na pasta de dente e fez o número de pessoas que escovam os dentes pular para 65% em 10 anos! Qual foi o grande segredo?"),
+                ]),
+          ),
+        ),
+        Image.asset("assets/brush.png", width: 150),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "   40% de tudo que fazemos no nosso dia são hábitos, ou seja, quase metade de nossas decisões são feitas em “piloto automático”. Isso serve para que seu cérebro poupe energia. Como até as coisas mais complexas, como dirigir um carro, com o tempo se tornam automáticas. Por isso aprender sobre os hábitos é algo determinante para mudar sua vida!"),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "   Os hábitos podem ser divididos em 3 partes, que formam o "),
+                  TextSpan(text: "loop do hábito", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: ", elas são: o gatilho, a rotina e a recompensa."),
+                ]),
+          ),
+        ),
+        Image.asset("assets/loop.png", width: 200),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "O "),
+                  TextSpan(text: "gatilho", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " nada mais é do que um sinal que você dá ao cérebro para ele iniciar o hábito. Como colocar o livro ao lado da cama, arrumar tapete do alongamento."),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 20, top: 20),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "A "),
+                  TextSpan(text: "rotina", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " é a ação que você toma ao ter o gatilho. Como acender a luz de um cômodo (mesmo a casa estando sem energia), checar as notificações ao pegar o celular."),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 20),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "A "),
+                  TextSpan(text: "recompensa", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " é o “prêmio” ou sensação que você tem ao realizar a tarefa, quanto melhor for o prêmio, mais forte será a força do hábito."),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "    Voltando a história da pasta de dente, o ingrediente foi nada mais que o sabor que deixava a boca com frescor, fazendo com que as pessoas associassem o frescor com limpeza."),
+                ]),
+          ),
+        ),
+        Image.asset("assets/brush_with_toothpaste.png", width: 150),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text: "    Portanto, quem deseja criar um novo hábito não deve focar na rotina, mas sim na "),
+                  TextSpan(
+                      text: "conexão do gatilho com a recompensa", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: ". Com um gatilho certo e uma recompensa forte, criar novos hábitos será bem mais fácil."),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "    E para mudar hábitos o segredo é o mesmo, o gatilho e a recompensa já estão criadas na sua cabeça, portanto basta "),
+                  TextSpan(
+                      text: "mudar a rotina que dará a mesma recompensa",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          ". Como por exemplo, o desejo de fumar (gatilho), que traz a recompensa de relaxamento é mantido, mas ao invés de fumar você pode fazer uma caminhada, comer algum alimento saudável, ou fazer algo que te traga a mesma recompensa."),
+                ]),
+          ),
+        ),
+        Image.asset("assets/loop_smoke.png", width: 200),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "    Quer "),
+                  TextSpan(
+                      text: "entender tudo que precisa saber sobre os hábitos",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " e ainda ajudar a plataforma do Altitude? Compre o livro \"O poder do hábito\" pela botão abaixo na Amazon."),
+                ]),
+          ),
+        ),
+      ],
+      "assets/o_poder_do_habito.jpg",
+      BUY_BOOK)
 ];

@@ -184,11 +184,9 @@ class FireAnalytics {
     }
   }
 
-  void sendBuyButtonClicked() {
+  void sendGenerateLead() {
     try {
-      analytics.logEvent(
-        name: 'buy_button_clicked',
-      );
+      analytics.logGenerateLead();
     } catch (e) {
       print(e);
     }
