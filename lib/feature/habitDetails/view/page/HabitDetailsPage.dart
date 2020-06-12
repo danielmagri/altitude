@@ -1,19 +1,16 @@
 import 'dart:async' show Timer;
 import 'package:altitude/common/enums/DonePageType.dart';
-import 'package:altitude/common/router/arguments/BuyBookPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
-import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:altitude/feature/habitDetails/view/widgets/AdvertisementBox.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/competitionWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
@@ -156,11 +153,6 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
     navigatePush('editHabit', arguments: arguments);
   }
 
-  void goBuyBook() {
-    var arguments = BuyBookPageArguments(FireConfig.instance.copyBook1);
-    navigatePush('buyBook', arguments: arguments);
-  }
-
   void competition(int index) {
     FireAnalytics().sendGoCompetition(index.toString());
     navigatePush('competition');
@@ -279,12 +271,12 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 ),
                 CueWidget(openBottomSheet: openBottomSheet),
                 const SizedBox(height: 16),
-                AdvertisementBox(
-                    color: controller.habitColor,
-                    title: controller.bookAdvertisement.title,
-                    message: controller.bookAdvertisement.subtitle,
-                    onTap: goBuyBook),
-                const SizedBox(height: 16),
+                // AdvertisementBox(
+                //     color: controller.habitColor,
+                //     title: controller.bookAdvertisement.title,
+                //     message: controller.bookAdvertisement.subtitle,
+                //     onTap: goBuyBook),
+                // const SizedBox(height: 16),
                 CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
                 const SizedBox(height: 16),
                 Observer(

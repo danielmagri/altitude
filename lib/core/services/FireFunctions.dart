@@ -6,7 +6,7 @@ import 'package:altitude/core/services/FireMenssaging.dart';
 
 class FireFunctions {
   Future<bool> newUser(String name, String email, int score) async {
-    Person person = new Person(name: name, email: email, score: score, fcmToken: await FireMessaging().getToken());
+    Person person = Person(name: name, email: email, score: score, fcmToken: await FireMessaging().getToken());
 
     try {
       await CloudFunctions.instance.getHttpsCallable(functionName: 'newUser').call(person.toJson());

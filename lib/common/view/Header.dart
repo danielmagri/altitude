@@ -3,15 +3,16 @@ import 'package:flutter/material.dart'
         BackButton,
         Container,
         EdgeInsets,
+        Expanded,
         FontWeight,
         Key,
         Row,
         SizedBox,
-        Spacer,
         StatelessWidget,
         Text,
         TextStyle,
         Widget;
+import 'package:flutter/widgets.dart';
 
 class Header extends StatelessWidget {
   const Header({Key key, this.title, this.button}) : super(key: key);
@@ -26,9 +27,11 @@ class Header extends StatelessWidget {
       child: Row(
         children: [
           const SizedBox(width: 50, child: BackButton()),
-          const Spacer(),
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const Spacer(),
+          Expanded(
+              child: Text(title,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
           SizedBox(width: 50, child: button),
         ],
       ),
