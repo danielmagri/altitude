@@ -26,11 +26,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class HomebottomNavigation extends StatelessWidget {
-  HomebottomNavigation({Key key, @required this.goAddHabit, @required this.goFriends, @required this.goCompetition})
+  HomebottomNavigation({Key key, @required this.goAddHabit, @required this.goStatistics, @required this.goCompetition})
       : super(key: key);
 
   final Function goAddHabit;
-  final Function(bool) goFriends;
+  final Function goStatistics;
   final Function(bool) goCompetition;
   final HomeLogic controller = GetIt.I.get<HomeLogic>();
 
@@ -58,8 +58,8 @@ class HomebottomNavigation extends StatelessWidget {
             Observer(
                 builder: (_) => IconButtonStatus(
                     status: controller.pendingFriendStatus,
-                    icon: const Icon(Icons.people, color: Colors.white, size: 28),
-                    onPressed: () => goFriends(false))),
+                    icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
+                    onPressed: () => goStatistics())),
             InkWell(
               onTap: _addHabitTap,
               child: Container(

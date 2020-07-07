@@ -102,11 +102,12 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     navigatePush('habitDetails', arguments: arguments);
   }
 
-  void goFriends(bool pop) {
-    if (pop)
+  void goFriends() {
       navigatePopAndPush('friends');
-    else
-      navigatePush('friends');
+  }
+
+  void goStatistics() {
+      navigatePush('statistics');
   }
 
   void goCompetition(bool pop) {
@@ -214,6 +215,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
           ],
         ),
         bottomNavigationBar:
-            HomebottomNavigation(goAddHabit: goAddHabit, goFriends: goFriends, goCompetition: goCompetition));
+            HomebottomNavigation(goAddHabit: goAddHabit, goStatistics: goStatistics, goCompetition: goCompetition));
   }
 }

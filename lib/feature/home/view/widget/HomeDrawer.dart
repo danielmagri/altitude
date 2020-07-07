@@ -48,7 +48,7 @@ class HomeDrawer extends StatelessWidget {
         super(key: key);
 
   final HomeLogic controller;
-  final Function(bool) goFriends;
+  final Function goFriends;
   final Function(bool) goCompetition;
   final Function goLearn;
   final Function goSettings;
@@ -177,7 +177,7 @@ class HomeDrawer extends StatelessWidget {
               trailing: controller.pendingFriendStatus
                   ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
-              onTap: () => goFriends(true),
+              onTap: goFriends,
             ),
             Divider(),
             ListTile(

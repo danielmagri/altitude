@@ -15,6 +15,7 @@ import 'package:altitude/feature/friends/view/page/FriendsPage.dart';
 import 'package:altitude/feature/friends/view/page/PendingFriendsPage.dart';
 import 'package:altitude/feature/habitDetails/view/page/HabitDetailsPage.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
+import 'package:altitude/feature/home/view/page/StatisticsPage.dart';
 import 'package:altitude/feature/learn/view/LearnDetailPage.dart';
 import 'package:altitude/feature/learn/view/LearnPage.dart';
 import 'package:altitude/feature/setting/view/page/HelpPage.dart';
@@ -33,6 +34,8 @@ class Router {
       case 'allLevels':
         var arguments = settings.arguments as AllLevelsPageArguments;
         return MaterialPageRoute(builder: (_) => AllLevelsPage(arguments), settings: RouteSettings(name: 'allLevels'));
+      case 'statistics':
+        return MaterialPageRoute(builder: (_) => Statisticspage(), settings: RouteSettings(name: 'statistics'));
       case 'friends':
         return MaterialPageRoute(builder: (_) => FriendsPage(), settings: RouteSettings(name: 'friends'));
       case 'pendingFriends':

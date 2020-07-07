@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Book.dart';
 import 'package:altitude/common/router/arguments/LearnDetailPageArguments.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/view/BaseState.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class _LearnPageState extends BaseState<LearnPage> {
 
   void goLearnDetail(int index) {
     LearnDetailPageArguments arguments = LearnDetailPageArguments(index);
+    FireAnalytics().sendLearn(BOOKS[index].keyword);
     navigatePush('learnDetail', arguments: arguments);
   }
 

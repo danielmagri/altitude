@@ -6,6 +6,7 @@ import 'package:flutter/material.dart'
 var BOOKS = [
   Book(
       "O que você precisa saber para mudar seus hábitos",
+      "change_your_habits",
       "assets/loop_smoke.png",
       4,
       [
@@ -168,5 +169,115 @@ var BOOKS = [
         ),
       ],
       "assets/o_poder_do_habito.jpg",
-      BUY_BOOK)
+      BUY_BOOK_1),
+  Book(
+      "Como projetar seu ambiente para o sucesso",
+      "environment_for_success",
+      "assets/cake.png",
+      2,
+      [
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+              style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+              children: [
+                TextSpan(
+                    text:
+                        "   Aposto que já aconteceu com você de começar uma dieta, nos primeiros dias seguir a risca e depois de um tempo quando vê já está comendo igual antes. Ou decidir que vai começar a ler todos os dias de noite e quando percebe já esta a dias esquecendo de ler. Bom, tenho uma noticia boa pra te dar, "),
+                TextSpan(
+                    text: "o problema não está em você mas sim no seu ambiente",
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: "."),
+              ],
+            ),
+          ),
+        ),
+        Image.asset("assets/cake.png", width: 200),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "   É mais difícil ter uma alimentação saudável quando se tem um bolo de chocolate sobre a mesa. Afinal o bolo já está ali, só sentar e comer, diferentemente de preparar uma refeição. Nosso cérebro sempre busca o caminho mais fácil. E é aí que está o "),
+                  TextSpan(
+                      text: "segredo das pessoas que tem autocontrole",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: "."),
+                ]),
+          ),
+        ),
+        Image.asset("assets/meditating.png", width: 150),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 20, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "   O segredo delas não é controlar a tentação, mas evitar ela ao máximo. Se você quer mudar seus hábitos alimentares trocar o bolo por uma cesta com frutas seria um bom começo. "),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 20),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text: "   Todo hábito é iniciado por um estímulo.",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " Infelizmente, os ambientes em que vivemos muitas vezes favorecem não praticar certas ações porque não existe estímulo óbvio para acionar tal comportamento. É fácil não praticar violão quando ele está escondido no armário. É fácil não ler um livro quando ele fica guardado dentro da gaveta."),
+                ]),
+          ),
+        ),
+        Image.asset("assets/book.png", width: 250),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(
+                      text:
+                          "   Se você deseja criar um hábito pense em como pode mudar seu ambiente para estimular seu cérebro a fazer o que deseja.",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " Se quer beber mais água durante o dia, deixe uma garrafa sempre ao seu lado, se quer ler um livro antes de dormir deixe o livro sobre o travesseiro. Facilite o caminho para o seu cérebro para que ele faça determinada ação sem nem precisar lembrar dela."),
+                ]),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 12, right: 12, bottom: 32, top: 32),
+          child: RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.25, fontFamily: "Montserrat"),
+                children: [
+                  TextSpan(text: "    Quer "),
+                  TextSpan(
+                      text: "entender tudo que precisa saber sobre os hábitos",
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text:
+                          " e ainda ajudar a plataforma do Altitude? Compre o livro \"Hábitos Atômicos\" pela botão abaixo na Amazon."),
+                ]),
+          ),
+        ),
+      ],
+      "assets/habitos_atomicos.jpg",
+      BUY_BOOK_2)
 ];

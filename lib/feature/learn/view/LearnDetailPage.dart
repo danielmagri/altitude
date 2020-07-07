@@ -46,7 +46,10 @@ class _LearnDetailPageState extends State<LearnDetailPage> {
             Column(children: widget.arguments.book.body),
             Row(
               children: <Widget>[
-                Expanded(child: Image.asset(widget.arguments.book.bookImage)),
+                Expanded(child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Image.asset(widget.arguments.book.bookImage),
+                )),
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.only(right: 16),

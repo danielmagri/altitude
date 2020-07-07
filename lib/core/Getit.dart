@@ -13,6 +13,7 @@ import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/feature/home/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:get_it/get_it.dart';
@@ -22,10 +23,11 @@ class Getit {
     var getIt = GetIt.instance;
 
     getIt.registerSingletonAsync<SharedPref>(() => SharedPref.initialize());
-    getIt.registerSingletonAsync<FireConfig>(() => FireConfig.initialize());
+    // getIt.registerSingletonAsync<FireConfig>(() => FireConfig.initialize());
 
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());
     getIt.registerLazySingleton<AddHabitLogic>(() => AddHabitLogic());
+    getIt.registerLazySingleton<StatisticsLogic>(() => StatisticsLogic());
     getIt.registerLazySingleton<HabitDetailsLogic>(() => HabitDetailsLogic());
     getIt.registerLazySingleton<EditCueLogic>(() => EditCueLogic());
     getIt.registerLazySingleton<EditAlarmLogic>(() => EditAlarmLogic());
