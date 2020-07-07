@@ -184,6 +184,19 @@ class FireAnalytics {
     }
   }
 
+  void sendLearn(String keyword) {
+    try {
+      analytics.logEvent(
+        name: 'learn_text',
+        parameters: <String, dynamic>{
+          'text': keyword,
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void sendGenerateLead() {
     try {
       analytics.logGenerateLead();
