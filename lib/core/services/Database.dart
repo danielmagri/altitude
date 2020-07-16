@@ -137,7 +137,7 @@ class DatabaseService {
   /// Retorna todos os hábitos registrados.
   Future<List<Habit>> getAllHabits() async {
     final db = await database;
-    var result = await db.rawQuery('SELECT id, color, habit_text FROM habit;');
+    var result = await db.rawQuery('SELECT * FROM habit;');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
     return list;
