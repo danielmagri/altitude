@@ -1,5 +1,4 @@
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
@@ -13,7 +12,7 @@ import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
-import 'package:altitude/feature/home/logic/StatisticsLogic.dart';
+import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:get_it/get_it.dart';
