@@ -274,6 +274,29 @@ class DatabaseService {
     return list;
   }
 
+  /// Retorna uma lista com todos os dias feitos.
+  Future<List<DayDone>> getAllDaysDone({DateTime startDate, DateTime endDate}) async {
+    final db = await database;
+    List<dynamic> result;
+
+    if (startDate != null && endDate != null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+                                                                 AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else if (startDate != null && endDate == null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else if (startDate == null && endDate != null) {
+      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
+                                                                 ORDER BY date_done;''');
+    } else {
+      result = await db.rawQuery('SELECT * FROM day_done ORDER BY date_done;');
+    }
+
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    return list;
+  }
+
   Future<bool> checkDayDone(int id, DateTime date) async {
     final db = await database;
 
