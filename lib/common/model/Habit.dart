@@ -1,3 +1,7 @@
+import 'dart:ui' show Color;
+
+import 'package:altitude/utils/Color.dart';
+
 class Habit {
   int id;
   int score;
@@ -7,14 +11,9 @@ class Habit {
   DateTime initialDate;
   int daysDone;
 
-  Habit(
-      {this.id,
-      this.color,
-      this.cue,
-      this.habit,
-      this.score,
-      this.initialDate,
-      this.daysDone});
+  Habit({this.id, this.color, this.cue, this.habit, this.score, this.initialDate, this.daysDone});
+
+  Color get habitColor => AppColors.habitsColor[color];
 
   factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
       id: json["id"],
@@ -22,10 +21,9 @@ class Habit {
       cue: json["cue_text"] == null ? "" : json["cue_text"],
       habit: json["habit_text"],
       score: json["score"],
-      initialDate:
-          json.containsKey("initial_date") && json["initial_date"] != null
-              ? DateTime.parse(json["initial_date"])
-              : null,
+      initialDate: json.containsKey("initial_date") && json["initial_date"] != null
+          ? DateTime.parse(json["initial_date"])
+          : null,
       daysDone: json["days_done"]);
 
   Map<String, dynamic> toJson() => {

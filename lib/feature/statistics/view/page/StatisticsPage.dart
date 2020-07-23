@@ -3,6 +3,7 @@ import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
+import 'package:altitude/feature/statistics/view/widget/HistoricChart.dart';
 import 'package:altitude/feature/statistics/view/widget/Indicator.dart';
 import 'package:altitude/feature/statistics/view/widget/PieChartScore.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,8 @@ class _StatisticspageState extends State<Statisticspage> {
                     () => Skeleton.custom(
                           child: Wrap(
                             alignment: WrapAlignment.center,
+                            runSpacing: 15,
+                            spacing: 15,
                             children: List.generate(
                               5,
                               (index) => Container(
@@ -61,8 +64,12 @@ class _StatisticspageState extends State<Statisticspage> {
                     (error) => DataError())),
             const SizedBox(height: 20),
             Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(bottom: 16, left: 24),
+                child: const Text("Porcetagem", style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20))),
+            Container(
                 width: double.maxFinite,
-                height: 260,
+                height: 200,
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 child: Observer(
                   builder: (_) => controller.habitsData.handleState(
@@ -76,6 +83,21 @@ class _StatisticspageState extends State<Statisticspage> {
                       (data) => PieChartScore(data: data.toList(), onClick: controller.selectHabit),
                       (error) => DataError()),
                 )),
+            const SizedBox(height: 50),
+            Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(bottom: 16, left: 24),
+                child: const Text("Histórico", style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20))),
+            Observer(
+              builder: (_) => controller.historicData.handleState(
+                  () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Skeleton(width: double.maxFinite, height: HISTORIC_CHART_HEIGHT),
+                      ),
+                  (data) => HistoricChart(list: data),
+                  (error) => DataError()),
+            ),
+            const SizedBox(height: 50),
           ],
         ),
       ),

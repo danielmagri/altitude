@@ -158,6 +158,11 @@ class HabitsControl {
     return map;
   }
 
+  /// Retorna um map com os dias feitos.
+  Future<List<DayDone>> getAllDaysDone({DateTime startDate, DateTime endDate}) async {
+    return await DatabaseService().getAllDaysDone(startDate: startDate, endDate: endDate);
+  }
+
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
   Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {bool add = true}) async {
     Frequency frequency = await getFrequency(id);

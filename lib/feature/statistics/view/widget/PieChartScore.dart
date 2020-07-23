@@ -23,7 +23,7 @@ class PieChartScore extends StatelessWidget {
                 color: e.habitColor,
                 value: e.porcentage,
                 title: e.porcentage < 5 ? '' : '${e.porcentage.toInt()}%',
-                radius: e.selected ? 130 : 120,
+                radius: e.selected ? 100 : 90,
                 titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xffffffff))))
             .toList(),
       ),
