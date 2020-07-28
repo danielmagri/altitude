@@ -3,6 +3,7 @@ import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
+import 'package:altitude/feature/statistics/view/widget/FrequencyChart.dart';
 import 'package:altitude/feature/statistics/view/widget/HistoricChart.dart';
 import 'package:altitude/feature/statistics/view/widget/Indicator.dart';
 import 'package:altitude/feature/statistics/view/widget/PieChartScore.dart';
@@ -63,10 +64,7 @@ class _StatisticspageState extends State<Statisticspage> {
                         ),
                     (error) => DataError())),
             const SizedBox(height: 20),
-            Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(bottom: 16, left: 24),
-                child: const Text("Porcetagem", style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20))),
+            const HeaderSection(title: "Porcetagem"),
             Container(
                 width: double.maxFinite,
                 height: 200,
@@ -84,10 +82,7 @@ class _StatisticspageState extends State<Statisticspage> {
                       (error) => DataError()),
                 )),
             const SizedBox(height: 50),
-            Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(bottom: 16, left: 24),
-                child: const Text("Histórico", style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20))),
+            const HeaderSection(title: "Histórico"),
             Observer(
               builder: (_) => controller.historicData.handleState(
                   () => Padding(
@@ -98,9 +93,33 @@ class _StatisticspageState extends State<Statisticspage> {
                   (error) => DataError()),
             ),
             const SizedBox(height: 50),
+            const HeaderSection(title: "Frquência"),
+            Observer(
+              builder: (_) => controller.frequencyData.handleState(
+                  () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Skeleton(width: double.maxFinite, height: FREQUENCY_CHART_HEIGHT),
+                      ),
+                  (data) => FrequencyChart(list: data),
+                  (error) => DataError()),
+            ),
+            const SizedBox(height: 50),
           ],
         ),
       ),
     );
+  }
+}
+
+class HeaderSection extends StatelessWidget {
+  const HeaderSection({Key key, this.title}) : super(key: key);
+
+  final String title;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        alignment: Alignment.centerLeft,
+        margin: const EdgeInsets.only(bottom: 16, left: 24),
+        child: Text(title, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20)));
   }
 }

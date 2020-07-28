@@ -4,6 +4,7 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/model/DataState.dart';
+import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
 import "package:collection/collection.dart";
@@ -14,8 +15,8 @@ class StatisticsLogic = _StatisticsLogicBase with _$StatisticsLogic;
 
 abstract class _StatisticsLogicBase with Store {
   DataState<ObservableList<HabitStatisticData>> habitsData = DataState();
-
   DataState<List<HistoricStatisticData>> historicData = DataState();
+  DataState<List<FrequencyStatisticData>> frequencyData = DataState();
 
   int selectedId;
 
@@ -25,7 +26,11 @@ abstract class _StatisticsLogicBase with Store {
       List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
       List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
 
-      historicData.setData(await handleHistoricData(daysDone, habits));
+      Map<DateTime, List<DayDone>> dateGrouped =
+          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.dateDone.year, e.dateDone.month));
+
+      historicData.setData(await handleHistoricData(dateGrouped, habits));
+      frequencyData.setData(handleFrequencyData(dateGrouped));
       habitsData
           .setData(habits.map((e) => HabitStatisticData(e.id, e.score, e.habit, e.color)).toList().asObservable());
     } catch (error) {
@@ -34,9 +39,8 @@ abstract class _StatisticsLogicBase with Store {
     }
   }
 
-  Future<List<HistoricStatisticData>> handleHistoricData(List<DayDone> daysDone, List<Habit> habits) async {
-    Map<DateTime, List<DayDone>> dayGroup =
-        groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.dateDone.year, e.dateDone.month));
+  Future<List<HistoricStatisticData>> handleHistoricData(
+      Map<DateTime, List<DayDone>> dateGrouped, List<Habit> habits) async {
     Map<int, Frequency> frequencies = Map();
 
     // Coleta a frequencia de todos os hábitos
@@ -50,7 +54,7 @@ abstract class _StatisticsLogicBase with Store {
     int lastMonth = 0;
 
     // Passa por cada grupo de mês
-    dayGroup.forEach((key, value) {
+    dateGrouped.forEach((key, value) {
       // Separa o grupo por hábitos para somar a pontuação total
       Map<int, List<DayDone>> dayGroupedHabit = groupBy<DayDone, int>(value, (e) => e.habitId);
       Map<Habit, int> habitsMap = Map();
@@ -80,10 +84,45 @@ abstract class _StatisticsLogicBase with Store {
               .add(HistoricStatisticData(Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
     }
 
-    return dayHistoric;
+    return dayHistoric.reversed.toList();
   }
 
-  @action
+  List<FrequencyStatisticData> handleFrequencyData(Map<DateTime, List<DayDone>> dateGrouped) {
+    List<FrequencyStatisticData> dayFrequency = List();
+
+    int currentYear = 0;
+    int lastMonth = 0;
+
+    dateGrouped.forEach((key, value) {
+      Map<DateTime, List<DayDone>> dayGrouped = 
+          groupBy<DayDone, DateTime>(value, (e) => DateTime(e.dateDone.year, e.dateDone.month, e.dateDone.day));
+
+      List<int> weekdayDone = List.generate(
+          7, (i) => dayGrouped.keys.where((e) => e.weekday == i || (e.weekday == 7 && i == 0)).length);
+
+      if (key.month > lastMonth + 1 && lastMonth != 0) {
+        List.generate(key.month - lastMonth - 1,
+            (i) => dayFrequency.add(FrequencyStatisticData(List(), lastMonth + 1 + i, key.year, false)));
+      }
+
+      dayFrequency.add(FrequencyStatisticData(weekdayDone, key.month, key.year, currentYear != key.year));
+
+      lastMonth = key.month;
+      if (currentYear != key.year) {
+        currentYear = key.year;
+      }
+    });
+
+    if (DateTime.now().month > lastMonth) {
+      List.generate(
+          DateTime.now().month - lastMonth,
+          (i) => dayFrequency
+              .add(FrequencyStatisticData(List(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
+    }
+
+    return dayFrequency.reversed.toList();
+  }
+
   void selectHabit(int id) {
     // if (selectedId != null) {
     //   habitsData.data.firstWhere((e) => e.id == selectedId).selected = false;

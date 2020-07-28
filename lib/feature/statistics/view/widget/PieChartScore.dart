@@ -13,7 +13,9 @@ class PieChartScore extends StatelessWidget {
     return PieChart(
       PieChartData(
         pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
-          onClick(data[pieTouchResponse.touchedSectionIndex].id);
+          if (pieTouchResponse.touchedSectionIndex != null) {
+            onClick(data[pieTouchResponse.touchedSectionIndex].id);
+          }
         }),
         borderData: FlBorderData(show: false),
         sectionsSpace: 5,
