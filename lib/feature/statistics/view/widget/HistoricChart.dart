@@ -35,24 +35,22 @@ class HistoricChart extends StatelessWidget {
 
   static const int linesCount = 6;
 
+  List<Widget> lines() {
+    List<Widget> lines;
+    double space = (HISTORIC_CHART_HEIGHT - 30) / (linesCount - 1);
+
+    lines = List.generate(
+        linesCount,
+        (i) => Container(
+            height: 1, color: Colors.grey[300], margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1)));
+
+    lines.add(const SizedBox(height: 29));
+
+    return lines;
+  }
+
   @override
   Widget build(context) {
-    List<Widget> lines() {
-      List<Widget> lines;
-      double space = (HISTORIC_CHART_HEIGHT - 30) / (linesCount - 1);
-
-      lines = List.generate(
-          linesCount,
-          (i) => Container(
-              height: 1,
-              color: Colors.grey[300],
-              margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1)));
-
-      lines.add(const SizedBox(height: 29));
-
-      return lines;
-    }
-
     return Container(
       height: HISTORIC_CHART_HEIGHT,
       child: Stack(
@@ -64,8 +62,9 @@ class HistoricChart extends StatelessWidget {
           ),
           ListView.builder(
               itemCount: list.length,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.only(left: 8, right: 38),
               shrinkWrap: true,
+              reverse: true,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) =>
