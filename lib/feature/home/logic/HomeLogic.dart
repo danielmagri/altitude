@@ -40,6 +40,9 @@ abstract class _HomeLogicBase with Store {
   @observable
   bool pendingLearnStatus = false;
 
+  @observable
+  bool pendingStatisticsStatus = false;
+
   @action
   Future<void> fetchData() async {
     try {
@@ -73,6 +76,7 @@ abstract class _HomeLogicBase with Store {
     pendingCompetitionStatus = CompetitionsControl().pendingCompetitionsStatus;
     pendingFriendStatus = UserControl().getPendingFriendsStatus();
     pendingLearnStatus = BOOKS.length != SharedPref.instance.pendingLearn ? true : false;
+    pendingStatisticsStatus = SharedPref.instance.pendingStatistic;
   }
 
   @action

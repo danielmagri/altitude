@@ -1,5 +1,6 @@
 import 'dart:math' show min;
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
+import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -71,7 +72,7 @@ class FrequencyChart extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               itemBuilder: (context, index) => FrequencyCircle(data: list[index], space: space)),
           Container(
-            color: Theme.of(context).canvasColor.withAlpha(128),
+            color: Theme.of(context).canvasColor.withAlpha(200),
             child: Column(
                 children: weekday
                     .map((e) => Container(
@@ -106,7 +107,7 @@ class FrequencyCircle extends StatelessWidget {
           child: Container(
             height: size,
             width: size,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red.withAlpha(alpha)),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent.withAlpha(alpha)),
           )));
     });
 

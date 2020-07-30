@@ -57,7 +57,8 @@ class HomebottomNavigation extends StatelessWidget {
           children: <Widget>[
             Observer(
                 builder: (_) => IconButtonStatus(
-                    status: controller.pendingFriendStatus,
+                    status: controller.pendingStatisticsStatus,
+                    backgroundColor: AppColors.colorAccent,
                     icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
                     onPressed: () => goStatistics())),
             InkWell(
@@ -71,6 +72,7 @@ class HomebottomNavigation extends StatelessWidget {
             Observer(
                 builder: (_) => IconButtonStatus(
                       status: controller.pendingCompetitionStatus,
+                    backgroundColor: AppColors.colorAccent,
                       icon: Image.asset("assets/ic_award.png", width: 28, color: Colors.white),
                       onPressed: () => goCompetition(false),
                     )),

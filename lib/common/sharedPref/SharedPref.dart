@@ -43,6 +43,11 @@ class SharedPref extends SharedPrefHandler {
   int get pendingLearn => getInt(NEW_LEARN_TEXT) ?? 0;
   set pendingLearn(int value) => saveInt(NEW_LEARN_TEXT, value);
 
+  //TEMPORARY
+  // Pending Statistic view
+  bool get pendingStatistic => getBool(PENDING_STATISTICS) ?? true;
+  set pendingStatistic(bool value) => saveBool(PENDING_STATISTICS, value);
+
   // Habit Tutorial
   bool get habitTutorial => getBool(HABIT_TUTORIAL) ?? false;
   set habitTutorial(bool value) => saveBool(HABIT_TUTORIAL, value);

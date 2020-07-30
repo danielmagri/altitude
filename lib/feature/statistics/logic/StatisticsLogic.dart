@@ -3,6 +3,7 @@ import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
@@ -22,6 +23,10 @@ abstract class _StatisticsLogicBase with Store {
 
   @action
   Future<void> fetchData() async {
+    if (SharedPref.instance.pendingStatistic) {
+      SharedPref.instance.pendingStatistic = false;
+    }
+    
     try {
       List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
       List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
