@@ -1,4 +1,5 @@
 import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
@@ -10,6 +11,7 @@ import 'package:altitude/feature/statistics/view/widget/PieChartScore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class Statisticspage extends StatefulWidget {
   @override
@@ -29,6 +31,17 @@ class _StatisticspageState extends State<Statisticspage> {
   void dispose() {
     GetIt.I.resetLazySingleton<StatisticsLogic>();
     super.dispose();
+  }
+
+  void showPercentageTutorial() {
+    Navigator.of(context).smooth(TutorialDialog(
+      hero: "helpPercentage",
+      texts: const [
+        TextSpan(text: "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano."),
+        TextSpan(text: "\n\n  O segredo para conseguir construir um hábito é "),
+        TextSpan(text: "criar um ritual e sempre fazer a mesma coisa.", style: TextStyle(fontWeight: FontWeight.bold)),
+      ],
+    ));
   }
 
   @override
@@ -64,7 +77,18 @@ class _StatisticspageState extends State<Statisticspage> {
                         ),
                     (error) => DataError())),
             const SizedBox(height: 20),
-            const HeaderSection(title: "Porcetagem"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16, left: 24),
+              child: Row(
+                children: [
+                  const HeaderSection(title: "Porcetagem"),
+                  IconButton(
+                      iconSize: 22,
+                      icon: const Hero(tag: "helpPercentage", child: Icon(Icons.help_outline)),
+                      onPressed: showPercentageTutorial)
+                ],
+              ),
+            ),
             Container(
                 width: double.maxFinite,
                 height: 200,
@@ -82,7 +106,18 @@ class _StatisticspageState extends State<Statisticspage> {
                       (error) => DataError()),
                 )),
             const SizedBox(height: 50),
-            const HeaderSection(title: "Histórico"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16, left: 24),
+              child: Row(
+                children: [
+                  const HeaderSection(title: "Histórico"),
+                  IconButton(
+                      iconSize: 22,
+                      icon: const Hero(tag: "helpHistoric", child: Icon(Icons.help_outline)),
+                      onPressed: showPercentageTutorial)
+                ],
+              ),
+            ),
             Observer(
               builder: (_) => controller.historicData.handleState(
                   () => Padding(
@@ -93,7 +128,18 @@ class _StatisticspageState extends State<Statisticspage> {
                   (error) => DataError()),
             ),
             const SizedBox(height: 50),
-            const HeaderSection(title: "Frquência"),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16, left: 24),
+              child: Row(
+                children: [
+                  const HeaderSection(title: "Frequência"),
+                  IconButton(
+                      iconSize: 22,
+                      icon: const Hero(tag: "helpFrequency", child: Icon(Icons.help_outline)),
+                      onPressed: showPercentageTutorial)
+                ],
+              ),
+            ),
             Observer(
               builder: (_) => controller.frequencyData.handleState(
                   () => Padding(
@@ -117,9 +163,6 @@ class HeaderSection extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        alignment: Alignment.centerLeft,
-        margin: const EdgeInsets.only(bottom: 16, left: 24),
-        child: Text(title, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20)));
+    return Text(title, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20));
   }
 }
