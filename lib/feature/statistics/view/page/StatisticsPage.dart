@@ -36,10 +36,22 @@ class _StatisticspageState extends State<Statisticspage> {
   void showPercentageTutorial() {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpPercentage",
+      texts: const [TextSpan(text: "A porcentagem mostra a representação de cada hábito na sua quilometragem total.")],
+    ));
+  }
+
+  void showHistoricTutorial() {
+    Navigator.of(context).smooth(TutorialDialog(
+      hero: "helpHistoric",
+      texts: const [TextSpan(text: "O histórico mostra quantos quilômetros você ganhou em cada mês.")],
+    ));
+  }
+
+  void showFrequencyTutorial() {
+    Navigator.of(context).smooth(TutorialDialog(
+      hero: "helpFrequency",
       texts: const [
-        TextSpan(text: "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano."),
-        TextSpan(text: "\n\n  O segredo para conseguir construir um hábito é "),
-        TextSpan(text: "criar um ritual e sempre fazer a mesma coisa.", style: TextStyle(fontWeight: FontWeight.bold)),
+        TextSpan(text: "A frequência mostra quais dias da semana você mais realizou seus hábitos em cada mês.")
       ],
     ));
   }
@@ -114,7 +126,7 @@ class _StatisticspageState extends State<Statisticspage> {
                   IconButton(
                       iconSize: 22,
                       icon: const Hero(tag: "helpHistoric", child: Icon(Icons.help_outline)),
-                      onPressed: showPercentageTutorial)
+                      onPressed: showHistoricTutorial)
                 ],
               ),
             ),
@@ -136,7 +148,7 @@ class _StatisticspageState extends State<Statisticspage> {
                   IconButton(
                       iconSize: 22,
                       icon: const Hero(tag: "helpFrequency", child: Icon(Icons.help_outline)),
-                      onPressed: showPercentageTutorial)
+                      onPressed: showFrequencyTutorial)
                 ],
               ),
             ),
