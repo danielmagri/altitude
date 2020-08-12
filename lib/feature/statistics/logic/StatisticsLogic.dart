@@ -26,7 +26,7 @@ abstract class _StatisticsLogicBase with Store {
     if (SharedPref.instance.pendingStatistic) {
       SharedPref.instance.pendingStatistic = false;
     }
-    
+
     try {
       List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
       List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
@@ -41,6 +41,7 @@ abstract class _StatisticsLogicBase with Store {
     } catch (error) {
       habitsData.setError(error);
       historicData.setError(error);
+      frequencyData.setError(error);
     }
   }
 
@@ -65,8 +66,10 @@ abstract class _StatisticsLogicBase with Store {
       Map<Habit, int> habitsMap = Map();
       // Faz o calcula da pontuação total
       dayGroupedHabit.forEach((key, value) {
-        habitsMap.putIfAbsent(
-            habits.firstWhere((e) => e.id == key), () => ScoreControl().scoreEarnedTotal(frequencies[key], value));
+        Habit habit = habits.firstWhere((e) => e.id == key, orElse: () => null);
+        if (habit != null) {
+          habitsMap.putIfAbsent(habit, () => ScoreControl().scoreEarnedTotal(frequencies[key], value));
+        }
       });
 
       if (key.month > lastMonth + 1 && lastMonth != 0) {
@@ -99,11 +102,11 @@ abstract class _StatisticsLogicBase with Store {
     int lastMonth = 0;
 
     dateGrouped.forEach((key, value) {
-      Map<DateTime, List<DayDone>> dayGrouped = 
+      Map<DateTime, List<DayDone>> dayGrouped =
           groupBy<DayDone, DateTime>(value, (e) => DateTime(e.dateDone.year, e.dateDone.month, e.dateDone.day));
 
-      List<int> weekdayDone = List.generate(
-          7, (i) => dayGrouped.keys.where((e) => e.weekday == i || (e.weekday == 7 && i == 0)).length);
+      List<int> weekdayDone =
+          List.generate(7, (i) => dayGrouped.keys.where((e) => e.weekday == i || (e.weekday == 7 && i == 0)).length);
 
       if (key.month > lastMonth + 1 && lastMonth != 0) {
         List.generate(key.month - lastMonth - 1,
