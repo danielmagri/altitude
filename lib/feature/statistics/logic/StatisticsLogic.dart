@@ -19,6 +19,7 @@ abstract class _StatisticsLogicBase with Store {
   DataState<List<HistoricStatisticData>> historicData = DataState();
   DataState<List<FrequencyStatisticData>> frequencyData = DataState();
 
+  @observable
   int selectedId;
 
   @action
@@ -35,7 +36,7 @@ abstract class _StatisticsLogicBase with Store {
           groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.dateDone.year, e.dateDone.month));
 
       historicData.setData(await handleHistoricData(dateGrouped, habits));
-      frequencyData.setData(handleFrequencyData(dateGrouped));
+      frequencyData.setData(handleFrequencyData(dateGrouped, habits));
       habitsData
           .setData(habits.map((e) => HabitStatisticData(e.id, e.score, e.habit, e.color)).toList().asObservable());
     } catch (error) {
@@ -95,7 +96,7 @@ abstract class _StatisticsLogicBase with Store {
     return dayHistoric.reversed.toList();
   }
 
-  List<FrequencyStatisticData> handleFrequencyData(Map<DateTime, List<DayDone>> dateGrouped) {
+  List<FrequencyStatisticData> handleFrequencyData(Map<DateTime, List<DayDone>> dateGrouped, List<Habit> habits) {
     List<FrequencyStatisticData> dayFrequency = List();
 
     int currentYear = 0;
@@ -104,16 +105,28 @@ abstract class _StatisticsLogicBase with Store {
     dateGrouped.forEach((key, value) {
       Map<DateTime, List<DayDone>> dayGrouped =
           groupBy<DayDone, DateTime>(value, (e) => DateTime(e.dateDone.year, e.dateDone.month, e.dateDone.day));
+      Map<int, List<DayDone>> dayGroupedHabit = groupBy<DayDone, int>(value, (e) => e.habitId);
+
+      Map<Habit, List<int>> habitsMap = Map();
+      dayGroupedHabit.forEach((key, value) {
+        Habit habit = habits.firstWhere((e) => e.id == key, orElse: () => null);
+        if (habit != null) {
+          habitsMap.putIfAbsent(
+              habit,
+              () => List.generate(
+                  7, (i) => value.where((e) => e.dateDone.weekday == i || (e.dateDone.weekday == 7 && i == 0)).length));
+        }
+      });
 
       List<int> weekdayDone =
           List.generate(7, (i) => dayGrouped.keys.where((e) => e.weekday == i || (e.weekday == 7 && i == 0)).length);
 
       if (key.month > lastMonth + 1 && lastMonth != 0) {
         List.generate(key.month - lastMonth - 1,
-            (i) => dayFrequency.add(FrequencyStatisticData(List(), lastMonth + 1 + i, key.year, false)));
+            (i) => dayFrequency.add(FrequencyStatisticData(List(), Map(), lastMonth + 1 + i, key.year, false)));
       }
 
-      dayFrequency.add(FrequencyStatisticData(weekdayDone, key.month, key.year, currentYear != key.year));
+      dayFrequency.add(FrequencyStatisticData(weekdayDone, habitsMap, key.month, key.year, currentYear != key.year));
 
       lastMonth = key.month;
       if (currentYear != key.year) {
@@ -124,24 +137,25 @@ abstract class _StatisticsLogicBase with Store {
     if (DateTime.now().month > lastMonth) {
       List.generate(
           DateTime.now().month - lastMonth,
-          (i) => dayFrequency
-              .add(FrequencyStatisticData(List(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
+          (i) => dayFrequency.add(FrequencyStatisticData(
+              List(), Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
     }
 
     return dayFrequency.reversed.toList();
   }
 
+  @action
   void selectHabit(int id) {
-    // if (selectedId != null) {
-    //   habitsData.data.firstWhere((e) => e.id == selectedId).selected = false;
-    // }
+    if (selectedId != null) {
+      habitsData.data.firstWhere((e) => e.id == selectedId).selected = false;
+    }
 
-    // if (selectedId != id) {
-    //   habitsData.data.firstWhere((e) => e.id == id).selected = true;
-    //   selectedId = id;
-    // } else {
-    //   selectedId = null;
-    // }
-    // habitsData.setData(habitsData.data);
+    if (selectedId != id) {
+      habitsData.data.firstWhere((e) => e.id == id).selected = true;
+      selectedId = id;
+    } else {
+      selectedId = null;
+    }
+    habitsData.setData(habitsData.data);
   }
 }
