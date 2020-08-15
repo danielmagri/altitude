@@ -1,9 +1,11 @@
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
 import 'package:flutter/material.dart'
     show
         AlignmentDirectional,
         Axis,
         BouncingScrollPhysics,
+        BuildContext,
         Colors,
         Column,
         Container,
@@ -26,11 +28,12 @@ import 'package:flutter/material.dart'
 const double HISTORIC_CHART_HEIGHT = 200;
 
 class HistoricChart extends StatelessWidget {
-  HistoricChart({Key key, @required this.list})
+  HistoricChart({Key key, @required this.list, this.selectedHabitId})
       : maxDataValue = list.reduce((e1, e2) => e1.totalScore > e2.totalScore ? e1 : e2).totalScore,
         super(key: key);
 
   final List<HistoricStatisticData> list;
+  final int selectedHabitId;
   final int maxDataValue;
 
   static const int linesCount = 6;
@@ -67,8 +70,10 @@ class HistoricChart extends StatelessWidget {
               reverse: true,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  HistoricBar(data: list[index], multiplier: (HISTORIC_CHART_HEIGHT - 50) / maxDataValue)),
+              itemBuilder: (context, index) => HistoricBar(
+                  data: list[index],
+                  multiplier: (HISTORIC_CHART_HEIGHT - 50) / maxDataValue,
+                  selectedHabitId: selectedHabitId)),
         ],
       ),
     );
@@ -76,42 +81,67 @@ class HistoricChart extends StatelessWidget {
 }
 
 class HistoricBar extends StatelessWidget {
-  const HistoricBar({Key key, @required this.data, @required this.multiplier}) : super(key: key);
+  const HistoricBar({Key key, @required this.data, @required this.multiplier, this.selectedHabitId}) : super(key: key);
 
   final HistoricStatisticData data;
   final double multiplier;
+  final int selectedHabitId;
+
+  List<Widget> barWidget(BuildContext context) {
+    List<Widget> list = List();
+
+    if (data.totalScore == 0) {
+      list.add(const SizedBox(width: 28));
+    } else if (selectedHabitId == null) {
+      list.add(Container(
+          height: 16,
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          color: Theme.of(context).canvasColor,
+          child: Text(data.totalScore.toString(), textAlign: TextAlign.center)));
+      list.add(Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          margin: const EdgeInsets.only(top: 3),
+          color: Theme.of(context).canvasColor,
+          child: Column(
+              children: data.habitsMap.keys
+                  .map((key) => Container(color: key.habitColor, height: multiplier * data.habitsMap[key], width: 20))
+                  .toList())));
+    } else {
+      Habit habit = data.habitsMap.keys.firstWhere((e) => e.id == selectedHabitId, orElse: () => null);
+
+      if (habit != null) {
+        int value = data.habitsMap[habit];
+
+        list.add(Container(
+            height: 16,
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            color: Theme.of(context).canvasColor,
+            child: Text(value.toString(), textAlign: TextAlign.center)));
+        list.add(Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            margin: const EdgeInsets.only(top: 3),
+            color: Theme.of(context).canvasColor,
+            child: Container(color: habit.habitColor, height: multiplier * value, width: 20)));
+      } else {
+        list.add(const SizedBox(width: 28));
+      }
+    }
+
+    list.add(SizedBox(
+        height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    list.add(SizedBox(
+        height: 15,
+        child: Text(data.firstOfYear ? data.year.toString() : "",
+            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    return list;
+  }
 
   @override
   Widget build(context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        data.totalScore == 0
-            ? const SizedBox()
-            : Container(
-                height: 16,
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                color: Theme.of(context).canvasColor,
-                child: Text(data.totalScore.toString(), textAlign: TextAlign.center)),
-        data.totalScore == 0
-            ? const SizedBox(width: 28)
-            : Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                margin: const EdgeInsets.only(top: 3),
-                color: Theme.of(context).canvasColor,
-                child: Column(
-                    children: data.habitsMap.keys
-                        .map((key) =>
-                            Container(color: key.habitColor, height: multiplier * data.habitsMap[key], width: 20))
-                        .toList())),
-        SizedBox(
-            height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))),
-        SizedBox(
-            height: 15,
-            child: Text(data.firstOfYear ? data.year.toString() : "",
-                style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))),
-      ],
+      children: barWidget(context),
     );
   }
 }
