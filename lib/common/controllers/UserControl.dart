@@ -7,32 +7,32 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/feature/home/model/User.dart';
 
 class UserControl {
-  Future<bool> isLogged() async {
-    return await FireAuth().isLogged();
+  bool isLogged() {
+    return FireAuth().isLogged();
   }
 
-  Future<User> getUserData() async {
-    String name = await getName();
-    String email = await FireAuth().getEmail();
-    String imageUrl = await FireAuth().getPhotoUrl();
+  User getUserData() {
+    String name = getName();
+    String email = FireAuth().getEmail();
+    String imageUrl = FireAuth().getPhotoUrl();
     int score = SharedPref.instance.score;
 
     return User(name, email, score, imageUrl);
   }
 
-  Future<String> getUid() async {
-    return await FireAuth().getUid();
+  String getUid() {
+    return FireAuth().getUid();
   }
 
-  Future<String> getName() async {
-    String name = await FireAuth().getName();
+  String getName() {
+    String name = FireAuth().getName();
     return name != "" ? name : SharedPref.instance.name;
   }
 
   Future<bool> setName(String name) async {
-    if (await FireAuth().isLogged()) {
+    if (FireAuth().isLogged()) {
       SharedPref.instance.name = name;
-      await FireAuth().setName(name);
+      FireAuth().setName(name);
       return await FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(), name: name);
     } else {
       SharedPref.instance.name = name;
@@ -40,12 +40,12 @@ class UserControl {
     }
   }
 
-  Future<String> getEmail() async {
-    return await FireAuth().getEmail();
+  String getEmail() {
+    return FireAuth().getEmail();
   }
 
-  Future<String> getPhotoUrl() async {
-    return await FireAuth().getPhotoUrl();
+  String getPhotoUrl() {
+    return FireAuth().getPhotoUrl();
   }
 
   Future<List<Person>> getFriends() async {
@@ -65,7 +65,7 @@ class UserControl {
   }
 
   Future<List<Person>> searchEmail(String email) async {
-    if (email != await getEmail())
+    if (email != getEmail())
       return await FireFunctions().searchEmail(email);
     else
       return List();

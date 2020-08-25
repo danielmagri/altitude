@@ -1,3 +1,4 @@
+import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
@@ -185,7 +186,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                           ]);
                         },
                         (error) {
-                          return const SizedBox();
+                          return const DataError();
                         },
                       );
                     }),

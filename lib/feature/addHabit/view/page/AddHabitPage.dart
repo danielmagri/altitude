@@ -8,6 +8,7 @@ import 'package:altitude/feature/addHabit/view/widget/HabitText.dart';
 import 'package:altitude/feature/addHabit/view/widget/SelectAlarm.dart';
 import 'package:altitude/feature/addHabit/view/widget/SelectColor.dart';
 import 'package:altitude/feature/addHabit/view/widget/SelectFrequency.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -39,7 +40,8 @@ class _AddHabitPageState extends BaseState<AddHabitPage> {
     } else if (controller.frequency == null) {
       showToast("Escolha qual será a frequência.");
     } else {
-      Habit habit = Habit(color: controller.color, habit: habitTextController.text);
+      Habit habit = Habit(
+          color: controller.color, habit: habitTextController.text, initialDate: DateTime.now().today);
 
       showLoading(true);
 

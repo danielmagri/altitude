@@ -24,7 +24,7 @@ class CompetitionsControl {
       DateTime date = DateTime.now().today;
 
       Competitor competitor = Competitor(
-          name: await UserControl().getName(),
+          name: UserControl().getName(),
           fcmToken: await FireMessaging().getToken(),
           color: habit.color,
           score: await HabitsControl().getHabitScore(habitId, date));
@@ -72,7 +72,7 @@ class CompetitionsControl {
   Future<bool> removeCompetitor(String id, String uidCompetitor) async {
     var result = await FireFunctions().removeCompetitor(id, uidCompetitor);
 
-    if (result && uidCompetitor == await UserControl().getUid()) {
+    if (result && uidCompetitor == UserControl().getUid()) {
       return await DatabaseService().removeCompetition(id);
     } else {
       return result;
@@ -87,7 +87,7 @@ class CompetitionsControl {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
 
-      await FireFunctions().acceptCompetitionRequest(id, await UserControl().getName(),
+      await FireFunctions().acceptCompetitionRequest(id, UserControl().getName(),
           await FireMessaging().getToken(), habit.color, await HabitsControl().getHabitScore(habitId, date));
 
       return await DatabaseService().createCompetitition(id, title, habitId, date);

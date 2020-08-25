@@ -102,7 +102,7 @@ class ScoreControl {
     SharedPref.instance.addscore(score);
     var oldScore = await DatabaseService().listHabitCompetitions(id, date);
     bool result = await DatabaseService().updateScore(id, score, date);
-    if (await UserControl().isLogged()) {
+    if (UserControl().isLogged()) {
       FireFunctions().setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date), oldScore);
     }
     return result ? true : false;

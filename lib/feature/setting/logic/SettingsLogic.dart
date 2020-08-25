@@ -13,8 +13,8 @@ abstract class _SettingsLogicBase with Store {
 
   @action
   Future<void> fetchData() async {
-    name = await UserControl().getName();
-    isLogged = await UserControl().isLogged();
+    name = UserControl().getName();
+    isLogged = UserControl().isLogged();
   }
 
   @action

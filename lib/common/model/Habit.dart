@@ -26,14 +26,20 @@ class Habit {
           : null,
       daysDone: json["days_done"]);
 
+  factory Habit.toDomain(Map<String, dynamic> json) => Habit(
+      id: json["id"],
+      color: json["color"],
+      habit: json["habit"],
+      score: json["score"],
+      initialDate: null,
+      daysDone: json["days_done_count"]);
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "color": color,
-        "cue_text": cue,
-        "habit_text": habit,
-        "score": score,
-        "initial_date":
-            '${initialDate.year.toString()}-${initialDate.month.toString().padLeft(2, '0')}-${initialDate.day.toString().padLeft(2, '0')}',
-        "days_done": daysDone
+        "habit": habit,
+        "score": score ?? 0,
+        "initial_date": initialDate,
+        "days_done_count": daysDone ?? 0
       };
 }
