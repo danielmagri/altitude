@@ -45,7 +45,7 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
       showLoading(true);
 
       CompetitionsControl()
-          .addCompetitor(widget.id, await UserControl().getName(), invitations, invitationsToken)
+          .addCompetitor(widget.id, UserControl().getName(), invitations, invitationsToken)
           .then((res) {
         showLoading(false);
         navigatePop();

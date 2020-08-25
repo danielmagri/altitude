@@ -3,6 +3,7 @@ import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/GetIt.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart'
     show
         Brightness,
@@ -27,6 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GetIt.I.isReady<SharedPref>();
+  await Firebase.initializeApp();
   runApp(MyApp(showTutorial: GetIt.I.get<SharedPref>().name == null));
 }
 

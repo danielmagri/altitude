@@ -15,7 +15,7 @@ abstract class _CompetitionDetailsLogicBase with Store {
   }
 
   Future<bool> leaveCompetition(String id) async {
-    return CompetitionsControl().removeCompetitor(id, await UserControl().getUid());
+    return CompetitionsControl().removeCompetitor(id, UserControl().getUid());
   }
 
   @action

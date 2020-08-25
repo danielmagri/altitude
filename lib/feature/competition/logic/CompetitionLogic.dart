@@ -21,7 +21,7 @@ abstract class _CompetitionLogicBase with Store {
   DataState<List<Person>> ranking = DataState();
   DataState<ObservableList<CompetitionPresentation>> competitions = DataState();
 
-  Future<bool> get isLogged async => await UserControl().isLogged();
+  Future<bool> get isLogged async => UserControl().isLogged();
 
   Future<void> fetchData() async {
     checkPendingFriendsStatus();
@@ -30,8 +30,8 @@ abstract class _CompetitionLogicBase with Store {
 
     UserControl().rankingFriends().then((value) async {
       value.add(Person(
-          name: await UserControl().getName(),
-          email: await UserControl().getEmail(),
+          name: UserControl().getName(),
+          email: UserControl().getEmail(),
           score: ScoreControl().score,
           you: true));
       value.sort((a, b) => -a.score.compareTo(b.score));
@@ -78,7 +78,7 @@ abstract class _CompetitionLogicBase with Store {
 
   @action
   Future<bool> exitCompetition(String id) async {
-    var res = await CompetitionsControl().removeCompetitor(id, await UserControl().getUid());
+    var res = await CompetitionsControl().removeCompetitor(id, UserControl().getUid());
     if (res) competitions.data.removeWhere((element) => element.id == id);
 
     return res;

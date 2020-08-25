@@ -47,7 +47,7 @@ abstract class _HomeLogicBase with Store {
   Future<void> fetchData() async {
     try {
       filterSelected = HabitFiltersType.values[SharedPref.instance.habitFilters];
-      user.setData(await UserControl().getUserData());
+      user.setData(UserControl().getUserData());
       doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
       await fetchHabits();
     } catch (error) {

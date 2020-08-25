@@ -16,8 +16,8 @@ abstract class _LoginLogicBase with Store {
 
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
-        AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
-        AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
+        AuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token);
+        UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
         FireAnalytics().analytics.setUserId(fireResult.user.uid);
         if (!await FireFunctions()
             .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
@@ -42,8 +42,8 @@ abstract class _LoginLogicBase with Store {
     if (result != null) {
       GoogleSignInAuthentication googleAuth = await result.authentication;
       AuthCredential credential =
-          GoogleAuthProvider.getCredential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      AuthResult fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
+          GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
       FireAnalytics().analytics.setUserId(fireResult.user.uid);
       if (!await FireFunctions()
           .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {

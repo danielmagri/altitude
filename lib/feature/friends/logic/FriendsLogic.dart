@@ -14,7 +14,7 @@ abstract class _FriendsLogicBase with Store {
   DataState<ObservableList<Person>> friends = DataState();
   DataState<ObservableList<Person>> ranking = DataState();
 
-  Future<bool> get isLogged async => await UserControl().isLogged();
+  Future<bool> get isLogged async => UserControl().isLogged();
 
   Future<void> fetchData() async {
     try {
@@ -24,8 +24,8 @@ abstract class _FriendsLogicBase with Store {
       var _ranking = _friends.toList().asObservable();
 
       _ranking.add(Person(
-          name: await UserControl().getName(),
-          email: await UserControl().getEmail(),
+          name: UserControl().getName(),
+          email: UserControl().getEmail(),
           score: ScoreControl().score,
           you: true));
 
