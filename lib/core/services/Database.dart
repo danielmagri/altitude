@@ -139,7 +139,7 @@ class DatabaseService {
     final db = await database;
     var result = await db.rawQuery('SELECT * FROM habit;');
 
-    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
+    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
     return list;
   }
 
@@ -157,7 +157,7 @@ class DatabaseService {
 
     var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
 
-    return result.isNotEmpty ? Habit.fromJson(result.first) : null;
+    return result.isNotEmpty ? Habit.fromJsonOld(result.first) : null;
   }
 
   /// Retorna os hábitos para serem feitos hoje.
@@ -205,7 +205,7 @@ class DatabaseService {
                SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
                );''');
 
-    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJson(c)).toList() : [];
+    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
     return list;
   }
 
@@ -240,9 +240,9 @@ class DatabaseService {
     var resultWeekly = await db.rawQuery('SELECT * FROM freq_weekly WHERE habit_id=$id;');
 
     if (resultDayWeek.isNotEmpty) {
-      return DayWeek.fromJson(resultDayWeek.first);
+      return Frequency.fromJson(resultDayWeek.first);
     } else if (resultWeekly.isNotEmpty) {
-      return Weekly.fromJson(resultWeekly.first);
+      return Frequency.fromJson(resultWeekly.first);
     } else {
       return null;
     }
@@ -280,14 +280,17 @@ class DatabaseService {
     List<dynamic> result;
 
     if (startDate != null && endDate != null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+      result = await db.rawQuery(
+          '''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate != null && endDate == null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
+      result = await db.rawQuery(
+          '''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate == null && endDate != null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
+      result = await db.rawQuery(
+          '''SELECT * FROM day_done WHERE date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else {
       result = await db.rawQuery('SELECT * FROM day_done ORDER BY date_done;');

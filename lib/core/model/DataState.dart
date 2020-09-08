@@ -23,7 +23,7 @@ abstract class _DataStateBase<T> with Store {
   dynamic _error;
   dynamic get error => _error;
 
-   @action
+  @action
   void setInitial() {
     _state = StateType.INITIAL;
     _loading = false;

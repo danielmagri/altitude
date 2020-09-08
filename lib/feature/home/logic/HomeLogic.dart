@@ -1,17 +1,14 @@
 import 'package:altitude/common/constant/Books.dart';
-import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
-import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/common/controllers/HabitsControl.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
-import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
-import 'package:altitude/feature/home/model/User.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:mobx/mobx.dart';
 part 'HomeLogic.g.dart';
@@ -19,14 +16,14 @@ part 'HomeLogic.g.dart';
 class HomeLogic = _HomeLogicBase with _$HomeLogic;
 
 abstract class _HomeLogicBase with Store {
-  DataState<User> user = DataState();
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+
+  DataState<Person> user = DataState();
   DataState<ObservableList<Habit>> habits = DataState();
 
   @observable
   ObservableList<DayDone> doneHabits;
-
-  @observable
-  HabitFiltersType filterSelected;
 
   @observable
   bool visibilty = false;
@@ -43,38 +40,27 @@ abstract class _HomeLogicBase with Store {
   @observable
   bool pendingStatisticsStatus = false;
 
-  @action
-  Future<void> fetchData() async {
-    try {
-      filterSelected = HabitFiltersType.values[SharedPref.instance.habitFilters];
-      user.setData(UserControl().getUserData());
-      doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
-      await fetchHabits();
-    } catch (error) {
+  Future<void> getUser() async {
+    (await _personUseCase.getPerson()).result((data) {
+      user.setData(data);
+    }, (error) {
       user.setError(error);
-    }
+    });
   }
 
-  Future<void> fetchHabits() async {
-    try {
-      habits.setInitial();
-      switch (filterSelected) {
-        case HabitFiltersType.TODAY_HABITS:
-          habits.setData((await HabitsControl().getHabitsToday()).asObservable());
-          break;
-        case HabitFiltersType.ALL_HABITS:
-          habits.setData((await HabitsControl().getAllHabits()).asObservable());
-          break;
-      }
-    } catch (error) {
+  void getHabits() async {
+    // doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
+    (await _habitUseCase.getHabits()).result((data) {
+      habits.setData(data.asObservable());
+    }, (error) {
       habits.setError(error);
-    }
+    });
   }
 
   @action
   void fetchPendingStatus() {
     pendingCompetitionStatus = CompetitionsControl().pendingCompetitionsStatus;
-    pendingFriendStatus = UserControl().getPendingFriendsStatus();
+    pendingFriendStatus = _personUseCase.pendingFriendsStatus;
     pendingLearnStatus = BOOKS.length != SharedPref.instance.pendingLearn ? true : false;
     pendingStatisticsStatus = SharedPref.instance.pendingStatistic;
   }
@@ -85,29 +71,19 @@ abstract class _HomeLogicBase with Store {
   }
 
   @action
-  void selectFilter(HabitFiltersType type) {
-    if (type != filterSelected) {
-      filterSelected = type;
-      SharedPref.instance.habitFilters = type.index;
-      fetchHabits();
-    }
-  }
-
-  @action
-  Future<int> completeHabit(int id) async {
-    int earnedScore = await HabitsControl().setHabitDoneAndScore(DateTime.now().today, id, DonePageType.Initial);
-    var newUser = user.data;
-    newUser.score += earnedScore;
-    user.setData(newUser);
-    doneHabits.add(DayDone(dateDone: DateTime.now().today, habitId: id));
-    return user.data.score;
+  Future<int> completeHabit(String id) async {
+    return (await _habitUseCase.completeHabit(id, DateTime.now().today)).result((value) {
+      getUser();
+      //doneHabits.add(DayDone(date: DateTime.now().today, habitId: id));
+      return user.data.score;
+    }, (error) => throw error);
   }
 
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelControl.getLevel(newScore);
-    int oldLevel = SharedPref.instance.level;
+    int oldLevel = LevelControl.getLevel(await _personUseCase.getScore());
 
-    if (newLevel != oldLevel) SharedPref.instance.level = newLevel;
+    if (newLevel != oldLevel) _personUseCase.updateLevel(newLevel);
 
     if (newLevel > oldLevel) {
       FireAnalytics().sendNextLevel(LevelControl.getLevelText(newScore));
@@ -117,10 +93,5 @@ abstract class _HomeLogicBase with Store {
     }
   }
 
-  Future<bool> canAddHabit() async {
-    if (await HabitsControl().getAllHabitCount() < MAX_HABITS) {
-      return true;
-    }
-    return false;
-  }
+  Future<bool> canAddHabit() => _habitUseCase.maximumNumberReached();
 }

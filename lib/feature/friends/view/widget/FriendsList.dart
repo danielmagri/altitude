@@ -137,7 +137,7 @@ class FriendsList extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Text(person.getLevelText(), style: TextStyle(fontSize: 16)),
+                          Text(person.levelText, style: TextStyle(fontSize: 16)),
                           Text("${person.score} Km", style: TextStyle(fontWeight: FontWeight.w300)),
                         ],
                       )

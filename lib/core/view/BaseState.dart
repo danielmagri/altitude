@@ -100,7 +100,10 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
         showToast(error.message);
         return;
       }
+    } else if (error is String) {
+      showToast(error);
+    } else {
+      showToast("Ocorreu um erro");
     }
-    showToast("Ocorreu um erro");
   }
 }

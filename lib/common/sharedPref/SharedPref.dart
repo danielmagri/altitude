@@ -16,20 +16,18 @@ class SharedPref extends SharedPrefHandler {
   set version(int value) => saveInt(VERSION, value);
 
   // Name
+  @deprecated
   String get name => getString(NAME);
+
+  @deprecated
   set name(String value) => saveString(NAME, value);
 
   // Score
+  @deprecated
   int get score => getInt(SCORE) ?? 0;
+
+  @deprecated
   void addscore(int value) => saveInt(SCORE, score + value);
-
-  // Level
-  int get level => getInt(LEVEL) ?? 0;
-  set level(int value) => saveInt(LEVEL, value);
-
-  // Habit filters
-  int get habitFilters => getInt(HABIT_FILTERS) ?? 1;
-  set habitFilters(int value) => saveInt(HABIT_FILTERS, value);
 
   // Pending Friends
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;

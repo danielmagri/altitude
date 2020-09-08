@@ -40,13 +40,13 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
   Habit selectedHabit;
 
   void acceptRequest() async {
-    if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.id)).length >= MAX_HABIT_COMPETITIONS) {
+    if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length >= MAX_HABIT_COMPETITIONS) {
       showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
       CompetitionsControl()
           .acceptCompetitionRequest(
-              widget.competition.id, widget.competition.title, widget.competition.initialDate, selectedHabit.id)
+              widget.competition.id, widget.competition.title, widget.competition.initialDate, selectedHabit.oldId)
           .then((_) {
         showLoading(false);
         navigatePop(result: widget.competition);
@@ -70,7 +70,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.color]),
+                    Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
                     const SizedBox(width: 10),
                     Text(habit.habit, style: const TextStyle(color: Colors.black)),
                   ],

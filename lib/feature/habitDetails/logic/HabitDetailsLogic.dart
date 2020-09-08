@@ -1,13 +1,14 @@
 import 'package:altitude/common/constant/Books.dart';
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Book.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
-import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
@@ -21,7 +22,10 @@ part 'HabitDetailsLogic.g.dart';
 class HabitDetailsLogic = _HabitDetailsLogicBase with _$HabitDetailsLogic;
 
 abstract class _HabitDetailsLogicBase with Store {
-  int _id;
+  final HabitUseCase habitUseCase = HabitUseCase.getInstance;
+
+  String _id;
+  int _oldId;
   int _color;
 
   Color get habitColor => AppColors.habitsColor[_color];
@@ -39,30 +43,39 @@ abstract class _HabitDetailsLogicBase with Store {
 
   Book get bookAdvertisement => BOOKS[FireConfig.instance.copyBook1];
 
-  Future<void> fetchData(int habitId, int color) async {
+  void fetchData(String habitId, int habitOldId, int color) async {
     _id = habitId;
+    _oldId = habitOldId;
     _color = color;
 
-    try {
-      var _habit = await HabitsControl().getHabit(_id);
-      var _frequency = await HabitsControl().getFrequency(_id);
-      var _reminders = (await HabitsControl().getReminders(_id)).asObservable();
-      var _competitions = (await CompetitionsControl().listCompetitionsIds(_id)).asObservable();
-      var _calendarMonth = (await HabitsControl().getDaysDone(_id,
-              startDate: DateTime.now().lastDayOfPreviousMonth().subtract(Duration(days: 6)),
-              endDate: DateTime.now().today.add(Duration(days: 7))))
-          .asObservable();
-
-      habit.setData(_habit);
-      frequency.setData(_frequency);
-      competitions.setData(_competitions);
-      reminders.setData(_reminders);
-      calendarMonth.setData(_calendarMonth);
-      isHabitDone.setData(_calendarMonth.containsKey(DateTime.now().today));
-      calculateRocketForce();
-    } catch (error) {
+    (await habitUseCase.getHabit(_id)).result((data) {
+      habit.setData(data);
+      frequency.setData(data.frequency);
+    }, (error) {
       habit.setError(error);
       frequency.setError(error);
+    });
+
+    DateTime today = DateTime.now().today;
+    (await habitUseCase.getCalendarDaysDone(_id, today.month, today.year)).result((data) {
+      calendarMonth.setData(data.asObservable());
+      isHabitDone.setData(data.containsKey(DateTime.now().today));
+    }, (error) {
+      calendarMonth.setError(error);
+    });
+
+    try {
+      // var _reminders = (await HabitsControl().getReminders(_oldId)).asObservable();
+      // var _competitions = (await CompetitionsControl().listCompetitionsIds(_oldId)).asObservable();
+      // var _calendarMonth = (await HabitsControl().getDaysDone(_oldId,
+      //         startDate: DateTime.now().lastDayOfPreviousMonth().subtract(Duration(days: 6)),
+      //         endDate: DateTime.now().today.add(Duration(days: 7))))
+      //     .asObservable();
+
+      // competitions.setData(_competitions);
+      // reminders.setData(_reminders);
+      // calculateRocketForce();
+    } catch (error) {
       competitions.setError(error);
       reminders.setError(error);
       throw error;
@@ -73,7 +86,7 @@ abstract class _HabitDetailsLogicBase with Store {
     try {
       double force;
       int timesDays = frequency.data.daysCount();
-      List<DateTime> dates = (await HabitsControl().getDaysDone(_id,
+      List<DateTime> dates = (await HabitsControl().getDaysDone(_oldId,
               startDate: DateTime.now().today.subtract(Duration(days: CYCLE_DAYS)), endDate: DateTime.now().today))
           .keys
           .toList();
@@ -98,7 +111,7 @@ abstract class _HabitDetailsLogicBase with Store {
   void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) {
     calendarMonth.setLoading();
     HabitsControl()
-        .getDaysDone(_id, startDate: start.subtract(Duration(days: 1)), endDate: end.add(Duration(days: 1)))
+        .getDaysDone(_oldId, startDate: start.subtract(Duration(days: 1)), endDate: end.add(Duration(days: 1)))
         .then((map) {
       calendarMonth.setData(map.asObservable());
     });
@@ -108,7 +121,7 @@ abstract class _HabitDetailsLogicBase with Store {
     calendarMonth.setLoading();
     isHabitDone.setLoading();
 
-    int earnedScore = await HabitsControl().setHabitDoneAndScore(date, _id, donePageType, add: add);
+    int earnedScore = await HabitsControl().setHabitDoneAndScore(date, _oldId, donePageType, add: add);
 
     Habit newHabit = habit.data;
     newHabit.score += earnedScore;
@@ -162,9 +175,9 @@ abstract class _HabitDetailsLogicBase with Store {
   void editCueCallback(String cue) {
     Habit newHabit = habit.data;
     if (cue == null) {
-      newHabit.cue = "";
+      newHabit.oldCue = "";
     } else {
-      newHabit.cue = cue;
+      newHabit.oldCue = cue;
     }
 
     habit.setData(newHabit);
@@ -179,7 +192,7 @@ abstract class _HabitDetailsLogicBase with Store {
   void updateHabitDetailsPageData(int color, String habitText, Frequency newFrequency) {
     _color = color;
     Habit newHabit = habit.data;
-    newHabit.color = color;
+    newHabit.colorCode = color;
     newHabit.habit = habitText;
     habit.setData(newHabit);
     frequency.setData(newFrequency);

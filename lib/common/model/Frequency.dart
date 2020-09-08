@@ -4,43 +4,42 @@ abstract class Frequency {
   int daysCount();
   String frequencyText();
   FrequencyType frequencyType();
+  Map<String, dynamic> toJson();
+
+  Frequency();
+
+  factory Frequency.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey("days_time")) {
+      return Weekly(daysTime: json["days_time"]);
+    } else {
+      return DayWeek(
+          monday: json["monday"],
+          tuesday: json["tuesday"],
+          wednesday: json["wednesday"],
+          thursday: json["thursday"],
+          friday: json["friday"],
+          saturday: json["saturday"],
+          sunday: json["sunday"]);
+    }
+  }
 }
 
 class DayWeek extends Frequency {
-  int habitId;
-  int monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+  bool monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
-  DayWeek(
-      {this.habitId,
-      this.monday,
-      this.tuesday,
-      this.wednesday,
-      this.thursday,
-      this.friday,
-      this.saturday,
-      this.sunday});
-
-  factory DayWeek.fromJson(Map<String, dynamic> json) => new DayWeek(
-      habitId: json["habit_id"],
-      monday: json["monday"],
-      tuesday: json["tuesday"],
-      wednesday: json["wednesday"],
-      thursday: json["thursday"],
-      friday: json["friday"],
-      saturday: json["saturday"],
-      sunday: json["sunday"]);
+  DayWeek({this.monday, this.tuesday, this.wednesday, this.thursday, this.friday, this.saturday, this.sunday});
 
   @override
   int daysCount() {
     int days = 0;
 
-    if (monday == 1) days++;
-    if (tuesday == 1) days++;
-    if (wednesday == 1) days++;
-    if (thursday == 1) days++;
-    if (friday == 1) days++;
-    if (saturday == 1) days++;
-    if (sunday == 1) days++;
+    if (monday) days++;
+    if (tuesday) days++;
+    if (wednesday) days++;
+    if (thursday) days++;
+    if (friday) days++;
+    if (saturday) days++;
+    if (sunday) days++;
 
     return days;
   }
@@ -51,42 +50,42 @@ class DayWeek extends Frequency {
     bool hasOne = false;
     int count = daysCount();
 
-    if (monday == 1) {
+    if (monday) {
       text += "Segunda";
       hasOne = true;
       count--;
     }
-    if (tuesday == 1) {
+    if (tuesday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Terça";
       hasOne = true;
       count--;
     }
-    if (wednesday == 1) {
+    if (wednesday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Quarta";
       hasOne = true;
       count--;
     }
-    if (thursday == 1) {
+    if (thursday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Quinta";
       hasOne = true;
       count--;
     }
-    if (friday == 1) {
+    if (friday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Sexta";
       hasOne = true;
       count--;
     }
-    if (saturday == 1) {
+    if (saturday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Sábado";
       hasOne = true;
       count--;
     }
-    if (sunday == 1) {
+    if (sunday) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Domingo";
     }
@@ -105,13 +104,13 @@ class DayWeek extends Frequency {
   }
 
   bool isADoneDay(DateTime day) {
-    if (monday == 1 && day.weekday == 1) return true;
-    if (tuesday == 1 && day.weekday == 2) return true;
-    if (wednesday == 1 && day.weekday == 3) return true;
-    if (thursday == 1 && day.weekday == 4) return true;
-    if (friday == 1 && day.weekday == 5) return true;
-    if (saturday == 1 && day.weekday == 6) return true;
-    if (sunday == 1 && day.weekday == 7) return true;
+    if (monday && day.weekday == 1) return true;
+    if (tuesday && day.weekday == 2) return true;
+    if (wednesday && day.weekday == 3) return true;
+    if (thursday && day.weekday == 4) return true;
+    if (friday && day.weekday == 5) return true;
+    if (saturday && day.weekday == 6) return true;
+    if (sunday && day.weekday == 7) return true;
 
     return false;
   }
@@ -119,8 +118,8 @@ class DayWeek extends Frequency {
   @override
   FrequencyType frequencyType() => FrequencyType.DAYWEEK;
 
+  @override
   Map<String, dynamic> toJson() => {
-        "habit_id": habitId,
         "monday": monday,
         "tuesday": tuesday,
         "wednesday": wednesday,
@@ -132,13 +131,9 @@ class DayWeek extends Frequency {
 }
 
 class Weekly extends Frequency {
-  int habitId;
   int daysTime;
 
-  Weekly({this.habitId, this.daysTime});
-
-  factory Weekly.fromJson(Map<String, dynamic> json) =>
-      new Weekly(habitId: json["habit_id"], daysTime: json["days_time"]);
+  Weekly({this.daysTime});
 
   @override
   int daysCount() => daysTime;
@@ -154,8 +149,8 @@ class Weekly extends Frequency {
   @override
   FrequencyType frequencyType() => FrequencyType.WEEKLY;
 
+  @override
   Map<String, dynamic> toJson() => {
-        "habit_id": habitId,
         "days_time": daysTime,
       };
 }

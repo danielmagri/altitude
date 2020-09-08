@@ -1,9 +1,9 @@
 import 'dart:math' show Random;
-import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/ReminderWeekday.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
@@ -13,6 +13,8 @@ part 'AddHabitLogic.g.dart';
 class AddHabitLogic = _AddHabitLogicBase with _$AddHabitLogic;
 
 abstract class _AddHabitLogicBase with Store {
+  final HabitUseCase habitUseCase = HabitUseCase.getInstance;
+
   @observable
   int color;
 
@@ -64,17 +66,13 @@ abstract class _AddHabitLogicBase with Store {
     if (time != null) reminderTime = time;
   }
 
-  Future<Habit> createHabit(Habit habit) async {
+  Future<Result<Habit>> createHabit(Habit habit) async {
     List<Reminder> reminders = List();
     reminderWeekday.forEach((day) {
       if (day.state) {
         reminders.add(Reminder(hour: reminderTime.hour, minute: reminderTime.minute, weekday: day.id, type: 0));
       }
     });
-    return (await HabitsControl().addHabit(habit, frequency, reminders)).result((data) {
-      return data;
-    }, (error) {
-      throw error;
-    });
+    return habitUseCase.addHabit(habit, reminders);
   }
 }

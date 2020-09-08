@@ -34,7 +34,7 @@ class NotificationControl {
   Future<void> addNotification(Reminder reminder, Habit habit) async {
     Time time = Time(reminder.hour, reminder.minute);
     Day day = Day(reminder.weekday);
-    String title = reminder.type == 0 ? habit.habit : habit.cue;
+    String title = reminder.type == 0 ? habit.habit : habit.oldCue;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       "1", // channel id
       "Aviso do hábito", // channel name
@@ -42,7 +42,7 @@ class NotificationControl {
       importance: Importance.Max,
       priority: Priority.High,
       ticker: 'ticker',
-      color: AppColors.habitsColor[habit.color],
+      color: AppColors.habitsColor[habit.colorCode],
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(

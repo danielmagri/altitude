@@ -116,7 +116,7 @@ class FrequencyCircle extends StatelessWidget {
             )));
       });
     } else {
-      Habit habit = data.habitsMap.keys.firstWhere((e) => e.id == selectedHabitId, orElse: () => null);
+      Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
       if (habit != null) {
         data.habitsMap[habit].forEach((e) {
           double size = (space - 8) * min(e / 4, 1.1);
@@ -127,7 +127,7 @@ class FrequencyCircle extends StatelessWidget {
               child: Container(
                 height: size,
                 width: size,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.habitColor.withAlpha(alpha)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.color.withAlpha(alpha)),
               )));
         });
       }

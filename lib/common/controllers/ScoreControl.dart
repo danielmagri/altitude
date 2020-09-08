@@ -2,14 +2,17 @@ import 'dart:async';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 
 enum ScoreType { ADD, SUBTRACT }
 
 class ScoreControl {
+
+  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  
   static const int DAY_DONE_POINT = 2;
   static const int CYCLE_DONE_POINT = 1;
 
@@ -20,7 +23,7 @@ class ScoreControl {
   /// week: os dias da semana feito
   /// date: o dia a ser adicionado ou removido
   int calculateScore(ScoreType type, Frequency frequency, List<DayDone> week, DateTime date) {
-    if (type == ScoreType.ADD) week.add(DayDone(dateDone: date));
+    if (type == ScoreType.ADD) week.add(DayDone(date: date));
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {
@@ -68,11 +71,11 @@ class ScoreControl {
   int scoreEarnedTotal(Frequency frequency, List<DayDone> daysDone) {
     int score = 0;
     int index = 0;
-    daysDone.sort((a, b) => a.dateDone.compareTo(b.dateDone));
+    daysDone.sort((a, b) => a.date.compareTo(b.date));
 
     while (index < daysDone.length) {
-      DateTime nextWeek = daysDone[index].dateDone.lastWeekDay().add(Duration(days: 1));
-      int lastIndexOfWeek = daysDone.lastIndexWhere((dayDone) => dayDone.dateDone.isBefore(nextWeek));
+      DateTime nextWeek = daysDone[index].date.lastWeekDay().add(Duration(days: 1));
+      int lastIndexOfWeek = daysDone.lastIndexWhere((dayDone) => dayDone.date.isBefore(nextWeek));
 
       if (lastIndexOfWeek != -1) {
         score += _calculateWeekScore(frequency, daysDone.sublist(index, lastIndexOfWeek + 1));
@@ -88,13 +91,13 @@ class ScoreControl {
 
   /// Checa se a frequêcia do DayWeek está completa
   bool _hasDoneCorrectDayWeek(DayWeek dayWeek, List<DayDone> week) {
-    if (dayWeek.monday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 1)) return false;
-    if (dayWeek.tuesday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 2)) return false;
-    if (dayWeek.wednesday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 3)) return false;
-    if (dayWeek.thursday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 4)) return false;
-    if (dayWeek.friday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 5)) return false;
-    if (dayWeek.saturday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 6)) return false;
-    if (dayWeek.sunday == 1 && !week.any((dayDone) => dayDone.dateDone.weekday == 7)) return false;
+    if (dayWeek.monday && !week.any((dayDone) => dayDone.date.weekday == 1)) return false;
+    if (dayWeek.tuesday && !week.any((dayDone) => dayDone.date.weekday == 2)) return false;
+    if (dayWeek.wednesday && !week.any((dayDone) => dayDone.date.weekday == 3)) return false;
+    if (dayWeek.thursday && !week.any((dayDone) => dayDone.date.weekday == 4)) return false;
+    if (dayWeek.friday && !week.any((dayDone) => dayDone.date.weekday == 5)) return false;
+    if (dayWeek.saturday && !week.any((dayDone) => dayDone.date.weekday == 6)) return false;
+    if (dayWeek.sunday && !week.any((dayDone) => dayDone.date.weekday == 7)) return false;
     return true;
   }
 
@@ -102,8 +105,9 @@ class ScoreControl {
     SharedPref.instance.addscore(score);
     var oldScore = await DatabaseService().listHabitCompetitions(id, date);
     bool result = await DatabaseService().updateScore(id, score, date);
-    if (UserControl().isLogged()) {
-      FireFunctions().setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date), oldScore);
+    if (personUseCase.isLogged) {
+      FireFunctions()
+          .setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date), oldScore);
     }
     return result ? true : false;
   }
