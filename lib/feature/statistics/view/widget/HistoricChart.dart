@@ -104,10 +104,10 @@ class HistoricBar extends StatelessWidget {
           color: Theme.of(context).canvasColor,
           child: Column(
               children: data.habitsMap.keys
-                  .map((key) => Container(color: key.habitColor, height: multiplier * data.habitsMap[key], width: 20))
+                  .map((key) => Container(color: key.color, height: multiplier * data.habitsMap[key], width: 20))
                   .toList())));
     } else {
-      Habit habit = data.habitsMap.keys.firstWhere((e) => e.id == selectedHabitId, orElse: () => null);
+      Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
 
       if (habit != null) {
         int value = data.habitsMap[habit];
@@ -121,7 +121,7 @@ class HistoricBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             margin: const EdgeInsets.only(top: 3),
             color: Theme.of(context).canvasColor,
-            child: Container(color: habit.habitColor, height: multiplier * value, width: 20)));
+            child: Container(color: habit.color, height: multiplier * value, width: 20)));
       } else {
         list.add(const SizedBox(width: 28));
       }

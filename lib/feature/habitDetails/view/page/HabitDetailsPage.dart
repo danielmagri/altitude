@@ -43,7 +43,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void initState() {
     super.initState();
 
-    controller.fetchData(widget.arguments.id, widget.arguments.color).catchError(handleError);
+    controller.fetchData(widget.arguments.id, widget.arguments.oldId, widget.arguments.color);
 
     showInitialTutorial();
   }
@@ -208,11 +208,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       ),
                       Observer(
                         builder: (_) => controller.habit.handleState(
-                          () => const Skeleton(
-                            width: 40,
-                            height: 40,
-                            margin: const EdgeInsets.only(bottom: 4, right: 8),
-                          ),
+                          () =>
+                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
                           (data) => IconButton(
                             icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
                             onPressed: goEditHabitPage,

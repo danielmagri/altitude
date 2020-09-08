@@ -23,6 +23,7 @@ import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 
+// ignore: must_be_immutable
 class CompetitionWidget extends StatelessWidget {
   CompetitionWidget({Key key, @required this.goCompetition})
       : controller = GetIt.I.get<HabitDetailsLogic>(),

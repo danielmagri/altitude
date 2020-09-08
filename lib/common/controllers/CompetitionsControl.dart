@@ -4,14 +4,17 @@ import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 
 class CompetitionsControl {
+
+  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+
   bool get pendingCompetitionsStatus => SharedPref.instance.pendingCompetition;
   set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
 
@@ -24,9 +27,9 @@ class CompetitionsControl {
       DateTime date = DateTime.now().today;
 
       Competitor competitor = Competitor(
-          name: UserControl().getName(),
+          name: personUseCase.name,
           fcmToken: await FireMessaging().getToken(),
-          color: habit.color,
+          color: habit.colorCode,
           score: await HabitsControl().getHabitScore(habitId, date));
 
       String id = await FireFunctions()
@@ -72,7 +75,7 @@ class CompetitionsControl {
   Future<bool> removeCompetitor(String id, String uidCompetitor) async {
     var result = await FireFunctions().removeCompetitor(id, uidCompetitor);
 
-    if (result && uidCompetitor == UserControl().getUid()) {
+    if (result && uidCompetitor == personUseCase.uid) {
       return await DatabaseService().removeCompetition(id);
     } else {
       return result;
@@ -87,8 +90,8 @@ class CompetitionsControl {
     try {
       Habit habit = await HabitsControl().getHabit(habitId);
 
-      await FireFunctions().acceptCompetitionRequest(id, UserControl().getName(),
-          await FireMessaging().getToken(), habit.color, await HabitsControl().getHabitScore(habitId, date));
+      await FireFunctions().acceptCompetitionRequest(id, personUseCase.name,
+          await FireMessaging().getToken(), habit.colorCode, await HabitsControl().getHabitScore(habitId, date));
 
       return await DatabaseService().createCompetitition(id, title, habitId, date);
     } catch (e) {

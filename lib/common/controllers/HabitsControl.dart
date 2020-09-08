@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
@@ -7,14 +6,14 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/controllers/NotificationControl.dart';
-import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/services/FireDatabase.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
+@deprecated
 class HabitsControl {
   static final HabitsControl _singleton = new HabitsControl._internal();
 
@@ -24,23 +23,23 @@ class HabitsControl {
 
   HabitsControl._internal();
 
+  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+
   /// Adiciona um novo hábito com sua frequência e alarmes.
-  Future<Result<Habit>> addHabit(Habit habit, Frequency frequency, List<Reminder> reminders) async {
-    return await FireDatabase().addHabit(habit);
+  Future<Habit> addHabit(Habit habit, Frequency frequency, List<Reminder> reminders) async {
+    Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+    habit.id = response[0];
+    for (Reminder reminder in response[1]) {
+      await NotificationControl().addNotification(reminder, habit);
+    }
 
-    // Map response = await DatabaseService().addHabit(habit, frequency, reminders);
-    // habit.id = response[0];
-    // for (Reminder reminder in response[1]) {
-    //   await NotificationControl().addNotification(reminder, habit);
-    // }
-
-    // FireAnalytics().sendNewHabit(
-    //     habit.habit,
-    //     AppColors.habitsColorName[habit.color],
-    //     frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
-    //     frequency.daysCount(),
-    //     reminders.length != 0 ? "Sim" : "Não");
-    // return habit;
+    FireAnalytics().sendNewHabit(
+        habit.habit,
+        AppColors.habitsColorName[habit.colorCode],
+        frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
+        frequency.daysCount(),
+        reminders.length != 0 ? "Sim" : "Não");
+    return habit;
   }
 
   /// Retorna a quantidade de hábitos registrados.
@@ -73,8 +72,8 @@ class HabitsControl {
   /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit, Habit oldHabit, List<Reminder> reminders) async {
     if (habit.color != oldHabit.color) {
-      if (UserControl().isLogged())
-        FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.id), color: habit.color);
+      if (personUseCase.isLogged)
+        FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.oldId), color: habit.colorCode);
     }
 
     for (Reminder reminder in reminders) {
@@ -110,7 +109,7 @@ class HabitsControl {
 
   /// Adiciona os alarmes do hábito.
   Future<List<Reminder>> addReminders(Habit habit, List<Reminder> reminders) async {
-    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.id, reminders);
+    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.oldId, reminders);
 
     for (Reminder reminder in remindersAdded) {
       await NotificationControl().addNotification(reminder, habit);
@@ -145,19 +144,19 @@ class HabitsControl {
     bool after = false;
 
     for (int i = 0; i < list.length; i++) {
-      if (i - 1 >= 0 && list[i].dateDone.difference(list[i - 1].dateDone) == Duration(days: 1)) {
+      if (i - 1 >= 0 && list[i].date.difference(list[i - 1].date) == Duration(days: 1)) {
         before = true;
       } else {
         before = false;
       }
 
-      if (i + 1 < list.length && list[i + 1].dateDone.difference(list[i].dateDone) == Duration(days: 1)) {
+      if (i + 1 < list.length && list[i + 1].date.difference(list[i].date) == Duration(days: 1)) {
         after = true;
       } else {
         after = false;
       }
 
-      map.putIfAbsent(list[i].dateDone, () => [before, after]);
+      map.putIfAbsent(list[i].date, () => [before, after]);
     }
     return map;
   }

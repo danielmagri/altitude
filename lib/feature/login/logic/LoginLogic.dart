@@ -1,7 +1,7 @@
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +11,8 @@ part 'LoginLogic.g.dart';
 class LoginLogic = _LoginLogicBase with _$LoginLogic;
 
 abstract class _LoginLogicBase with Store {
+  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  
   Future<bool> loginFacebook() async {
     var result = await FacebookLogin().logIn(['email', 'public_profile']);
 
@@ -21,7 +23,7 @@ abstract class _LoginLogicBase with Store {
         FireAnalytics().analytics.setUserId(fireResult.user.uid);
         if (!await FireFunctions()
             .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
-          await UserControl().logout();
+          await personUseCase.logout();
           throw "Erro ao salvar os dados";
         }
         break;
@@ -47,7 +49,7 @@ abstract class _LoginLogicBase with Store {
       FireAnalytics().analytics.setUserId(fireResult.user.uid);
       if (!await FireFunctions()
           .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
-        await UserControl().logout();
+        await personUseCase.logout();
         throw "Erro ao salvar os dados";
       }
       return true;

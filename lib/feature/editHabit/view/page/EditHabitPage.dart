@@ -31,7 +31,7 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
 
     controller.setData(widget.arguments.habit, widget.arguments.frequency, widget.arguments.reminders);
 
-    controller.color = widget.arguments.habit.color;
+    controller.color = widget.arguments.habit.colorCode;
     habitTextController.text = widget.arguments.habit.habit;
   }
 

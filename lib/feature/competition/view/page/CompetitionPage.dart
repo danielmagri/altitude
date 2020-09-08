@@ -33,7 +33,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
   }
 
   void initialize() async {
-    if (await controller.isLogged) {
+    if (controller.isLogged) {
       getData();
     } else {
       Timer.run(() async {
@@ -191,7 +191,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
-                                Text(person.getLevelText(), style: const TextStyle(fontSize: 15)),
+                                Text(person.levelText, style: const TextStyle(fontSize: 15)),
                                 Text("${person.score} Km", style: const TextStyle(fontWeight: FontWeight.w300)),
                               ],
                             )

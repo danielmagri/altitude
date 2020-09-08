@@ -52,26 +52,26 @@ class _DayweekDialogState extends State<DayweekDialog> {
     super.initState();
 
     if (widget.frequency != null) {
-      days[0].state = widget.frequency.sunday == 1 ? true : false;
-      days[1].state = widget.frequency.monday == 1 ? true : false;
-      days[2].state = widget.frequency.tuesday == 1 ? true : false;
-      days[3].state = widget.frequency.wednesday == 1 ? true : false;
-      days[4].state = widget.frequency.thursday == 1 ? true : false;
-      days[5].state = widget.frequency.friday == 1 ? true : false;
-      days[6].state = widget.frequency.saturday == 1 ? true : false;
+      days[0].state = widget.frequency.sunday ? true : false;
+      days[1].state = widget.frequency.monday ? true : false;
+      days[2].state = widget.frequency.tuesday ? true : false;
+      days[3].state = widget.frequency.wednesday ? true : false;
+      days[4].state = widget.frequency.thursday ? true : false;
+      days[5].state = widget.frequency.friday ? true : false;
+      days[6].state = widget.frequency.saturday ? true : false;
     }
   }
 
   void _validate() {
     if (days.any((element) => element.state == true)) {
       DayWeek dayWeek = DayWeek(
-          monday: days[1].state ? 1 : 0,
-          tuesday: days[2].state ? 1 : 0,
-          wednesday: days[3].state ? 1 : 0,
-          thursday: days[4].state ? 1 : 0,
-          friday: days[5].state ? 1 : 0,
-          saturday: days[6].state ? 1 : 0,
-          sunday: days[0].state ? 1 : 0);
+          monday: days[1].state,
+          tuesday: days[2].state,
+          wednesday: days[3].state,
+          thursday: days[4].state,
+          friday: days[5].state,
+          saturday: days[6].state,
+          sunday: days[0].state);
 
       Navigator.of(context).pop(dayWeek);
     } else {

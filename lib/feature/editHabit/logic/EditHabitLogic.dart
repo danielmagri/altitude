@@ -43,18 +43,18 @@ abstract class _EditHabitLogicBase with Store {
   }
 
   Future<void> removeHabit() async {
-    return await HabitsControl().deleteHabit(initialHabit.id, initialHabit.habit, initialHabit.score, initialReminders);
+    return await HabitsControl().deleteHabit(initialHabit.oldId, initialHabit.habit, initialHabit.score, initialReminders);
   }
 
   Future<void> updateHabit(String habit) async {
-    Habit editedHabit = Habit(id: initialHabit.id, color: color, habit: habit);
+    Habit editedHabit = Habit(id: initialHabit.id, colorCode: color, habit: habit);
 
     if (editedHabit.color != initialHabit.color || editedHabit.habit.compareTo(initialHabit.habit) != 0) {
       await HabitsControl().updateHabit(editedHabit, initialHabit, initialReminders);
     }
 
     if (!compareFrequency(initialFrequency, frequency)) {
-      await HabitsControl().updateFrequency(editedHabit.id, frequency, initialFrequency.runtimeType);
+      await HabitsControl().updateFrequency(editedHabit.oldId, frequency, initialFrequency.runtimeType);
     }
 
     GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, frequency);

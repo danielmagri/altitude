@@ -41,19 +41,24 @@ class _AddHabitPageState extends BaseState<AddHabitPage> {
       showToast("Escolha qual será a frequência.");
     } else {
       Habit habit = Habit(
-          color: controller.color, habit: habitTextController.text, initialDate: DateTime.now().today);
+          habit: habitTextController.text,
+          colorCode: controller.color,
+          frequency: controller.frequency,
+          initialDate: DateTime.now().today);
 
       showLoading(true);
 
-      controller.createHabit(habit).then((result) {
-        showLoading(false);
-        if (widget.backTo) {
-          navigatePop(result: result);
-        } else {
-          showToast("O hábito foi criado com sucesso!");
-          HabitDetailsPageArguments arguments = HabitDetailsPageArguments(result.id, result.color);
-          navigatePushReplacement("habitDetails", arguments: arguments);
-        }
+      controller.createHabit(habit).then((response) {
+        response.result((data) {
+          showLoading(false);
+          if (widget.backTo) {
+            navigatePop(result: data);
+          } else {
+            showToast("O hábito foi criado com sucesso!");
+            HabitDetailsPageArguments arguments = HabitDetailsPageArguments(data.id, data.oldId, data.colorCode);
+            navigatePushReplacement("habitDetails", arguments: arguments);
+          }
+        }, handleError);
       }).catchError(handleError);
     }
   }

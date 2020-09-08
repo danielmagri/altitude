@@ -71,14 +71,14 @@ abstract class _EditAlarmLogicBase with Store {
 
   Future<void> saveReminders() async {
     if (reminders.length != 0) {
-      await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.id, reminders);
+      await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.oldId, reminders);
     }
     List<Reminder> newReminders = List();
     String days = "";
     reminderWeekdaySelection.forEach((item) {
       if (item.state) {
         newReminders.add(Reminder(
-            habitId: habitDetailsLogic.habit.data.id,
+            habitId: habitDetailsLogic.habit.data.oldId,
             hour: reminderTime.hour,
             minute: reminderTime.minute,
             weekday: item.id,
@@ -98,7 +98,7 @@ abstract class _EditAlarmLogicBase with Store {
   }
 
   Future<bool> removeReminders() async {
-    bool result = await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.id, reminders);
+    bool result = await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.oldId, reminders);
     FireAnalytics().sendRemoveAlarm(habitDetailsLogic.habit.data.habit);
     habitDetailsLogic.editAlarmCallback(ObservableList());
     return result;

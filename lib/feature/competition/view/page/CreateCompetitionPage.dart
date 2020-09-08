@@ -112,7 +112,7 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.color]),
+                          Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
                           const SizedBox(width: 10),
                           Text(habit.habit, style: const TextStyle(color: Colors.black)),
                         ],

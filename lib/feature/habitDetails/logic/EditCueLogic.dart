@@ -12,7 +12,7 @@ abstract class _EditCueLogicBase with Store {
   HabitDetailsLogic habitDetailsLogic = GetIt.I.get<HabitDetailsLogic>();
 
   Color get habitColor => habitDetailsLogic.habitColor;
-  String get cue => habitDetailsLogic.habit.data.cue;
+  String get cue => habitDetailsLogic.habit.data.oldCue;
 
   @observable
   bool showAllTutorialText = false;
@@ -21,7 +21,7 @@ abstract class _EditCueLogicBase with Store {
   ObservableList<String> suggestions = ObservableList();
 
   _EditCueLogicBase() {
-    fetchSuggestions(habitDetailsLogic.habit.data.cue);
+    fetchSuggestions(habitDetailsLogic.habit.data.oldCue);
   }
 
   @action
@@ -45,14 +45,14 @@ abstract class _EditCueLogicBase with Store {
 
   Future<bool> saveCue(String cue) async {
     bool result =
-        await HabitsControl().updateCue(habitDetailsLogic.habit.data.id, habitDetailsLogic.habit.data.habit, cue);
+        await HabitsControl().updateCue(habitDetailsLogic.habit.data.oldId, habitDetailsLogic.habit.data.habit, cue);
     habitDetailsLogic.editCueCallback(cue);
     return result;
   }
 
   Future<bool> removeCue() async {
     bool result =
-        await HabitsControl().updateCue(habitDetailsLogic.habit.data.id, habitDetailsLogic.habit.data.habit, null);
+        await HabitsControl().updateCue(habitDetailsLogic.habit.data.oldId, habitDetailsLogic.habit.data.habit, null);
     habitDetailsLogic.editCueCallback(null);
     return result;
   }
