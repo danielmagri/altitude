@@ -1,17 +1,14 @@
 import 'dart:async';
-import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/controllers/NotificationControl.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 @deprecated
 class HabitsControl {
@@ -49,15 +46,15 @@ class HabitsControl {
 
   /// Retorna todos os hábitos registrados;
   Future<List<Habit>> getAllHabits() async {
-    List habits = await DatabaseService().getAllHabits();
+    // List habits = await DatabaseService().getAllHabits();
 
-    return habits;
+    return List();
   }
 
   /// Retorna todos os hábitos para serem feitos hoje.
-  Future<List<Habit>> getHabitsToday() async {
-    return await DatabaseService().getHabitsToday();
-  }
+  // Future<List<Habit>> getHabitsToday() async {
+  //   return await DatabaseService().getHabitsToday();
+  // }
 
   /// Retorna todos os hábitos feitos hoje.
   Future<List<DayDone>> getHabitsDoneToday() async {
@@ -66,7 +63,7 @@ class HabitsControl {
 
   /// Retorna os dados de um hábito específico.
   Future<Habit> getHabit(int id) async {
-    return await DatabaseService().getHabit(id);
+    return Habit();
   }
 
   /// Atualiza o hábito.
@@ -167,36 +164,37 @@ class HabitsControl {
   }
 
   /// Atualiza a pontuação, registra o dia feito e retorna a pontuação adquirida.
-  Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {bool add = true}) async {
-    Frequency frequency = await getFrequency(id);
-    int weekDay = date.weekday == 7 ? 0 : date.weekday;
-    DateTime startDate = date.subtract(Duration(days: weekDay));
-    DateTime endDate = date.lastWeekDay();
-    int score;
+  // Future<int> setHabitDoneAndScore(DateTime date, int id, DonePageType page, {bool add = true}) async {
+  //   Frequency frequency = await getFrequency(id);
+  //   int weekDay = date.weekday == 7 ? 0 : date.weekday;
+  //   DateTime startDate = date.subtract(Duration(days: weekDay));
+  //   DateTime endDate = date.lastWeekDay();
+  //   int score;
 
-    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
+  //   List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: startDate, endDate: endDate);
 
-    if (add) {
-      score = ScoreControl().calculateScore(ScoreType.ADD, frequency, daysDone, date);
-      await ScoreControl().setScore(id, score, date);
-      await DatabaseService().setDayDone(id, date);
-    } else {
-      score = -ScoreControl().calculateScore(ScoreType.SUBTRACT, frequency, daysDone, date);
-      await ScoreControl().setScore(id, score, date);
-      await DatabaseService().deleteDayDone(id, date);
-    }
+  //   if (add) {
+  //     score = ScoreControl().calculateScore(ScoreType.ADD, frequency, daysDone, date);
+  //     await ScoreControl().setScore(id, score, date);
+  //     await DatabaseService().setDayDone(id, date);
+  //   } else {
+  //     score = -ScoreControl().calculateScore(ScoreType.SUBTRACT, frequency, daysDone, date);
+  //     await ScoreControl().setScore(id, score, date);
+  //     await DatabaseService().deleteDayDone(id, date);
+  //   }
 
-    FireAnalytics().sendDoneHabit(page.toString(), DateTime.now().hour);
+  //   FireAnalytics().sendDoneHabit(page.toString(), DateTime.now().hour);
 
-    return score;
-  }
+  //   return score;
+  // }
 
   /// Retorna a pontuação contada a partir da data
   Future<int> getHabitScore(int id, DateTime initialDate) async {
-    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    dynamic frequency = await getFrequency(id);
-    List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: initialDate, endDate: today);
+    // DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    // dynamic frequency = await getFrequency(id);
+    // List<DayDone> daysDone = await DatabaseService().getDaysDone(id, startDate: initialDate, endDate: today);
 
-    return ScoreControl().scoreEarnedTotal(frequency, daysDone);
+    // return ScoreControl().scoreEarnedTotal(frequency, daysDone);
+    return 0;
   }
 }

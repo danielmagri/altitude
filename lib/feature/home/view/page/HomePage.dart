@@ -4,7 +4,7 @@ import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
 import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
@@ -96,7 +96,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   }
 
   void goHabitDetails(String id, int oldId, int color) {
-    var arguments = HabitDetailsPageArguments(id, oldId, color);
+    var arguments = HabitDetailsPageArguments(id, color);
     navigatePush('habitDetails', arguments: arguments);
   }
 

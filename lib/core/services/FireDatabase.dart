@@ -7,7 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FireDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  DocumentReference get userDoc => firestore.collection('users').doc(FireAuth().getUid());
+  DocumentReference get userDoc =>
+      firestore.collection('users').doc(FireAuth().getUid());
   CollectionReference get habitsCollection => userDoc.collection('habits');
 
   // PERSON
@@ -30,39 +31,68 @@ class FireDatabase {
   }
 
   Future<List<Habit>> getHabits() {
-    return habitsCollection.get().then((value) => value.docs.map((e) => Habit.fromJson(e.data())).toList());
+    return habitsCollection.get().then(
+        (value) => value.docs.map((e) => Habit.fromJson(e.data())).toList());
   }
 
   Future<Habit> getHabit(String id) {
-    return habitsCollection.doc(id).get().then((value) => Habit.fromJson(value.data()));
+    return habitsCollection
+        .doc(id)
+        .get()
+        .then((value) => Habit.fromJson(value.data()));
   }
 
-  Future completeHabit(String habitId, int totalScore, int habitScore, int daysDoneCount, DayDone dayDone) {
+  Future completeHabit(String habitId, bool isAdd, int totalScore,
+      int habitScore, int daysDoneCount, bool isLastDone, DayDone dayDone) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection('days_done');
 
     return daysDoneCollection.doc(dayDone.dateFormatted).get().then((date) {
-      if (!date.exists) {
+      if (!date.exists && isAdd) {
         WriteBatch batch = FirebaseFirestore.instance.batch();
 
+        Map<String, dynamic> habitMap = Map();
+        habitMap.putIfAbsent(Habit.SCORE, () => habitScore);
+        habitMap.putIfAbsent(Habit.DAYS_DONE_COUNT, () => daysDoneCount);
+        if (isLastDone)
+          habitMap.putIfAbsent(Habit.LAST_DONE, () => dayDone.date);
+
         batch.update(userDoc, {Person.SCORE: totalScore});
-        batch.update(habitDoc, {Habit.SCORE: habitScore, Habit.DAYS_DONE_COUNT: daysDoneCount});
-        batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
+        batch.update(habitDoc, habitMap);
+        batch.set(
+            daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
+
+        return batch.commit();
+      } else if (date.exists && !isAdd) {
+        WriteBatch batch = FirebaseFirestore.instance.batch();
+
+        Map<String, dynamic> habitMap = Map();
+        habitMap.putIfAbsent(Habit.SCORE, () => habitScore);
+        habitMap.putIfAbsent(Habit.DAYS_DONE_COUNT, () => daysDoneCount);
+        if (isLastDone) habitMap.putIfAbsent(Habit.LAST_DONE, () => null);
+
+        batch.update(userDoc, {Person.SCORE: totalScore});
+        batch.update(habitDoc, habitMap);
+        batch.delete(daysDoneCollection.doc(dayDone.dateFormatted));
 
         return batch.commit();
       } else {
-        throw "Hábito já foi feito";
+        throw "Erro desconhecido";
       }
     });
   }
 
   // DAYS DONE
 
-  Future<List<DayDone>> getDaysDone(String id, DateTime startDate, DateTime endDate) {
+  Future<List<DayDone>> getDaysDone(
+      String id, DateTime startDate, DateTime endDate) {
     return habitsCollection
         .doc(id)
         .collection('days_done')
+        .where(DayDone.DATE, isGreaterThanOrEqualTo: startDate)
+        .where(DayDone.DATE, isLessThanOrEqualTo: endDate)
         .get()
-        .then((value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList());
+        .then((value) =>
+            value.docs.map((e) => DayDone.fromJson(e.data())).toList());
   }
 }

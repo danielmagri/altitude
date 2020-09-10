@@ -9,8 +9,10 @@ class DayDone {
   String get dateFormatted =>
       '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-  factory DayDone.fromJson(Map<String, dynamic> json) =>
-      DayDone(date: DateTime.fromMillisecondsSinceEpoch((json["date"] as Timestamp).millisecondsSinceEpoch));
+  static const DATE = "date";
 
-  Map<String, dynamic> toJson() => {"date": date};
+  factory DayDone.fromJson(Map<String, dynamic> json) =>
+      DayDone(date: DateTime.fromMillisecondsSinceEpoch((json[DATE] as Timestamp).millisecondsSinceEpoch));
+
+  Map<String, dynamic> toJson() => {DATE: date};
 }

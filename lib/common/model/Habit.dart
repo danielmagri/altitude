@@ -15,6 +15,7 @@ class Habit {
 
   Frequency frequency;
 
+  DateTime lastDone;
   DateTime initialDate;
   int daysDone;
 
@@ -26,6 +27,7 @@ class Habit {
       this.score,
       this.oldCue,
       this.frequency,
+      this.lastDone,
       this.initialDate,
       this.daysDone});
 
@@ -37,6 +39,7 @@ class Habit {
   static const SCORE = "score";
   static const OLD_CUE = "old_cue";
   static const FREQUENCY = "frequency";
+  static const LAST_DONE = "last_done";
   static const INITIAL_DATE = "initial_date";
   static const DAYS_DONE_COUNT = "days_done_count";
 
@@ -47,19 +50,15 @@ class Habit {
       score: json[SCORE],
       oldCue: json[OLD_CUE] == null ? "" : json[OLD_CUE],
       frequency: Frequency.fromJson(json[FREQUENCY]),
-      initialDate: DateTime.fromMillisecondsSinceEpoch((json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch),
-      daysDone: json[DAYS_DONE_COUNT]);
-
-  factory Habit.fromJsonOld(Map<String, dynamic> json) => new Habit(
-      oldId: json["id"],
-      colorCode: json["color"],
-      oldCue: json["cue_text"] == null ? "" : json["cue_text"],
-      habit: json["habit_text"],
-      score: json["score"],
-      initialDate: json.containsKey("initial_date") && json["initial_date"] != null
-          ? DateTime.parse(json["initial_date"])
+      lastDone: json[LAST_DONE] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (json[LAST_DONE] as Timestamp).millisecondsSinceEpoch)
           : null,
-      daysDone: json["days_done"]);
+      initialDate: json.containsKey(INITIAL_DATE)
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
+          : null,
+      daysDone: json[DAYS_DONE_COUNT]);
 
   Map<String, dynamic> toJson() => {
         ID: id,
@@ -68,6 +67,7 @@ class Habit {
         SCORE: score ?? 0,
         OLD_CUE: oldCue,
         FREQUENCY: frequency.toJson(),
+        LAST_DONE: lastDone,
         INITIAL_DATE: initialDate,
         DAYS_DONE_COUNT: daysDone ?? 0
       };

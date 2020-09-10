@@ -3,7 +3,7 @@ import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:flutter/material.dart';

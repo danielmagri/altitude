@@ -1,5 +1,6 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
@@ -9,7 +10,7 @@ import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:get_it/get_it.dart';
 
-class PersonUseCase {
+class PersonUseCase extends BaseUseCase {
   static PersonUseCase get getInstance => GetIt.I.get<PersonUseCase>();
 
   final Memory _memory = Memory.getInstance;
@@ -24,17 +25,16 @@ class PersonUseCase {
 
   String get photoUrl => FireAuth().getPhotoUrl();
 
-  Future<Result<Person>> getPerson() {
-    if (_memory.person == null) {
-      return FireDatabase().getPerson().then((data) {
-        data.photoUrl = photoUrl;
-        _memory.person = data;
-        return Result.success(data);
-      }).catchError((error) => Result.error(error));
-    } else {
-      return Future.value(Result.success(_memory.person));
-    }
-  }
+  Future<Result<Person>> getPerson() => safeCall(() async {
+        if (_memory.person == null) {
+          var data = await FireDatabase().getPerson();
+          data.photoUrl = photoUrl;
+          _memory.person = data;
+          return Result.success(data);
+        } else {
+          return Future.value(Result.success(_memory.person));
+        }
+      });
 
   Future<int> getScore() async {
     return (await getPerson()).result((data) => data.score, (error) => 0);
@@ -46,21 +46,22 @@ class PersonUseCase {
     }
   }
 
-  Future<Result<void>> updateLevel(int level) {
-    return FireDatabase().updateLevel(level).then((value) {
-      _memory.person.level = level;
-      return Result.success(null);
-    }).catchError((error) => Result.error(error));
-  }
+  Future<Result<void>> updateLevel(int level) => safeCall(() async {
+        await FireDatabase().updateLevel(level);
+        _memory.person.level = level;
+        return Result.success(null);
+      });
 
   //TODO: alterar direto pelo firestore
   Future<bool> setName(String name) async {
     FireAuth().setName(name);
-    return await FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(), name: name);
+    return await FireFunctions()
+        .updateUser(await DatabaseService().listCompetitionsIds(), name: name);
   }
 
   bool get pendingFriendsStatus => SharedPref.instance.pendingFriends;
-  set pendingFriendsStatus(bool value) => SharedPref.instance.pendingFriends = value;
+  set pendingFriendsStatus(bool value) =>
+      SharedPref.instance.pendingFriends = value;
 
   Future<List<Person>> getFriends() async {
     return await FireFunctions().getFriends();

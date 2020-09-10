@@ -135,13 +135,13 @@ class DatabaseService {
   }
 
   /// Retorna todos os hábitos registrados.
-  Future<List<Habit>> getAllHabits() async {
-    final db = await database;
-    var result = await db.rawQuery('SELECT * FROM habit;');
+  // Future<List<Habit>> getAllHabits() async {
+  //   final db = await database;
+  //   var result = await db.rawQuery('SELECT * FROM habit;');
 
-    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
-    return list;
-  }
+    //List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
+    //return list;
+  // }
 
   Future<List<int>> getAllHabitsColor() async {
     final db = await database;
@@ -152,62 +152,62 @@ class DatabaseService {
   }
 
   /// Retorna os dados de um hábito específico.
-  Future<Habit> getHabit(int id) async {
-    final db = await database;
+  // Future<Habit> getHabit(int id) async {
+  //   final db = await database;
 
-    var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
+  //   var result = await db.rawQuery('SELECT * FROM habit WHERE id=$id;');
 
-    return result.isNotEmpty ? Habit.fromJsonOld(result.first) : null;
-  }
+  //   //return result.isNotEmpty ? Habit.fromJsonOld(result.first) : null;
+  // }
 
   /// Retorna os hábitos para serem feitos hoje.
-  Future<List> getHabitsToday() async {
-    DateTime now = new DateTime.now();
-    DateTime startWeek;
-    String weekday = "";
-    switch (now.weekday) {
-      case 1:
-        weekday = "monday";
-        startWeek = now.subtract(Duration(days: 1));
-        break;
-      case 2:
-        weekday = "tuesday";
-        startWeek = now.subtract(Duration(days: 2));
-        break;
-      case 3:
-        weekday = "wednesday";
-        startWeek = now.subtract(Duration(days: 3));
-        break;
-      case 4:
-        weekday = "thursday";
-        startWeek = now.subtract(Duration(days: 4));
-        break;
-      case 5:
-        weekday = "friday";
-        startWeek = now.subtract(Duration(days: 5));
-        break;
-      case 6:
-        weekday = "saturday";
-        startWeek = now.subtract(Duration(days: 6));
-        break;
-      case 7:
-        weekday = "sunday";
-        startWeek = now;
-        break;
-    }
+  // Future<List> getHabitsToday() async {
+  //   DateTime now = new DateTime.now();
+  //   DateTime startWeek;
+  //   String weekday = "";
+  //   switch (now.weekday) {
+  //     case 1:
+  //       weekday = "monday";
+  //       startWeek = now.subtract(Duration(days: 1));
+  //       break;
+  //     case 2:
+  //       weekday = "tuesday";
+  //       startWeek = now.subtract(Duration(days: 2));
+  //       break;
+  //     case 3:
+  //       weekday = "wednesday";
+  //       startWeek = now.subtract(Duration(days: 3));
+  //       break;
+  //     case 4:
+  //       weekday = "thursday";
+  //       startWeek = now.subtract(Duration(days: 4));
+  //       break;
+  //     case 5:
+  //       weekday = "friday";
+  //       startWeek = now.subtract(Duration(days: 5));
+  //       break;
+  //     case 6:
+  //       weekday = "saturday";
+  //       startWeek = now.subtract(Duration(days: 6));
+  //       break;
+  //     case 7:
+  //       weekday = "sunday";
+  //       startWeek = now;
+  //       break;
+  //   }
 
-    final db = await database;
+  //   final db = await database;
 
-    var result = await db.rawQuery('''
-        SELECT id, color, habit_text FROM habit WHERE id IN (
-							 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
-							 UNION ALL
-               SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
-               );''');
+  //   var result = await db.rawQuery('''
+  //       SELECT id, color, habit_text FROM habit WHERE id IN (
+	// 						 SELECT habit_id FROM freq_day_week WHERE $weekday=1 
+	// 						 UNION ALL
+  //              SELECT habit_id FROM freq_weekly WHERE habit_id NOT IN (SELECT habit_id FROM day_done WHERE date_done>\'${startWeek.year}-${startWeek.month.toString().padLeft(2, '0')}-${startWeek.day.toString().padLeft(2, '0')}\' AND date_done!=\'${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\' GROUP BY habit_id HAVING COUNT(*) >= days_time)
+  //              );''');
 
-    List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
-    return list;
-  }
+  //   //List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromJsonOld(c)).toList() : [];
+  //   //return list;
+  // }
 
   /// Retorna os hábitos feitos hoje.
   Future<List<DayDone>> getHabitsDoneToday() async {

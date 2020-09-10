@@ -9,7 +9,7 @@ import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
 import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:flutter/material.dart';

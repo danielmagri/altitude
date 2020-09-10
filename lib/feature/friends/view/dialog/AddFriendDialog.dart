@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/friends/logic/AddFriendLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';

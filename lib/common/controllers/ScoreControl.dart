@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/services/Database.dart';
@@ -16,30 +15,33 @@ class ScoreControl {
   static const int DAY_DONE_POINT = 2;
   static const int CYCLE_DONE_POINT = 1;
 
+  @deprecated
   int get score => SharedPref.instance.score;
 
   /// Calcula os pontos a ser adicionado ou retirado
   /// frequency: frequência do hábito
   /// week: os dias da semana feito
   /// date: o dia a ser adicionado ou removido
-  int calculateScore(ScoreType type, Frequency frequency, List<DayDone> week, DateTime date) {
-    if (type == ScoreType.ADD) week.add(DayDone(date: date));
+  int calculateScore(ScoreType type, Frequency frequency, List<DateTime> week, DateTime date) {
+    if (type == ScoreType.ADD) week.add(date);
+
+    var signal = type==ScoreType.ADD ? 1 : -1;
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {
-        return DAY_DONE_POINT;
+        return signal * DAY_DONE_POINT;
       } else if (frequency.isADoneDay(date)) {
-        return DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT);
+        return signal * (DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT));
       } else {
-        return DAY_DONE_POINT + CYCLE_DONE_POINT;
+        return signal * (DAY_DONE_POINT + CYCLE_DONE_POINT);
       }
     } else if (frequency is Weekly) {
       if (week.length > frequency.daysCount()) {
-        return DAY_DONE_POINT + CYCLE_DONE_POINT;
+        return signal * (DAY_DONE_POINT + CYCLE_DONE_POINT);
       } else if (week.length == frequency.daysCount()) {
-        return DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT);
+        return signal * (DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT));
       } else {
-        return DAY_DONE_POINT;
+        return signal * (DAY_DONE_POINT);
       }
     } else {
       return 0;
@@ -49,7 +51,7 @@ class ScoreControl {
   /// Calcula os pontos da semana toda
   /// frequency: frequência do hábito
   /// daysDone: os dias da semana feito
-  int _calculateWeekScore(Frequency frequency, List<DayDone> week) {
+  int _calculateWeekScore(Frequency frequency, List<DateTime> week) {
     if (frequency is DayWeek) {
       if (_hasDoneCorrectDayWeek(frequency, week)) {
         return week.length * (DAY_DONE_POINT + CYCLE_DONE_POINT);
@@ -68,14 +70,14 @@ class ScoreControl {
   }
 
   /// Calcula toda a pontuação
-  int scoreEarnedTotal(Frequency frequency, List<DayDone> daysDone) {
+  int scoreEarnedTotal(Frequency frequency, List<DateTime> daysDone) {
     int score = 0;
     int index = 0;
-    daysDone.sort((a, b) => a.date.compareTo(b.date));
+    daysDone.sort((a, b) => a.compareTo(b));
 
     while (index < daysDone.length) {
-      DateTime nextWeek = daysDone[index].date.lastWeekDay().add(Duration(days: 1));
-      int lastIndexOfWeek = daysDone.lastIndexWhere((dayDone) => dayDone.date.isBefore(nextWeek));
+      DateTime nextWeek = daysDone[index].lastWeekDay().add(Duration(days: 1));
+      int lastIndexOfWeek = daysDone.lastIndexWhere((dayDone) => dayDone.isBefore(nextWeek));
 
       if (lastIndexOfWeek != -1) {
         score += _calculateWeekScore(frequency, daysDone.sublist(index, lastIndexOfWeek + 1));
@@ -90,14 +92,14 @@ class ScoreControl {
   }
 
   /// Checa se a frequêcia do DayWeek está completa
-  bool _hasDoneCorrectDayWeek(DayWeek dayWeek, List<DayDone> week) {
-    if (dayWeek.monday && !week.any((dayDone) => dayDone.date.weekday == 1)) return false;
-    if (dayWeek.tuesday && !week.any((dayDone) => dayDone.date.weekday == 2)) return false;
-    if (dayWeek.wednesday && !week.any((dayDone) => dayDone.date.weekday == 3)) return false;
-    if (dayWeek.thursday && !week.any((dayDone) => dayDone.date.weekday == 4)) return false;
-    if (dayWeek.friday && !week.any((dayDone) => dayDone.date.weekday == 5)) return false;
-    if (dayWeek.saturday && !week.any((dayDone) => dayDone.date.weekday == 6)) return false;
-    if (dayWeek.sunday && !week.any((dayDone) => dayDone.date.weekday == 7)) return false;
+  bool _hasDoneCorrectDayWeek(DayWeek dayWeek, List<DateTime> week) {
+    if (dayWeek.monday && !week.any((dayDone) => dayDone.weekday == 1)) return false;
+    if (dayWeek.tuesday && !week.any((dayDone) => dayDone.weekday == 2)) return false;
+    if (dayWeek.wednesday && !week.any((dayDone) => dayDone.weekday == 3)) return false;
+    if (dayWeek.thursday && !week.any((dayDone) => dayDone.weekday == 4)) return false;
+    if (dayWeek.friday && !week.any((dayDone) => dayDone.weekday == 5)) return false;
+    if (dayWeek.saturday && !week.any((dayDone) => dayDone.weekday == 6)) return false;
+    if (dayWeek.sunday && !week.any((dayDone) => dayDone.weekday == 7)) return false;
     return true;
   }
 
