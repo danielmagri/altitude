@@ -1,9 +1,9 @@
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
@@ -57,13 +57,11 @@ class HabitsPanel extends StatelessWidget {
                 child: Wrap(
                   alignment: WrapAlignment.center,
                   children: data.map((habit) {
-                    // DayDone done =
-                    //     controller.doneHabits.firstWhere((dayDone) => dayDone.habitId == habit.oldId, orElse: () => null);
                     return HabitCardItem(
                         habit: habit,
                         goHabitDetails: goHabitDetails,
                         showDragTarget: controller.swipeSkyWidget,
-                        done: false);
+                        done: DateTime.now().today.isSameDay(habit.lastDone));
                   }).toList(),
                 ),
               );

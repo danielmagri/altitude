@@ -30,7 +30,7 @@ abstract class _DataStateBase<T> with Store {
   }
 
   @action
-  void setLoading({bool loading = true}) {
+  void setLoading([bool loading = true]) {
     _loading = loading;
   }
 

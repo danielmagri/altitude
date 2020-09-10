@@ -1,6 +1,6 @@
 import 'package:altitude/common/view/ReminderDay.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';

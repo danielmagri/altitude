@@ -1,5 +1,5 @@
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';

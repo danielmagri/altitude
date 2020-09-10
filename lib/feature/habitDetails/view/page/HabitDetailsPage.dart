@@ -6,13 +6,12 @@ import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
-import 'package:altitude/feature/habitDetails/view/widgets/competitionWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/cueWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/headerWidget.dart';
@@ -43,7 +42,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void initState() {
     super.initState();
 
-    controller.fetchData(widget.arguments.id, widget.arguments.oldId, widget.arguments.color);
+    controller.fetchData(widget.arguments.id, widget.arguments.color);
 
     showInitialTutorial();
   }
@@ -114,27 +113,27 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void completeHabit(bool add, DateTime date, DonePageType donePageType) {
     controller.setDoneHabit(add, date, donePageType).then((_) async {
       vibratePhone();
-      if (donePageType == DonePageType.Calendar &&
-          add &&
-          SharedPref.instance.alarmTutorial < 2 &&
-          controller.reminders.data.isEmpty) {
-        await Future.delayed(Duration(milliseconds: 600));
-        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-        navigateSmooth(
-          TutorialPresentation(
-            focusAlignment: Alignment(0.65, -0.85),
-            focusRadius: 0.15,
-            textAlignment: Alignment(0, 0),
-            text: [
-              TextSpan(
-                  text: "Esqueceu de marcar como feito o hábito?",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              TextSpan(text: "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
-            ],
-          ),
-        );
-        SharedPref.instance.addAlarmTutorial();
-      }
+      // if (donePageType == DonePageType.Calendar &&
+      //     add &&
+      //     SharedPref.instance.alarmTutorial < 2 &&
+      //     controller.reminders.data.isEmpty) {
+      //   await Future.delayed(Duration(milliseconds: 600));
+      //   scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      //   navigateSmooth(
+      //     TutorialPresentation(
+      //       focusAlignment: Alignment(0.65, -0.85),
+      //       focusRadius: 0.15,
+      //       textAlignment: Alignment(0, 0),
+      //       text: [
+      //         TextSpan(
+      //             text: "Esqueceu de marcar como feito o hábito?",
+      //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      //         TextSpan(text: "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
+      //       ],
+      //     ),
+      //   );
+      //   SharedPref.instance.addAlarmTutorial();
+      // }
     }).catchError(handleError);
   }
 
@@ -148,8 +147,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void goEditHabitPage() {
-    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data,
-        controller.competitions.data.isNotEmpty);
+    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data, false);
     navigatePush('editHabit', arguments: arguments);
   }
 
@@ -275,15 +273,6 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 //     onTap: goBuyBook),
                 // const SizedBox(height: 16),
                 CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
-                const SizedBox(height: 16),
-                Observer(
-                  builder: (_) => controller.competitions.handleState(
-                    () => const Skeleton(
-                        width: double.maxFinite, height: 130, margin: EdgeInsets.symmetric(horizontal: 8)),
-                    (data) => data.isEmpty ? CompetitionWidget(goCompetition: competition) : const SizedBox(),
-                    (error) => const SizedBox(),
-                  ),
-                ),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
                 const SizedBox(height: 48),

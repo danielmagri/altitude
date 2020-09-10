@@ -23,9 +23,6 @@ abstract class _HomeLogicBase with Store {
   DataState<ObservableList<Habit>> habits = DataState();
 
   @observable
-  ObservableList<DayDone> doneHabits;
-
-  @observable
   bool visibilty = false;
 
   @observable
@@ -49,7 +46,6 @@ abstract class _HomeLogicBase with Store {
   }
 
   void getHabits() async {
-    // doneHabits = (await HabitsControl().getHabitsDoneToday()).asObservable();
     (await _habitUseCase.getHabits()).result((data) {
       habits.setData(data.asObservable());
     }, (error) {
@@ -61,7 +57,7 @@ abstract class _HomeLogicBase with Store {
   void fetchPendingStatus() {
     pendingCompetitionStatus = CompetitionsControl().pendingCompetitionsStatus;
     pendingFriendStatus = _personUseCase.pendingFriendsStatus;
-    pendingLearnStatus = BOOKS.length != SharedPref.instance.pendingLearn ? true : false;
+    pendingLearnStatus = books.length != SharedPref.instance.pendingLearn ? true : false;
     pendingStatisticsStatus = SharedPref.instance.pendingStatistic;
   }
 
@@ -74,7 +70,7 @@ abstract class _HomeLogicBase with Store {
   Future<int> completeHabit(String id) async {
     return (await _habitUseCase.completeHabit(id, DateTime.now().today)).result((value) {
       getUser();
-      //doneHabits.add(DayDone(date: DateTime.now().today, habitId: id));
+      getHabits();
       return user.data.score;
     }, (error) => throw error);
   }

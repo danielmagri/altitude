@@ -4,7 +4,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show

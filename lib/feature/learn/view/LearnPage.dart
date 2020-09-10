@@ -4,7 +4,7 @@ import 'package:altitude/common/router/arguments/LearnDetailPageArguments.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:flutter/material.dart';
 
 class LearnPage extends StatefulWidget {
@@ -15,13 +15,13 @@ class LearnPage extends StatefulWidget {
 class _LearnPageState extends BaseState<LearnPage> {
   @override
   void initState() {
-    SharedPref.instance.pendingLearn = BOOKS.length;
+    SharedPref.instance.pendingLearn = books.length;
     super.initState();
   }
 
   void goLearnDetail(int index) {
     LearnDetailPageArguments arguments = LearnDetailPageArguments(index);
-    FireAnalytics().sendLearn(BOOKS[index].keyword);
+    FireAnalytics().sendLearn(books[index].keyword);
     navigatePush('learnDetail', arguments: arguments);
   }
 
@@ -48,9 +48,9 @@ class _LearnPageState extends BaseState<LearnPage> {
               padding: const EdgeInsets.all(0),
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: BOOKS.length,
+              itemCount: books.length,
               itemBuilder: (_, index) {
-                Book book = BOOKS[index];
+                Book book = books[index];
                 return InkWell(
                   onTap: () => goLearnDetail(index),
                   child: Padding(

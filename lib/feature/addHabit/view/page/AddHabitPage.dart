@@ -2,7 +2,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart';
 import 'package:altitude/feature/addHabit/view/widget/HabitText.dart';
 import 'package:altitude/feature/addHabit/view/widget/SelectAlarm.dart';
@@ -55,7 +55,7 @@ class _AddHabitPageState extends BaseState<AddHabitPage> {
             navigatePop(result: data);
           } else {
             showToast("O hábito foi criado com sucesso!");
-            HabitDetailsPageArguments arguments = HabitDetailsPageArguments(data.id, data.oldId, data.colorCode);
+            HabitDetailsPageArguments arguments = HabitDetailsPageArguments(data.id, data.colorCode);
             navigatePushReplacement("habitDetails", arguments: arguments);
           }
         }, handleError);

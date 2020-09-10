@@ -2,7 +2,7 @@ import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
