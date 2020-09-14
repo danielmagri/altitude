@@ -30,7 +30,8 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
   }
 
   void switchReminderType(ReminderType type) {
-    if (type == ReminderType.CUE && controller.habitDetailsLogic.habit.data.oldCue == "") {
+    if (type == ReminderType.CUE &&
+        controller.habitDetailsLogic.habit.data.oldCue == "") {
       showToast("Adicione o gatilho primeiro");
       return;
     }
@@ -94,7 +95,8 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                     Expanded(
                       child: Text(
                         item.title,
-                        style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+                        style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black),
                       ),
                     ),
                   ],
@@ -116,26 +118,32 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
             margin: const EdgeInsets.only(top: 18),
             height: 30,
             child: Text("Alarme",
-                style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor)),
+                style: TextStyle(
+                    fontSize: 21.0,
+                    fontWeight: FontWeight.bold,
+                    color: controller.habitColor)),
           ),
           const Spacer(flex: 1),
           const Padding(
             padding: const EdgeInsets.all(8),
-            child: const Text("Você deseja ser lembrado do hábito ou do gatilho?",
+            child: const Text(
+                "Você deseja ser lembrado do hábito ou do gatilho?",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
           ),
           Observer(
             builder: (_) {
               return Row(
                   children: controller.reminderCards
-                      .map((item) => _reminderCard(controller.cardTypeSelected == item.type, item))
+                      .map((item) => _reminderCard(
+                          controller.cardTypeSelected == item.type, item))
                       .toList());
             },
           ),
           const SizedBox(height: 32),
           const Padding(
             padding: const EdgeInsets.all(8),
-            child: Text("Selecione os dias e o horário que deseja ser lembrado:",
+            child: Text(
+                "Selecione os dias e o horário que deseja ser lembrado:",
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
           ),
           Observer(
@@ -146,7 +154,8 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                         day: item.title,
                         state: item.state,
                         color: controller.habitColor,
-                        onTap: () => controller.reminderWeekdayClick(item.id, !item.state)))
+                        onTap: () => controller.reminderWeekdayClick(
+                            item.id, !item.state)))
                     .toList(),
               );
             },
@@ -159,10 +168,15 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                 builder: (_) {
                   return RichText(
                     text: TextSpan(
-                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: "Montserrat"),
                       children: <TextSpan>[
                         TextSpan(
-                            text: controller.timeText, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            text: controller.timeText,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold)),
                         const TextSpan(text: " hrs"),
                       ],
                     ),
@@ -177,19 +191,24 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                controller.reminders.length != 0
+                controller.reminder != null && controller.reminder.hasAnyDay()
                     ? FlatButton(
                         onPressed: remove,
-                        child: const Text("Remover", style: TextStyle(fontSize: 16)),
+                        child: const Text("Remover",
+                            style: TextStyle(fontSize: 16)),
                       )
                     : const SizedBox(),
                 RaisedButton(
                   color: controller.habitColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   elevation: 0,
                   onPressed: save,
-                  child: const Text("SALVAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text("SALVAR",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

@@ -6,9 +6,7 @@ import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/controllers/NotificationControl.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
-import 'package:altitude/utils/Color.dart';
 
 @deprecated
 class HabitsControl {
@@ -24,18 +22,18 @@ class HabitsControl {
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
   Future<Habit> addHabit(Habit habit, Frequency frequency, List<Reminder> reminders) async {
-    Map response = await DatabaseService().addHabit(habit, frequency, reminders);
-    habit.id = response[0];
-    for (Reminder reminder in response[1]) {
-      await NotificationControl().addNotification(reminder, habit);
-    }
+    // Map response = await DatabaseService().addHabit(habit, frequency, reminders);
+    // habit.id = response[0];
+    // for (Reminder reminder in response[1]) {
+    //   await NotificationControl().addNotification(reminder, habit);
+    // }
 
-    FireAnalytics().sendNewHabit(
-        habit.habit,
-        AppColors.habitsColorName[habit.colorCode],
-        frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
-        frequency.daysCount(),
-        reminders.length != 0 ? "Sim" : "Não");
+    // FireAnalytics().sendNewHabit(
+    //     habit.habit,
+    //     AppColors.habitsColorName[habit.colorCode],
+    //     frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
+    //     frequency.daysCount(),
+    //     reminders.length != 0 ? "Sim" : "Não");
     return habit;
   }
 
@@ -68,16 +66,17 @@ class HabitsControl {
 
   /// Atualiza o hábito.
   Future<bool> updateHabit(Habit habit, Habit oldHabit, List<Reminder> reminders) async {
-    if (habit.color != oldHabit.color) {
-      if (personUseCase.isLogged)
-        FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.oldId), color: habit.colorCode);
-    }
+    // if (habit.color != oldHabit.color) {
+    //   if (personUseCase.isLogged)
+    //     FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(habitId: habit.oldId), color: habit.colorCode);
+    // }
 
-    for (Reminder reminder in reminders) {
-      await NotificationControl().removeNotification(reminder.id);
-      await NotificationControl().addNotification(reminder, habit);
-    }
-    return await DatabaseService().updateHabit(habit);
+    // for (Reminder reminder in reminders) {
+    //   await NotificationControl().removeNotification(reminder.id);
+    //   await NotificationControl().addNotification(reminder, habit);
+    // }
+    // return await DatabaseService().updateHabit(habit);
+    return false;
   }
 
   /// Atualiza o gatilho do hábito.
@@ -105,15 +104,15 @@ class HabitsControl {
   }
 
   /// Adiciona os alarmes do hábito.
-  Future<List<Reminder>> addReminders(Habit habit, List<Reminder> reminders) async {
-    List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.oldId, reminders);
+  // Future<List<Reminder>> addReminders(Habit habit, List<Reminder> reminders) async {
+    // List<Reminder> remindersAdded = await DatabaseService().addReminders(habit.oldId, reminders);
 
-    for (Reminder reminder in remindersAdded) {
-      await NotificationControl().addNotification(reminder, habit);
-    }
+    // for (Reminder reminder in remindersAdded) {
+    //   await NotificationControl().addNotification(reminder, habit);
+    // }
 
-    return remindersAdded;
-  }
+    // return remindersAdded;
+  // }
 
   /// Deleta os alarmes do hábito.
   Future<bool> deleteReminders(int habitId, List<Reminder> reminders) async {

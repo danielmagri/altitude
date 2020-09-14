@@ -29,7 +29,7 @@ abstract class _HabitDetailsLogicBase with Store {
 
   DataState<Habit> habit = DataState();
   DataState<Frequency> frequency = DataState();
-  DataState<ObservableList<Reminder>> reminders = DataState();
+  DataState<Reminder> reminders = DataState();
   DataState<ObservableMap<DateTime, List>> calendarMonth = DataState();
   DataState<bool> isHabitDone = DataState();
   DataState<double> rocketForce = DataState();
@@ -61,29 +61,17 @@ abstract class _HabitDetailsLogicBase with Store {
     }, (error) {
       calendarMonth.setError(error);
     });
-
-    try {
-      // var _reminders = (await HabitsControl().getReminders(_oldId)).asObservable();
-      // var _calendarMonth = (await HabitsControl().getDaysDone(_oldId,
-      //         startDate: DateTime.now().lastDayOfPreviousMonth().subtract(Duration(days: 6)),
-      //         endDate: DateTime.now().today.add(Duration(days: 7))))
-      //     .asObservable();
-
-      // competitions.setData(_competitions);
-      // reminders.setData(_reminders);
-    } catch (error) {
-      reminders.setError(error);
-      throw error;
-    }
   }
 
   Future<void> getHabitDetail() async {
     (await habitUseCase.getHabit(_id)).result((data) {
       habit.setData(data);
       frequency.setData(data.frequency);
+      reminders.setData(data.reminder);
     }, (error) {
       habit.setError(error);
       frequency.setError(error);
+      reminders.setError(error);
     });
   }
 
@@ -133,9 +121,13 @@ abstract class _HabitDetailsLogicBase with Store {
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.lastWeekDay();
 
-    var days = calendarMonth.data.keys.where((e) => e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate)).toList();
+    var days = calendarMonth.data.keys
+        .where((e) =>
+            e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate))
+        .toList();
 
-    return (await habitUseCase.completeHabit(_id, date, add, days)).result((data) {
+    return (await habitUseCase.completeHabit(_id, date, add, days)).result(
+        (data) {
       Map<DateTime, List> visibleMonthDays = calendarMonth.data;
 
       bool yesterday =
@@ -201,8 +193,9 @@ abstract class _HabitDetailsLogicBase with Store {
     switchPanelType(BottomSheetType.NONE);
   }
 
-  void editAlarmCallback(ObservableList<Reminder> newReminders) {
-    reminders.setData(newReminders);
+  void editAlarmCallback(Reminder newReminder) {
+    reminders.setData(newReminder);
+    habit.data.reminder = newReminder;
     switchPanelType(BottomSheetType.NONE);
   }
 

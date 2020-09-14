@@ -336,45 +336,45 @@ class DatabaseService {
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
   Future<Map> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
-    DateTime now = new DateTime.now();
-    final db = await database;
+    // DateTime now = new DateTime.now();
+    // final db = await database;
 
-    // Inserção dos dados do hábito
-    var id = await db.rawInsert('''INSERT INTO habit (habit_text, color, initial_date) VALUES (\'${habit.habit}\',
-                                                                       ${habit.color},
-                                                                       \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
-    // Inserção dos dados da frequência
-    await addFrequency(id, frequency);
+    // // Inserção dos dados do hábito
+    // var id = await db.rawInsert('''INSERT INTO habit (habit_text, color, initial_date) VALUES (\'${habit.habit}\',
+    //                                                                    ${habit.color},
+    //                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
+    // // Inserção dos dados da frequência
+    // await addFrequency(id, frequency);
 
-    // Inserção dos dados dos alarmes
-    List<Reminder> remindersAdded = await addReminders(id, reminders);
+    // // Inserção dos dados dos alarmes
+    // List<Reminder> remindersAdded = await addReminders(id, reminders);
 
-    return {0: id, 1: remindersAdded};
+    return {};
   }
 
   /// Adiciona os alarmes do hábito.
-  Future<List<Reminder>> addReminders(int habitId, List<Reminder> reminders) async {
-    final db = await database;
-    List<Reminder> remindersAdded = new List();
+  // Future<List<Reminder>> addReminders(int habitId, List<Reminder> reminders) async {
+    // final db = await database;
+    // List<Reminder> remindersAdded = new List();
 
-    for (Reminder reminder in reminders) {
-      int reminderId =
-          await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, type, habit_id) VALUES (${reminder.hour},
-                                                                                  ${reminder.minute},
-                                                                                  ${reminder.weekday},
-                                                                                  ${reminder.type},
-                                                                                  $habitId);''');
-      remindersAdded.add(new Reminder(
-          id: reminderId,
-          hour: reminder.hour,
-          minute: reminder.minute,
-          type: reminder.type,
-          habitId: reminder.habitId,
-          weekday: reminder.weekday));
-    }
+    // for (Reminder reminder in reminders) {
+    //   int reminderId =
+    //       await db.rawInsert('''INSERT INTO reminder (hour, minute, weekday, type, habit_id) VALUES (${reminder.hour},
+    //                                                                               ${reminder.minute},
+    //                                                                               ${reminder.weekday},
+    //                                                                               ${reminder.type},
+    //                                                                               $habitId);''');
+    //   remindersAdded.add(new Reminder(
+    //       id: reminderId,
+    //       hour: reminder.hour,
+    //       minute: reminder.minute,
+    //       type: reminder.type,
+    //       habitId: reminder.habitId,
+    //       weekday: reminder.weekday));
+    // }
 
-    return remindersAdded;
-  }
+    // return null;
+  // }
 
   /// Adiciona a frequência do hábito.
   Future<bool> addFrequency(int id, dynamic frequency) async {

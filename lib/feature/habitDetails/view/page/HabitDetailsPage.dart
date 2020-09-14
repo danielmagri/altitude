@@ -51,7 +51,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
     if (!SharedPref.instance.rocketTutorial) {
       Timer.run(() async {
         await Future.delayed(Duration(milliseconds: 600));
-        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        scrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         await navigateSmooth(
           TutorialPresentation(
               focusAlignment: Alignment(-0.55, -0.6),
@@ -60,16 +61,22 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
               text: const [
                 TextSpan(
                     text: "Esse é seu hábito em forma de foguete..",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                TextSpan(text: "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 TextSpan(
-                    text: "\n\nSiga a frequência certinho para ir ainda mais longe!",
+                    text:
+                        "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                TextSpan(
+                    text:
+                        "\n\nSiga a frequência certinho para ir ainda mais longe!",
                     style: TextStyle(fontWeight: FontWeight.w300)),
               ],
               hasNext: true),
         );
-        await scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
         await navigateSmooth(
           TutorialPresentation(
             focusAlignment: Alignment(0.0, -0.35),
@@ -77,9 +84,12 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
             textAlignment: Alignment(0, 0.51),
             text: const [
               TextSpan(
-                  text: "No calendário você tem o controle de todos os dias feitos!",
+                  text:
+                      "No calendário você tem o controle de todos os dias feitos!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              TextSpan(text: "\n\nAo manter pressionado um dia você consegue marcar como feito ou desmarcar."),
+              TextSpan(
+                  text:
+                      "\n\nAo manter pressionado um dia você consegue marcar como feito ou desmarcar."),
             ],
           ),
         );
@@ -113,6 +123,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void completeHabit(bool add, DateTime date, DonePageType donePageType) {
     controller.setDoneHabit(add, date, donePageType).then((_) async {
       vibratePhone();
+      //TODO:
       // if (donePageType == DonePageType.Calendar &&
       //     add &&
       //     SharedPref.instance.alarmTutorial < 2 &&
@@ -147,8 +158,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void goEditHabitPage() {
-    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data, false);
-    navigatePush('editHabit', arguments: arguments);
+    // var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data, false);
+    // navigatePush('editHabit', arguments: arguments);
   }
 
   void competition(int index) {
@@ -175,12 +186,14 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
       child: Scaffold(
         body: SlidingUpPanel(
           controller: panelController,
-          borderRadius: const BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
           backdropEnabled: true,
           maxHeight: MediaQuery.of(context).size.height * 0.8,
           minHeight: 0,
           onPanelClosed: closeBottomSheet,
-          panel: Observer(builder: (_) => _bottomSheetBuilder(controller.panelType)),
+          panel: Observer(
+              builder: (_) => _bottomSheetBuilder(controller.panelType)),
           body: SingleChildScrollView(
             controller: scrollController,
             physics: BouncingScrollPhysics(),
@@ -195,21 +208,33 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       const Spacer(),
                       Observer(
                         builder: (_) => controller.reminders.handleState(
-                          () =>
-                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                          () => const Skeleton(
+                              width: 40,
+                              height: 40,
+                              margin:
+                                  const EdgeInsets.only(bottom: 4, right: 8)),
                           (data) => IconButton(
-                              icon: Icon(data.isNotEmpty ? Icons.alarm_on : Icons.add_alarm,
-                                  size: 25, color: controller.habitColor),
-                              onPressed: () => openBottomSheet(BottomSheetType.REMINDER)),
+                              icon: Icon(
+                                  data != null && data.hasAnyDay()
+                                      ? Icons.alarm_on
+                                      : Icons.add_alarm,
+                                  size: 25,
+                                  color: controller.habitColor),
+                              onPressed: () =>
+                                  openBottomSheet(BottomSheetType.REMINDER)),
                           (error) => const SizedBox(),
                         ),
                       ),
                       Observer(
                         builder: (_) => controller.habit.handleState(
-                          () =>
-                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                          () => const Skeleton(
+                              width: 40,
+                              height: 40,
+                              margin:
+                                  const EdgeInsets.only(bottom: 4, right: 8)),
                           (data) => IconButton(
-                            icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
+                            icon: Icon(Icons.edit,
+                                size: 25, color: controller.habitColor),
                             onPressed: goEditHabitPage,
                           ),
                           (error) => const SizedBox(),
@@ -220,7 +245,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 ),
                 HeaderWidget(),
                 Container(
-                  margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
+                  margin: const EdgeInsets.only(
+                      top: 36, bottom: 4, left: 32, right: 32),
                   width: double.maxFinite,
                   height: 50,
                   child: Observer(
@@ -228,11 +254,14 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       () => const Skeleton(width: double.maxFinite, height: 50),
                       (data, loading) => RaisedButton(
                         color: data ? controller.habitColor : Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         elevation: 5.0,
                         onPressed: () {
-                          if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
+                          if (!data)
+                            completeHabit(true, DateTime.now().today,
+                                DonePageType.Detail);
                         },
                         child: loading
                             ? SizedBox(
@@ -240,12 +269,19 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
-                            : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        data
+                                            ? Colors.white
+                                            : controller.habitColor)))
+                            : Text(
+                                data
+                                    ? "HÁBITO COMPLETO!"
+                                    : "COMPLETAR HÁBITO HOJE",
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: data ? Colors.white : controller.habitColor,
+                                    color: data
+                                        ? Colors.white
+                                        : controller.habitColor,
                                     fontWeight: FontWeight.bold)),
                       ),
                       (error) => const SizedBox(),
@@ -259,7 +295,9 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       () => const Skeleton(width: 200, height: 20),
                       (data) => Text(data.frequencyText(),
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54)),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black54)),
                       (error) => const SizedBox(),
                     ),
                   ),
@@ -272,7 +310,9 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 //     message: controller.bookAdvertisement.subtitle,
                 //     onTap: goBuyBook),
                 // const SizedBox(height: 16),
-                CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
+                CalendarWidget(
+                    calendarController: calendarController,
+                    completeHabit: completeHabit),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
                 const SizedBox(height: 48),

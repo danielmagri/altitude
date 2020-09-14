@@ -1,7 +1,8 @@
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/ReminderWeekday.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/feature/habitDetails/enums/ReminderType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/model/ReminderCard.dart';
@@ -14,8 +15,9 @@ class EditAlarmLogic = _EditAlarmLogicBase with _$EditAlarmLogic;
 
 abstract class _EditAlarmLogicBase with Store {
   HabitDetailsLogic habitDetailsLogic = GetIt.I.get<HabitDetailsLogic>();
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
 
-  ObservableList<Reminder> get reminders => habitDetailsLogic.reminders.data;
+  Reminder get reminder => habitDetailsLogic.reminders.data;
   Color get habitColor => habitDetailsLogic.habitColor;
 
   final List<ReminderCard> reminderCards = [
@@ -31,7 +33,9 @@ abstract class _EditAlarmLogicBase with Store {
 
   @computed
   String get timeText =>
-      reminderTime.hour.toString().padLeft(2, '0') + " : " + reminderTime.minute.toString().padLeft(2, '0');
+      reminderTime.hour.toString().padLeft(2, '0') +
+      " : " +
+      reminderTime.minute.toString().padLeft(2, '0');
 
   List<ReminderWeekday> reminderWeekdaySelection = [
     ReminderWeekday(1, "D", false),
@@ -44,11 +48,12 @@ abstract class _EditAlarmLogicBase with Store {
   ];
 
   _EditAlarmLogicBase() {
-    if (reminders != null && reminders.length != 0) {
-      cardTypeSelected = ReminderType.values.firstWhere((type) => type.value == reminders[0].type);
-      reminderTime = TimeOfDay(hour: reminders[0].hour, minute: reminders[0].minute);
-      reminders.forEach((reminder) {
-        reminderWeekdaySelection[reminder.weekday - 1].state = true;
+    if (reminder != null && reminder.hasAnyDay()) {
+      cardTypeSelected =
+          ReminderType.values.firstWhere((type) => type.value == reminder.type);
+      reminderTime = TimeOfDay(hour: reminder.hour, minute: reminder.minute);
+      reminder.getAllweekdays().forEach((reminder) {
+        reminderWeekdaySelection[reminder.value - 1].state = true;
       });
     } else {
       reminderTime = TimeOfDay.now();
@@ -70,37 +75,35 @@ abstract class _EditAlarmLogicBase with Store {
   }
 
   Future<void> saveReminders() async {
-    if (reminders.length != 0) {
-      await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.oldId, reminders);
-    }
-    List<Reminder> newReminders = List();
-    String days = "";
-    reminderWeekdaySelection.forEach((item) {
-      if (item.state) {
-        newReminders.add(Reminder(
-            habitId: habitDetailsLogic.habit.data.oldId,
-            hour: reminderTime.hour,
-            minute: reminderTime.minute,
-            weekday: item.id,
-            type: cardTypeSelected.value));
-        days += item.title;
-      } else {
-        days += "-";
-      }
-    });
+    Reminder newReminder = Reminder(
+        type: cardTypeSelected.value,
+        hour: reminderTime.hour,
+        minute: reminderTime.minute,
+        sunday: reminderWeekdaySelection[0].state,
+        monday: reminderWeekdaySelection[1].state,
+        tuesday: reminderWeekdaySelection[2].state,
+        wednesday: reminderWeekdaySelection[3].state,
+        thursday: reminderWeekdaySelection[4].state,
+        friday: reminderWeekdaySelection[5].state,
+        saturday: reminderWeekdaySelection[6].state);
 
-    List<Reminder> remindersAdded =await HabitsControl().addReminders(habitDetailsLogic.habit.data, newReminders);
+    Habit habit = habitDetailsLogic.habit.data;
+    habit.reminder = newReminder;
 
-    FireAnalytics().sendSetAlarm(
-        habitDetailsLogic.habit.data.habit, cardTypeSelected.value, reminderTime.hour, reminderTime.minute, days);
-
-    habitDetailsLogic.editAlarmCallback(remindersAdded.asObservable());
+    return (await _habitUseCase.updateReminder(reminder?.id, habit)).result(
+        (data) {
+      habitDetailsLogic.editAlarmCallback(newReminder);
+    }, (error) => throw error);
   }
 
   Future<bool> removeReminders() async {
-    bool result = await HabitsControl().deleteReminders(habitDetailsLogic.habit.data.oldId, reminders);
-    FireAnalytics().sendRemoveAlarm(habitDetailsLogic.habit.data.habit);
-    habitDetailsLogic.editAlarmCallback(ObservableList());
-    return result;
+    Habit habit = habitDetailsLogic.habit.data;
+    habit.reminder = null;
+    return (await _habitUseCase.updateReminder(reminder.id, habit)).result(
+        (data) {
+      FireAnalytics().sendRemoveAlarm(habitDetailsLogic.habit.data.habit);
+      habitDetailsLogic.editAlarmCallback(null);
+      return true;
+    }, (error) => throw error);
   }
 }

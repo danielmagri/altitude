@@ -1,5 +1,6 @@
 import 'dart:ui' show Color;
 import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
@@ -14,6 +15,7 @@ class Habit {
   String oldCue;
 
   Frequency frequency;
+  Reminder reminder;
 
   DateTime lastDone;
   DateTime initialDate;
@@ -27,6 +29,7 @@ class Habit {
       this.score,
       this.oldCue,
       this.frequency,
+      this.reminder,
       this.lastDone,
       this.initialDate,
       this.daysDone});
@@ -39,6 +42,7 @@ class Habit {
   static const SCORE = "score";
   static const OLD_CUE = "old_cue";
   static const FREQUENCY = "frequency";
+  static const REMINDER = "reminder";
   static const LAST_DONE = "last_done";
   static const INITIAL_DATE = "initial_date";
   static const DAYS_DONE_COUNT = "days_done_count";
@@ -50,6 +54,8 @@ class Habit {
       score: json[SCORE],
       oldCue: json[OLD_CUE] == null ? "" : json[OLD_CUE],
       frequency: Frequency.fromJson(json[FREQUENCY]),
+      reminder:
+          json[REMINDER] != null ? Reminder.fromJson(json[REMINDER]) : null,
       lastDone: json[LAST_DONE] != null
           ? DateTime.fromMillisecondsSinceEpoch(
               (json[LAST_DONE] as Timestamp).millisecondsSinceEpoch)
@@ -66,7 +72,8 @@ class Habit {
         COLOR: colorCode,
         SCORE: score ?? 0,
         OLD_CUE: oldCue,
-        FREQUENCY: frequency.toJson(),
+        FREQUENCY: frequency?.toJson(),
+        REMINDER: reminder?.toJson(),
         LAST_DONE: lastDone,
         INITIAL_DATE: initialDate,
         DAYS_DONE_COUNT: daysDone ?? 0
