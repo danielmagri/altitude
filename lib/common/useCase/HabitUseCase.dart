@@ -1,9 +1,10 @@
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/controllers/NotificationControl.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
@@ -17,36 +18,46 @@ import 'package:get_it/get_it.dart';
 class HabitUseCase extends BaseUseCase {
   static HabitUseCase get getInstance => GetIt.I.get<HabitUseCase>();
 
-  final Memory memory = Memory.getInstance;
+  final Memory _memory = Memory.getInstance;
   final PersonUseCase _personUseCase = PersonUseCase.getInstance;
 
   // Habit
 
   Future<Result<List<Habit>>> getHabits() => safeCall(() async {
-        if (memory.habits.isEmpty) {
+        if (_memory.habits.isEmpty) {
           var data = await FireDatabase().getHabits();
-          memory.habits = data;
+          _memory.habits = data;
           return Result.success(data);
         } else {
-          return Result.success(memory.habits);
+          return Result.success(_memory.habits);
         }
       });
 
   Future<Result<Habit>> getHabit(String id) => safeCall(() async {
         var data = await FireDatabase().getHabit(id);
 
-        int index = memory.habits.indexWhere((e) => e.id == id);
+        int index = _memory.habits.indexWhere((e) => e.id == id);
         if (index == -1) {
-          memory.habits.add(data);
+          _memory.habits.add(data);
         } else {
-          memory.habits[index] = data;
+          _memory.habits[index] = data;
         }
         return Result.success(data);
       });
 
-  Future<Result<Habit>> addHabit(Habit habit, List<Reminder> reminders) =>
-      safeCall(() async {
-        var data = await FireDatabase().addHabit(habit);
+  Future<int> _getReminderCounter() async {
+    Person person = (await _personUseCase.getPerson()).absoluteResult();
+    _memory.person?.reminderCounter += 1;
+    return person.reminderCounter;
+  }
+
+  Future<Result<Habit>> addHabit(Habit habit) => safeCall(() async {
+        int reminderCounter;
+        if (habit.reminder != null) {
+          reminderCounter = await _getReminderCounter();
+          habit.reminder.id = reminderCounter;
+        }
+        var data = await FireDatabase().addHabit(habit, reminderCounter);
         FireAnalytics().sendNewHabit(
             habit.habit,
             AppColors.habitsColorName[habit.colorCode],
@@ -54,11 +65,43 @@ class HabitUseCase extends BaseUseCase {
                 ? "Diariamente"
                 : "Semanalmente",
             habit.frequency.daysCount(),
-            reminders.length != 0 ? "Sim" : "Não");
+            habit.reminder != null ? "Sim" : "Não");
 
-        memory.habits.add(data);
+        _memory.habits.add(data);
+        await NotificationControl().addNotification(habit);
 
         return Result.success(data);
+      });
+
+  Future<Result<void>> updateReminder(int reminderId, Habit habit) =>
+      safeCall(() async {
+        if (reminderId != null) {
+          await NotificationControl().removeNotification(reminderId);
+        }
+
+        if (habit.reminder != null) {
+          int reminderCounter;
+          if (habit.reminder.id == null) {
+            reminderCounter = await _getReminderCounter();
+            habit.reminder.id = reminderCounter;
+          }
+
+          await FireDatabase()
+              .updateReminder(habit.id, reminderCounter, habit.reminder);
+          int index = _memory.habits.indexWhere((e) => e.id == habit.id);
+          if (index != -1) {
+            _memory.habits[index] = habit;
+          }
+          await NotificationControl().addNotification(habit);
+        } else {
+          await FireDatabase().updateReminder(habit.id, null, null);
+          int index = _memory.habits.indexWhere((e) => e.id == habit.id);
+          if (index != -1) {
+            _memory.habits[index] = habit;
+          }
+        }
+
+        return Result.success(null);
       });
 
   Future<Result<void>> completeHabit(String habitId, DateTime date,
@@ -70,7 +113,8 @@ class HabitUseCase extends BaseUseCase {
           DateTime endDate = date.lastWeekDay();
 
           List<DateTime> days = daysDone ??
-              (await FireDatabase().getDaysDone(habitId, startDate, endDate)).map((e) => e.date);
+              (await FireDatabase().getDaysDone(habitId, startDate, endDate))
+                  .map((e) => e.date);
 
           var score = ScoreControl().calculateScore(
               isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
@@ -88,11 +132,12 @@ class HabitUseCase extends BaseUseCase {
           await FireDatabase().completeHabit(habitId, isAdd, totalScore,
               habitScore, habitDaysDone, isLastDone, dayDone);
           _personUseCase.setLocalScore(totalScore);
-          int index = memory.habits.indexWhere((e) => e.id == habitId);
+          int index = _memory.habits.indexWhere((e) => e.id == habitId);
           if (index != -1) {
-            memory.habits[index].score = habitScore;
-            memory.habits[index].daysDone = habitDaysDone;
-            if (isLastDone) memory.habits[index].lastDone = isAdd ? date : null;
+            _memory.habits[index].score = habitScore;
+            _memory.habits[index].daysDone = habitDaysDone;
+            if (isLastDone)
+              _memory.habits[index].lastDone = isAdd ? date : null;
           }
           return Result.success(null);
         }, (error) => throw error);
@@ -100,13 +145,13 @@ class HabitUseCase extends BaseUseCase {
 
   Future<bool> maximumNumberReached() {
     try {
-      if (memory.habits.isEmpty) {
+      if (_memory.habits.isEmpty) {
         return FireDatabase().getHabits().then((data) {
-          memory.habits = data;
+          _memory.habits = data;
           return data.length < MAX_HABITS;
         });
       } else {
-        return Future.value(memory.habits.length < MAX_HABITS);
+        return Future.value(_memory.habits.length < MAX_HABITS);
       }
     } catch (e) {
       return Future.value(true);

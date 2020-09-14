@@ -1,6 +1,7 @@
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/core/services/FireAuth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -23,11 +24,16 @@ class FireDatabase {
 
   // HABIT
 
-  Future<Habit> addHabit(Habit habit) {
+  Future<Habit> addHabit(Habit habit, int reminderCounter) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
     DocumentReference doc = habitsCollection.doc();
     habit.id = doc.id;
 
-    return doc.set(habit.toJson()).then((value) => habit);
+    batch.set(doc, habit.toJson());
+    if (reminderCounter != null) {
+      batch.update(userDoc, {Person.REMINDER_COUNTER: reminderCounter});
+    }
+    return batch.commit().then((value) => habit);
   }
 
   Future<List<Habit>> getHabits() {
@@ -40,6 +46,19 @@ class FireDatabase {
         .doc(id)
         .get()
         .then((value) => Habit.fromJson(value.data()));
+  }
+
+  Future updateReminder(
+      String habitId, int reminderCounter, Reminder reminder) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    batch.update(
+        habitsCollection.doc(habitId), {Habit.REMINDER: reminder?.toJson()});
+    if (reminderCounter != null) {
+      batch.update(userDoc, {Person.REMINDER_COUNTER: reminderCounter});
+    }
+
+    return batch.commit();
   }
 
   Future completeHabit(String habitId, bool isAdd, int totalScore,

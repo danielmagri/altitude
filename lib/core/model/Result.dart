@@ -17,6 +17,14 @@ class Result<T> {
       return error((this as RError).error);
     }
   }
+
+  R absoluteResult<R>() {
+    if (isSuccess) {
+      return (this as RSuccess).data;
+    } else {
+      throw (this as RError).error;
+    }
+  }
 }
 
 class RSuccess<T> extends Result<T> {

@@ -36,7 +36,9 @@ abstract class _AddHabitLogicBase with Store {
 
   @computed
   String get timeText =>
-      reminderTime.hour.toString().padLeft(2, '0') + " : " + reminderTime.minute.toString().padLeft(2, '0');
+      reminderTime.hour.toString().padLeft(2, '0') +
+      " : " +
+      reminderTime.minute.toString().padLeft(2, '0');
 
   @computed
   Color get habitColor => AppColors.habitsColor[color];
@@ -67,12 +69,20 @@ abstract class _AddHabitLogicBase with Store {
   }
 
   Future<Result<Habit>> createHabit(Habit habit) async {
-    List<Reminder> reminders = List();
-    reminderWeekday.forEach((day) {
-      if (day.state) {
-        reminders.add(Reminder(hour: reminderTime.hour, minute: reminderTime.minute, weekday: day.id, type: 0));
-      }
-    });
-    return habitUseCase.addHabit(habit, reminders);
+    Reminder reminder = Reminder(
+        type: 0,
+        hour: reminderTime.hour,
+        minute: reminderTime.minute,
+        sunday: reminderWeekday[0].state,
+        monday: reminderWeekday[1].state,
+        tuesday: reminderWeekday[2].state,
+        wednesday: reminderWeekday[3].state,
+        thursday: reminderWeekday[4].state,
+        friday: reminderWeekday[5].state,
+        saturday: reminderWeekday[6].state);
+        
+    if (reminder.hasAnyDay()) habit.reminder = reminder;
+
+    return habitUseCase.addHabit(habit);
   }
 }

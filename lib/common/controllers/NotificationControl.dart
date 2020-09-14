@@ -1,5 +1,4 @@
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/utils/Color.dart';
 
@@ -31,10 +30,9 @@ class NotificationControl {
     }
   }
 
-  Future<void> addNotification(Reminder reminder, Habit habit) async {
-    Time time = Time(reminder.hour, reminder.minute);
-    Day day = Day(reminder.weekday);
-    String title = reminder.type == 0 ? habit.habit : habit.oldCue;
+  Future<void> addNotification(Habit habit) async {
+    Time time = Time(habit.reminder.hour, habit.reminder.minute);
+    String title = habit.reminder.type == 0 ? habit.habit : habit.oldCue;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       "1", // channel id
       "Aviso do hábito", // channel name
@@ -47,12 +45,17 @@ class NotificationControl {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
-        reminder.id, title, "", day, time, platformChannelSpecifics,
-        payload: habit.id.toString());
+
+    for (Day day in habit.reminder.getAllweekdays()) {
+      await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+          habit.reminder.id, title, "", day, time, platformChannelSpecifics,
+          payload: habit.id.toString());
+    }
+
+    return;
   }
 
   Future<void> removeNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
+    return await flutterLocalNotificationsPlugin.cancel(id);
   }
 }

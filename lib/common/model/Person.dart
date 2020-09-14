@@ -10,6 +10,7 @@ class Person {
   int level;
   String fcmToken;
   String photoUrl;
+  int reminderCounter;
 
   List<String> friends;
   List<String> pendingFriends;
@@ -23,6 +24,7 @@ class Person {
   static const SCORE = "score";
   static const LEVEL = "level";
   static const FCM_TOKEN = "fcm_token";
+  static const REMINDER_COUNTER = "reminder_counter";
   static const STATE = "state";
 
   Person(
@@ -33,6 +35,7 @@ class Person {
       this.level,
       this.fcmToken,
       this.photoUrl,
+      this.reminderCounter,
       this.friends,
       this.pendingFriends,
       this.you,
@@ -49,6 +52,7 @@ class Person {
         email: json[EMAIL],
         fcmToken: json[FCM_TOKEN],
         score: json[SCORE],
+        reminderCounter: json[REMINDER_COUNTER] ?? 0,
         level: json[LEVEL],
         state: json[STATE],
         you: false,
