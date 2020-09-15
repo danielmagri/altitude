@@ -95,7 +95,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     navigatePush('addHabit');
   }
 
-  void goHabitDetails(String id, int oldId, int color) {
+  void goHabitDetails(String id, int color) {
     var arguments = HabitDetailsPageArguments(id, color);
     navigatePush('habitDetails', arguments: arguments);
   }

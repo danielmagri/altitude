@@ -1,5 +1,3 @@
-import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
@@ -40,18 +38,19 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
   Habit selectedHabit;
 
   void acceptRequest() async {
-    if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length >= MAX_HABIT_COMPETITIONS) {
-      showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
-    } else {
-      showLoading(true);
-      CompetitionsControl()
-          .acceptCompetitionRequest(
-              widget.competition.id, widget.competition.title, widget.competition.initialDate, selectedHabit.oldId)
-          .then((_) {
-        showLoading(false);
-        navigatePop(result: widget.competition);
-      }).catchError(handleError);
-    }
+    //TODO:
+    // if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length >= MAX_HABIT_COMPETITIONS) {
+    //   showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+    // } else {
+    //   showLoading(true);
+    //   CompetitionsControl()
+    //       .acceptCompetitionRequest(
+    //           widget.competition.id, widget.competition.title, widget.competition.initialDate, selectedHabit.oldId)
+    //       .then((_) {
+    //     showLoading(false);
+    //     navigatePop(result: widget.competition);
+    //   }).catchError(handleError);
+    // }
   }
 
   @override

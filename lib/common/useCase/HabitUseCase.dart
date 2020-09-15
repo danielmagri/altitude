@@ -61,9 +61,7 @@ class HabitUseCase extends BaseUseCase {
         FireAnalytics().sendNewHabit(
             habit.habit,
             AppColors.habitsColorName[habit.colorCode],
-            habit.frequency.runtimeType == DayWeek
-                ? "Diariamente"
-                : "Semanalmente",
+            habit.frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
             habit.frequency.daysCount(),
             habit.reminder != null ? "Sim" : "Não");
 
@@ -75,8 +73,17 @@ class HabitUseCase extends BaseUseCase {
         return Result.success(data);
       });
 
-  Future<Result<void>> updateReminder(int reminderId, Habit habit) =>
-      safeCall(() async {
+  Future<Result<void>> updateHabit(Habit habit) => safeCall(() async {
+        await FireDatabase().updateHabit(habit);
+        //TODO: Atualizar competiçõeshabit
+        int index = _memory.habits.indexWhere((e) => e.id == habit.id);
+        if (index != -1) {
+          _memory.habits[index] = habit;
+        }
+        return Result.success(null);
+      });
+
+  Future<Result<void>> updateReminder(int reminderId, Habit habit) => safeCall(() async {
         if (reminderId != null) {
           await NotificationControl().removeNotification(reminderId);
         }
@@ -88,8 +95,7 @@ class HabitUseCase extends BaseUseCase {
             habit.reminder.id = reminderCounter;
           }
 
-          await FireDatabase()
-              .updateReminder(habit.id, reminderCounter, habit.reminder);
+          await FireDatabase().updateReminder(habit.id, reminderCounter, habit.reminder);
           int index = _memory.habits.indexWhere((e) => e.id == habit.id);
           if (index != -1) {
             _memory.habits[index] = habit;
@@ -106,40 +112,33 @@ class HabitUseCase extends BaseUseCase {
         return Result.success(null);
       });
 
-  Future<Result<void>> completeHabit(String habitId, DateTime date,
-          [bool isAdd = true, List<DateTime> daysDone]) =>
+  Future<Result<void>> completeHabit(String habitId, DateTime date, [bool isAdd = true, List<DateTime> daysDone]) =>
       safeCall(() async {
         return (await getHabit(habitId)).result((habit) async {
           int weekDay = date.weekday == 7 ? 0 : date.weekday;
           DateTime startDate = date.subtract(Duration(days: weekDay));
           DateTime endDate = date.lastWeekDay();
 
-          List<DateTime> days = daysDone ??
-              (await FireDatabase().getDaysDone(habitId, startDate, endDate))
-                  .map((e) => e.date);
+          List<DateTime> days =
+              daysDone ?? (await FireDatabase().getDaysDone(habitId, startDate, endDate)).map((e) => e.date);
 
-          var score = ScoreControl().calculateScore(
-              isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
-              habit.frequency,
-              days,
-              date);
+          var score =
+              ScoreControl().calculateScore(isAdd ? ScoreType.ADD : ScoreType.SUBTRACT, habit.frequency, days, date);
 
           int totalScore = await _personUseCase.getScore() + score;
           int habitScore = habit.score + score;
           int habitDaysDone = isAdd ? habit.daysDone + 1 : habit.daysDone - 1;
-          bool isLastDone =
-              habit.lastDone == null || habit.lastDone.isBeforeOrSameDay(date);
+          bool isLastDone = habit.lastDone == null || habit.lastDone.isBeforeOrSameDay(date);
           DayDone dayDone = DayDone(date: date);
 
-          await FireDatabase().completeHabit(habitId, isAdd, totalScore,
-              habitScore, habitDaysDone, isLastDone, dayDone);
+          await FireDatabase()
+              .completeHabit(habitId, isAdd, totalScore, habitScore, habitDaysDone, isLastDone, dayDone);
           _personUseCase.setLocalScore(totalScore);
           int index = _memory.habits.indexWhere((e) => e.id == habitId);
           if (index != -1) {
             _memory.habits[index].score = habitScore;
             _memory.habits[index].daysDone = habitDaysDone;
-            if (isLastDone)
-              _memory.habits[index].lastDone = isAdd ? date : null;
+            if (isLastDone) _memory.habits[index].lastDone = isAdd ? date : null;
           }
           return Result.success(null);
         }, (error) => throw error);
@@ -178,8 +177,7 @@ class HabitUseCase extends BaseUseCase {
 
   /// Days Done
 
-  Future<Result<Map<DateTime, List>>> getCalendarDaysDone(
-          String id, DateTime start, DateTime end) =>
+  Future<Result<Map<DateTime, List>>> getCalendarDaysDone(String id, DateTime start, DateTime end) =>
       safeCall(() async {
         DateTime startDate = start.subtract(const Duration(days: 1));
         DateTime endDate = end.add(const Duration(days: 1));
@@ -189,17 +187,13 @@ class HabitUseCase extends BaseUseCase {
         bool after = false;
 
         for (int i = 0; i < data.length; i++) {
-          if (i - 1 >= 0 &&
-              data[i].date.difference(data[i - 1].date) ==
-                  const Duration(days: 1)) {
+          if (i - 1 >= 0 && data[i].date.difference(data[i - 1].date) == const Duration(days: 1)) {
             before = true;
           } else {
             before = false;
           }
 
-          if (i + 1 < data.length &&
-              data[i + 1].date.difference(data[i].date) ==
-                  const Duration(days: 1)) {
+          if (i + 1 < data.length && data[i + 1].date.difference(data[i].date) == const Duration(days: 1)) {
             after = true;
           } else {
             after = false;

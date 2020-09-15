@@ -2,8 +2,10 @@ import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color;
+import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'EditHabitLogic.g.dart';
 
@@ -42,18 +44,26 @@ abstract class _EditHabitLogicBase with Store {
     return _habitUseCase.deleteHabit(initialHabit);
   }
 
-  Future<void> updateHabit(String habit) async {
-    // Habit editedHabit = Habit(id: initialHabit.id, colorCode: color, habit: habit);
+  Future updateHabit(String habit) async {
+    Habit editedHabit = Habit(
+        id: initialHabit.id,
+        habit: habit,
+        colorCode: color,
+        score: initialHabit.score,
+        oldCue: initialHabit.oldCue,
+        frequency: frequency,
+        reminder: initialHabit.reminder,
+        lastDone: initialHabit.lastDone,
+        initialDate: initialHabit.initialDate,
+        daysDone: initialHabit.daysDone);
 
-    // if (editedHabit.color != initialHabit.color || editedHabit.habit.compareTo(initialHabit.habit) != 0) {
-    //   await HabitsControl().updateHabit(editedHabit, initialHabit, initialReminders);
-    // }
-
-    // if (!compareFrequency(initialFrequency, frequency)) {
-    //   await HabitsControl().updateFrequency(editedHabit.oldId, frequency, initialFrequency.runtimeType);
-    // }
-
-    // GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, frequency);
+    if (editedHabit.color != initialHabit.color ||
+        editedHabit.habit.compareTo(initialHabit.habit) != 0 ||
+        !compareFrequency(initialHabit.frequency, frequency)) {
+      (await _habitUseCase.updateHabit(editedHabit)).result((data) {
+        GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(editedHabit);
+      }, (error) => throw error);
+    }
   }
 
   bool compareFrequency(dynamic f1, dynamic f2) {

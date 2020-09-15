@@ -1,15 +1,11 @@
 import 'dart:math' show min;
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
         AlignmentDirectional,
         Axis,
         BouncingScrollPhysics,
-        BoxDecoration,
-        BoxShape,
         Colors,
         Column,
         Container,
@@ -102,43 +98,43 @@ class FrequencyCircle extends StatelessWidget {
   List<Widget> _content() {
     List<Widget> content = List();
 
-    if (selectedHabitId == null) {
-      data.weekdayDone.forEach((e) {
-        double size = (space - 8) * min(e / 4, 1.1);
-        int alpha = (255 * min(e / 4, 1)).toInt();
-        content.add(Container(
-            height: space,
-            margin: const EdgeInsets.only(bottom: 1),
-            child: Container(
-              height: size,
-              width: size,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent.withAlpha(alpha)),
-            )));
-      });
-    } else {
-      Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
-      if (habit != null) {
-        data.habitsMap[habit].forEach((e) {
-          double size = (space - 8) * min(e / 4, 1.1);
-          int alpha = (255 * min(e / 4, 1)).toInt();
-          content.add(Container(
-              height: space,
-              margin: const EdgeInsets.only(bottom: 1),
-              child: Container(
-                height: size,
-                width: size,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.color.withAlpha(alpha)),
-              )));
-        });
-      }
-    }
+    // if (selectedHabitId == null) {
+    //   data.weekdayDone.forEach((e) {
+    //     double size = (space - 8) * min(e / 4, 1.1);
+    //     int alpha = (255 * min(e / 4, 1)).toInt();
+    //     content.add(Container(
+    //         height: space,
+    //         margin: const EdgeInsets.only(bottom: 1),
+    //         child: Container(
+    //           height: size,
+    //           width: size,
+    //           decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent.withAlpha(alpha)),
+    //         )));
+    //   });
+    // } else {
+    //   Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
+    //   if (habit != null) {
+    //     data.habitsMap[habit].forEach((e) {
+    //       double size = (space - 8) * min(e / 4, 1.1);
+    //       int alpha = (255 * min(e / 4, 1)).toInt();
+    //       content.add(Container(
+    //           height: space,
+    //           margin: const EdgeInsets.only(bottom: 1),
+    //           child: Container(
+    //             height: size,
+    //             width: size,
+    //             decoration: BoxDecoration(shape: BoxShape.circle, color: habit.color.withAlpha(alpha)),
+    //           )));
+    //     });
+    //   }
+    // }
 
-    content.add(SizedBox(
-        height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
-    content.add(SizedBox(
-        height: 15,
-        child: Text(data.firstOfYear ? data.year.toString() : "",
-            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    // content.add(SizedBox(
+    //     height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    // content.add(SizedBox(
+    //     height: 15,
+    //     child: Text(data.firstOfYear ? data.year.toString() : "",
+    //         style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
 
     return content;
   }
