@@ -39,7 +39,7 @@ class HabitCardItem extends StatelessWidget {
       : super(key: key);
 
   final Habit habit;
-  final Function(String id, int oldId, int color) goHabitDetails;
+  final Function(String id, int color) goHabitDetails;
   final Function(bool) showDragTarget;
   final bool done;
 
@@ -47,7 +47,7 @@ class HabitCardItem extends StatelessWidget {
     return done
         ? InkWell(
             borderRadius: BorderRadius.circular(100),
-            onTap: () => goHabitDetails(habit.id, habit.oldId, habit.colorCode),
+            onTap: () => goHabitDetails(habit.id, habit.colorCode),
             child: Container(
               padding: const EdgeInsets.all(4),
               width: 118,
@@ -99,7 +99,7 @@ class HabitCardItem extends StatelessWidget {
                 fireForce: 1),
             child: InkWell(
               borderRadius: BorderRadius.circular(100),
-              onTap: () => goHabitDetails(habit.id, habit.oldId, habit.colorCode),
+              onTap: () => goHabitDetails(habit.id, habit.colorCode),
               child: Container(
                 padding: const EdgeInsets.all(4),
                 width: 118,

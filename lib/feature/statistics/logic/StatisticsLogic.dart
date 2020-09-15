@@ -1,14 +1,9 @@
-import 'package:altitude/common/controllers/HabitsControl.dart';
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
-import "package:collection/collection.dart";
 import 'package:mobx/mobx.dart';
 part 'StatisticsLogic.g.dart';
 
@@ -24,26 +19,27 @@ abstract class _StatisticsLogicBase with Store {
 
   @action
   Future<void> fetchData() async {
-    if (SharedPref.instance.pendingStatistic) {
-      SharedPref.instance.pendingStatistic = false;
-    }
+    //TODO:
+    // if (SharedPref.instance.pendingStatistic) {
+    //   SharedPref.instance.pendingStatistic = false;
+    // }
 
-    try {
-      List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
-      List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
+    // try {
+    //   List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
+    //   List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
 
-      Map<DateTime, List<DayDone>> dateGrouped =
-          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
+    //   Map<DateTime, List<DayDone>> dateGrouped =
+    //       groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
 
-      historicData.setData(await handleHistoricData(dateGrouped, habits));
-      frequencyData.setData(handleFrequencyData(dateGrouped, habits));
-      habitsData
-          .setData(habits.map((e) => HabitStatisticData(e.oldId, e.score, e.habit, e.colorCode)).toList().asObservable());
-    } catch (error) {
-      habitsData.setError(error);
-      historicData.setError(error);
-      frequencyData.setError(error);
-    }
+    //   historicData.setData(await handleHistoricData(dateGrouped, habits));
+    //   frequencyData.setData(handleFrequencyData(dateGrouped, habits));
+    //   habitsData
+    //       .setData(habits.map((e) => HabitStatisticData(e.oldId, e.score, e.habit, e.colorCode)).toList().asObservable());
+    // } catch (error) {
+    //   habitsData.setError(error);
+    //   historicData.setError(error);
+    //   frequencyData.setError(error);
+    // }
   }
 
   Future<List<HistoricStatisticData>> handleHistoricData(

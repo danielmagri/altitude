@@ -48,12 +48,9 @@ abstract class _HabitDetailsLogicBase with Store {
     await getHabitDetail();
 
     DateTime today = DateTime.now().today;
-    DateTime startDate =
-        DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
-    DateTime endDate =
-        DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
-    (await habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result(
-        (data) {
+    DateTime startDate = DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
+    DateTime endDate = DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
+    (await habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result((data) {
       currentMonth = data;
       calendarMonth.setData(data.asObservable());
       isHabitDone.setData(data.containsKey(DateTime.now().today));
@@ -81,8 +78,7 @@ abstract class _HabitDetailsLogicBase with Store {
       int timesDays = habit.data.frequency.daysCount();
       List<DateTime> dates = currentMonth.keys
           .toList()
-          .where((e) => e.isAfterOrSameDay(
-              DateTime.now().today.subtract(Duration(days: CYCLE_DAYS))))
+          .where((e) => e.isAfterOrSameDay(DateTime.now().today.subtract(Duration(days: CYCLE_DAYS))))
           .toList();
 
       int daysDoneLastCycle = dates.length;
@@ -102,8 +98,7 @@ abstract class _HabitDetailsLogicBase with Store {
     panelType = type;
   }
 
-  void calendarMonthSwipe(
-      DateTime start, DateTime end, CalendarFormat format) async {
+  void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) async {
     calendarMonth.setLoading();
     (await habitUseCase.getCalendarDaysDone(_id, start, end)).result((data) {
       calendarMonth.setData(data.asObservable());
@@ -112,8 +107,7 @@ abstract class _HabitDetailsLogicBase with Store {
     });
   }
 
-  Future<void> setDoneHabit(
-      bool add, DateTime date, DonePageType donePageType) async {
+  Future<void> setDoneHabit(bool add, DateTime date, DonePageType donePageType) async {
     calendarMonth.setLoading();
     isHabitDone.setLoading();
 
@@ -121,47 +115,38 @@ abstract class _HabitDetailsLogicBase with Store {
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.lastWeekDay();
 
-    var days = calendarMonth.data.keys
-        .where((e) =>
-            e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate))
-        .toList();
+    var days =
+        calendarMonth.data.keys.where((e) => e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate)).toList();
 
-    return (await habitUseCase.completeHabit(_id, date, add, days)).result(
-        (data) {
+    return (await habitUseCase.completeHabit(_id, date, add, days)).result((data) {
       Map<DateTime, List> visibleMonthDays = calendarMonth.data;
 
-      bool yesterday =
-          visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
+      bool yesterday = visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
       bool tomorrow = visibleMonthDays.containsKey(date.add(Duration(days: 1)));
 
       if (!add) {
         // Remover dia
         visibleMonthDays?.remove(date);
         if (yesterday) {
-          visibleMonthDays?.update(
-              date.subtract(Duration(days: 1)), (old) => [old[0], false]);
+          visibleMonthDays?.update(date.subtract(Duration(days: 1)), (old) => [old[0], false]);
         }
 
         if (tomorrow) {
-          visibleMonthDays?.update(
-              date.add(Duration(days: 1)), (old) => [false, old[1]]);
+          visibleMonthDays?.update(date.add(Duration(days: 1)), (old) => [false, old[1]]);
         }
       } else {
         // Adicionar dia
         visibleMonthDays?.putIfAbsent(date, () => [yesterday, tomorrow]);
         if (yesterday) {
-          visibleMonthDays?.update(
-              date.subtract(Duration(days: 1)), (old) => [old[0], true]);
+          visibleMonthDays?.update(date.subtract(Duration(days: 1)), (old) => [old[0], true]);
         }
 
         if (tomorrow) {
-          visibleMonthDays?.update(
-              date.add(Duration(days: 1)), (old) => [true, old[1]]);
+          visibleMonthDays?.update(date.add(Duration(days: 1)), (old) => [true, old[1]]);
         }
       }
 
-      if (date
-          .isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
+      if (date.isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
         currentMonth = visibleMonthDays;
         calculateRocketForce();
       }
@@ -199,13 +184,8 @@ abstract class _HabitDetailsLogicBase with Store {
     switchPanelType(BottomSheetType.NONE);
   }
 
-  void updateHabitDetailsPageData(
-      int color, String habitText, Frequency newFrequency) {
-    _color = color;
-    Habit newHabit = habit.data;
-    newHabit.colorCode = color;
-    newHabit.habit = habitText;
-    habit.setData(newHabit);
-    frequency.setData(newFrequency);
+  void updateHabitDetailsPageData(Habit newHabit) {
+    _color = newHabit.colorCode;
+    getHabitDetail();
   }
 }

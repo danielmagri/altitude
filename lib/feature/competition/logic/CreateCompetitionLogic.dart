@@ -1,5 +1,3 @@
-import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
@@ -33,13 +31,16 @@ abstract class _CreateCompetitionLogicBase with Store {
   }
 
   Future<bool> checkHabitCompetitionLimit() async {
-    return (await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length < MAX_HABIT_COMPETITIONS;
+    //TODO:
+    //return (await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length < MAX_HABIT_COMPETITIONS;
+    return false;
   }
 
   Future<Competition> createCompetition(String title) {
-    List<String> invitations = selectedFriends.map((person) => person.uid).toList();
-    List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
+    //TODO:
+    // List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+    // List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
 
-    return CompetitionsControl().createCompetition(title, selectedHabit.oldId, invitations, invitationsToken);
+    // return CompetitionsControl().createCompetition(title, selectedHabit.oldId, invitations, invitationsToken);
   }
 }

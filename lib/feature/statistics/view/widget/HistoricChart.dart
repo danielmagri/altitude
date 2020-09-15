@@ -90,49 +90,49 @@ class HistoricBar extends StatelessWidget {
   List<Widget> barWidget(BuildContext context) {
     List<Widget> list = List();
 
-    if (data.totalScore == 0) {
-      list.add(const SizedBox(width: 28));
-    } else if (selectedHabitId == null) {
-      list.add(Container(
-          height: 16,
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          color: Theme.of(context).canvasColor,
-          child: Text(data.totalScore.toString(), textAlign: TextAlign.center)));
-      list.add(Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          margin: const EdgeInsets.only(top: 3),
-          color: Theme.of(context).canvasColor,
-          child: Column(
-              children: data.habitsMap.keys
-                  .map((key) => Container(color: key.color, height: multiplier * data.habitsMap[key], width: 20))
-                  .toList())));
-    } else {
-      Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
+    // if (data.totalScore == 0) {
+    //   list.add(const SizedBox(width: 28));
+    // } else if (selectedHabitId == null) {
+    //   list.add(Container(
+    //       height: 16,
+    //       padding: const EdgeInsets.symmetric(horizontal: 3),
+    //       color: Theme.of(context).canvasColor,
+    //       child: Text(data.totalScore.toString(), textAlign: TextAlign.center)));
+    //   list.add(Container(
+    //       padding: const EdgeInsets.symmetric(horizontal: 4),
+    //       margin: const EdgeInsets.only(top: 3),
+    //       color: Theme.of(context).canvasColor,
+    //       child: Column(
+    //           children: data.habitsMap.keys
+    //               .map((key) => Container(color: key.color, height: multiplier * data.habitsMap[key], width: 20))
+    //               .toList())));
+    // } else {
+    //   Habit habit = data.habitsMap.keys.firstWhere((e) => e.oldId == selectedHabitId, orElse: () => null);
 
-      if (habit != null) {
-        int value = data.habitsMap[habit];
+    //   if (habit != null) {
+    //     int value = data.habitsMap[habit];
 
-        list.add(Container(
-            height: 16,
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            color: Theme.of(context).canvasColor,
-            child: Text(value.toString(), textAlign: TextAlign.center)));
-        list.add(Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            margin: const EdgeInsets.only(top: 3),
-            color: Theme.of(context).canvasColor,
-            child: Container(color: habit.color, height: multiplier * value, width: 20)));
-      } else {
-        list.add(const SizedBox(width: 28));
-      }
-    }
+    //     list.add(Container(
+    //         height: 16,
+    //         padding: const EdgeInsets.symmetric(horizontal: 3),
+    //         color: Theme.of(context).canvasColor,
+    //         child: Text(value.toString(), textAlign: TextAlign.center)));
+    //     list.add(Container(
+    //         padding: const EdgeInsets.symmetric(horizontal: 4),
+    //         margin: const EdgeInsets.only(top: 3),
+    //         color: Theme.of(context).canvasColor,
+    //         child: Container(color: habit.color, height: multiplier * value, width: 20)));
+    //   } else {
+    //     list.add(const SizedBox(width: 28));
+    //   }
+    // }
 
-    list.add(SizedBox(
-        height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
-    list.add(SizedBox(
-        height: 15,
-        child: Text(data.firstOfYear ? data.year.toString() : "",
-            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    // list.add(SizedBox(
+    //     height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+    // list.add(SizedBox(
+    //     height: 15,
+    //     child: Text(data.firstOfYear ? data.year.toString() : "",
+    //         style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
     return list;
   }
 
