@@ -108,8 +108,12 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
 
   @override
   void onPageBack(Object value) {
-    setState(() {});
-    super.onPageBack(value);
+    if (value is bool && !value) {
+      navigatePop();
+    } else {
+      setState(() {});
+      super.onPageBack(value);
+    }
   }
 
   Future<bool> onBackPress() {
@@ -158,8 +162,9 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void goEditHabitPage() {
-    // var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data, false);
-    // navigatePush('editHabit', arguments: arguments);
+    //TODO: hasCompetition
+    var arguments = EditHabitPageArguments(controller.habit.data, false);
+    navigatePush('editHabit', arguments: arguments);
   }
 
   void competition(int index) {

@@ -101,6 +101,10 @@ class FireDatabase {
     });
   }
 
+  Future deleteHabit(String id) {
+    return habitsCollection.doc(id).delete();
+  }
+
   // DAYS DONE
 
   Future<List<DayDone>> getDaysDone(

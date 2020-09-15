@@ -1,7 +1,6 @@
 import 'package:altitude/common/constant/Books.dart';
 import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
