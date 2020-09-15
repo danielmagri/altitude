@@ -68,7 +68,9 @@ class HabitUseCase extends BaseUseCase {
             habit.reminder != null ? "Sim" : "Não");
 
         _memory.habits.add(data);
-        await NotificationControl().addNotification(habit);
+        if (habit.reminder != null) {
+          await NotificationControl().addNotification(habit);
+        }
 
         return Result.success(data);
       });
@@ -141,6 +143,22 @@ class HabitUseCase extends BaseUseCase {
           }
           return Result.success(null);
         }, (error) => throw error);
+      });
+
+  Future<Result<void>> deleteHabit(Habit habit) => safeCall(() async {
+        if (habit.reminder != null) {
+          NotificationControl().removeNotification(habit.reminder.id);
+        }
+        FireAnalytics().sendRemoveHabit(habit.habit);
+
+        await FireDatabase().deleteHabit(habit.id);
+
+        int index = _memory.habits.indexWhere((e) => e.id == habit.id);
+        if (index != -1) {
+          _memory.habits.removeAt(index);
+        }
+
+        return Result.success(null);
       });
 
   Future<bool> maximumNumberReached() {

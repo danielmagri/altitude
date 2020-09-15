@@ -1,20 +1,18 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/controllers/HabitsControl.dart';
-import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color;
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 part 'EditHabitLogic.g.dart';
 
 class EditHabitLogic = _EditHabitLogicBase with _$EditHabitLogic;
 
 abstract class _EditHabitLogicBase with Store {
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+
   Habit initialHabit;
-  Frequency initialFrequency;
-  List<Reminder> initialReminders;
 
   @observable
   int color;
@@ -25,11 +23,9 @@ abstract class _EditHabitLogicBase with Store {
   @computed
   Color get habitColor => AppColors.habitsColor[color];
 
-  void setData(Habit habit, Frequency frequency, List<Reminder> reminders) {
+  void setData(Habit habit) {
     initialHabit = habit;
-    initialFrequency = frequency;
-    this.frequency = frequency;
-    initialReminders = reminders;
+    this.frequency = habit.frequency;
   }
 
   @action
@@ -42,22 +38,22 @@ abstract class _EditHabitLogicBase with Store {
     frequency = value;
   }
 
-  Future<void> removeHabit() async {
-    return await HabitsControl().deleteHabit(initialHabit.oldId, initialHabit.habit, initialHabit.score, initialReminders);
+  Future<Result<void>> removeHabit() {
+    return _habitUseCase.deleteHabit(initialHabit);
   }
 
   Future<void> updateHabit(String habit) async {
-    Habit editedHabit = Habit(id: initialHabit.id, colorCode: color, habit: habit);
+    // Habit editedHabit = Habit(id: initialHabit.id, colorCode: color, habit: habit);
 
-    if (editedHabit.color != initialHabit.color || editedHabit.habit.compareTo(initialHabit.habit) != 0) {
-      await HabitsControl().updateHabit(editedHabit, initialHabit, initialReminders);
-    }
+    // if (editedHabit.color != initialHabit.color || editedHabit.habit.compareTo(initialHabit.habit) != 0) {
+    //   await HabitsControl().updateHabit(editedHabit, initialHabit, initialReminders);
+    // }
 
-    if (!compareFrequency(initialFrequency, frequency)) {
-      await HabitsControl().updateFrequency(editedHabit.oldId, frequency, initialFrequency.runtimeType);
-    }
+    // if (!compareFrequency(initialFrequency, frequency)) {
+    //   await HabitsControl().updateFrequency(editedHabit.oldId, frequency, initialFrequency.runtimeType);
+    // }
 
-    GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, frequency);
+    // GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(color, habit, frequency);
   }
 
   bool compareFrequency(dynamic f1, dynamic f2) {
