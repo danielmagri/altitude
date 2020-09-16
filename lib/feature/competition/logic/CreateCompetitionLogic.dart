@@ -1,14 +1,18 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:mobx/mobx.dart';
 part 'CreateCompetitionLogic.g.dart';
 
 class CreateCompetitionLogic = _CreateCompetitionLogicBase with _$CreateCompetitionLogic;
 
 abstract class _CreateCompetitionLogicBase with Store {
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+
   @observable
   Habit selectedHabit;
+
   @observable
   ObservableList<Person> selectedFriends = ObservableList();
 
@@ -30,17 +34,13 @@ abstract class _CreateCompetitionLogicBase with Store {
     selected ? selectedFriends.add(friend) : selectedFriends.remove(friend);
   }
 
-  Future<bool> checkHabitCompetitionLimit() async {
-    //TODO:
-    //return (await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length < MAX_HABIT_COMPETITIONS;
-    return false;
+  Future<Competition> createCompetition(String title) async {
+    List<String> invitations = selectedFriends.map((person) => person.uid).toList();
+    List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
+
+    return (await _competitionUseCase.createCompetition(title, selectedHabit, invitations, invitationsToken))
+        .absoluteResult();
   }
 
-  Future<Competition> createCompetition(String title) {
-    //TODO:
-    // List<String> invitations = selectedFriends.map((person) => person.uid).toList();
-    // List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
-
-    // return CompetitionsControl().createCompetition(title, selectedHabit.oldId, invitations, invitationsToken);
-  }
+  Future<bool> checkHabitCompetitionLimit() => _competitionUseCase.maximumNumberReachedByHabit(selectedHabit.id);
 }

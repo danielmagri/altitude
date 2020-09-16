@@ -1,3 +1,4 @@
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
@@ -8,13 +9,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FireDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  DocumentReference get userDoc => firestore.collection('users').doc(FireAuth().getUid());
+  CollectionReference get userCollection => firestore.collection('users');
+  DocumentReference get userDoc => userCollection.doc(FireAuth().getUid());
   CollectionReference get habitsCollection => userDoc.collection('habits');
+  CollectionReference get competitionCollection => firestore.collection('competitions');
 
   // PERSON
 
   Future<Person> getPerson() {
-    return userDoc.get().then((value) => Person.fromJson(value.data()));
+    return userDoc.get().then((value) => Person.fromJson(value.data(), value.id));
   }
 
   Future updateLevel(int level) {
@@ -110,5 +113,50 @@ class FireDatabase {
         .where(DayDone.DATE, isLessThanOrEqualTo: endDate)
         .get()
         .then((value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList());
+  }
+
+  // FRIENDS
+
+  Future<List<Person>> getFriendsDetails() {
+    return userCollection
+        .where(Person.FRIENDS, arrayContains: FireAuth().getUid())
+        .get()
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+  }
+
+  Future<List<Person>> getRankingFriends(int limit) {
+    return userCollection
+        .orderBy(Person.SCORE, descending: true)
+        .where(Person.FRIENDS, arrayContains: FireAuth().getUid())
+        .limit(limit)
+        .get()
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+  }
+
+  Future<List<Person>> searchEmail(String email, List<String> myPendingFriends) {
+    return userCollection.where(Person.EMAIL, isEqualTo: email).get().then((value) => value.docs.map((e) {
+          Person person = Person.fromJson(e.data(), e.id);
+          var state = 0;
+
+          if (person.friends.contains(FireAuth().getUid())) {
+            state = 1;
+          } else if (myPendingFriends.contains(person.uid)) {
+            state = 2;
+          } else if (person.pendingFriends.contains(FireAuth().getUid())) {
+            state = 3;
+          }
+
+          person.state = state;
+          return person;
+        }).toList());
+  }
+
+  // COMPETITION
+
+  Future<List<Competition>> getCompetitions() {
+    return competitionCollection
+        .where(Competition.COMPETITORS_ID, arrayContains: FireAuth().getUid())
+        .get()
+        .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
   }
 }

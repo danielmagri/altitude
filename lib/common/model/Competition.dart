@@ -1,6 +1,6 @@
 import 'dart:collection';
-
 import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/core/services/FireAuth.dart';
 
 class Competition {
   String id;
@@ -11,6 +11,7 @@ class Competition {
   static const ID = "id";
   static const TITLE = "title";
   static const INITIAL_DATE = "initial_date";
+  static const COMPETITORS_ID = "competitors_id";
   static const COMPETITORS = "competitors";
 
   Competition({
@@ -22,6 +23,10 @@ class Competition {
     if (competitors.isNotEmpty) {
       competitors.sort((a, b) => b.score.compareTo(a.score));
     }
+  }
+
+  int getHabitColor() {
+    return competitors.firstWhere((element) => element.uid == FireAuth().getUid()).color ?? 0;
   }
 
   String listCompetitors() {
@@ -39,21 +44,23 @@ class Competition {
     return list;
   }
 
+  @deprecated
   factory Competition.fromLinkedJson(LinkedHashMap<dynamic, dynamic> json) {
     return new Competition(
       id: json[ID],
       title: json[TITLE],
       initialDate: json[INITIAL_DATE] == null ? null : new DateTime.fromMillisecondsSinceEpoch(json[INITIAL_DATE]),
-      competitors: (json[COMPETITORS] as List)
-          .map((c) => Competitor.fromJson(c))
-          .toList(),
+      competitors: (json[COMPETITORS] as List).map((c) => Competitor.fromJson(c)).toList(),
     );
   }
 
-  factory Competition.fromMapJson(Map<dynamic, dynamic> json) =>
-      new Competition(
-        id: json[ID],
-        title: json[TITLE],
-        competitors: json[COMPETITORS],
-      );
+  factory Competition.fromJson(Map<String, dynamic> json, String id) => Competition(
+      id: id,
+      title: json[TITLE],
+      initialDate: json[INITIAL_DATE] == null ? null : new DateTime.fromMillisecondsSinceEpoch(json[INITIAL_DATE]),
+      competitors: json[COMPETITORS]);
+
+  Map<String, dynamic> toJson() => {
+    
+  };
 }

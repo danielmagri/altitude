@@ -1,3 +1,4 @@
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:get_it/get_it.dart';
@@ -7,5 +8,5 @@ class Memory {
 
   Person person;
   List<Habit> habits = List();
-
+  List<Competition> competitions = List();
 }

@@ -18,7 +18,7 @@ class Result<T> {
     }
   }
 
-  R absoluteResult<R>() {
+  T absoluteResult() {
     if (isSuccess) {
       return (this as RSuccess).data;
     } else {

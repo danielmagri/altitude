@@ -1,5 +1,4 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:mobx/mobx.dart';
@@ -18,26 +17,27 @@ abstract class _FriendsLogicBase with Store {
 
   Future<bool> get isLogged async => personUseCase.isLogged;
 
-  Future<void> fetchData() async {
-    try {
-      checkPendingFriendsStatus();
+  Future fetchData() async {
+    checkPendingFriendsStatus();
 
-      var _friends = (await personUseCase.getFriends()).asObservable();
-      var _ranking = _friends.toList().asObservable();
+    return (await personUseCase.getFriends()).result((data) async {
+      var _friends = data.toList().asObservable();
+      var _ranking = data.toList().asObservable();
 
-      _ranking
-          .add(Person(name: personUseCase.name, email: personUseCase.email, score: ScoreControl().score, you: true));
+      Person me = (await personUseCase.getPerson()).absoluteResult();
+      me.you = true;
+
+      _ranking.add(me);
 
       sortLists(_friends, _ranking);
 
       friends.setData(_friends);
       ranking.setData(_ranking);
-    } catch (error) {
+    }, (error) {
       friends.setError(error);
       ranking.setError(error);
-
       throw error;
-    }
+    });
   }
 
   @action

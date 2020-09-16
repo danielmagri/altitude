@@ -2,7 +2,6 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
@@ -11,12 +10,11 @@ import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 
+@deprecated
 class CompetitionsControl {
 
   final PersonUseCase personUseCase = PersonUseCase.getInstance;
 
-  bool get pendingCompetitionsStatus => SharedPref.instance.pendingCompetition;
-  set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
 
   Future<int> get competitionsCount => DatabaseService().getCompetitionsCount();
 
@@ -58,10 +56,6 @@ class CompetitionsControl {
     } else {
       return false;
     }
-  }
-
-  Future<bool> updateCompetitionDB(String id, String title) async {
-    return await DatabaseService().updateCompetition(id, title);
   }
 
   Future<Competition> getCompetitionDetail(String id) async {

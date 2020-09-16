@@ -3,6 +3,7 @@ import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:mobx/mobx.dart';
 part 'PendingCompetitionLogic.g.dart';
@@ -10,6 +11,8 @@ part 'PendingCompetitionLogic.g.dart';
 class PendingCompetitionLogic = _PendingCompetitionLogicBase with _$PendingCompetitionLogic;
 
 abstract class _PendingCompetitionLogicBase with Store {
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+
   DataState<ObservableList<Competition>> pendingCompetition = DataState();
   List<Competition> addedCompetitions = [];
 
@@ -17,7 +20,7 @@ abstract class _PendingCompetitionLogicBase with Store {
     try {
       var _pendingCompetition = (await CompetitionsControl().getPendingCompetitions()).asObservable();
 
-      CompetitionsControl().pendingCompetitionsStatus = _pendingCompetition.isNotEmpty;
+      _competitionUseCase.pendingCompetitionsStatus = _pendingCompetition.isNotEmpty;
 
       pendingCompetition.setData(_pendingCompetition);
     } catch (error) {
@@ -37,13 +40,13 @@ abstract class _PendingCompetitionLogicBase with Store {
   void acceptedCompetitionRequest(Competition competition) {
     pendingCompetition.data.removeWhere((item) => item.id == competition.id);
     addedCompetitions.add(competition);
-    if (pendingCompetition.data.isEmpty) CompetitionsControl().pendingCompetitionsStatus = false;
+    if (pendingCompetition.data.isEmpty) _competitionUseCase.pendingCompetitionsStatus = false;
   }
 
   Future<void> declineCompetitionRequest(String id) async {
     await CompetitionsControl().declineCompetitionRequest(id);
     pendingCompetition.data.removeWhere((item) => item.id == id);
 
-    if (pendingCompetition.data.isEmpty) CompetitionsControl().pendingCompetitionsStatus = false;
+    if (pendingCompetition.data.isEmpty) _competitionUseCase.pendingCompetitionsStatus = false;
   }
 }
