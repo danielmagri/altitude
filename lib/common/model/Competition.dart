@@ -61,6 +61,9 @@ class Competition {
       competitors: json[COMPETITORS]);
 
   Map<String, dynamic> toJson() => {
-    
+    TITLE: title,
+    INITIAL_DATE: initialDate,
+    COMPETITORS_ID: competitors.map((e) => e.uid).toList(),
+    COMPETITORS: competitors.map((e) => e.toJson()).toList()
   };
 }

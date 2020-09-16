@@ -44,7 +44,7 @@ class HabitUseCase extends BaseUseCase {
         }
         return Result.success(data);
       });
-
+ 
   Future<int> _getReminderCounter() async {
     Person person = (await _personUseCase.getPerson()).absoluteResult();
     _memory.person?.reminderCounter += 1;
