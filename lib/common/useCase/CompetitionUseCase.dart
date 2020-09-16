@@ -29,6 +29,10 @@ class CompetitionUseCase extends BaseUseCase {
   Future<Result<Competition>> createCompetition(
           String title, Habit habit, List<String> invitations, List<String> invitationsToken) =>
       safeCall(() {
+        Competition competition = Competition(
+          title: title,
+          
+        );
         // Criar json no firebase
         //Enviar notificações
         // Salvar no Memory

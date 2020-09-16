@@ -159,4 +159,11 @@ class FireDatabase {
         .get()
         .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
   }
+
+  Future<Competition> createCompetition(Competition competition) {
+    DocumentReference doc = competitionCollection.doc();
+    competition.id = doc.id;
+
+    return doc.set(competition.toJson()).then((value) => competition);
+  }
 }
