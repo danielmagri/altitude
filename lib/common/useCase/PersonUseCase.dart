@@ -55,28 +55,29 @@ class PersonUseCase extends BaseUseCase {
   //TODO: alterar direto pelo firestore
   Future<bool> setName(String name) async {
     FireAuth().setName(name);
-    return await FireFunctions()
-        .updateUser(await DatabaseService().listCompetitionsIds(), name: name);
+    return await FireFunctions().updateUser(await DatabaseService().listCompetitionsIds(), name: name);
   }
 
   bool get pendingFriendsStatus => SharedPref.instance.pendingFriends;
-  set pendingFriendsStatus(bool value) =>
-      SharedPref.instance.pendingFriends = value;
+  set pendingFriendsStatus(bool value) => SharedPref.instance.pendingFriends = value;
 
-  Future<List<Person>> getFriends() async {
-    return await FireFunctions().getFriends();
-  }
+  Future<Result<List<Person>>> getFriends() => safeCall(() async {
+        List<Person> friends = await FireDatabase().getFriendsDetails();
+        return Result.success(friends);
+      });
 
   Future<List<Person>> getPendingFriends() async {
     return await FireFunctions().getPendingFriends();
   }
 
-  Future<List<Person>> searchEmail(String value) async {
-    if (value != email)
-      return await FireFunctions().searchEmail(value);
-    else
-      return List();
-  }
+  Future<Result<List<Person>>> searchEmail(String value) => safeCall(() async {
+        if (value != email) {
+          List<String> myPendingFriends = (await getPerson()).absoluteResult().pendingFriends ?? List();
+          return Result.success(await FireDatabase().searchEmail(value, myPendingFriends));
+        } else {
+          return Result.success(List());
+        }
+      });
 
   Future<void> friendRequest(String uid) async {
     FireAnalytics().sendFriendRequest(false);
@@ -102,9 +103,9 @@ class PersonUseCase extends BaseUseCase {
     return await FireFunctions().removeFriend(uid);
   }
 
-  Future<List<Person>> rankingFriends() async {
-    return await FireFunctions().rankingFriends(3);
-  }
+  Future<Result<List<Person>>> rankingFriends() => safeCall(() async {
+        return Result.success(await FireDatabase().getRankingFriends(3));
+      });
 
   Future<void> logout() async {
     await FireAuth().logout();

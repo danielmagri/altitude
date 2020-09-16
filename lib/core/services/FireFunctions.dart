@@ -47,19 +47,6 @@ class FireFunctions {
     }
   }
 
-  Future<List<Person>> getFriends() async {
-    try {
-      HttpsCallableResult result = await CloudFunctions.instance.getHttpsCallable(functionName: 'getFriends').call();
-
-      List data = result.data;
-
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "getFriends");
-      return null;
-    }
-  }
-
   Future<List<Person>> getPendingFriends() async {
     try {
       HttpsCallableResult result =
@@ -70,21 +57,6 @@ class FireFunctions {
       return data.map((c) => Person.fromJson(c)).toList();
     } catch (error) {
       handleError(error, from: "getPendingFriends");
-      return null;
-    }
-  }
-
-  Future<List<Person>> searchEmail(String email) async {
-    Person person = new Person(email: email);
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'searchEmail').call(person.toJson());
-
-      List data = result.data;
-
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "searchEmail");
       return null;
     }
   }
@@ -139,22 +111,6 @@ class FireFunctions {
     }
   }
 
-  Future<List<Person>> rankingFriends(int limit) async {
-    Map<String, dynamic> map = Map();
-    map.putIfAbsent("limit", () => limit);
-
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'rankingFriends').call(map);
-
-      List data = result.data;
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "getFriends");
-      throw error;
-    }
-  }
-
   // Competition
 
   Future<String> createCompetition(String title, int initialDate, Competitor competitor, List<String> invitations,
@@ -176,19 +132,6 @@ class FireFunctions {
       return result.data;
     } catch (error) {
       handleError(error, from: "createCompetition");
-      throw error;
-    }
-  }
-
-  Future<List<Competition>> fetchCompetitions() async {
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'getCompetitions').call();
-
-      List data = result.data;
-      return data.map((c) => Competition.fromLinkedJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "fetchCompetitions");
       throw error;
     }
   }

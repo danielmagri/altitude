@@ -13,7 +13,8 @@ abstract class _AddFriendLogicBase with Store {
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoading();
-    searchResult.setData(await personUseCase.searchEmail(email));
+    List<Person> list = (await personUseCase.searchEmail(email)).absoluteResult() ?? List();
+    searchResult.setData(list);
   }
 
   Future<void> sendFriendRequest(String uid) async {

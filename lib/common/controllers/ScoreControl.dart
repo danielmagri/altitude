@@ -9,14 +9,10 @@ import 'package:altitude/common/useCase/PersonUseCase.dart';
 enum ScoreType { ADD, SUBTRACT }
 
 class ScoreControl {
-
   final PersonUseCase personUseCase = PersonUseCase.getInstance;
-  
+
   static const int DAY_DONE_POINT = 2;
   static const int CYCLE_DONE_POINT = 1;
-
-  @deprecated
-  int get score => SharedPref.instance.score;
 
   /// Calcula os pontos a ser adicionado ou retirado
   /// frequency: frequência do hábito
@@ -25,7 +21,7 @@ class ScoreControl {
   int calculateScore(ScoreType type, Frequency frequency, List<DateTime> week, DateTime date) {
     if (type == ScoreType.ADD) week.add(date);
 
-    var signal = type==ScoreType.ADD ? 1 : -1;
+    var signal = type == ScoreType.ADD ? 1 : -1;
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {

@@ -25,6 +25,8 @@ class Person {
   static const LEVEL = "level";
   static const FCM_TOKEN = "fcm_token";
   static const REMINDER_COUNTER = "reminder_counter";
+  static const FRIENDS = "friends";
+  static const PENDING_FRIENDS = "pending_friends";
   static const STATE = "state";
 
   Person(
@@ -46,17 +48,17 @@ class Person {
 
   String get levelText => score == null ? "" : LevelControl.getLevelText(score);
 
-  factory Person.fromJson(Map<String, dynamic> json) => Person(
-        uid: json[UID],
-        name: json[NAME],
-        email: json[EMAIL],
-        fcmToken: json[FCM_TOKEN],
-        score: json[SCORE],
-        reminderCounter: json[REMINDER_COUNTER] ?? 0,
-        level: json[LEVEL],
-        state: json[STATE],
-        you: false,
-      );
+  factory Person.fromJson(Map<String, dynamic> json, [String id]) => Person(
+      uid: id ?? json[UID],
+      name: json[NAME],
+      email: json[EMAIL],
+      fcmToken: json[FCM_TOKEN],
+      score: json[SCORE],
+      reminderCounter: json[REMINDER_COUNTER] ?? 0,
+      friends: List<String>.from(json[FRIENDS] ?? List()),
+      pendingFriends: List<String>.from(json[PENDING_FRIENDS] ?? List()),
+      level: json[LEVEL],
+      state: json[STATE]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = Map();

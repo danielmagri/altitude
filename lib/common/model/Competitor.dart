@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 class Competitor {
   String uid;
   String name;
@@ -26,13 +24,21 @@ class Competitor {
     if (you == null) you = false;
     if (score == null) score = 0;
   }
-  factory Competitor.fromJson(LinkedHashMap<dynamic, dynamic> json) =>
-      new Competitor(
-        uid: json[UID],
-        name: json[NAME],
-        fcmToken: json[FCM_TOKEN],
-        color: json[COLOR],
-        score: json[SCORE],
-        you: json[YOU],
-      );
+
+  factory Competitor.fromJson(Map<dynamic, dynamic> json) => Competitor(
+      uid: json[UID],
+      name: json[NAME],
+      fcmToken: json[FCM_TOKEN],
+      color: json[COLOR],
+      score: json[SCORE],
+      you: json[YOU]);
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent(NAME, () => name);
+    map.putIfAbsent(COLOR, () => color);
+    map.putIfAbsent(FCM_TOKEN, () => fcmToken);
+    if (you) map.putIfAbsent(SCORE, () => score);
+    return map;
+  }
 }

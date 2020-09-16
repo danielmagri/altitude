@@ -1,5 +1,5 @@
 import 'dart:async' show Timer;
-import 'package:altitude/common/model/CompetitionPresentation.dart';
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
@@ -62,7 +62,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
 
   void createCompetition() async {
     showLoading(true);
-    if (await controller.checkCreateCompetition()) {
+    if (!await controller.checkCreateCompetition()) {
       try {
         var data = await controller.getCreationData();
         showLoading(false);
@@ -79,24 +79,12 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
     }
   }
 
-  void competitionTap(CompetitionPresentation item) {
-    showLoading(true);
-    controller.getCompetitionDetail(item.id).then((competition) {
-      showLoading(false);
-
-      if (competition != null) {
-        if (competition.title != item.title) {
-          controller.updateCompetitionTitle(item.id, competition.title);
-        }
-        var arguments = CompetitionDetailsPageArguments(competition);
-        navigatePush('competitionDetails', arguments: arguments);
-      } else {
-        showToast("Ocorreu um erro");
-      }
-    }).catchError(handleError);
+  void competitionTap(Competition competition) {
+    var arguments = CompetitionDetailsPageArguments(competition);
+    navigatePush('competitionDetails', arguments: arguments);
   }
 
-  void competitionLongTap(CompetitionPresentation item) {
+  void competitionLongTap(Competition item) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -252,7 +240,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                     padding: const EdgeInsets.all(0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                     itemBuilder: (_, index) {
-                      CompetitionPresentation competition = data[index];
+                      Competition competition = data[index];
                       return Card(
                         elevation: 4,
                         margin: const EdgeInsets.all(10),
@@ -270,7 +258,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                                       angle: 0.523,
                                       child: Rocket(
                                           size: Size(constraints.maxWidth, constraints.maxWidth),
-                                          color: AppColors.habitsColor[competition.color],
+                                          color: AppColors.habitsColor[competition.getHabitColor()],
                                           isExtend: true));
                                 }),
                               ),

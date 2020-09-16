@@ -160,16 +160,11 @@ class HabitUseCase extends BaseUseCase {
         return Result.success(null);
       });
 
-  Future<bool> maximumNumberReached() {
+  Future<bool> maximumNumberReached() async {
     try {
-      if (_memory.habits.isEmpty) {
-        return FireDatabase().getHabits().then((data) {
-          _memory.habits = data;
-          return data.length < MAX_HABITS;
-        });
-      } else {
-        return Future.value(_memory.habits.length < MAX_HABITS);
-      }
+      int length = (await getHabits()).absoluteResult().length;
+
+      return length >= MAX_HABITS;
     } catch (e) {
       return Future.value(true);
     }

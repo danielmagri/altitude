@@ -12,8 +12,8 @@ abstract class _CompetitionDetailsLogicBase with Store {
   @observable
   String title = "";
 
-  Future<List<Person>> getFriends() {
-    return personUseCase.getFriends();
+  Future<List<Person>> getFriends() async {
+    return (await personUseCase.getFriends()).absoluteResult();
   }
 
   Future<bool> leaveCompetition(String id) async {
