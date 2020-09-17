@@ -258,7 +258,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                                       angle: 0.523,
                                       child: Rocket(
                                           size: Size(constraints.maxWidth, constraints.maxWidth),
-                                          color: AppColors.habitsColor[competition.getHabitColor()],
+                                          color: AppColors.habitsColor[competition.getMyCompetitor().color],
                                           isExtend: true));
                                 }),
                               ),

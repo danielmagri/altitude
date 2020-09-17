@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class DayDone {
   final String habitId;
@@ -6,8 +7,7 @@ class DayDone {
 
   DayDone({this.habitId, this.date});
 
-  String get dateFormatted =>
-      '${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  String get dateFormatted => date.dateFormatted;
 
   static const DATE = "date";
 

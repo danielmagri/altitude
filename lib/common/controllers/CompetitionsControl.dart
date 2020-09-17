@@ -1,5 +1,4 @@
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/controllers/HabitsControl.dart';
@@ -41,14 +40,6 @@ class CompetitionsControl {
     }
   }
 
-  Future<List<CompetitionPresentation>> fetchCompetitions() async {
-    return await DatabaseService().listCompetitions();
-  }
-
-  Future<List<String>> listCompetitionsIds(int habitId) async {
-    return await DatabaseService().listCompetitionsIds(habitId: habitId);
-  }
-
   Future<bool> updateCompetition(String id, String title) async {
     var result = await FireFunctions().updateCompetition(id, title);
     if (result) {
@@ -56,10 +47,6 @@ class CompetitionsControl {
     } else {
       return false;
     }
-  }
-
-  Future<Competition> getCompetitionDetail(String id) async {
-    return await FireFunctions().getCompetitionDetail(id);
   }
 
   Future<bool> addCompetitor(String id, String name, List<String> invitations, List<String> invitationsToken) async {

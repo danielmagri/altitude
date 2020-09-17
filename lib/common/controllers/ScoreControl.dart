@@ -1,8 +1,4 @@
-import 'dart:async';
 import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
-import 'package:altitude/core/services/Database.dart';
-import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 
@@ -97,16 +93,5 @@ class ScoreControl {
     if (dayWeek.saturday && !week.any((dayDone) => dayDone.weekday == 6)) return false;
     if (dayWeek.sunday && !week.any((dayDone) => dayDone.weekday == 7)) return false;
     return true;
-  }
-
-  Future<bool> setScore(int id, int score, DateTime date) async {
-    SharedPref.instance.addscore(score);
-    var oldScore = await DatabaseService().listHabitCompetitions(id, date);
-    bool result = await DatabaseService().updateScore(id, score, date);
-    if (personUseCase.isLogged) {
-      FireFunctions()
-          .setScore(SharedPref.instance.score, await DatabaseService().listHabitCompetitions(id, date), oldScore);
-    }
-    return result ? true : false;
   }
 }

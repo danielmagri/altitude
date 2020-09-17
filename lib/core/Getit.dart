@@ -32,8 +32,8 @@ class Getit {
 
     //USE CASE
     getIt.registerFactory<PersonUseCase>(() => PersonUseCase());
-    getIt.registerFactory<HabitUseCase>(() => HabitUseCase());
     getIt.registerFactory<CompetitionUseCase>(() => CompetitionUseCase());
+    getIt.registerFactory<HabitUseCase>(() => HabitUseCase());
 
     // LOGIC
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());

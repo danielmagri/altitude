@@ -7,6 +7,10 @@ extension dateTime on DateTime {
     return DateTime(this.year, this.month, this.day);
   }
 
+  String get dateFormatted {
+    return '${this.year.toString()}-${this.month.toString().padLeft(2, '0')}-${this.day.toString().padLeft(2, '0')}';
+  }
+
   /// Retorna o último dia da semana
   DateTime lastWeekDay() {
     int days = this.weekday == 7 ? LAST_WEEKDAY : LAST_WEEKDAY - this.weekday;

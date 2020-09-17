@@ -66,10 +66,6 @@ abstract class _CompetitionLogicBase with Store {
     return Pair(habits, friends);
   }
 
-  Future<Competition> getCompetitionDetail(String id) async {
-    return CompetitionsControl().getCompetitionDetail(id);
-  }
-
   @action
   Future<bool> exitCompetition(String id) async {
     var res = await CompetitionsControl().removeCompetitor(id, _personUseCase.uid);
