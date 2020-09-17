@@ -1,9 +1,9 @@
 import 'package:altitude/core/model/Result.dart';
 
 abstract class BaseUseCase {
-  Future<Result<T>> safeCall<T>(Future<Result<T>> Function() call) async {
+  Future<Result<T>> safeCall<T>(Future<T> Function() call) async {
     try {
-      return await call();
+      return Result.success(await call());
     } catch (e) {
       return Result.error(e);
     }

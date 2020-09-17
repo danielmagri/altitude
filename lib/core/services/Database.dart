@@ -1,4 +1,3 @@
-import 'package:altitude/common/model/CompetitionPresentation.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
@@ -531,18 +530,6 @@ class DatabaseService {
     List<String> list = List();
     result.forEach((c) => list.add(c["id"]));
 
-    return list;
-  }
-
-  /// Listar competições
-  Future<List<CompetitionPresentation>> listCompetitions() async {
-    final db = await database;
-
-    var result = await db
-        .rawQuery('SELECT c.id, c.title, c.score, h.color FROM competition AS c, habit AS h WHERE c.habit_id==h.id;');
-
-    List<CompetitionPresentation> list =
-        result.isNotEmpty ? result.map((c) => CompetitionPresentation.fromMapJson(c)).toList() : [];
     return list;
   }
 

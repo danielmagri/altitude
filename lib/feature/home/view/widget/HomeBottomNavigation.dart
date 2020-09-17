@@ -35,7 +35,7 @@ class HomebottomNavigation extends StatelessWidget {
   final HomeLogic controller = GetIt.I.get<HomeLogic>();
 
   void _addHabitTap() async {
-    if (await controller.canAddHabit()) {
+    if (!await controller.canAddHabit()) {
       goAddHabit();
     } else {
       showToast("Você atingiu o limite de 9 hábitos");

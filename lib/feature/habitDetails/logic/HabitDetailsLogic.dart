@@ -5,6 +5,7 @@ import 'package:altitude/common/model/Book.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/model/DataState.dart';
@@ -20,7 +21,8 @@ part 'HabitDetailsLogic.g.dart';
 class HabitDetailsLogic = _HabitDetailsLogicBase with _$HabitDetailsLogic;
 
 abstract class _HabitDetailsLogicBase with Store {
-  final HabitUseCase habitUseCase = HabitUseCase.getInstance;
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
 
   String _id;
   int _color;
@@ -50,7 +52,7 @@ abstract class _HabitDetailsLogicBase with Store {
     DateTime today = DateTime.now().today;
     DateTime startDate = DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
     DateTime endDate = DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
-    (await habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result((data) {
+    (await _habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result((data) {
       currentMonth = data;
       calendarMonth.setData(data.asObservable());
       isHabitDone.setData(data.containsKey(DateTime.now().today));
@@ -61,7 +63,7 @@ abstract class _HabitDetailsLogicBase with Store {
   }
 
   Future<void> getHabitDetail() async {
-    (await habitUseCase.getHabit(_id)).result((data) {
+    (await _habitUseCase.getHabit(_id)).result((data) {
       habit.setData(data);
       frequency.setData(data.frequency);
       reminders.setData(data.reminder);
@@ -100,7 +102,7 @@ abstract class _HabitDetailsLogicBase with Store {
 
   void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) async {
     calendarMonth.setLoading();
-    (await habitUseCase.getCalendarDaysDone(_id, start, end)).result((data) {
+    (await _habitUseCase.getCalendarDaysDone(_id, start, end)).result((data) {
       calendarMonth.setData(data.asObservable());
     }, (error) {
       calendarMonth.setError(error);
@@ -118,7 +120,7 @@ abstract class _HabitDetailsLogicBase with Store {
     var days =
         calendarMonth.data.keys.where((e) => e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate)).toList();
 
-    return (await habitUseCase.completeHabit(_id, date, add, days)).result((data) {
+    return (await _habitUseCase.completeHabit(_id, date, add, days)).result((data) {
       Map<DateTime, List> visibleMonthDays = calendarMonth.data;
 
       bool yesterday = visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
@@ -187,5 +189,9 @@ abstract class _HabitDetailsLogicBase with Store {
   void updateHabitDetailsPageData(Habit newHabit) {
     _color = newHabit.colorCode;
     getHabitDetail();
+  }
+
+  Future<bool> hasCompetition() {
+    return _competitionUseCase.hasCompetitionByHabit(_id);
   }
 }

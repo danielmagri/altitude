@@ -55,7 +55,7 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
       showToast("Escolha um hábito para competir.");
     } else if (controller.selectedFriends.length == 0) {
       showToast("Escolha pelo menos um amigo.");
-    } else if (!(await controller.checkHabitCompetitionLimit())) {
+    } else if (await controller.checkHabitCompetitionLimit()) {
       showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);

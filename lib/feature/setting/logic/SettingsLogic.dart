@@ -1,3 +1,4 @@
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:mobx/mobx.dart';
 part 'SettingsLogic.g.dart';
@@ -5,7 +6,8 @@ part 'SettingsLogic.g.dart';
 class SettingsLogic = _SettingsLogicBase with _$SettingsLogic;
 
 abstract class _SettingsLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
 
   @observable
   String name = "";
@@ -15,20 +17,20 @@ abstract class _SettingsLogicBase with Store {
 
   @action
   Future<void> fetchData() async {
-    name = personUseCase.name;
-    isLogged = personUseCase.isLogged;
+    name = _personUseCase.name;
+    isLogged = _personUseCase.isLogged;
   }
 
   @action
   Future<void> changeName(String newName) async {
-    if (await personUseCase.setName(newName)) {
-      name = newName;
-    }
+    List<String> competitionsId = (await _competitionUseCase.getCompetitions()).absoluteResult().map((e) => e.id).toList();
+    (await _personUseCase.updateName(newName, competitionsId)).absoluteResult();
+    name = newName;
   }
 
   @action
   Future<void> logout() async {
-    await personUseCase.logout();
+    await _personUseCase.logout();
     isLogged = false;
   }
 }

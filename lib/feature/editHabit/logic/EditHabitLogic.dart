@@ -60,7 +60,7 @@ abstract class _EditHabitLogicBase with Store {
     if (editedHabit.color != initialHabit.color ||
         editedHabit.habit.compareTo(initialHabit.habit) != 0 ||
         !compareFrequency(initialHabit.frequency, frequency)) {
-      (await _habitUseCase.updateHabit(editedHabit)).result((data) {
+      (await _habitUseCase.updateHabit(editedHabit, initialHabit)).result((data) {
         GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(editedHabit);
       }, (error) => throw error);
     }
