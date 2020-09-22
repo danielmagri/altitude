@@ -32,7 +32,7 @@ class _PendingCompetitionPageState extends BaseState<PendingCompetitionPage> {
 
   void acceptRequest(Competition competition) async {
     showLoading(true);
-    if (await controller.checkCreateCompetition()) {
+    if (!await controller.checkCreateCompetition()) {
       List<Habit> habits = await controller.getAllHabits();
       showLoading(false);
 

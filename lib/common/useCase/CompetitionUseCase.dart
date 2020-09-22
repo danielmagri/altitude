@@ -7,6 +7,7 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireDatabase.dart';
 import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/services/Memory.dart';
@@ -32,6 +33,21 @@ class CompetitionUseCase extends BaseUseCase {
         }
       });
 
+  Future<Result<Competition>> getCompetition(String id) => safeCall(() async {
+        Competition competition = await FireDatabase().getCompetition(id);
+        int index = _memory.competitions.indexWhere((element) => element.id == id);
+        if (index != -1) {
+          _memory.competitions[index] = competition;
+        }
+        return competition;
+      });
+
+  Future<Result<List<Competition>>> getPendingCompetitions() => safeCall(() async {
+        List<Competition> list = await FireDatabase().getPendingCompetitions();
+        pendingCompetitionsStatus = list.isNotEmpty;
+        return list;
+      });
+
   Future<Result<Competition>> createCompetition(
           String title, Habit habit, List<String> invitations, List<String> invitationsToken) =>
       safeCall(() async {
@@ -51,9 +67,51 @@ class CompetitionUseCase extends BaseUseCase {
 
         //TODO: Enviar notificações
 
+        FireAnalytics().sendCreateCompetition(title, habit.habit, invitations.length);
+
         _memory.competitions.add(competition);
 
         return competition;
+      });
+
+  Future<Result> updateCompetition(String id, String title) => safeCall(() async {
+        await FireDatabase().updateCompetition(id, title);
+        int index = _memory.competitions.indexWhere((element) => element.id == id);
+        if (index != -1) {
+          _memory.competitions[index].title = title;
+        }
+      });
+
+  Future<Result> removeCompetitor(Competition competition) => safeCall(() async {
+        await FireDatabase().removeCompetitor(competition.id, _personUseCase.uid, competition.competitors.length == 1);
+        _memory.competitions.removeWhere((element) => element.id == competition.id);
+      });
+
+  Future<Result> inviteCompetitor(String competitionId, List<String> competitorId, List<String> fcmTokens) =>
+      safeCall(() async {
+        Competition competition = (await getCompetition(competitionId)).absoluteResult();
+        if (competition.competitors.length < MAX_COMPETITORS) {
+          await FireDatabase().inviteCompetitor(competitionId, competitorId);
+          //TODO: Enviar notificações
+        } else {
+          throw "Máximo de competidores atingido.";
+        }
+      });
+
+  Future<Result> acceptCompetitionRequest(String competitionId, Competition competition, Competitor competitor) =>
+      safeCall(() async {
+        Competition competition = (await getCompetition(competitionId)).absoluteResult();
+        if (competition.competitors.length < MAX_COMPETITORS) {
+          await FireDatabase().acceptCompetitionRequest(competitionId, competitor);
+          _memory.competitions.add(competition);
+          //TODO: Enviar notificações
+        } else {
+          throw "Máximo de competidores atingido.";
+        }
+      });
+
+  Future<Result> declineCompetitionRequest(String id) => safeCall(() async {
+        return await FireDatabase().declineCompetitionRequest(id);
       });
 
   Future<bool> hasCompetitionByHabit(String habitId) async {

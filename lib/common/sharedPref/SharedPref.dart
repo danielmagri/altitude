@@ -15,20 +15,6 @@ class SharedPref extends SharedPrefHandler {
   int get version => getInt(VERSION) ?? 0;
   set version(int value) => saveInt(VERSION, value);
 
-  // Name
-  @deprecated
-  String get name => getString(NAME);
-
-  @deprecated
-  set name(String value) => saveString(NAME, value);
-
-  // Score
-  @deprecated
-  int get score => getInt(SCORE) ?? 0;
-
-  @deprecated
-  void addscore(int value) => saveInt(SCORE, score + value);
-
   // Pending Friends
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
   set pendingFriends(bool value) => saveBool(PENDING_FRIENDS, value);
@@ -41,11 +27,7 @@ class SharedPref extends SharedPrefHandler {
   int get pendingLearn => getInt(NEW_LEARN_TEXT) ?? 0;
   set pendingLearn(int value) => saveInt(NEW_LEARN_TEXT, value);
 
-  //TEMPORARY
-  // Pending Statistic view
-  bool get pendingStatistic => getBool(PENDING_STATISTICS) ?? true;
-  set pendingStatistic(bool value) => saveBool(PENDING_STATISTICS, value);
-
+  // TUTORIAL
   // Habit Tutorial
   bool get habitTutorial => getBool(HABIT_TUTORIAL) ?? false;
   set habitTutorial(bool value) => saveBool(HABIT_TUTORIAL, value);

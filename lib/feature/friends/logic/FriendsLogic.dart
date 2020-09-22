@@ -15,8 +15,6 @@ abstract class _FriendsLogicBase with Store {
   DataState<ObservableList<Person>> friends = DataState();
   DataState<ObservableList<Person>> ranking = DataState();
 
-  Future<bool> get isLogged async => personUseCase.isLogged;
-
   Future fetchData() async {
     checkPendingFriendsStatus();
 

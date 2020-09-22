@@ -1,8 +1,15 @@
+import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
@@ -35,22 +42,35 @@ class ChooseHabit extends StatefulWidget {
 }
 
 class _ChooseHabitState extends BaseState<ChooseHabit> {
+  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+
   Habit selectedHabit;
 
   void acceptRequest() async {
-    //TODO:
-    // if ((await CompetitionsControl().listCompetitionsIds(selectedHabit.oldId)).length >= MAX_HABIT_COMPETITIONS) {
-    //   showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
-    // } else {
-    //   showLoading(true);
-    //   CompetitionsControl()
-    //       .acceptCompetitionRequest(
-    //           widget.competition.id, widget.competition.title, widget.competition.initialDate, selectedHabit.oldId)
-    //       .then((_) {
-    //     showLoading(false);
-    //     navigatePop(result: widget.competition);
-    //   }).catchError(handleError);
-    // }
+    if (!await _competitionUseCase.maximumNumberReachedByHabit(selectedHabit.id)) {
+      showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+    } else {
+      showLoading(true);
+      List<DateTime> days =
+          (await _habitUseCase.getDaysDone(selectedHabit.id, widget.competition.initialDate, DateTime.now().today))
+              .absoluteResult()
+              .map((e) => e.date)
+              .toList();
+
+      Competitor competitor = Competitor(
+          name: _personUseCase.name,
+          fcmToken: await _personUseCase.fcmToken,
+          color: selectedHabit.colorCode,
+          habitId: selectedHabit.id,
+          score: ScoreControl().scoreEarnedTotal(selectedHabit.frequency, days),
+          you: true);
+      _competitionUseCase.acceptCompetitionRequest(widget.competition.id, widget.competition, competitor).then((_) {
+        showLoading(false);
+        navigatePop(result: widget.competition);
+      }).catchError(handleError);
+    }
   }
 
   @override

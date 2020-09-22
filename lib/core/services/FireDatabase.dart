@@ -24,6 +24,10 @@ class FireDatabase {
 
   // PERSON
 
+  Future createPerson(Person person) {
+    return userDoc.set(person.toJson(), SetOptions(merge: true));
+  }
+
   Future<Person> getPerson() {
     return userDoc.get().then((value) => Person.fromJson(value.data(), value.id));
   }
@@ -134,15 +138,19 @@ class FireDatabase {
 
       if (!date.exists && isAdd) {
         if (isLastDone) habitMap.putIfAbsent(Habit.LAST_DONE, () => dayDone.date);
+        batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
       } else if (date.exists && !isAdd) {
         if (isLastDone) habitMap.putIfAbsent(Habit.LAST_DONE, () => null);
+        batch.delete(daysDoneCollection.doc(dayDone.dateFormatted));
       } else {
+        if (date.exists && isAdd) {
+          throw "Você já completou esse dia";
+        }
         throw "Erro desconhecido";
       }
 
       batch.update(userDoc, {Person.SCORE: totalScore});
       batch.update(habitDoc, habitMap);
-      batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
 
       return batch.commit();
     });
@@ -153,6 +161,14 @@ class FireDatabase {
   }
 
   // DAYS DONE
+
+  Future<List<DayDone>> getAllDaysDone(String id) {
+    return habitsCollection
+        .doc(id)
+        .collection(_DAYS_DONE)
+        .get()
+        .then((value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList());
+  }
 
   Future<List<DayDone>> getDaysDone(String id, DateTime startDate, DateTime endDate) {
     return habitsCollection
@@ -213,10 +229,75 @@ class FireDatabase {
         .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
   }
 
+  Future<Competition> getCompetition(String id) {
+    return competitionCollection.doc(id).get().then((value) => Competition.fromJson(value.data(), value.id));
+  }
+
+  Future<List<Competition>> getPendingCompetitions() {
+    return competitionCollection
+        .where(Competition.INVITATIONS, arrayContains: FireAuth().getUid())
+        .get()
+        .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
+  }
+
   Future<Competition> createCompetition(Competition competition) {
     DocumentReference doc = competitionCollection.doc();
     competition.id = doc.id;
 
     return doc.set(competition.toJson()).then((value) => competition);
+  }
+
+  Future updateCompetition(String competitionId, String title) {
+    return competitionCollection.doc(competitionId).update({Competition.TITLE: title});
+  }
+
+  Future inviteCompetitor(String competitionId, List<String> competitorId) {
+    return competitionCollection
+        .doc(competitionId)
+        .update({Competition.INVITATIONS: FieldValue.arrayUnion(competitorId)});
+  }
+
+  Future removeCompetitor(String competitionId, String uid, bool removeAll) {
+    if (removeAll) {
+      return competitionCollection.doc(competitionId).delete();
+    } else {
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      batch.update(competitionCollection.doc(competitionId), {
+        Competition.COMPETITORS_ID: FieldValue.arrayRemove([uid])
+      });
+
+      batch.update(competitionCollection.doc(competitionId), {"${Competition.COMPETITORS}.$uid": FieldValue.delete()});
+
+      return batch.commit();
+    }
+  }
+
+  Future acceptCompetitionRequest(String competitionId, Competitor competitor) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    DocumentReference doc = competitionCollection.doc(competitionId);
+
+    batch.set(
+        doc,
+        {
+          Competition.COMPETITORS: {FireAuth().getUid(): competitor.toJson()}
+        },
+        SetOptions(merge: true));
+
+    batch.update(doc, {
+      Competition.COMPETITORS_ID: FieldValue.arrayUnion([FireAuth().getUid()])
+    });
+    batch.update(doc, {
+      Competition.INVITATIONS: FieldValue.arrayRemove([FireAuth().getUid()])
+    });
+
+    return batch.commit();
+  }
+
+  Future declineCompetitionRequest(String competitionId) {
+    return competitionCollection.doc(competitionId).update({
+      Competition.INVITATIONS: FieldValue.arrayRemove([FireAuth().getUid()])
+    });
   }
 }

@@ -4,7 +4,6 @@ import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FireMessaging {
-
   void configure() {
     FirebaseMessaging().configure(onMessage: (Map<String, dynamic> message) async {
       if (message.containsKey('data')) {
@@ -24,9 +23,7 @@ class FireMessaging {
     });
   }
 
-  Future<String> getToken() async {
-    return await FirebaseMessaging().getToken();
-  }
+  Future<String> getToken() => FirebaseMessaging().getToken();
 
   void isNewFriendRequest(Map<dynamic, dynamic> data) {
     if (data.containsKey('new_friend')) {

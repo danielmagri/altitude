@@ -6,6 +6,7 @@ import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireAuth.dart';
 import 'package:altitude/core/services/FireDatabase.dart';
 import 'package:altitude/core/services/FireFunctions.dart';
+import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,6 +24,28 @@ class PersonUseCase extends BaseUseCase {
   String get email => FireAuth().getEmail();
 
   String get photoUrl => FireAuth().getPhotoUrl();
+
+  Future<String> get fcmToken => FireMessaging().getToken();
+
+  Future<Result> createPerson() => safeCall(() async {
+        _memory.person = null;
+        return (await getPerson()).result((data) {
+          return;
+        }, (error) async {
+          Person person = Person(
+              name: name,
+              email: email,
+              fcmToken: await fcmToken,
+              friends: [],
+              level: 0,
+              pendingFriends: [],
+              reminderCounter: 0,
+              score: 0);
+          await FireDatabase().createPerson(person);
+          person.photoUrl = photoUrl;
+          _memory.person = person;
+        });
+      });
 
   Future<Result<Person>> getPerson() => safeCall(() async {
         if (_memory.person == null) {
@@ -108,6 +131,7 @@ class PersonUseCase extends BaseUseCase {
       });
 
   Future<void> logout() async {
+    _memory.clear();
     await FireAuth().logout();
   }
 }

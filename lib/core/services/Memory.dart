@@ -9,4 +9,10 @@ class Memory {
   Person person;
   List<Habit> habits = List();
   List<Competition> competitions = List();
+
+  void clear() {
+    person = null;
+    habits = List();
+    competitions = List();
+  }
 }

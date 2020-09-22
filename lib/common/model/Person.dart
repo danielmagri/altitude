@@ -65,8 +65,12 @@ class Person {
     if (uid != null) map.putIfAbsent(UID, () => uid);
     if (name != null) map.putIfAbsent(NAME, () => name);
     if (email != null) map.putIfAbsent(EMAIL, () => email);
-    if (score != null) map.putIfAbsent(SCORE, () => score);
     if (fcmToken != null) map.putIfAbsent(FCM_TOKEN, () => fcmToken);
+    if (level != null) map.putIfAbsent(LEVEL, () => level);
+    if (reminderCounter != null) map.putIfAbsent(REMINDER_COUNTER, () => reminderCounter);
+    if (score != null) map.putIfAbsent(SCORE, () => score);
+    if (friends != null) map.putIfAbsent(FRIENDS, () => friends);
+    if (pendingFriends != null) map.putIfAbsent(PENDING_FRIENDS, () => pendingFriends);
 
     return map;
   }

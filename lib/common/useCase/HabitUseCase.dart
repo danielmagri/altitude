@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/common/controllers/NotificationControl.dart';
+import 'package:altitude/core/services/LocalNotification.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
@@ -71,7 +71,7 @@ class HabitUseCase extends BaseUseCase {
 
         _memory.habits.add(data);
         if (habit.reminder != null) {
-          await NotificationControl().addNotification(habit);
+          await LocalNotification().addNotification(habit);
         }
 
         return data;
@@ -96,7 +96,7 @@ class HabitUseCase extends BaseUseCase {
 
   Future<Result<void>> updateReminder(int reminderId, Habit habit) => safeCall(() async {
         if (reminderId != null) {
-          await NotificationControl().removeNotification(reminderId);
+          await LocalNotification().removeNotification(reminderId);
         }
 
         if (habit.reminder != null) {
@@ -111,7 +111,7 @@ class HabitUseCase extends BaseUseCase {
           if (index != -1) {
             _memory.habits[index] = habit;
           }
-          await NotificationControl().addNotification(habit);
+          await LocalNotification().addNotification(habit);
         } else {
           await FireDatabase().updateReminder(habit.id, null, null);
           int index = _memory.habits.indexWhere((e) => e.id == habit.id);
@@ -167,13 +167,15 @@ class HabitUseCase extends BaseUseCase {
             }
           });
 
+          print("$date $isAdd - Total score: $totalScore  HabitScore: $habitScore  DaysDone: $habitDaysDone");
+
           return;
         }, (error) => throw error);
       });
 
   Future<Result<void>> deleteHabit(Habit habit) => safeCall(() async {
         if (habit.reminder != null) {
-          NotificationControl().removeNotification(habit.reminder.id);
+          LocalNotification().removeNotification(habit.reminder.id);
         }
         FireAnalytics().sendRemoveHabit(habit.habit);
 
@@ -198,6 +200,12 @@ class HabitUseCase extends BaseUseCase {
   }
 
   /// Days Done
+
+  // Future<Result<List<DayDone>>> getAllDayDone() => safeCall(() => FireDatabase().getAllDaysDone(id));
+
+  Future<Result<List<DayDone>>> getDaysDone(String id, DateTime start, DateTime end) => safeCall(() {
+        return FireDatabase().getDaysDone(id, start, end);
+      });
 
   Future<Result<Map<DateTime, List>>> getCalendarDaysDone(String id, DateTime start, DateTime end) =>
       safeCall(() async {

@@ -1,6 +1,4 @@
-import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -11,8 +9,8 @@ part 'LoginLogic.g.dart';
 class LoginLogic = _LoginLogicBase with _$LoginLogic;
 
 abstract class _LoginLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
-  
+  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+
   Future<bool> loginFacebook() async {
     var result = await FacebookLogin().logIn(['email', 'public_profile']);
 
@@ -20,16 +18,11 @@ abstract class _LoginLogicBase with Store {
       case FacebookLoginStatus.loggedIn:
         AuthCredential credential = FacebookAuthProvider.credential(result.accessToken.token);
         UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-        FireAnalytics().analytics.setUserId(fireResult.user.uid);
-        if (!await FireFunctions()
-            .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
-          await personUseCase.logout();
-          throw "Erro ao salvar os dados";
-        }
+        await setPersonData(fireResult.user.uid);
         break;
       case FacebookLoginStatus.cancelledByUser:
         return false;
-        break;  
+        break;
       case FacebookLoginStatus.error:
         throw result.errorMessage;
         break;
@@ -46,15 +39,19 @@ abstract class _LoginLogicBase with Store {
       AuthCredential credential =
           GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
       UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      FireAnalytics().analytics.setUserId(fireResult.user.uid);
-      if (!await FireFunctions()
-          .newUser(fireResult.user.displayName, fireResult.user.email, SharedPref.instance.score)) {
-        await personUseCase.logout();
-        throw "Erro ao salvar os dados";
-      }
+      await setPersonData(fireResult.user.uid);
       return true;
     } else {
       return false;
     }
+  }
+
+  Future setPersonData(String uid) async {
+    return (await _personUseCase.createPerson()).result((data) {
+      FireAnalytics().analytics.setUserId(uid);
+    }, (error) async {
+      await _personUseCase.logout();
+      throw "Erro ao salvar os dados";
+    });
   }
 }

@@ -6,7 +6,7 @@ class PieChartScore extends StatelessWidget {
   PieChartScore({Key key, @required this.data, this.onClick}) : super(key: key);
 
   final List<HabitStatisticData> data;
-  final Function(int) onClick;
+  final Function(String) onClick;
 
   @override
   Widget build(context) {

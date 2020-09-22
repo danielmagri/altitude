@@ -37,6 +37,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
     super.initState();
 
     controller.title = widget.arguments.competition.title;
+    controller.competition = widget.arguments.competition;
 
     showInitialTutorial();
   }

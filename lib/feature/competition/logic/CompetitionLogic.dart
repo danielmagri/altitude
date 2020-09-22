@@ -1,4 +1,3 @@
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
@@ -22,8 +21,6 @@ abstract class _CompetitionLogicBase with Store {
 
   DataState<List<Person>> ranking = DataState();
   DataState<ObservableList<Competition>> competitions = DataState();
-
-  bool get isLogged => _personUseCase.isLogged;
 
   Future<void> fetchData() async {
     checkPendingFriendsStatus();
@@ -52,6 +49,10 @@ abstract class _CompetitionLogicBase with Store {
     });
   }
 
+  Future<Competition> getCompetitionDetails(String id) async {
+    return (await _competitionUseCase.getCompetition(id)).absoluteResult();
+  }
+
   @action
   void checkPendingFriendsStatus() {
     pendingStatus = _competitionUseCase.pendingCompetitionsStatus;
@@ -67,10 +68,9 @@ abstract class _CompetitionLogicBase with Store {
   }
 
   @action
-  Future<bool> exitCompetition(String id) async {
-    var res = await CompetitionsControl().removeCompetitor(id, _personUseCase.uid);
-    if (res) competitions.data.removeWhere((element) => element.id == id);
-
-    return res;
+  Future exitCompetition(Competition competition) async {
+    (await _competitionUseCase.removeCompetitor(competition)).result((data) {
+      competitions.data.removeWhere((element) => element.id == competition.id);
+    }, (error) => throw error);
   }
 }
