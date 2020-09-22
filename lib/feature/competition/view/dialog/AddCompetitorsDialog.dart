@@ -1,7 +1,6 @@
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:flutter/material.dart'
     show
@@ -35,7 +34,7 @@ class AddCompetitorsDialog extends StatefulWidget {
 }
 
 class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
 
   List<Person> selectedFriends = [];
 
@@ -46,7 +45,7 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
 
       showLoading(true);
 
-      CompetitionsControl().addCompetitor(widget.id, personUseCase.name, invitations, invitationsToken).then((res) {
+      _competitionUseCase.inviteCompetitor(widget.id, invitations, invitationsToken).then((res) {
         showLoading(false);
         navigatePop();
         showToast("Convite enviado!");

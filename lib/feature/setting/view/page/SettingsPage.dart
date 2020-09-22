@@ -50,7 +50,7 @@ class _SettingsPageState extends BaseState<SettingsPage> {
               showLoading(true);
               controller.logout().then((_) {
                 showLoading(false);
-                Navigator.pop(context);
+                navigateRemoveUntil('login');
               }).catchError(handleError);
             },
           ),
@@ -117,15 +117,8 @@ class _SettingsPageState extends BaseState<SettingsPage> {
           ListTile(
             title: const Text("Rever tutorial inicial"),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) {
-                        return TutorialPage(
-                          showNameTab: false,
-                        );
-                      },
-                      settings: RouteSettings(name: "Tutorial Page")));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => TutorialPage(), settings: RouteSettings(name: "Tutorial Page")));
             },
           ),
           const Divider(),

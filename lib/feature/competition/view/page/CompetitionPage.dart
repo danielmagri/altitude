@@ -1,4 +1,3 @@
-import 'dart:async' show Timer;
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
@@ -11,7 +10,6 @@ import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
-import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -29,22 +27,6 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
   void initState() {
     super.initState();
 
-    initialize();
-  }
-
-  void initialize() async {
-    if (controller.isLogged) {
-      getData();
-    } else {
-      Timer.run(() async {
-        navigateSmooth(LoginDialog(isCompetitionPage: true)).then((value) {
-          if (value != null) getData();
-        });
-      });
-    }
-  }
-
-  void getData() {
     controller.fetchData();
   }
 
@@ -80,8 +62,12 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
   }
 
   void competitionTap(Competition competition) {
-    var arguments = CompetitionDetailsPageArguments(competition);
-    navigatePush('competitionDetails', arguments: arguments);
+    showLoading(true);
+    controller.getCompetitionDetails(competition.id).then((value) {
+      showLoading(false);
+      var arguments = CompetitionDetailsPageArguments(value);
+      navigatePush('competitionDetails', arguments: arguments);
+    }).catchError(handleError);
   }
 
   void competitionLongTap(Competition item) {
@@ -96,7 +82,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
               child: const Text("Sim", style: TextStyle(fontSize: 17)),
               onPressed: () {
                 showLoading(true);
-                controller.exitCompetition(item.id).then((res) {
+                controller.exitCompetition(item).then((res) {
                   showLoading(false);
                   Navigator.of(context).pop();
                 }).catchError((error) {

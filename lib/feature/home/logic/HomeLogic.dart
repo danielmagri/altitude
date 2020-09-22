@@ -34,9 +34,6 @@ abstract class _HomeLogicBase with Store {
   @observable
   bool pendingLearnStatus = false;
 
-  @observable
-  bool pendingStatisticsStatus = false;
-
   Future<void> getUser() async {
     (await _personUseCase.getPerson()).result((data) {
       user.setData(data);
@@ -58,7 +55,6 @@ abstract class _HomeLogicBase with Store {
     pendingCompetitionStatus = _competitionUseCase.pendingCompetitionsStatus;
     pendingFriendStatus = _personUseCase.pendingFriendsStatus;
     pendingLearnStatus = books.length != SharedPref.instance.pendingLearn ? true : false;
-    pendingStatisticsStatus = SharedPref.instance.pendingStatistic;
   }
 
   @action

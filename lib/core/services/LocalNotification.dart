@@ -2,26 +2,22 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/utils/Color.dart';
 
-class NotificationControl {
-  static final NotificationControl _singleton =
-      new NotificationControl._internal();
+class LocalNotification {
+  static final LocalNotification _singleton = LocalNotification._internal();
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  factory NotificationControl() {
+  factory LocalNotification() {
     return _singleton;
   }
 
-  NotificationControl._internal() {
+  LocalNotification._internal() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_notification');
+    var initializationSettingsAndroid = AndroidInitializationSettings('ic_notification');
     var initializationSettingsIOS = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+    var initializationSettings = InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
   }
 
   Future onSelectNotification(String payload) async {
@@ -43,8 +39,7 @@ class NotificationControl {
       color: AppColors.habitsColor[habit.colorCode],
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
     for (Day day in habit.reminder.getAllweekdays()) {
       await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(

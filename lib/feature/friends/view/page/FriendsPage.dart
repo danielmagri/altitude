@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -6,7 +5,6 @@ import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:altitude/feature/friends/view/dialog/AddFriendDialog.dart';
 import 'package:altitude/feature/friends/view/widget/FriendsList.dart';
 import 'package:altitude/feature/friends/view/widget/RankingList.dart';
-import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -25,23 +23,6 @@ class _FriendsPageState extends BaseState<FriendsPage> {
   void initState() {
     super.initState();
 
-    initialize();
-  }
-
-  void initialize() async {
-    if (await controller.isLogged) {
-      getData();
-    } else {
-      Timer.run(() async {
-        navigateSmooth(LoginDialog(isCompetitionPage: false)).then((value) {
-          if (value != null) getData();
-        });
-        controller.setEmptyData();
-      });
-    }
-  }
-
-  void getData() {
     controller.fetchData().catchError(handleError);
   }
 
