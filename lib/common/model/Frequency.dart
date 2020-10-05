@@ -22,6 +22,21 @@ abstract class Frequency {
           sunday: json["sunday"]);
     }
   }
+
+  factory Frequency.fromBD(Map<String, dynamic> json) {
+    if (json.containsKey("days_time")) {
+      return Weekly(daysTime: json["days_time"]);
+    } else {
+      return DayWeek(
+          monday: json["monday"] == 0 ? false : true,
+          tuesday: json["tuesday"] == 0 ? false : true,
+          wednesday: json["wednesday"] == 0 ? false : true,
+          thursday: json["thursday"] == 0 ? false : true,
+          friday: json["friday"] == 0 ? false : true,
+          saturday: json["saturday"] == 0 ? false : true,
+          sunday: json["sunday"] == 0 ? false : true);
+    }
+  }
 }
 
 class DayWeek extends Frequency {

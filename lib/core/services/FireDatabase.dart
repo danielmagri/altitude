@@ -254,7 +254,7 @@ class FireDatabase {
   Future updateCompetitor(String competitionId, String habitId) {
     return competitionCollection.doc(competitionId).set({
       Competition.COMPETITORS: {
-        FireAuth().getUid(): {Competitor.HABIT_ID: habitId}
+        FireAuth().getUid(): {Competitor.HABIT_ID: habitId, Competitor.SCORE: 0}
       }
     }, SetOptions(merge: true));
   }
