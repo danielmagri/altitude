@@ -251,6 +251,14 @@ class FireDatabase {
     return competitionCollection.doc(competitionId).update({Competition.TITLE: title});
   }
 
+  Future updateCompetitor(String competitionId, String habitId) {
+    return competitionCollection.doc(competitionId).set({
+      Competition.COMPETITORS: {
+        FireAuth().getUid(): {Competitor.HABIT_ID: habitId}
+      }
+    }, SetOptions(merge: true));
+  }
+
   Future inviteCompetitor(String competitionId, List<String> competitorId) {
     return competitionCollection
         .doc(competitionId)

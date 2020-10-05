@@ -15,6 +15,9 @@ class SharedPref extends SharedPrefHandler {
   int get version => getInt(VERSION) ?? 0;
   set version(int value) => saveInt(VERSION, value);
 
+  // Score
+  int get score => getInt(SCORE) ?? 0;
+
   // Pending Friends
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
   set pendingFriends(bool value) => saveBool(PENDING_FRIENDS, value);

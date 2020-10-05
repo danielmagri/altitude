@@ -1,4 +1,5 @@
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -12,11 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends BaseState<LoginPage> {
-  static const String friendText =
-      "Adicione seus amigos para acompanhar o progresso de cada um. E veja quem está na frente pelo Ranking de amigos!";
-  // static const String competitionText = "Crie competições com seus amigos para ver quem vai mais alto!";
+  final LoginLogic controller = GetIt.I.get<LoginLogic>();
 
-  LoginLogic controller = GetIt.I.get<LoginLogic>();
   @override
   void dispose() {
     GetIt.I.resetLazySingleton<LoginLogic>();
@@ -25,68 +23,88 @@ class _LoginPageState extends BaseState<LoginPage> {
 
   void loginWithFacebook() {
     showLoading(true);
-    controller.loginFacebook().then((result) {
+    controller.loginFacebook().then((uid) {
       showLoading(false);
-      if (result) navigateRemoveUntil('home');
+      if (uid != null) savePersonData(uid);
     }).catchError(handleError);
   }
 
   void loginWithGoogle() {
     showLoading(true);
-    controller.loginGoogle().then((result) {
+    controller.loginGoogle().then((uid) {
       showLoading(false);
-      if (result) navigateRemoveUntil('home');
+      if (uid != null) savePersonData(uid);
+    }).catchError(handleError);
+  }
+
+  void savePersonData(String uid) {
+    showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return TransferDataDialog(uid: uid);
+        }).then((value) {
+      if (value) navigateRemoveUntil('home');
     }).catchError(handleError);
   }
 
   @override
   Widget build(context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text("Você precisa fazer o login\n para continuar...",
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
-          const SizedBox(height: 24),
-          Container(
-            width: double.maxFinite,
-            child: Text(
-              friendText,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, height: 1.25, color: AppColors.colorAccent, fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            const Spacer(flex: 1),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Image.asset("assets/logo_grande.png"),
             ),
-          ),
-          const SizedBox(height: 24),
-          const Text("..selecione por qual preferir",
-              textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
-          const SizedBox(height: 24),
-          Container(
-            margin: const EdgeInsets.only(left: 20, right: 20),
-            width: double.maxFinite,
-            child: RaisedButton(
-              color: Color.fromARGB(255, 59, 89, 152),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              onPressed: loginWithFacebook,
-              child:
-                  const Text("Entrar com Facebook", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            const Spacer(flex: 2),
+            Container(
+              width: double.maxFinite,
+              child: Text(
+                "Texto do login aqui", //TODO:
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, height: 1.25, color: AppColors.colorAccent, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 8, left: 20, right: 20),
-            width: double.maxFinite,
-            child: RaisedButton(
-              color: Color.fromARGB(255, 218, 67, 54),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              padding: const EdgeInsets.symmetric(vertical: 13),
-              onPressed: loginWithGoogle,
-              child:
-                  const Text("Entrar com Google", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            const Spacer(flex: 2),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              width: double.maxFinite,
+              child: RaisedButton(
+                color: const Color.fromARGB(255, 59, 89, 152),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                onPressed: loginWithFacebook,
+                child: const Text("Entrar com Facebook",
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-        ],
+            Container(
+              margin: const EdgeInsets.only(top: 8, left: 20, right: 20),
+              width: double.maxFinite,
+              child: RaisedButton(
+                color: Color.fromARGB(255, 218, 67, 54),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                onPressed: loginWithGoogle,
+                child:
+                    const Text("Entrar com Google", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const Spacer(flex: 2),
+            InkWell(
+                onTap: () {
+                  //TODO:
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text("termos de uso", style: const TextStyle(decoration: TextDecoration.underline)),
+                ))
+          ],
+        ),
       ),
     );
   }

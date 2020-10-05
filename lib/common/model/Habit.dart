@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
 class Habit {
   String id;
+  int oldId;
 
   String habit;
   int colorCode;
@@ -22,6 +23,7 @@ class Habit {
 
   Habit(
       {this.id,
+      this.oldId,
       this.habit,
       this.colorCode,
       this.score,
@@ -60,6 +62,17 @@ class Habit {
           ? DateTime.fromMillisecondsSinceEpoch((json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
           : null,
       daysDone: json[DAYS_DONE_COUNT]);
+
+  factory Habit.fromDB(Map<String, dynamic> json) => Habit(
+      oldId: json["id"],
+      colorCode: json["color"],
+      score: json["score"],
+      habit: json["habit_text"],
+      oldCue: json["cue_text"] == null ? "" : json["cue_text"],
+      initialDate: json.containsKey("initial_date") && json["initial_date"] != null
+          ? DateTime.parse(json["initial_date"])
+          : null,
+      daysDone: json["days_done"]);
 
   Map<String, dynamic> toJson() => {
         ID: id,
