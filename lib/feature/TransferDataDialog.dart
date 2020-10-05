@@ -1,3 +1,4 @@
+import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/utils/Color.dart';
@@ -12,6 +13,7 @@ import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/services/LocalNotification.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class TransferDataDialog extends StatefulWidget {
   const TransferDataDialog({Key key, @required this.uid}) : super(key: key);
@@ -65,7 +67,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           Person person = (result as RSuccess).data;
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(_sharedPref.score),
-                  score: _sharedPref.score,
+                  score: person.score,
                   reminderCounter: 0,
                   friends: person.friends,
                   pendingFriends: person.pendingFriends))
@@ -80,11 +82,20 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         List<Habit> habits = await DatabaseService().getAllHabits();
         List<Habit> newHabits = [];
 
+        double habitProgress = 1 / habits.length;
+
+        // Envio dos hábitos
         for (Habit habit in habits) {
+          habit.score = 0;
+          habit.daysDone = 0;
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
-          await (await _habitUseCase.addHabit(habit)).result((data) async {
+          await (await _habitUseCase.addHabit(habit, notSave: true)).result((data) async {
+            setState(() {
+              progress = newHabits.length / habits.length;
+            });
+
             newHabits.add(data);
 
             List<String> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
@@ -98,8 +109,26 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
               });
             }
 
+            List<DayDone> daysDone = await DatabaseService().getDaysDone(habit.oldId);
+
+            for (DayDone dayDone in daysDone) {
+              int weekDay = dayDone.date.weekday == 7 ? 0 : dayDone.date.weekday;
+              DateTime startDate = dayDone.date.subtract(Duration(days: weekDay));
+              DateTime endDate = dayDone.date.lastWeekDay();
+
+              var days = daysDone
+                  .where((e) => e.date.isAfterOrSameDay(startDate) && e.date.isBeforeOrSameDay(endDate))
+                  .map((e) => e.date)
+                  .toList();
+
+              await _habitUseCase.completeHabit(data.id, dayDone.date, true, days);
+
+              setState(() {
+                progress += (1 / daysDone.length) / habitProgress;
+              });
+            }
+
             await DatabaseService().deleteHabit(habit.oldId);
-            progress = (newHabits.length / habits.length) / 0.5;
           }, (error) async {
             await _personUseCase.logout();
             throw "Erro ao salvar os dados";

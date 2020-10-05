@@ -55,7 +55,7 @@ class HabitUseCase extends BaseUseCase {
     return person.reminderCounter;
   }
 
-  Future<Result<Habit>> addHabit(Habit habit) => safeCall(() async {
+  Future<Result<Habit>> addHabit(Habit habit, {bool notSave = false}) => safeCall(() async {
         int reminderCounter;
         if (habit.reminder != null) {
           reminderCounter = await _getReminderCounter();
@@ -69,7 +69,9 @@ class HabitUseCase extends BaseUseCase {
             habit.frequency.daysCount(),
             habit.reminder != null ? "Sim" : "Não");
 
-        _memory.habits.add(data);
+        if (!notSave) {
+          _memory.habits.add(data);
+        }
         if (habit.reminder != null) {
           await LocalNotification().addNotification(habit);
         }
@@ -200,8 +202,6 @@ class HabitUseCase extends BaseUseCase {
   }
 
   /// Days Done
-
-  // Future<Result<List<DayDone>>> getAllDayDone() => safeCall(() => FireDatabase().getAllDaysDone(id));
 
   Future<Result<List<DayDone>>> getDaysDone(String id, DateTime start, DateTime end) => safeCall(() {
         return FireDatabase().getDaysDone(id, start, end);

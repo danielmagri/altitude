@@ -166,6 +166,10 @@ class DatabaseService {
 
     var result = await db.rawQuery('SELECT * FROM reminder WHERE habit_id=$id;');
 
+    if (result == null || result.length == 0) {
+      return null;
+    }
+
     Reminder reminder = Reminder(
       type: result.first["type"],
       hour: result.first["hour"],
@@ -211,9 +215,9 @@ class DatabaseService {
     var resultWeekly = await db.rawQuery('SELECT * FROM freq_weekly WHERE habit_id=$id;');
 
     if (resultDayWeek.isNotEmpty) {
-      return Frequency.fromJson(resultDayWeek.first);
+      return Frequency.fromBD(resultDayWeek.first);
     } else if (resultWeekly.isNotEmpty) {
-      return Frequency.fromJson(resultWeekly.first);
+      return Frequency.fromBD(resultWeekly.first);
     } else {
       return null;
     }
@@ -307,20 +311,20 @@ class DatabaseService {
 
   /// Adiciona um novo hábito com sua frequência e alarmes.
   // Future<Map> addHabit(Habit habit, dynamic frequency, List<Reminder> reminders) async {
-    // DateTime now = new DateTime.now();
-    // final db = await database;
+  // DateTime now = new DateTime.now();
+  // final db = await database;
 
-    // // Inserção dos dados do hábito
-    // var id = await db.rawInsert('''INSERT INTO habit (habit_text, color, initial_date) VALUES (\'${habit.habit}\',
-    //                                                                    ${habit.color},
-    //                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
-    // // Inserção dos dados da frequência
-    // await addFrequency(id, frequency);
+  // // Inserção dos dados do hábito
+  // var id = await db.rawInsert('''INSERT INTO habit (habit_text, color, initial_date) VALUES (\'${habit.habit}\',
+  //                                                                    ${habit.color},
+  //                                                                    \'${now.year.toString()}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}\');''');
+  // // Inserção dos dados da frequência
+  // await addFrequency(id, frequency);
 
-    // // Inserção dos dados dos alarmes
-    // List<Reminder> remindersAdded = await addReminders(id, reminders);
+  // // Inserção dos dados dos alarmes
+  // List<Reminder> remindersAdded = await addReminders(id, reminders);
 
-    // return {};
+  // return {};
   // }
 
   /// Adiciona os alarmes do hábito.
@@ -375,7 +379,7 @@ class DatabaseService {
   //   final db = await database;
 
   //   await db.rawUpdate('''UPDATE habit SET habit_text=\'${habit.habit}\',
-  //                                          color=${habit.color} 
+  //                                          color=${habit.color}
   //                                          WHERE id=${habit.id};''');
 
   //   return true;
