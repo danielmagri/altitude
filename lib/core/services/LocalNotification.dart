@@ -53,4 +53,8 @@ class LocalNotification {
   Future<void> removeNotification(int id) async {
     return await flutterLocalNotificationsPlugin.cancel(id);
   }
+
+  Future<void> removeAllNotification() async {
+    return await flutterLocalNotificationsPlugin.cancelAll();
+  }
 }

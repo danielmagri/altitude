@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart' show CloudFunctions, Cloud
 
 class FireFunctions {
 
+  @deprecated
   Future<List<Person>> getPendingFriends() async {
     try {
       HttpsCallableResult result =
@@ -17,6 +18,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> friendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -27,6 +29,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> acceptRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -37,6 +40,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> declineRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -47,6 +51,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> cancelFriendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -57,6 +62,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> removeFriend(String uid) async {
     Person person = new Person(uid: uid);
     try {

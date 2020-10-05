@@ -27,28 +27,29 @@ class PersonUseCase extends BaseUseCase {
 
   Future<String> get fcmToken => FireMessaging().getToken();
 
-  Future<Result> createPerson() => safeCall(() async {
-        _memory.person = null;
-        return (await getPerson()).result((data) {
+  Future<Result> createPerson(
+          {int level, int reminderCounter, int score, List<String> friends, List<String> pendingFriends}) =>
+      safeCall(() async {
+        return (await getPerson(fromServer: true)).result((data) {
           return;
         }, (error) async {
           Person person = Person(
               name: name,
               email: email,
               fcmToken: await fcmToken,
-              friends: [],
-              level: 0,
-              pendingFriends: [],
-              reminderCounter: 0,
-              score: 0);
+              level: level ?? 0,
+              reminderCounter: reminderCounter ?? 0,
+              score: score ?? 0,
+              friends: friends ?? [],
+              pendingFriends: pendingFriends ?? []);
           await FireDatabase().createPerson(person);
           person.photoUrl = photoUrl;
           _memory.person = person;
         });
       });
 
-  Future<Result<Person>> getPerson() => safeCall(() async {
-        if (_memory.person == null) {
+  Future<Result<Person>> getPerson({bool fromServer = false}) => safeCall(() async {
+        if (_memory.person == null || fromServer) {
           var data = await FireDatabase().getPerson();
           data.photoUrl = photoUrl;
           _memory.person = data;

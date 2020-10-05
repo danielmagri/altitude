@@ -36,13 +36,7 @@ class Reminder {
   }
 
   bool hasAnyDay() {
-    return monday ||
-        tuesday ||
-        wednesday ||
-        thursday ||
-        friday ||
-        saturday ||
-        sunday;
+    return monday || tuesday || wednesday || thursday || friday || saturday || sunday;
   }
 
   static const ID = "id";

@@ -82,6 +82,10 @@ class CompetitionUseCase extends BaseUseCase {
         }
       });
 
+  Future<Result> updateCompetitor(String competitionId, String habitId) => safeCall(() async {
+        await FireDatabase().updateCompetitor(competitionId, habitId);
+      });
+
   Future<Result> removeCompetitor(Competition competition) => safeCall(() async {
         await FireDatabase().removeCompetitor(competition.id, _personUseCase.uid, competition.competitors.length == 1);
         _memory.competitions.removeWhere((element) => element.id == competition.id);
