@@ -27,10 +27,12 @@ class HabitUseCase extends BaseUseCase {
 
   // Habit
 
-  Future<Result<List<Habit>>> getHabits() => safeCall(() async {
+  Future<Result<List<Habit>>> getHabits({bool notSave = false}) => safeCall(() async {
         if (_memory.habits.isEmpty) {
           var data = await FireDatabase().getHabits();
-          _memory.habits = data;
+          if (!notSave) {
+            _memory.habits = data;
+          }
           return data;
         } else {
           return _memory.habits;

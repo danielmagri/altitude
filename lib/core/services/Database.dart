@@ -176,6 +176,14 @@ class DatabaseService {
       minute: result.first["minute"],
     );
 
+    reminder.sunday = false;
+    reminder.monday = false;
+    reminder.tuesday = false;
+    reminder.wednesday = false;
+    reminder.thursday = false;
+    reminder.friday = false;
+    reminder.saturday = false;
+
     result.forEach((element) {
       switch (element["weekday"]) {
         case 1:
@@ -245,7 +253,7 @@ class DatabaseService {
       result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
     }
 
-    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
+    List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromDB(c)).toList() : [];
     return list;
   }
 
