@@ -5,6 +5,9 @@ import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart'
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
 import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
@@ -29,12 +32,28 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   bool isPageActived = true;
 
   @override
-  initState() {
+  initState() async {
     super.initState();
+    if (await DatabaseService().existDB()) {
+      showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return TransferDataDialog(uid: FireAuth().getUid());
+          }).then((value) {
+        if (value) fetchData();
+      }).catchError(handleError);
+    } else {
+      fetchData();
+    }
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void fetchData() {
     controller.getUser();
     controller.getHabits();
     controller.fetchPendingStatus();
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -189,23 +208,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                     }),
                   ),
                 ),
-                // Container(
-                //   alignment: Alignment.centerRight,
-                //   padding: const EdgeInsets.only(right: 12, top: 24),
-                //   child: Observer(
-                //     builder: (_) => PopupMenuButton<HabitFiltersType>(
-                //       initialValue: controller.filterSelected,
-                //       onSelected: controller.selectFilter,
-                //       itemBuilder: (_) => HabitFiltersType.values
-                //           .map((type) => PopupMenuItem(value: type, child: Text(type.title)))
-                //           .toList(),
-                //       child: Row(mainAxisSize: MainAxisSize.min, children: [
-                //         Text(controller.filterSelected.title, style: TextStyle(color: AppColors.popupMenuButtonHome)),
-                //         Icon(Icons.arrow_drop_down, color: AppColors.popupMenuButtonHome),
-                //       ]),
-                //     ),
-                //   ),
-                // ),
                 Expanded(child: HabitsPanel(goHabitDetails: goHabitDetails)),
               ],
             ),

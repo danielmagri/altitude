@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
@@ -28,7 +27,6 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   final PersonUseCase _personUseCase = PersonUseCase.getInstance;
   final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
   final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
-  final SharedPref _sharedPref = SharedPref.instance;
 
   double progress;
 
@@ -54,20 +52,17 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         Result<Person> result = await _personUseCase.getPerson(fromServer: true);
 
         if (result.isError) {
-          (await _personUseCase.createPerson(
-            level: LevelControl.getLevel(_sharedPref.score),
-            score: _sharedPref.score,
-            reminderCounter: 0,
-          ))
-              .result((data) {}, (error) async {
+          (await _personUseCase.createPerson()).result((data) {}, (error) async {
             await _personUseCase.logout();
             throw "Erro ao salvar os dados";
           });
         } else {
           Person person = (result as RSuccess).data;
+          int score = (await _habitUseCase.getHabits(notSave: true)).absoluteResult().map((e) => e.score).reduce((a, b) => a+b);
+
           (await _personUseCase.createPerson(
-                  level: LevelControl.getLevel(_sharedPref.score),
-                  score: person.score,
+                  level: LevelControl.getLevel(score),
+                  score: score,
                   reminderCounter: 0,
                   friends: person.friends,
                   pendingFriends: person.pendingFriends))
@@ -84,7 +79,6 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
 
         double habitProgress = 1 / habits.length;
 
-        // Envio dos hábitos
         for (Habit habit in habits) {
           habit.score = 0;
           habit.daysDone = 0;
@@ -136,6 +130,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         }
       }
 
+      await DatabaseService().deleteDB();
       FireAnalytics().analytics.setUserId(uid);
       return true;
     } catch (e) {
