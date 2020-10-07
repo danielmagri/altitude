@@ -32,8 +32,14 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   bool isPageActived = true;
 
   @override
-  initState() async {
+  initState() {
     super.initState();
+
+    checkTransferData();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void checkTransferData() async {
     if (await DatabaseService().existDB()) {
       showDialog<bool>(
           context: context,
@@ -46,8 +52,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     } else {
       fetchData();
     }
-
-    WidgetsBinding.instance.addObserver(this);
   }
 
   void fetchData() {

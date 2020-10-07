@@ -58,7 +58,10 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           });
         } else {
           Person person = (result as RSuccess).data;
-          int score = (await _habitUseCase.getHabits(notSave: true)).absoluteResult().map((e) => e.score).reduce((a, b) => a+b);
+          int score = (await _habitUseCase.getHabits(notSave: true))
+              .absoluteResult()
+              .map((e) => e.score)
+              .reduce((a, b) => a + b);
 
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(score),
@@ -108,7 +111,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             for (DayDone dayDone in daysDone) {
               int weekDay = dayDone.date.weekday == 7 ? 0 : dayDone.date.weekday;
               DateTime startDate = dayDone.date.subtract(Duration(days: weekDay));
-              DateTime endDate = dayDone.date.lastWeekDay();
+              DateTime endDate = dayDone.date;
 
               var days = daysDone
                   .where((e) => e.date.isAfterOrSameDay(startDate) && e.date.isBeforeOrSameDay(endDate))
@@ -118,7 +121,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
               await _habitUseCase.completeHabit(data.id, dayDone.date, true, days);
 
               setState(() {
-                progress += (1 / daysDone.length) / habitProgress;
+                progress += habitProgress / daysDone.length;
               });
             }
 
