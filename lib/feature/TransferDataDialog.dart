@@ -111,7 +111,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             for (DayDone dayDone in daysDone) {
               int weekDay = dayDone.date.weekday == 7 ? 0 : dayDone.date.weekday;
               DateTime startDate = dayDone.date.subtract(Duration(days: weekDay));
-              DateTime endDate = dayDone.date;
+              DateTime endDate = dayDone.date.subtract(const Duration(days: 1));
 
               var days = daysDone
                   .where((e) => e.date.isAfterOrSameDay(startDate) && e.date.isBeforeOrSameDay(endDate))
