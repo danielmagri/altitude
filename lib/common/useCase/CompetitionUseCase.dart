@@ -9,6 +9,7 @@ import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireDatabase.dart';
+import 'package:altitude/core/services/FireFunctions.dart';
 import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
@@ -23,8 +24,8 @@ class CompetitionUseCase extends BaseUseCase {
   bool get pendingCompetitionsStatus => SharedPref.instance.pendingCompetition;
   set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
 
-  Future<Result<List<Competition>>> getCompetitions() => safeCall(() async {
-        if (_memory.competitions.isEmpty) {
+  Future<Result<List<Competition>>> getCompetitions({bool fromServer = false}) => safeCall(() async {
+        if (_memory.competitions.isEmpty || fromServer) {
           List<Competition> list = await FireDatabase().getCompetitions();
           _memory.competitions = list;
           return list;
@@ -65,7 +66,10 @@ class CompetitionUseCase extends BaseUseCase {
         Competition competition = await FireDatabase().createCompetition(
             Competition(title: title, initialDate: date, competitors: [competitor], invitations: invitations));
 
-        //TODO: Enviar notificações
+        for (String token in invitationsToken) {
+          await FireFunctions().sendNotification(
+              "Convite de competição", "${_personUseCase.name} te convidou a participar do $title", token);
+        }
 
         FireAnalytics().sendCreateCompetition(title, habit.habit, invitations.length);
 
@@ -96,7 +100,11 @@ class CompetitionUseCase extends BaseUseCase {
         Competition competition = (await getCompetition(competitionId)).absoluteResult();
         if (competition.competitors.length < MAX_COMPETITORS) {
           await FireDatabase().inviteCompetitor(competitionId, competitorId);
-          //TODO: Enviar notificações
+
+          for (String token in fcmTokens) {
+            await FireFunctions().sendNotification("Convite de competição",
+                "${_personUseCase.name} te convidou a participar do ${competition.title}", token);
+          }
         } else {
           throw "Máximo de competidores atingido.";
         }
@@ -108,7 +116,11 @@ class CompetitionUseCase extends BaseUseCase {
         if (competition.competitors.length < MAX_COMPETITORS) {
           await FireDatabase().acceptCompetitionRequest(competitionId, competitor);
           _memory.competitions.add(competition);
-          //TODO: Enviar notificações
+
+          for (Competitor friend in competition.competitors) {
+            await FireFunctions().sendNotification(
+                "Novo competidor", "${_personUseCase.name} entrou em  ${competition.title}", friend.fcmToken);
+          }
         } else {
           throw "Máximo de competidores atingido.";
         }

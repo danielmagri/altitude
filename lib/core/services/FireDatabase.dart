@@ -111,8 +111,8 @@ class FireDatabase {
     return batch.commit();
   }
 
-  Future completeHabit(String habitId, bool isAdd, int totalScore, int habitScore, int daysDoneCount, bool isLastDone,
-      DayDone dayDone, List<Pair<String, int>> competitions) {
+  Future completeHabit(
+      String habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<Pair<String, int>> competitions) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection(_DAYS_DONE);
 
@@ -133,8 +133,8 @@ class FireDatabase {
       }
 
       Map<String, dynamic> habitMap = Map();
-      habitMap.putIfAbsent(Habit.SCORE, () => habitScore);
-      habitMap.putIfAbsent(Habit.DAYS_DONE_COUNT, () => daysDoneCount);
+      habitMap.putIfAbsent(Habit.SCORE, () => FieldValue.increment(score));
+      habitMap.putIfAbsent(Habit.DAYS_DONE_COUNT, () => FieldValue.increment(isAdd ? 1 : -1));
 
       if (!date.exists && isAdd) {
         if (isLastDone) habitMap.putIfAbsent(Habit.LAST_DONE, () => dayDone.date);
@@ -149,7 +149,7 @@ class FireDatabase {
         throw "Erro desconhecido";
       }
 
-      batch.update(userDoc, {Person.SCORE: totalScore});
+      batch.update(userDoc, {Person.SCORE: FieldValue.increment(score)});
       batch.update(habitDoc, habitMap);
 
       return batch.commit();

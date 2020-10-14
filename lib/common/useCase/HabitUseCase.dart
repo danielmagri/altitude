@@ -140,9 +140,6 @@ class HabitUseCase extends BaseUseCase {
           var score =
               ScoreControl().calculateScore(isAdd ? ScoreType.ADD : ScoreType.SUBTRACT, habit.frequency, days, date);
 
-          int totalScore = await _personUseCase.getScore() + score;
-          int habitScore = habit.score + score;
-          int habitDaysDone = isAdd ? habit.daysDone + 1 : habit.daysDone - 1;
           bool isLastDone = habit.lastDone == null || habit.lastDone.isBeforeOrSameDay(date);
           DayDone dayDone = DayDone(date: date);
 
@@ -154,13 +151,12 @@ class HabitUseCase extends BaseUseCase {
           List<Pair<String, int>> competitionsScore =
               competitions.map((e) => Pair(e.id, e.getMyCompetitor().score + score)).toList();
 
-          await FireDatabase().completeHabit(
-              habitId, isAdd, totalScore, habitScore, habitDaysDone, isLastDone, dayDone, competitionsScore);
-          _personUseCase.setLocalScore(totalScore);
+          await FireDatabase().completeHabit(habitId, isAdd, score, isLastDone, dayDone, competitionsScore);
+          _personUseCase.setLocalScore(await _personUseCase.getScore() + score);
           int index = _memory.habits.indexWhere((e) => e.id == habitId);
           if (index != -1) {
-            _memory.habits[index].score = habitScore;
-            _memory.habits[index].daysDone = habitDaysDone;
+            _memory.habits[index].score = habit.score + score;
+            _memory.habits[index].daysDone = isAdd ? habit.daysDone + 1 : habit.daysDone - 1;
             if (isLastDone) _memory.habits[index].lastDone = isAdd ? date : null;
           }
 
@@ -171,7 +167,7 @@ class HabitUseCase extends BaseUseCase {
             }
           });
 
-          print("$date $isAdd - Total score: $totalScore  HabitScore: $habitScore  DaysDone: $habitDaysDone");
+          print("$date $isAdd - Score: $score  Id: $habitId");
 
           return;
         }, (error) => throw error);
@@ -204,6 +200,17 @@ class HabitUseCase extends BaseUseCase {
   }
 
   /// Days Done
+
+  Future<Result<List<DayDone>>> getAllDaysDone(List<Habit> habits) => safeCall(() async {
+        List<DayDone> list = List();
+
+        for (Habit habit in habits) {
+          list.addAll((await FireDatabase().getDaysDone(habit.id, habit.initialDate, DateTime.now().today))
+              .map((e) => DayDone(date: e.date, habitId: habit.id)));
+        }
+
+        return list;
+      });
 
   Future<Result<List<DayDone>>> getDaysDone(String id, DateTime start, DateTime end) => safeCall(() {
         return FireDatabase().getDaysDone(id, start, end);

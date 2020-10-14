@@ -4,6 +4,7 @@ import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -63,7 +64,7 @@ class _LoginPageState extends BaseState<LoginPage> {
             Container(
               width: double.maxFinite,
               child: Text(
-                "Texto do login aqui", //TODO:
+                "Entre agora e mude seus hábitos de vez! Está esperando o que?",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, height: 1.25, color: AppColors.colorAccent, fontWeight: FontWeight.bold),
               ),
@@ -96,7 +97,7 @@ class _LoginPageState extends BaseState<LoginPage> {
             const Spacer(flex: 2),
             InkWell(
                 onTap: () {
-                  //TODO:
+                  launch("https://altitude-4e5d4.firebaseapp.com/");
                 },
                 borderRadius: BorderRadius.circular(8),
                 child: Padding(
