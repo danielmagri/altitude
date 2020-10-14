@@ -29,14 +29,13 @@ abstract class _StatisticsLogicBase with Store {
     try {
       List<Habit> habits = (await _habitUseCase.getHabits()).absoluteResult().asObservable();
       int totalScore = await _personUseCase.getScore();
-      //TODO:
-      // List<DayDone> daysDone = await _habitUseCase.getAllDaysDone();
+      List<DayDone> daysDone = (await _habitUseCase.getAllDaysDone(habits)).absoluteResult();
 
-      // Map<DateTime, List<DayDone>> dateGrouped =
-      //     groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
+      Map<DateTime, List<DayDone>> dateGrouped =
+          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
 
-      // historicData.setData(await handleHistoricData(dateGrouped, habits));
-      // frequencyData.setData(handleFrequencyData(dateGrouped, habits));
+      historicData.setData(await handleHistoricData(dateGrouped, habits));
+      frequencyData.setData(handleFrequencyData(dateGrouped, habits));
       habitsData.setData(habits
           .map((e) => HabitStatisticData(e.id, e.score, e.habit, e.colorCode, totalScore))
           .toList()

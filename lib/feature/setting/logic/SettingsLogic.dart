@@ -23,7 +23,7 @@ abstract class _SettingsLogicBase with Store {
 
   @action
   Future<void> changeName(String newName) async {
-    List<String> competitionsId = (await _competitionUseCase.getCompetitions()).absoluteResult().map((e) => e.id).toList();
+    List<String> competitionsId = (await _competitionUseCase.getCompetitions(fromServer: true)).absoluteResult().map((e) => e.id).toList();
     (await _personUseCase.updateName(newName, competitionsId)).absoluteResult();
     name = newName;
   }

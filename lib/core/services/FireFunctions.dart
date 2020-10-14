@@ -2,6 +2,16 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:cloud_functions/cloud_functions.dart' show CloudFunctions, CloudFunctionsException, HttpsCallableResult;
 
 class FireFunctions {
+  Future sendNotification(String title, String body, String token) async {
+    try {
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'sendNotification')
+          .call({"title": title, "body": body, "token": token});
+    } catch (error) {
+      handleError(error, from: "sendNotification");
+      return null;
+    }
+  }
 
   @deprecated
   Future<List<Person>> getPendingFriends() async {
