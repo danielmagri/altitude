@@ -46,7 +46,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       if (!await DatabaseService().existDB()) {
         (await _personUseCase.createPerson()).result((data) {}, (error) async {
           await _personUseCase.logout();
-          throw "Erro ao salvar os dados";
+          throw "Erro ao salvar os dados (1)";
         });
       } else {
         Result<Person> result = await _personUseCase.getPerson(fromServer: true);
@@ -54,14 +54,12 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         if (result.isError) {
           (await _personUseCase.createPerson()).result((data) {}, (error) async {
             await _personUseCase.logout();
-            throw "Erro ao salvar os dados";
+            throw "Erro ao salvar os dados (2)";
           });
         } else {
           Person person = (result as RSuccess).data;
           int score = (await _habitUseCase.getHabits(notSave: true))
-              .absoluteResult()
-              .map((e) => e.score)
-              .reduce((a, b) => a + b);
+              .result((data) => data.map((e) => e.score).reduce((a, b) => a + b), (error) => 0);
 
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(score),
@@ -71,7 +69,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                   pendingFriends: person.pendingFriends))
               .result((data) {}, (error) async {
             await _personUseCase.logout();
-            throw "Erro ao salvar os dados";
+            throw "Erro ao salvar os dados (3)";
           });
         }
 
@@ -102,7 +100,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                 await DatabaseService().removeCompetition(competitionId);
               }, (error) async {
                 await _personUseCase.logout();
-                throw "Erro ao salvar os dados";
+                throw "Erro ao salvar os dados (4)";
               });
             }
 
@@ -128,7 +126,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {
             await _personUseCase.logout();
-            throw "Erro ao salvar os dados";
+            throw "Erro ao salvar os dados (5)";
           });
         }
       }
@@ -138,7 +136,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       return true;
     } catch (e) {
       await _personUseCase.logout();
-      throw "Erro ao salvar os dados";
+      throw "Erro ao salvar os dados (0)";
     }
   }
 
