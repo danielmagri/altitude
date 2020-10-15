@@ -51,7 +51,7 @@ class PersonUseCase extends BaseUseCase {
   Future<Result<Person>> getPerson({bool fromServer = false}) => safeCall(() async {
         if (_memory.person == null || fromServer) {
           var data = await FireDatabase().getPerson();
-          data.photoUrl = photoUrl;
+          data.photoUrl = photoUrl ?? "";
           _memory.person = data;
           return data;
         } else {
