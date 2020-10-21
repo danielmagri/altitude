@@ -4,6 +4,7 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/core/model/Pair.dart';
 import 'package:altitude/core/services/FireAuth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
@@ -61,6 +62,31 @@ class FireDatabase {
     CollectionReference daysDoneCollection = habitDoc.collection(_DAYS_DONE);
     for (DayDone dayDone in daysDone) {
       batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
+    }
+
+    return batch.commit();
+  }
+
+  Future updateTotalScore(int score, int level) {
+    return userDoc.update({Person.SCORE: score, Person.LEVEL: level});
+  }
+
+  Future updateHabitScore(String habitId, int score, List<Pair<String, int>> competitionsScore) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    DocumentReference habitDoc = habitsCollection.doc(habitId);
+
+    batch.update(habitDoc, {Habit.SCORE: score});
+
+    for (Pair<String, int> item in competitionsScore) {
+      batch.set(
+          competitionCollection.doc(item.first),
+          {
+            Competition.COMPETITORS: {
+              FireAuth().getUid(): {Competitor.SCORE: item.second}
+            }
+          },
+          SetOptions(merge: true));
     }
 
     return batch.commit();

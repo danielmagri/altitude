@@ -74,7 +74,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         await LocalNotification().removeAllNotification();
 
         List<Habit> habits = await DatabaseService().getAllHabits();
-        List<Habit> newHabits = [];
+        int counter = 0;
 
         for (Habit habit in habits) {
           habit.score = 0;
@@ -87,15 +87,11 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           habit.score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
 
           await (await _habitUseCase.transferHabit(habit, competitionsId, daysDone)).result((data) async {
-            newHabits.add(data);
+            counter++;
 
             setState(() {
-              progress = newHabits.length / habits.length;
+              progress = counter / habits.length;
             });
-
-            for (String competitionId in competitionsId) {
-              await DatabaseService().removeCompetition(competitionId);
-            }
 
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {

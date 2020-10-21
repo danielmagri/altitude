@@ -1,4 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/core/model/Pair.dart';
 import 'package:altitude/core/services/LocalNotification.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
@@ -26,14 +28,17 @@ class HabitUseCase extends BaseUseCase {
 
   // Transfer data
 
-  Future<Result> transferHabit(Habit habit, List<String> competitionsId, List<DayDone> daysDone) =>
-      safeCall(() async {
+  Future<Result> transferHabit(Habit habit, List<String> competitionsId, List<DayDone> daysDone) => safeCall(() async {
         int reminderCounter;
         if (habit.reminder != null) {
           reminderCounter = await _getReminderCounter();
           habit.reminder.id = reminderCounter;
         }
-        
+
+        if (habit.reminder != null) {
+          await LocalNotification().addNotification(habit);
+        }
+
         if (daysDone.length > 450) {
           String id =
               await FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone.sublist(0, 450));
@@ -41,6 +46,36 @@ class HabitUseCase extends BaseUseCase {
         } else {
           return FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone);
         }
+      });
+
+  Future<Result> recalculateScore() => safeCall(() async {
+        int totalScore = 0;
+        _memory.clear();
+
+        List<Habit> habits = await FireDatabase().getHabits();
+        List<Competition> competitions = await FireDatabase().getCompetitions();
+
+        for (Habit habit in habits) {
+          List<DayDone> daysDone = await FireDatabase().getAllDaysDone(habit.id);
+
+          int score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
+          totalScore += score;
+
+          List<Pair<String, int>> competitionsScore = List();
+
+          for (Competition competition in competitions.where((e) => e.getMyCompetitor().habitId == habit.id).toList()) {
+            int competitionScore = ScoreControl().scoreEarnedTotal(habit.frequency,
+                daysDone.where((e) => e.date.isAfterOrSameDay(competition.initialDate)).map((e) => e.date).toList());
+
+            competitionsScore.add(Pair(competition.id, competitionScore));
+          }
+
+          await FireDatabase().updateHabitScore(habit.id, score, competitionsScore);
+        }
+
+        await FireDatabase().updateTotalScore(totalScore, LevelControl.getLevel(totalScore));
+
+        _memory.clear();
       });
 
   // Habit
@@ -75,7 +110,7 @@ class HabitUseCase extends BaseUseCase {
     return person.reminderCounter;
   }
 
-  Future<Result<Habit>> addHabit(Habit habit, {bool notSave = false}) => safeCall(() async {
+  Future<Result<Habit>> addHabit(Habit habit) => safeCall(() async {
         int reminderCounter;
         if (habit.reminder != null) {
           reminderCounter = await _getReminderCounter();
@@ -89,9 +124,8 @@ class HabitUseCase extends BaseUseCase {
             habit.frequency.daysCount(),
             habit.reminder != null ? "Sim" : "Não");
 
-        if (!notSave) {
-          _memory.habits.add(data);
-        }
+        _memory.habits.add(data);
+
         if (habit.reminder != null) {
           await LocalNotification().addNotification(habit);
         }
@@ -221,8 +255,8 @@ class HabitUseCase extends BaseUseCase {
         List<DayDone> list = List();
 
         for (Habit habit in habits) {
-          list.addAll((await FireDatabase().getDaysDone(habit.id, habit.initialDate, DateTime.now().today))
-              .map((e) => DayDone(date: e.date, habitId: habit.id)));
+          list.addAll(
+              (await FireDatabase().getAllDaysDone(habit.id)).map((e) => DayDone(date: e.date, habitId: habit.id)));
         }
 
         return list;

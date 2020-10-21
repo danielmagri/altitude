@@ -1,4 +1,5 @@
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:mobx/mobx.dart';
 part 'SettingsLogic.g.dart';
@@ -7,6 +8,7 @@ class SettingsLogic = _SettingsLogicBase with _$SettingsLogic;
 
 abstract class _SettingsLogicBase with Store {
   final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
   final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
 
   @observable
@@ -32,5 +34,9 @@ abstract class _SettingsLogicBase with Store {
   Future<void> logout() async {
     await _personUseCase.logout();
     isLogged = false;
+  }
+
+  Future recalculateScore() async {
+    return (await _habitUseCase.recalculateScore()).absoluteResult();
   }
 }

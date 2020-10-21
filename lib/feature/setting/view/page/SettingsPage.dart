@@ -1,7 +1,6 @@
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
-import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
@@ -98,6 +97,33 @@ class _SettingsPageState extends BaseState<SettingsPage> {
     }
   }
 
+  void recalculateScore() {
+    showDialog(
+      context: context,
+      builder: (_) => BaseTextDialog(
+        title: "Pontuação",
+        body: "Deseja recalcular sua pontuação?",
+        action: <Widget>[
+          FlatButton(
+            child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FlatButton(
+            child: const Text("Sim", style: TextStyle(fontSize: 17)),
+            onPressed: () async {
+              showLoading(true);
+              controller.recalculateScore().then((_) {
+                showLoading(false);
+                navigatePop();
+                showToast("Pontuação recalculada.");
+              }).catchError(handleError);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,6 +152,12 @@ class _SettingsPageState extends BaseState<SettingsPage> {
             title: const Text("Ajuda"),
             onTap: () => navigatePush('help'),
           ),
+          const Divider(),
+          ListTile(
+            title: const Text("Minha pontuação está errada"),
+            onTap: recalculateScore,
+          ),
+          const Divider(),
           Observer(builder: (_) {
             return ListTile(
               title: const Text("Logout"),
