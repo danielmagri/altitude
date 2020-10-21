@@ -1,3 +1,4 @@
+import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/services/Database.dart';
@@ -6,13 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/services/LocalNotification.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class TransferDataDialog extends StatefulWidget {
   const TransferDataDialog({Key key, @required this.uid}) : super(key: key);
@@ -26,7 +25,6 @@ class TransferDataDialog extends StatefulWidget {
 class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   final PersonUseCase _personUseCase = PersonUseCase.getInstance;
   final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
 
   double progress;
 
@@ -59,7 +57,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         } else {
           Person person = (result as RSuccess).data;
           int score = (await _habitUseCase.getHabits(notSave: true))
-              .result((data) => data.map((e) => e.score).reduce((a, b) => a + b), (error) => 0);
+              .result((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a + b), (error) => 0);
 
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(score),
@@ -78,55 +76,31 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         List<Habit> habits = await DatabaseService().getAllHabits();
         List<Habit> newHabits = [];
 
-        double habitProgress = 1 / habits.length;
-
         for (Habit habit in habits) {
           habit.score = 0;
-          habit.daysDone = 0;
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
-          await (await _habitUseCase.addHabit(habit, notSave: true)).result((data) async {
+          List<String> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
+          List<DayDone> daysDone = await DatabaseService().getDaysDone(habit.oldId);
+          habit.daysDone = daysDone.length;
+          habit.score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
+
+          await (await _habitUseCase.transferHabit(habit, competitionsId, daysDone)).result((data) async {
+            newHabits.add(data);
+
             setState(() {
               progress = newHabits.length / habits.length;
             });
 
-            newHabits.add(data);
-
-            List<String> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
-
             for (String competitionId in competitionsId) {
-              await (await _competitionUseCase.updateCompetitor(competitionId, data.id)).result((data) async {
-                await DatabaseService().removeCompetition(competitionId);
-              }, (error) async {
-                await _personUseCase.logout();
-                throw "Erro ao salvar os dados (4)";
-              });
-            }
-
-            List<DayDone> daysDone = await DatabaseService().getDaysDone(habit.oldId);
-
-            for (DayDone dayDone in daysDone) {
-              int weekDay = dayDone.date.weekday == 7 ? 0 : dayDone.date.weekday;
-              DateTime startDate = dayDone.date.subtract(Duration(days: weekDay));
-              DateTime endDate = dayDone.date.subtract(const Duration(days: 1));
-
-              var days = daysDone
-                  .where((e) => e.date.isAfterOrSameDay(startDate) && e.date.isBeforeOrSameDay(endDate))
-                  .map((e) => e.date)
-                  .toList();
-
-              await _habitUseCase.completeHabit(data.id, dayDone.date, true, days);
-
-              setState(() {
-                progress += habitProgress / daysDone.length;
-              });
+              await DatabaseService().removeCompetition(competitionId);
             }
 
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {
             await _personUseCase.logout();
-            throw "Erro ao salvar os dados (5)";
+            throw "Erro ao salvar os dados (4)";
           });
         }
       }
