@@ -4,7 +4,6 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/core/model/Pair.dart';
 import 'package:altitude/core/services/FireAuth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
@@ -21,6 +20,51 @@ class FireDatabase {
   DocumentReference get userDoc => userCollection.doc(FireAuth().getUid());
   CollectionReference get habitsCollection => userDoc.collection(_HABITS);
   CollectionReference get competitionCollection => firestore.collection(_COMPETITIONS);
+
+  // TRANSFER DATA
+
+  Future<String> transferHabit(Habit habit, int reminderCounter, List<String> competitionsId, List<DayDone> daysDone) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    DocumentReference doc = habitsCollection.doc();
+    habit.id = doc.id;
+    batch.set(doc, habit.toJson());
+    if (reminderCounter != null) {
+      batch.update(userDoc, {Person.REMINDER_COUNTER: reminderCounter});
+    }
+
+    for (String competitionId in competitionsId) {
+      batch.set(
+          competitionCollection.doc(competitionId),
+          {
+            Competition.COMPETITORS: {
+              FireAuth().getUid(): {Competitor.HABIT_ID: habit.id}
+            }
+          },
+          SetOptions(merge: true));
+    }
+
+    CollectionReference daysDoneCollection = doc.collection(_DAYS_DONE);
+    for (DayDone dayDone in daysDone) {
+      batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
+    }
+
+    batch.update(userDoc, {Person.SCORE: FieldValue.increment(habit.score)});
+
+    return batch.commit().then((value) => doc.id);
+  }
+
+  Future transferDayDonePlus(String habitId, List<DayDone> daysDone) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    DocumentReference habitDoc = habitsCollection.doc(habitId);
+    CollectionReference daysDoneCollection = habitDoc.collection(_DAYS_DONE);
+    for (DayDone dayDone in daysDone) {
+      batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
+    }
+
+    return batch.commit();
+  }
 
   // PERSON
 
@@ -112,7 +156,7 @@ class FireDatabase {
   }
 
   Future completeHabit(
-      String habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<Pair<String, int>> competitions) {
+      String habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<String> competitions) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection(_DAYS_DONE);
 
@@ -120,12 +164,12 @@ class FireDatabase {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       if (competitions != null) {
-        for (Pair<String, int> item in competitions) {
+        for (String item in competitions) {
           batch.set(
-              competitionCollection.doc(item.first),
+              competitionCollection.doc(item),
               {
                 Competition.COMPETITORS: {
-                  FireAuth().getUid(): {Competitor.SCORE: item.second}
+                  FireAuth().getUid(): {Competitor.SCORE: FieldValue.increment(score)}
                 }
               },
               SetOptions(merge: true));
@@ -254,7 +298,7 @@ class FireDatabase {
   Future updateCompetitor(String competitionId, String habitId) {
     return competitionCollection.doc(competitionId).set({
       Competition.COMPETITORS: {
-        FireAuth().getUid(): {Competitor.HABIT_ID: habitId, Competitor.SCORE: 0}
+        FireAuth().getUid(): {Competitor.HABIT_ID: habitId}
       }
     }, SetOptions(merge: true));
   }

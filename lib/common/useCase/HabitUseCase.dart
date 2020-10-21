@@ -9,7 +9,6 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
-import 'package:altitude/core/model/Pair.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/services/FireDatabase.dart';
@@ -24,6 +23,25 @@ class HabitUseCase extends BaseUseCase {
   final Memory _memory = Memory.getInstance;
   final PersonUseCase _personUseCase = PersonUseCase.getInstance;
   final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+
+  // Transfer data
+
+  Future<Result> transferHabit(Habit habit, List<String> competitionsId, List<DayDone> daysDone) =>
+      safeCall(() async {
+        int reminderCounter;
+        if (habit.reminder != null) {
+          reminderCounter = await _getReminderCounter();
+          habit.reminder.id = reminderCounter;
+        }
+        
+        if (daysDone.length > 450) {
+          String id =
+              await FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone.sublist(0, 450));
+          return FireDatabase().transferDayDonePlus(id, daysDone.sublist(450, daysDone.length));
+        } else {
+          return FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone);
+        }
+      });
 
   // Habit
 
@@ -148,10 +166,8 @@ class HabitUseCase extends BaseUseCase {
               .where((e) => e.getMyCompetitor().habitId == habitId && e.initialDate.isBeforeOrSameDay(date))
               .toList();
 
-          List<Pair<String, int>> competitionsScore =
-              competitions.map((e) => Pair(e.id, e.getMyCompetitor().score + score)).toList();
-
-          await FireDatabase().completeHabit(habitId, isAdd, score, isLastDone, dayDone, competitionsScore);
+          await FireDatabase()
+              .completeHabit(habitId, isAdd, score, isLastDone, dayDone, competitions.map((e) => e.id).toList());
           _personUseCase.setLocalScore(await _personUseCase.getScore() + score);
           int index = _memory.habits.indexWhere((e) => e.id == habitId);
           if (index != -1) {
