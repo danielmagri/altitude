@@ -105,11 +105,11 @@ class _SettingsPageState extends BaseState<SettingsPage> {
         body: "Deseja recalcular sua pontuação?",
         action: <Widget>[
           FlatButton(
-            child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            child: const Text("Não", style: TextStyle(fontSize: 17)),
             onPressed: () => Navigator.pop(context),
           ),
           FlatButton(
-            child: const Text("Sim", style: TextStyle(fontSize: 17)),
+            child: const Text("Sim", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
             onPressed: () async {
               showLoading(true);
               controller.recalculateScore().then((_) {
