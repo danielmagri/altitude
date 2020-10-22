@@ -48,6 +48,11 @@ class HabitUseCase extends BaseUseCase {
         }
       });
 
+      Future<Result> updateTotalScore(int score) => safeCall(() {
+        _memory.clear();
+        return FireDatabase().updateTotalScore(score, LevelControl.getLevel(score));
+      });
+
   Future<Result> recalculateScore() => safeCall(() async {
         int totalScore = 0;
         _memory.clear();

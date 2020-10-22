@@ -49,6 +49,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       } else {
         Result<Person> result = await _personUseCase.getPerson(fromServer: true);
 
+        int score = 0;
         if (result.isError) {
           (await _personUseCase.createPerson()).result((data) {}, (error) async {
             await _personUseCase.logout();
@@ -56,7 +57,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           });
         } else {
           Person person = (result as RSuccess).data;
-          int score = (await _habitUseCase.getHabits(notSave: true))
+          score = (await _habitUseCase.getHabits(notSave: true))
               .result((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a + b), (error) => 0);
 
           (await _personUseCase.createPerson(
@@ -85,6 +86,8 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           habit.daysDone = daysDone.length;
           habit.score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
 
+          score += habit.score;
+
           await (await _habitUseCase.transferHabit(habit, competitionsId, daysDone)).result((data) async {
             counter++;
 
@@ -98,6 +101,8 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             throw "Erro ao salvar os dados (4)";
           });
         }
+
+        await _habitUseCase.updateTotalScore(score);
       }
 
       await DatabaseService().deleteDB();
@@ -130,7 +135,8 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                 const SizedBox(height: 8),
                 const Text("Por favor não feche o app", style: TextStyle(fontSize: 11)),
                 const SizedBox(height: 4),
-                const Text("Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.", style: TextStyle(fontSize: 11)),
+                const Text("Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.",
+                    style: TextStyle(fontSize: 11)),
               ]),
             ),
           )

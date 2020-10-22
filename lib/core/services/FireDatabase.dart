@@ -50,8 +50,6 @@ class FireDatabase {
       batch.set(daysDoneCollection.doc(dayDone.dateFormatted), dayDone.toJson());
     }
 
-    batch.update(userDoc, {Person.SCORE: FieldValue.increment(habit.score)});
-
     return batch.commit().then((value) => doc.id);
   }
 
