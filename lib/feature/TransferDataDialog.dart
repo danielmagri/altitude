@@ -77,7 +77,6 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         int counter = 0;
 
         for (Habit habit in habits) {
-          habit.score = 0;
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
@@ -129,7 +128,9 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                 const SizedBox(height: 16),
                 const Text("Carregando...."),
                 const SizedBox(height: 8),
-                const Text("Por favor não feche o app", style: TextStyle(fontSize: 12)),
+                const Text("Por favor não feche o app", style: TextStyle(fontSize: 11)),
+                const SizedBox(height: 4),
+                const Text("Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.", style: TextStyle(fontSize: 11)),
               ]),
             ),
           )
