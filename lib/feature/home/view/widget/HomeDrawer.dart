@@ -43,7 +43,12 @@ import 'package:flutter/material.dart'
         required;
 
 class HomeDrawer extends StatelessWidget {
-  HomeDrawer({Key key, @required this.goFriends, @required this.goLearn, @required this.goCompetition, @required this.goSettings})
+  HomeDrawer(
+      {Key key,
+      @required this.goFriends,
+      @required this.goLearn,
+      @required this.goCompetition,
+      @required this.goSettings})
       : controller = GetIt.I.get<HomeLogic>(),
         super(key: key);
 
@@ -129,8 +134,8 @@ class HomeDrawer extends StatelessWidget {
                           height: 40,
                           decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                           alignment: Alignment.center,
-                          child: data.imageUrl.isNotEmpty
-                              ? ClipRRect(borderRadius: BorderRadius.circular(30), child: Image.network(data.imageUrl))
+                          child: data.photoUrl.isNotEmpty
+                              ? ClipRRect(borderRadius: BorderRadius.circular(30), child: Image.network(data.photoUrl))
                               : const Icon(Icons.person, size: 32),
                         ),
                         const SizedBox(width: 8),

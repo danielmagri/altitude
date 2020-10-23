@@ -1,44 +1,45 @@
-import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
+import "package:collection/collection.dart";
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
-import "package:collection/collection.dart";
 import 'package:mobx/mobx.dart';
 part 'StatisticsLogic.g.dart';
 
 class StatisticsLogic = _StatisticsLogicBase with _$StatisticsLogic;
 
 abstract class _StatisticsLogicBase with Store {
+  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+
   DataState<ObservableList<HabitStatisticData>> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
   DataState<List<FrequencyStatisticData>> frequencyData = DataState();
 
   @observable
-  int selectedId;
+  String selectedId;
 
   @action
   Future<void> fetchData() async {
-    if (SharedPref.instance.pendingStatistic) {
-      SharedPref.instance.pendingStatistic = false;
-    }
-
     try {
-      List<Habit> habits = (await HabitsControl().getAllHabits()).asObservable();
-      List<DayDone> daysDone = await HabitsControl().getAllDaysDone();
+      List<Habit> habits = (await _habitUseCase.getHabits()).absoluteResult().asObservable();
+      int totalScore = await _personUseCase.getScore();
+      List<DayDone> daysDone = (await _habitUseCase.getAllDaysDone(habits)).absoluteResult();
 
       Map<DateTime, List<DayDone>> dateGrouped =
-          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.dateDone.year, e.dateDone.month));
+          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
 
       historicData.setData(await handleHistoricData(dateGrouped, habits));
       frequencyData.setData(handleFrequencyData(dateGrouped, habits));
-      habitsData
-          .setData(habits.map((e) => HabitStatisticData(e.id, e.score, e.habit, e.color)).toList().asObservable());
+      habitsData.setData(habits
+          .map((e) => HabitStatisticData(e.id, e.score, e.habit, e.colorCode, totalScore))
+          .toList()
+          .asObservable());
     } catch (error) {
       habitsData.setError(error);
       historicData.setError(error);
@@ -48,14 +49,6 @@ abstract class _StatisticsLogicBase with Store {
 
   Future<List<HistoricStatisticData>> handleHistoricData(
       Map<DateTime, List<DayDone>> dateGrouped, List<Habit> habits) async {
-    Map<int, Frequency> frequencies = Map();
-
-    // Coleta a frequencia de todos os hábitos
-    for (Habit habit in habits) {
-      Frequency frequency = await HabitsControl().getFrequency(habit.id);
-      frequencies.putIfAbsent(habit.id, () => frequency);
-    }
-
     List<HistoricStatisticData> dayHistoric = List();
     int currentYear = 0;
     int lastMonth = 0;
@@ -63,13 +56,14 @@ abstract class _StatisticsLogicBase with Store {
     // Passa por cada grupo de mês
     dateGrouped.forEach((key, value) {
       // Separa o grupo por hábitos para somar a pontuação total
-      Map<int, List<DayDone>> dayGroupedHabit = groupBy<DayDone, int>(value, (e) => e.habitId);
+      Map<String, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String>(value, (e) => e.habitId);
       Map<Habit, int> habitsMap = Map();
       // Faz o calcula da pontuação total
       dayGroupedHabit.forEach((key, value) {
         Habit habit = habits.firstWhere((e) => e.id == key, orElse: () => null);
         if (habit != null) {
-          habitsMap.putIfAbsent(habit, () => ScoreControl().scoreEarnedTotal(frequencies[key], value));
+          habitsMap.putIfAbsent(
+              habit, () => ScoreControl().scoreEarnedTotal(habit.frequency, value.map((e) => e.date).toList()));
         }
       });
 
@@ -104,8 +98,8 @@ abstract class _StatisticsLogicBase with Store {
 
     dateGrouped.forEach((key, value) {
       Map<DateTime, List<DayDone>> dayGrouped =
-          groupBy<DayDone, DateTime>(value, (e) => DateTime(e.dateDone.year, e.dateDone.month, e.dateDone.day));
-      Map<int, List<DayDone>> dayGroupedHabit = groupBy<DayDone, int>(value, (e) => e.habitId);
+          groupBy<DayDone, DateTime>(value, (e) => DateTime(e.date.year, e.date.month, e.date.day));
+      Map<String, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String>(value, (e) => e.habitId);
 
       Map<Habit, List<int>> habitsMap = Map();
       dayGroupedHabit.forEach((key, value) {
@@ -114,7 +108,7 @@ abstract class _StatisticsLogicBase with Store {
           habitsMap.putIfAbsent(
               habit,
               () => List.generate(
-                  7, (i) => value.where((e) => e.dateDone.weekday == i || (e.dateDone.weekday == 7 && i == 0)).length));
+                  7, (i) => value.where((e) => e.date.weekday == i || (e.date.weekday == 7 && i == 0)).length));
         }
       });
 
@@ -145,7 +139,7 @@ abstract class _StatisticsLogicBase with Store {
   }
 
   @action
-  void selectHabit(int id) {
+  void selectHabit(String id) {
     if (selectedId != null) {
       habitsData.data.firstWhere((e) => e.id == selectedId).selected = false;
     }

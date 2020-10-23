@@ -8,7 +8,7 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/view/dialog/AddCompetitorsDialog.dart';
 import 'package:altitude/feature/competition/view/dialog/CompetitorDetailsDialog.dart';
@@ -37,6 +37,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
     super.initState();
 
     controller.title = widget.arguments.competition.title;
+    controller.competition = widget.arguments.competition;
 
     showInitialTutorial();
   }

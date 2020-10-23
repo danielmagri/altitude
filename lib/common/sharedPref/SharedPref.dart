@@ -15,21 +15,8 @@ class SharedPref extends SharedPrefHandler {
   int get version => getInt(VERSION) ?? 0;
   set version(int value) => saveInt(VERSION, value);
 
-  // Name
-  String get name => getString(NAME);
-  set name(String value) => saveString(NAME, value);
-
   // Score
   int get score => getInt(SCORE) ?? 0;
-  void addscore(int value) => saveInt(SCORE, score + value);
-
-  // Level
-  int get level => getInt(LEVEL) ?? 0;
-  set level(int value) => saveInt(LEVEL, value);
-
-  // Habit filters
-  int get habitFilters => getInt(HABIT_FILTERS) ?? 1;
-  set habitFilters(int value) => saveInt(HABIT_FILTERS, value);
 
   // Pending Friends
   bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
@@ -43,11 +30,7 @@ class SharedPref extends SharedPrefHandler {
   int get pendingLearn => getInt(NEW_LEARN_TEXT) ?? 0;
   set pendingLearn(int value) => saveInt(NEW_LEARN_TEXT, value);
 
-  //TEMPORARY
-  // Pending Statistic view
-  bool get pendingStatistic => getBool(PENDING_STATISTICS) ?? true;
-  set pendingStatistic(bool value) => saveBool(PENDING_STATISTICS, value);
-
+  // TUTORIAL
   // Habit Tutorial
   bool get habitTutorial => getBool(HABIT_TUTORIAL) ?? false;
   set habitTutorial(bool value) => saveBool(HABIT_TUTORIAL, value);

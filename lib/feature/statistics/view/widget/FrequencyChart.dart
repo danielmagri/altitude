@@ -7,9 +7,9 @@ import 'package:flutter/material.dart'
         Alignment,
         AlignmentDirectional,
         Axis,
+        BoxShape,
         BouncingScrollPhysics,
         BoxDecoration,
-        BoxShape,
         Colors,
         Column,
         Container,
@@ -34,7 +34,7 @@ class FrequencyChart extends StatelessWidget {
   FrequencyChart({Key key, @required this.list, this.selectedHabitId}) : super(key: key);
 
   final List<FrequencyStatisticData> list;
-  final int selectedHabitId;
+  final String selectedHabitId;
 
   static const int linesCount = 8;
   static const List<String> weekday = const ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
@@ -97,7 +97,7 @@ class FrequencyCircle extends StatelessWidget {
 
   final FrequencyStatisticData data;
   final double space;
-  final int selectedHabitId;
+  final String selectedHabitId;
 
   List<Widget> _content() {
     List<Widget> content = List();
@@ -127,7 +127,7 @@ class FrequencyCircle extends StatelessWidget {
               child: Container(
                 height: size,
                 width: size,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.habitColor.withAlpha(alpha)),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.color.withAlpha(alpha)),
               )));
         });
       }

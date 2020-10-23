@@ -4,20 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
-    show
-        Animation,
-        BuildContext,
-        Color,
-        Colors,
-        CurvedAnimation,
-        Curves,
-        FadeTransition,
-        Navigator,
-        PageRouteBuilder,
-        State,
-        StatefulWidget,
-        Widget,
-        protected;
+    show Animation, BuildContext, Color, Colors, CurvedAnimation, Curves, FadeTransition, Navigator, PageRouteBuilder, Route, State, StatefulWidget, Widget, protected;
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
@@ -47,6 +34,11 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   @protected
   void navigatePop<R>({R result}) {
     Navigator.pop<R>(context, result);
+  }
+
+  @protected
+  void navigateRemoveUntil(String route) {
+    Navigator.of(context).pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
   }
 
   @protected
@@ -100,7 +92,10 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
         showToast(error.message);
         return;
       }
+    } else if (error is String) {
+      showToast(error);
+    } else {
+      showToast("Ocorreu um erro");
     }
-    showToast("Ocorreu um erro");
   }
 }

@@ -6,13 +6,12 @@ import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
-import 'package:altitude/feature/habitDetails/view/widgets/competitionWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/cueWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/headerWidget.dart';
@@ -43,7 +42,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   void initState() {
     super.initState();
 
-    controller.fetchData(widget.arguments.id, widget.arguments.color).catchError(handleError);
+    controller.fetchData(widget.arguments.id, widget.arguments.color);
 
     showInitialTutorial();
   }
@@ -99,8 +98,12 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
 
   @override
   void onPageBack(Object value) {
-    setState(() {});
-    super.onPageBack(value);
+    if (value is bool && !value) {
+      navigatePop();
+    } else {
+      setState(() {});
+      super.onPageBack(value);
+    }
   }
 
   Future<bool> onBackPress() {
@@ -117,7 +120,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
       if (donePageType == DonePageType.Calendar &&
           add &&
           SharedPref.instance.alarmTutorial < 2 &&
-          controller.reminders.data.isEmpty) {
+          controller.reminders.data.hasAnyDay()) {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         navigateSmooth(
@@ -147,9 +150,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
     controller.switchPanelType(BottomSheetType.NONE);
   }
 
-  void goEditHabitPage() {
-    var arguments = EditHabitPageArguments(controller.habit.data, controller.frequency.data, controller.reminders.data,
-        controller.competitions.data.isNotEmpty);
+  void goEditHabitPage() async {
+    var arguments = EditHabitPageArguments(controller.habit.data, await controller.hasCompetition());
     navigatePush('editHabit', arguments: arguments);
   }
 
@@ -200,7 +202,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                           () =>
                               const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
                           (data) => IconButton(
-                              icon: Icon(data.isNotEmpty ? Icons.alarm_on : Icons.add_alarm,
+                              icon: Icon(data != null && data.hasAnyDay() ? Icons.alarm_on : Icons.add_alarm,
                                   size: 25, color: controller.habitColor),
                               onPressed: () => openBottomSheet(BottomSheetType.REMINDER)),
                           (error) => const SizedBox(),
@@ -208,11 +210,8 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                       ),
                       Observer(
                         builder: (_) => controller.habit.handleState(
-                          () => const Skeleton(
-                            width: 40,
-                            height: 40,
-                            margin: const EdgeInsets.only(bottom: 4, right: 8),
-                          ),
+                          () =>
+                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
                           (data) => IconButton(
                             icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
                             onPressed: goEditHabitPage,
@@ -278,15 +277,6 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                 //     onTap: goBuyBook),
                 // const SizedBox(height: 16),
                 CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
-                const SizedBox(height: 16),
-                Observer(
-                  builder: (_) => controller.competitions.handleState(
-                    () => const Skeleton(
-                        width: double.maxFinite, height: 130, margin: EdgeInsets.symmetric(horizontal: 8)),
-                    (data) => data.isEmpty ? CompetitionWidget(goCompetition: competition) : const SizedBox(),
-                    (error) => const SizedBox(),
-                  ),
-                ),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
                 const SizedBox(height: 48),

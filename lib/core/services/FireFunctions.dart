@@ -1,65 +1,19 @@
-import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:cloud_functions/cloud_functions.dart' show CloudFunctions, CloudFunctionsException, HttpsCallableResult;
-import 'package:altitude/core/services/FireMenssaging.dart';
 
 class FireFunctions {
-  Future<bool> newUser(String name, String email, int score) async {
-    Person person = Person(name: name, email: email, score: score, fcmToken: await FireMessaging().getToken());
-
+  Future sendNotification(String title, String body, String token) async {
     try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'newUser').call(person.toJson());
-      return true;
+      await CloudFunctions.instance
+          .getHttpsCallable(functionName: 'sendNotification')
+          .call({"title": title, "body": body, "token": token});
     } catch (error) {
-      handleError(error, from: "newUser");
-      return false;
-    }
-  }
-
-  Future<bool> setScore(int score, Map<String, int> competitions, Map<String, int> oldScores) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("score", () => score);
-    map.putIfAbsent("competitions", () => competitions);
-    map.putIfAbsent("old_scores", () => oldScores);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateUser').call(map);
-      return true;
-    } catch (error) {
-      handleError(error, from: "setScore");
-      return false;
-    }
-  }
-
-  Future<bool> updateUser(List<String> competitions, {String name, int color}) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("display_name", () => name);
-    map.putIfAbsent("color", () => color);
-    map.putIfAbsent("competitions", () => competitions);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateUser').call(map);
-      return true;
-    } catch (error) {
-      handleError(error, from: "updateUser");
-      return false;
-    }
-  }
-
-  Future<List<Person>> getFriends() async {
-    try {
-      HttpsCallableResult result = await CloudFunctions.instance.getHttpsCallable(functionName: 'getFriends').call();
-
-      List data = result.data;
-
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "getFriends");
+      handleError(error, from: "sendNotification");
       return null;
     }
   }
 
+  @deprecated
   Future<List<Person>> getPendingFriends() async {
     try {
       HttpsCallableResult result =
@@ -74,21 +28,7 @@ class FireFunctions {
     }
   }
 
-  Future<List<Person>> searchEmail(String email) async {
-    Person person = new Person(email: email);
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'searchEmail').call(person.toJson());
-
-      List data = result.data;
-
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "searchEmail");
-      return null;
-    }
-  }
-
+  @deprecated
   Future<void> friendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -99,6 +39,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> acceptRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -109,6 +50,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> declineRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -119,6 +61,7 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> cancelFriendRequest(String uid) async {
     Person person = new Person(uid: uid);
     try {
@@ -129,173 +72,13 @@ class FireFunctions {
     }
   }
 
+  @deprecated
   Future<void> removeFriend(String uid) async {
     Person person = new Person(uid: uid);
     try {
       await CloudFunctions.instance.getHttpsCallable(functionName: 'removeFriend').call(person.toJson());
     } catch (error) {
       handleError(error, from: "removeFriend");
-      throw error;
-    }
-  }
-
-  Future<List<Person>> rankingFriends(int limit) async {
-    Map<String, dynamic> map = Map();
-    map.putIfAbsent("limit", () => limit);
-
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'rankingFriends').call(map);
-
-      List data = result.data;
-      return data.map((c) => Person.fromJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "getFriends");
-      throw error;
-    }
-  }
-
-  // Competition
-
-  Future<String> createCompetition(String title, int initialDate, Competitor competitor, List<String> invitations,
-      List<String> invitationsToken) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent(Competition.TITLE, () => title);
-    map.putIfAbsent(Competition.INITIAL_DATE, () => initialDate);
-    map.putIfAbsent(Competitor.NAME, () => competitor.name);
-    map.putIfAbsent(Competitor.FCM_TOKEN, () => competitor.fcmToken);
-    map.putIfAbsent(Competitor.SCORE, () => competitor.score);
-    map.putIfAbsent(Competitor.COLOR, () => competitor.color);
-    map.putIfAbsent("invitations", () => invitations);
-    map.putIfAbsent("invitations_token", () => invitationsToken);
-
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'createCompetition').call(map);
-
-      return result.data;
-    } catch (error) {
-      handleError(error, from: "createCompetition");
-      throw error;
-    }
-  }
-
-  Future<List<Competition>> fetchCompetitions() async {
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'getCompetitions').call();
-
-      List data = result.data;
-      return data.map((c) => Competition.fromLinkedJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "fetchCompetitions");
-      throw error;
-    }
-  }
-
-  Future<bool> updateCompetition(String id, String title) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("id", () => id);
-    map.putIfAbsent("title", () => title);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'updateCompetition').call(map);
-
-      return true;
-    } catch (error) {
-      handleError(error, from: "updateCompetition");
-      throw error;
-    }
-  }
-
-  Future<Competition> getCompetitionDetail(String id) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("id", () => id);
-
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'getCompetitionDetail').call(map);
-
-      return Competition.fromLinkedJson(result.data);
-    } catch (error) {
-      handleError(error, from: "getCompetitionDetail");
-      throw error;
-    }
-  }
-
-  Future<bool> addCompetitor(String id, String name, List<String> invitations, List<String> invitationsToken) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("id", () => id);
-    map.putIfAbsent("display_name", () => name);
-    map.putIfAbsent("invitations", () => invitations);
-    map.putIfAbsent("invitations_token", () => invitationsToken);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'addCompetitor').call(map);
-
-      return true;
-    } catch (error) {
-      handleError(error, from: "addCompetitor");
-      throw error;
-    }
-  }
-
-  Future<bool> removeCompetitor(String id, String uidCompetitor) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent("id", () => id);
-    map.putIfAbsent("uid", () => uidCompetitor);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'removeCompetitor').call(map);
-
-      return true;
-    } catch (error) {
-      handleError(error, from: "removeCompetitor");
-      throw error;
-    }
-  }
-
-  Future<List<Competition>> getPendingCompetitions() async {
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'getPendingCompetitions').call();
-
-      List data = result.data;
-
-      return data.map((c) => Competition.fromLinkedJson(c)).toList();
-    } catch (error) {
-      handleError(error, from: "getPendingCompetitions");
-      return null;
-    }
-  }
-
-  Future<int> acceptCompetitionRequest(String id, String name, String fcmToken, int color, int score) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent(Competition.ID, () => id);
-    map.putIfAbsent(Competitor.NAME, () => name);
-    map.putIfAbsent(Competitor.FCM_TOKEN, () => fcmToken);
-    map.putIfAbsent(Competitor.SCORE, () => score);
-    map.putIfAbsent(Competitor.COLOR, () => color);
-
-    try {
-      HttpsCallableResult result =
-          await CloudFunctions.instance.getHttpsCallable(functionName: 'acceptCompetitionRequest').call(map);
-
-      return result.data;
-    } catch (error) {
-      handleError(error, from: "declineCompetitionRequest");
-      throw error;
-    }
-  }
-
-  Future<void> declineCompetitionRequest(String id) async {
-    Map<String, dynamic> map = new Map();
-    map.putIfAbsent(Competition.ID, () => id);
-
-    try {
-      await CloudFunctions.instance.getHttpsCallable(functionName: 'declineCompetitionRequest').call(map);
-    } catch (error) {
-      handleError(error, from: "declineCompetitionRequest");
       throw error;
     }
   }

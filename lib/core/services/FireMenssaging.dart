@@ -1,7 +1,7 @@
 import 'dart:collection';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:altitude/common/controllers/CompetitionsControl.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 
 class FireMessaging {
   void configure() {
@@ -23,16 +23,14 @@ class FireMessaging {
     });
   }
 
-  Future<String> getToken() async {
-    return await FirebaseMessaging().getToken();
-  }
+  Future<String> getToken() => FirebaseMessaging().getToken();
 
   void isNewFriendRequest(Map<dynamic, dynamic> data) {
     if (data.containsKey('new_friend')) {
-      UserControl().setPendingFriendsStatus(true);
+      PersonUseCase.getInstance.pendingFriendsStatus = true;
     }
     if (data.containsKey('new_competition')) {
-      CompetitionsControl().pendingCompetitionsStatus = true;
+      CompetitionUseCase.getInstance.pendingCompetitionsStatus = true;
     }
   }
 }

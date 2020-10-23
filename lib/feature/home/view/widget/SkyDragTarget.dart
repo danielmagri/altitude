@@ -35,7 +35,7 @@ class SkyDragTarget extends StatefulWidget {
   SkyDragTarget({Key key, this.visibilty, this.setHabitDone}) : super(key: key);
 
   final bool visibilty;
-  final Function(int id) setHabitDone;
+  final Function(String id) setHabitDone;
 
   @override
   _SkyDragTargetState createState() => _SkyDragTargetState();
@@ -113,8 +113,8 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
                   end: Alignment.bottomCenter,
                   stops: [0.7, 1],
                   colors: [AppColors.sky, Theme.of(context).canvasColor])),
-          child: DragTarget<int>(
-            builder: (context, List<int> candidateData, rejectedData) {
+          child: DragTarget<String>(
+            builder: (context, List<String> candidateData, rejectedData) {
               return Stack(
                 children: <Widget>[
                   Align(

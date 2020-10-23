@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:flutter/material.dart'
@@ -125,7 +126,7 @@ class RankingList extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Text(person.getLevelText(), style: TextStyle(fontSize: 16)),
+                          Text(person.levelText, style: TextStyle(fontSize: 16)),
                           Text("${person.score} Km", style: TextStyle(fontWeight: FontWeight.w300)),
                         ],
                       )
@@ -134,7 +135,7 @@ class RankingList extends StatelessWidget {
                 );
               });
         }, (error) {
-          return const SizedBox();
+          return const DataError();
         });
       },
     );

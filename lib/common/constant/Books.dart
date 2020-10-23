@@ -3,7 +3,7 @@ import 'package:altitude/common/model/Book.dart';
 import 'package:flutter/material.dart'
     show Colors, EdgeInsets, FontWeight, Image, Padding, RichText, TextAlign, TextSpan, TextStyle;
 
-var BOOKS = [
+var books = [
   Book(
       "O que você precisa saber para mudar seus hábitos",
       "change_your_habits",
