@@ -28,7 +28,6 @@ import 'package:flutter/material.dart'
         Transform,
         Widget,
         required;
-import 'package:altitude/utils/Color.dart';
 
 class HabitCardItem extends StatelessWidget {
   HabitCardItem(
@@ -40,7 +39,7 @@ class HabitCardItem extends StatelessWidget {
       : super(key: key);
 
   final Habit habit;
-  final Function(int id, int color) goHabitDetails;
+  final Function(String id, int color) goHabitDetails;
   final Function(bool) showDragTarget;
   final bool done;
 
@@ -48,7 +47,7 @@ class HabitCardItem extends StatelessWidget {
     return done
         ? InkWell(
             borderRadius: BorderRadius.circular(100),
-            onTap: () => goHabitDetails(habit.id, habit.color),
+            onTap: () => goHabitDetails(habit.id, habit.colorCode),
             child: Container(
               padding: const EdgeInsets.all(4),
               width: 118,
@@ -59,7 +58,7 @@ class HabitCardItem extends StatelessWidget {
                   Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
-                      Rocket(size: const Size(60, 60), color: AppColors.habitsColor[habit.color], isExtend: true),
+                      Rocket(size: const Size(60, 60), color: habit.color, isExtend: true),
                       Transform.rotate(
                         angle: -0.2,
                         child: Container(
@@ -88,19 +87,19 @@ class HabitCardItem extends StatelessWidget {
               ),
             ),
           )
-        : Draggable<int>(
+        : Draggable<String>(
             data: habit.id,
             onDragStarted: () => showDragTarget(true),
             onDragEnd: (details) => showDragTarget(false),
             feedback: Rocket(
                 size: const Size(100, 100),
-                color: AppColors.habitsColor[habit.color],
+                color: habit.color,
                 state: RocketState.ON_FIRE,
                 isExtend: true,
                 fireForce: 1),
             child: InkWell(
               borderRadius: BorderRadius.circular(100),
-              onTap: () => goHabitDetails(habit.id, habit.color),
+              onTap: () => goHabitDetails(habit.id, habit.colorCode),
               child: Container(
                 padding: const EdgeInsets.all(4),
                 width: 118,
@@ -108,7 +107,7 @@ class HabitCardItem extends StatelessWidget {
                 color: Colors.transparent,
                 child: Column(
                   children: <Widget>[
-                    Rocket(size: const Size(60, 60), color: AppColors.habitsColor[habit.color], isExtend: true),
+                    Rocket(size: const Size(60, 60), color: habit.color, isExtend: true),
                     Expanded(
                       child: Center(
                         child: Text(habit.habit,
@@ -129,8 +128,7 @@ class HabitCardItem extends StatelessWidget {
               color: Colors.transparent,
               child: Column(
                 children: <Widget>[
-                  SizedBox(width: 60, height: 60),
-                  // Rocket(size: const Size(110, 60), color: HabitColors.colors[habit.color], state: RocketState.DISABLED,),
+                  const SizedBox(width: 60, height: 60),
                   Expanded(
                     child: Center(
                       child: Text(habit.habit,

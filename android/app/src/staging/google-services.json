@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "667107802057",
+    "firebase_url": "https://teste-6728d.firebaseio.com",
+    "project_id": "teste-6728d",
+    "storage_bucket": "teste-6728d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667107802057:android:aaa4146f5ce52419e8c618",
+        "android_client_info": {
+          "package_name": "com.magrizo.habit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667107802057-0o8ni340lhl790jhhr8ur6vh85l9elsa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA67jYBaxqDuGOsABk304NeckPYSXz9d2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667107802057-0o8ni340lhl790jhhr8ur6vh85l9elsa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

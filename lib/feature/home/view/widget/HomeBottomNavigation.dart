@@ -35,7 +35,7 @@ class HomebottomNavigation extends StatelessWidget {
   final HomeLogic controller = GetIt.I.get<HomeLogic>();
 
   void _addHabitTap() async {
-    if (await controller.canAddHabit()) {
+    if (!await controller.canAddHabit()) {
       goAddHabit();
     } else {
       showToast("Você atingiu o limite de 9 hábitos");
@@ -55,12 +55,11 @@ class HomebottomNavigation extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Observer(
-                builder: (_) => IconButtonStatus(
-                    status: controller.pendingStatisticsStatus,
-                    backgroundColor: AppColors.colorAccent,
-                    icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
-                    onPressed: () => goStatistics())),
+            IconButtonStatus(
+                status: false,
+                backgroundColor: AppColors.colorAccent,
+                icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
+                onPressed: () => goStatistics()),
             InkWell(
               onTap: _addHabitTap,
               child: Container(
@@ -72,7 +71,7 @@ class HomebottomNavigation extends StatelessWidget {
             Observer(
                 builder: (_) => IconButtonStatus(
                       status: controller.pendingCompetitionStatus,
-                    backgroundColor: AppColors.colorAccent,
+                      backgroundColor: AppColors.colorAccent,
                       icon: Image.asset("assets/ic_award.png", width: 28, color: Colors.white),
                       onPressed: () => goCompetition(false),
                     )),

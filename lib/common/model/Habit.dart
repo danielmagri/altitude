@@ -1,39 +1,89 @@
 import 'dart:ui' show Color;
-
+import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
 class Habit {
-  int id;
-  int score;
-  int color;
-  String cue;
+  String id;
+  int oldId;
+
   String habit;
+  int colorCode;
+  int score;
+
+  String oldCue;
+
+  Frequency frequency;
+  Reminder reminder;
+
+  DateTime lastDone;
   DateTime initialDate;
   int daysDone;
 
-  Habit({this.id, this.color, this.cue, this.habit, this.score, this.initialDate, this.daysDone});
+  Habit(
+      {this.id,
+      this.oldId,
+      this.habit,
+      this.colorCode,
+      this.score,
+      this.oldCue,
+      this.frequency,
+      this.reminder,
+      this.lastDone,
+      this.initialDate,
+      this.daysDone});
 
-  Color get habitColor => AppColors.habitsColor[color];
+  Color get color => AppColors.habitsColor[colorCode];
 
-  factory Habit.fromJson(Map<String, dynamic> json) => new Habit(
-      id: json["id"],
-      color: json["color"],
-      cue: json["cue_text"] == null ? "" : json["cue_text"],
-      habit: json["habit_text"],
+  static const ID = "id";
+  static const HABIT = "habit";
+  static const COLOR = "color";
+  static const SCORE = "score";
+  static const OLD_CUE = "old_cue";
+  static const FREQUENCY = "frequency";
+  static const REMINDER = "reminder";
+  static const LAST_DONE = "last_done";
+  static const INITIAL_DATE = "initial_date";
+  static const DAYS_DONE_COUNT = "days_done_count";
+
+  factory Habit.fromJson(Map<String, dynamic> json) => Habit(
+      id: json[ID],
+      habit: json[HABIT],
+      colorCode: json[COLOR],
+      score: json[SCORE],
+      oldCue: json[OLD_CUE] == null ? "" : json[OLD_CUE],
+      frequency: Frequency.fromJson(json[FREQUENCY]),
+      reminder: json[REMINDER] != null ? Reminder.fromJson(json[REMINDER]) : null,
+      lastDone: json[LAST_DONE] != null
+          ? DateTime.fromMillisecondsSinceEpoch((json[LAST_DONE] as Timestamp).millisecondsSinceEpoch)
+          : null,
+      initialDate: json.containsKey(INITIAL_DATE)
+          ? DateTime.fromMillisecondsSinceEpoch((json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
+          : null,
+      daysDone: json[DAYS_DONE_COUNT]);
+
+  factory Habit.fromDB(Map<String, dynamic> json) => Habit(
+      oldId: json["id"],
+      colorCode: json["color"],
       score: json["score"],
+      habit: json["habit_text"],
+      oldCue: json["cue_text"] == null ? "" : json["cue_text"],
       initialDate: json.containsKey("initial_date") && json["initial_date"] != null
           ? DateTime.parse(json["initial_date"])
           : null,
       daysDone: json["days_done"]);
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "color": color,
-        "cue_text": cue,
-        "habit_text": habit,
-        "score": score,
-        "initial_date":
-            '${initialDate.year.toString()}-${initialDate.month.toString().padLeft(2, '0')}-${initialDate.day.toString().padLeft(2, '0')}',
-        "days_done": daysDone
+        ID: id,
+        HABIT: habit,
+        COLOR: colorCode,
+        SCORE: score ?? 0,
+        OLD_CUE: oldCue == null ? "" : oldCue,
+        FREQUENCY: frequency?.toJson(),
+        REMINDER: reminder?.toJson(),
+        LAST_DONE: lastDone,
+        INITIAL_DATE: initialDate,
+        DAYS_DONE_COUNT: daysDone ?? 0
       };
 }

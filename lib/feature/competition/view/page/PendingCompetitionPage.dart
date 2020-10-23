@@ -2,7 +2,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/PendingCompetitionLogic.dart';
 import 'package:altitude/feature/competition/view/widget/ChooseHabit.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class _PendingCompetitionPageState extends BaseState<PendingCompetitionPage> {
 
   void acceptRequest(Competition competition) async {
     showLoading(true);
-    if (await controller.checkCreateCompetition()) {
+    if (!await controller.checkCreateCompetition()) {
       List<Habit> habits = await controller.getAllHabits();
       showLoading(false);
 

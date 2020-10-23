@@ -6,5 +6,5 @@ class LearnDetailPageArguments {
 
   final int index;
 
-  Book get book => BOOKS[index];
+  Book get book => books[index];
 }

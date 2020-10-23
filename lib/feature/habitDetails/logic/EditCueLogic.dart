@@ -1,4 +1,5 @@
-import 'package:altitude/common/controllers/HabitsControl.dart';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:flutter/material.dart' show Color;
@@ -9,10 +10,11 @@ part 'EditCueLogic.g.dart';
 class EditCueLogic = _EditCueLogicBase with _$EditCueLogic;
 
 abstract class _EditCueLogicBase with Store {
-  HabitDetailsLogic habitDetailsLogic = GetIt.I.get<HabitDetailsLogic>();
+  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final HabitDetailsLogic habitDetailsLogic = GetIt.I.get<HabitDetailsLogic>();
 
   Color get habitColor => habitDetailsLogic.habitColor;
-  String get cue => habitDetailsLogic.habit.data.cue;
+  String get cue => habitDetailsLogic.habit.data.oldCue;
 
   @observable
   bool showAllTutorialText = false;
@@ -21,7 +23,7 @@ abstract class _EditCueLogicBase with Store {
   ObservableList<String> suggestions = ObservableList();
 
   _EditCueLogicBase() {
-    fetchSuggestions(habitDetailsLogic.habit.data.cue);
+    fetchSuggestions(habitDetailsLogic.habit.data.oldCue);
   }
 
   @action
@@ -44,16 +46,22 @@ abstract class _EditCueLogicBase with Store {
   }
 
   Future<bool> saveCue(String cue) async {
-    bool result =
-        await HabitsControl().updateCue(habitDetailsLogic.habit.data.id, habitDetailsLogic.habit.data.habit, cue);
-    habitDetailsLogic.editCueCallback(cue);
-    return result;
+    Habit habit = habitDetailsLogic.habit.data;
+    habit.oldCue = cue;
+
+    return (await _habitUseCase.updateHabit(habit)).result((data) {
+      habitDetailsLogic.editCueCallback(cue);
+      return true;
+    }, (error) => throw error);
   }
 
   Future<bool> removeCue() async {
-    bool result =
-        await HabitsControl().updateCue(habitDetailsLogic.habit.data.id, habitDetailsLogic.habit.data.habit, null);
-    habitDetailsLogic.editCueCallback(null);
-    return result;
+    Habit habit = habitDetailsLogic.habit.data;
+    habit.oldCue = null;
+
+    return (await _habitUseCase.updateHabit(habit)).result((data) {
+      habitDetailsLogic.editCueCallback(null);
+      return true;
+    }, (error) => throw error);
   }
 }

@@ -1,122 +1,54 @@
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/feature/home/view/page/HomePage.dart';
+import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/services/FireAuth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:package_info/package_info.dart';
 
 class TutorialPage extends StatefulWidget {
-  TutorialPage({Key key, this.showNameTab = true}) : super(key: key);
-
-  final bool showNameTab;
+  TutorialPage({Key key}) : super(key: key);
 
   @override
   _TutorialPageState createState() => _TutorialPageState();
 }
 
-class _TutorialPageState extends State<TutorialPage> {
-  final _controller = new PageController();
-  final _nameTextController = TextEditingController();
+class _TutorialPageState extends BaseState<TutorialPage> {
+  final _controller = PageController();
 
   int pageIndex = 0;
+
+  List<Widget> pagesWidget = [Initial(), CreateHabit(), CompleteHabit(), Score()];
 
   @override
   initState() {
     super.initState();
 
+    SharedPref.instance.habitTutorial = true;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
   }
 
   @override
   void dispose() {
-    _nameTextController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   void _nextTap() async {
-    if (pageIndex == 4) {
-      String result = ValidationHandler.nameTextValidate(_nameTextController.text);
-
-      if (result == null) {
-        int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
-        SharedPref.instance.name = _nameTextController.text;
-        SharedPref.instance.version = version;
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) {
-                  return HomePage();
-                },
-                settings: RouteSettings(name: "Main Page")));
+    if (pageIndex == 3) {
+      int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
+      SharedPref.instance.version = version;
+      if (FireAuth().isLogged()) {
+        navigatePushReplacement('/');
       } else {
-        Fluttertoast.showToast(
-            msg: result,
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIos: 1,
-            backgroundColor: Color.fromARGB(255, 220, 220, 220),
-            textColor: Colors.black,
-            fontSize: 16.0);
+        navigatePushReplacement('login');
       }
-    } else if (pageIndex == 3 && !widget.showNameTab) {
-      Navigator.pop(context);
     } else {
       pageIndex++;
       _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
     }
-  }
-
-  List<Widget> _pageList() {
-    List<Widget> widgets = [Initial(), CreateHabit(), CompleteHabit(), Score()];
-    if (widget.showNameTab) {
-      widgets.add(
-        Container(
-          color: AppColors.habitsColor[5],
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 64),
-                child: Text(
-                  "Como podemos te chamar?",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-              Flexible(
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                    margin: const EdgeInsets.only(left: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20), bottomLeft: Radius.circular(20)),
-                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.3))],
-                    ),
-                    child: TextField(
-                      controller: _nameTextController,
-                      textInputAction: TextInputAction.done,
-                      textCapitalization: TextCapitalization.words,
-                      onEditingComplete: _nextTap,
-                      style: TextStyle(fontSize: 18.0),
-                      decoration: InputDecoration.collapsed(hintText: "Seu nome"),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 60,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return widgets;
   }
 
   @override
@@ -127,7 +59,7 @@ class _TutorialPageState extends State<TutorialPage> {
           PageView(
             controller: _controller,
             onPageChanged: (index) => pageIndex = index,
-            children: _pageList(),
+            children: pagesWidget,
           ),
           new Positioned(
             bottom: 0,
@@ -140,7 +72,7 @@ class _TutorialPageState extends State<TutorialPage> {
                   new Center(
                     child: new DotsIndicator(
                       controller: _controller,
-                      itemCount: widget.showNameTab ? 5 : 4,
+                      itemCount: pagesWidget.length,
                     ),
                   ),
                   Positioned(

@@ -1,12 +1,14 @@
 import 'package:altitude/common/router/Router.dart';
+import 'package:altitude/core/services/FireAuth.dart';
 import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/GetIt.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
+import 'package:altitude/feature/login/view/page/LoginPage.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart'
     show
         Brightness,
-        BuildContext,
         Color,
         Colors,
         MaterialApp,
@@ -14,7 +16,6 @@ import 'package:flutter/material.dart'
         ThemeData,
         Widget,
         WidgetsFlutterBinding,
-        required,
         runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome, SystemUiOverlayStyle;
 import 'package:altitude/feature/tutorialPage.dart';
@@ -27,16 +28,25 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await GetIt.I.isReady<SharedPref>();
-  runApp(MyApp(showTutorial: GetIt.I.get<SharedPref>().name == null));
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool showTutorial;
+  MyApp();
 
-  MyApp({@required this.showTutorial});
+  Widget initialPage() {
+    if (!SharedPref.instance.habitTutorial && !FireAuth().isLogged()) {
+      return TutorialPage();
+    } else if (!FireAuth().isLogged()) {
+      return LoginPage();
+    } else {
+      return HomePage();
+    }
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     FireMessaging().configure();
 
@@ -53,7 +63,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
       ),
       debugShowCheckedModeBanner: false,
-      home: showTutorial ? TutorialPage() : HomePage(),
+      home: initialPage(),
       navigatorObservers: [FirebaseAnalyticsObserver(analytics: FireAnalytics().analytics)],
       onGenerateRoute: Router.generateRoute,
     );

@@ -20,7 +20,7 @@ class Indicator extends StatelessWidget {
   Indicator({Key key, @required this.data, this.onClick}) : super(key: key);
 
   final HabitStatisticData data;
-  final Function(int) onClick;
+  final Function(String) onClick;
 
   @override
   Widget build(context) {

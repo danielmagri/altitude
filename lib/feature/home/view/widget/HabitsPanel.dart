@@ -1,10 +1,9 @@
-import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
@@ -31,7 +30,7 @@ class HabitsPanel extends StatelessWidget {
         super(key: key);
 
   final HomeLogic controller;
-  final Function(int id, int color) goHabitDetails;
+  final Function(String id, int color) goHabitDetails;
 
   @override
   Widget build(context) {
@@ -50,7 +49,7 @@ class HabitsPanel extends StatelessWidget {
           ),
           (data) {
             if (data.isEmpty) {
-              return Text(controller.filterSelected.emptyMessage,
+              return Text("Crie um novo hábito pelo botão \"+\" na tela principal.",
                   textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black26));
             } else {
               return SingleChildScrollView(
@@ -58,13 +57,11 @@ class HabitsPanel extends StatelessWidget {
                 child: Wrap(
                   alignment: WrapAlignment.center,
                   children: data.map((habit) {
-                    DayDone done =
-                        controller.doneHabits.firstWhere((dayDone) => dayDone.habitId == habit.id, orElse: () => null);
                     return HabitCardItem(
                         habit: habit,
                         goHabitDetails: goHabitDetails,
                         showDragTarget: controller.swipeSkyWidget,
-                        done: done == null ? false : true);
+                        done: DateTime.now().today.isSameDay(habit.lastDone));
                   }).toList(),
                 ),
               );

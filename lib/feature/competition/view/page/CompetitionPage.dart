@@ -1,5 +1,4 @@
-import 'dart:async' show Timer;
-import 'package:altitude/common/model/CompetitionPresentation.dart';
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
@@ -9,9 +8,8 @@ import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
-import 'package:altitude/feature/login/view/dialog/LoginDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -29,22 +27,6 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
   void initState() {
     super.initState();
 
-    initialize();
-  }
-
-  void initialize() async {
-    if (await controller.isLogged) {
-      getData();
-    } else {
-      Timer.run(() async {
-        navigateSmooth(LoginDialog(isCompetitionPage: true)).then((value) {
-          if (value != null) getData();
-        });
-      });
-    }
-  }
-
-  void getData() {
     controller.fetchData();
   }
 
@@ -62,7 +44,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
 
   void createCompetition() async {
     showLoading(true);
-    if (await controller.checkCreateCompetition()) {
+    if (!await controller.checkCreateCompetition()) {
       try {
         var data = await controller.getCreationData();
         showLoading(false);
@@ -79,24 +61,16 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
     }
   }
 
-  void competitionTap(CompetitionPresentation item) {
+  void competitionTap(Competition competition) {
     showLoading(true);
-    controller.getCompetitionDetail(item.id).then((competition) {
+    controller.getCompetitionDetails(competition.id).then((value) {
       showLoading(false);
-
-      if (competition != null) {
-        if (competition.title != item.title) {
-          controller.updateCompetitionTitle(item.id, competition.title);
-        }
-        var arguments = CompetitionDetailsPageArguments(competition);
-        navigatePush('competitionDetails', arguments: arguments);
-      } else {
-        showToast("Ocorreu um erro");
-      }
+      var arguments = CompetitionDetailsPageArguments(value);
+      navigatePush('competitionDetails', arguments: arguments);
     }).catchError(handleError);
   }
 
-  void competitionLongTap(CompetitionPresentation item) {
+  void competitionLongTap(Competition item) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -108,7 +82,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
               child: const Text("Sim", style: TextStyle(fontSize: 17)),
               onPressed: () {
                 showLoading(true);
-                controller.exitCompetition(item.id).then((res) {
+                controller.exitCompetition(item).then((res) {
                   showLoading(false);
                   Navigator.of(context).pop();
                 }).catchError((error) {
@@ -191,7 +165,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: <Widget>[
-                                Text(person.getLevelText(), style: const TextStyle(fontSize: 15)),
+                                Text(person.levelText, style: const TextStyle(fontSize: 15)),
                                 Text("${person.score} Km", style: const TextStyle(fontWeight: FontWeight.w300)),
                               ],
                             )
@@ -252,7 +226,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                     padding: const EdgeInsets.all(0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
                     itemBuilder: (_, index) {
-                      CompetitionPresentation competition = data[index];
+                      Competition competition = data[index];
                       return Card(
                         elevation: 4,
                         margin: const EdgeInsets.all(10),
@@ -270,7 +244,7 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                                       angle: 0.523,
                                       child: Rocket(
                                           size: Size(constraints.maxWidth, constraints.maxWidth),
-                                          color: AppColors.habitsColor[competition.color],
+                                          color: AppColors.habitsColor[competition.getMyCompetitor().color],
                                           isExtend: true));
                                 }),
                               ),

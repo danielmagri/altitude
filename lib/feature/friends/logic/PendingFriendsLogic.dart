@@ -1,20 +1,22 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/controllers/UserControl.dart';
 import 'package:altitude/core/model/DataState.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:mobx/mobx.dart';
 part 'PendingFriendsLogic.g.dart';
 
 class PendingFriendsLogic = _PendingFriendsLogicBase with _$PendingFriendsLogic;
 
 abstract class _PendingFriendsLogicBase with Store {
+  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+
   DataState<ObservableList<Person>> pendingFriends = DataState();
   List<Person> addedFriends = [];
 
   Future<void> fetchData() async {
     try {
-      var _pendingFriends = (await UserControl().getPendingFriends()).asObservable();
+      var _pendingFriends = (await personUseCase.getPendingFriends()).asObservable();
 
-      UserControl().setPendingFriendsStatus(_pendingFriends.isNotEmpty);
+      personUseCase.pendingFriendsStatus = _pendingFriends.isNotEmpty;
 
       pendingFriends.setData(_pendingFriends);
     } catch (error) {
@@ -25,18 +27,18 @@ abstract class _PendingFriendsLogicBase with Store {
 
   @action
   Future<void> acceptRequest(Person person) async {
-    await UserControl().acceptRequest(person.uid);
+    await personUseCase.acceptRequest(person.uid);
     addedFriends.add(person);
     pendingFriends.data.removeWhere((item) => item.uid == person.uid);
 
-    if (pendingFriends.data.isEmpty) UserControl().setPendingFriendsStatus(false);
+    if (pendingFriends.data.isEmpty) personUseCase.pendingFriendsStatus = false;
   }
 
   @action
   Future<void> declineRequest(Person person) async {
-    await UserControl().declineRequest(person.uid);
+    await personUseCase.declineRequest(person.uid);
     pendingFriends.data.removeWhere((item) => item.uid == person.uid);
 
-    if (pendingFriends.data.isEmpty) UserControl().setPendingFriendsStatus(false);
+    if (pendingFriends.data.isEmpty) personUseCase.pendingFriendsStatus = false;
   }
 }

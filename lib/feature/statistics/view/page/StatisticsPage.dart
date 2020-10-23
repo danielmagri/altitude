@@ -109,10 +109,10 @@ class _StatisticspageState extends State<Statisticspage> {
                   builder: (_) => controller.habitsData.handleState(
                       () => Skeleton.custom(
                               child: PieChartScore(data: [
-                            HabitStatisticData(0, 25, "", 1),
-                            HabitStatisticData(0, 25, "", 1),
-                            HabitStatisticData(0, 25, "", 1),
-                            HabitStatisticData(0, 25, "", 1),
+                            HabitStatisticData("", 25, "", 1, 100),
+                            HabitStatisticData("", 25, "", 1, 100),
+                            HabitStatisticData("", 25, "", 1, 100),
+                            HabitStatisticData("", 25, "", 1, 100),
                           ])),
                       (data) => PieChartScore(data: data.toList(), onClick: controller.selectHabit),
                       (error) => DataError()),

@@ -1,9 +1,8 @@
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
-import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,7 @@ class _SettingsPageState extends BaseState<SettingsPage> {
               showLoading(true);
               controller.logout().then((_) {
                 showLoading(false);
-                Navigator.pop(context);
+                navigateRemoveUntil('login');
               }).catchError(handleError);
             },
           ),
@@ -98,6 +97,33 @@ class _SettingsPageState extends BaseState<SettingsPage> {
     }
   }
 
+  void recalculateScore() {
+    showDialog(
+      context: context,
+      builder: (_) => BaseTextDialog(
+        title: "Pontuação",
+        body: "Deseja recalcular sua pontuação?",
+        action: <Widget>[
+          FlatButton(
+            child: const Text("Não", style: TextStyle(fontSize: 17)),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FlatButton(
+            child: const Text("Sim", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            onPressed: () async {
+              showLoading(true);
+              controller.recalculateScore().then((_) {
+                showLoading(false);
+                navigatePop();
+                showToast("Pontuação recalculada.");
+              }).catchError(handleError);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,15 +143,8 @@ class _SettingsPageState extends BaseState<SettingsPage> {
           ListTile(
             title: const Text("Rever tutorial inicial"),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) {
-                        return TutorialPage(
-                          showNameTab: false,
-                        );
-                      },
-                      settings: RouteSettings(name: "Tutorial Page")));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => TutorialPage(), settings: RouteSettings(name: "Tutorial Page")));
             },
           ),
           const Divider(),
@@ -133,6 +152,12 @@ class _SettingsPageState extends BaseState<SettingsPage> {
             title: const Text("Ajuda"),
             onTap: () => navigatePush('help'),
           ),
+          const Divider(),
+          ListTile(
+            title: const Text("Minha pontuação está errada"),
+            onTap: recalculateScore,
+          ),
+          const Divider(),
           Observer(builder: (_) {
             return ListTile(
               title: const Text("Logout"),

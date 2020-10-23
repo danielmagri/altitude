@@ -5,6 +5,7 @@ const CYCLE_DAYS = 7;
 // Competition
 const MAX_COMPETITIONS = 5;
 const MAX_HABIT_COMPETITIONS = 2;
+const MAX_COMPETITORS = 5;
 
 // Habit
 const MAX_HABITS = 9;

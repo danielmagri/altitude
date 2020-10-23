@@ -1,9 +1,10 @@
 import 'dart:math' show Random;
-import 'package:altitude/common/controllers/HabitsControl.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/ReminderWeekday.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:mobx/mobx.dart';
@@ -12,6 +13,8 @@ part 'AddHabitLogic.g.dart';
 class AddHabitLogic = _AddHabitLogicBase with _$AddHabitLogic;
 
 abstract class _AddHabitLogicBase with Store {
+  final HabitUseCase habitUseCase = HabitUseCase.getInstance;
+
   @observable
   int color;
 
@@ -33,7 +36,9 @@ abstract class _AddHabitLogicBase with Store {
 
   @computed
   String get timeText =>
-      reminderTime.hour.toString().padLeft(2, '0') + " : " + reminderTime.minute.toString().padLeft(2, '0');
+      reminderTime.hour.toString().padLeft(2, '0') +
+      " : " +
+      reminderTime.minute.toString().padLeft(2, '0');
 
   @computed
   Color get habitColor => AppColors.habitsColor[color];
@@ -63,13 +68,21 @@ abstract class _AddHabitLogicBase with Store {
     if (time != null) reminderTime = time;
   }
 
-  Future<Habit> createHabit(Habit habit) {
-    List<Reminder> reminders = List();
-    reminderWeekday.forEach((day) { 
-      if (day.state) {
-        reminders.add(Reminder(hour: reminderTime.hour, minute: reminderTime.minute, weekday: day.id, type: 0));
-      }
-    });
-    return HabitsControl().addHabit(habit, frequency, reminders);
+  Future<Result<Habit>> createHabit(Habit habit) async {
+    Reminder reminder = Reminder(
+        type: 0,
+        hour: reminderTime.hour,
+        minute: reminderTime.minute,
+        sunday: reminderWeekday[0].state,
+        monday: reminderWeekday[1].state,
+        tuesday: reminderWeekday[2].state,
+        wednesday: reminderWeekday[3].state,
+        thursday: reminderWeekday[4].state,
+        friday: reminderWeekday[5].state,
+        saturday: reminderWeekday[6].state);
+        
+    if (reminder.hasAnyDay()) habit.reminder = reminder;
+
+    return habitUseCase.addHabit(habit);
   }
 }

@@ -1,38 +1,42 @@
-import 'dart:collection';
+import 'package:altitude/core/services/FireAuth.dart';
 
 class Competitor {
-  String uid;
-  String name;
-  String fcmToken;
+  final String uid;
+  final String name;
+  final String fcmToken;
+
+  final String habitId;
   int color;
   int score;
+
   bool you;
 
-  static const UID = "uid";
   static const NAME = "display_name";
   static const FCM_TOKEN = "fcm_token";
+  static const HABIT_ID = "habit_id";
   static const COLOR = "color";
   static const SCORE = "score";
-  static const YOU = "you";
 
-  Competitor({
-    this.uid,
-    this.name,
-    this.fcmToken,
-    this.color,
-    this.score,
-    this.you,
-  }) {
-    if (you == null) you = false;
-    if (score == null) score = 0;
+  Competitor({this.uid, this.name, this.fcmToken, this.habitId, this.color, this.score, this.you}) {
+    this.you = you ?? FireAuth().getUid() == uid;
+    this.score = score ?? 0;
   }
-  factory Competitor.fromJson(LinkedHashMap<dynamic, dynamic> json) =>
-      new Competitor(
-        uid: json[UID],
-        name: json[NAME],
-        fcmToken: json[FCM_TOKEN],
-        color: json[COLOR],
-        score: json[SCORE],
-        you: json[YOU],
-      );
+
+  factory Competitor.fromJson(Map<dynamic, dynamic> json, String uid) => Competitor(
+      uid: uid,
+      name: json[NAME],
+      fcmToken: json[FCM_TOKEN],
+      habitId: json[HABIT_ID],
+      color: json[COLOR],
+      score: json[SCORE]);
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = Map();
+    map.putIfAbsent(NAME, () => name);
+    map.putIfAbsent(FCM_TOKEN, () => fcmToken);
+    map.putIfAbsent(HABIT_ID, () => habitId);
+    map.putIfAbsent(COLOR, () => color);
+    if (you) map.putIfAbsent(SCORE, () => score);
+    return map;
+  }
 }

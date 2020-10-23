@@ -1,4 +1,8 @@
 import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/useCase/CompetitionUseCase.dart';
+import 'package:altitude/common/useCase/HabitUseCase.dart';
+import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
@@ -24,6 +28,14 @@ class Getit {
     getIt.registerSingletonAsync<SharedPref>(() => SharedPref.initialize());
     // getIt.registerSingletonAsync<FireConfig>(() => FireConfig.initialize());
 
+    getIt.registerSingleton<Memory>(Memory());
+
+    //USE CASE
+    getIt.registerFactory<PersonUseCase>(() => PersonUseCase());
+    getIt.registerFactory<CompetitionUseCase>(() => CompetitionUseCase());
+    getIt.registerFactory<HabitUseCase>(() => HabitUseCase());
+
+    // LOGIC
     getIt.registerLazySingleton<HomeLogic>(() => HomeLogic());
     getIt.registerLazySingleton<AddHabitLogic>(() => AddHabitLogic());
     getIt.registerLazySingleton<StatisticsLogic>(() => StatisticsLogic());

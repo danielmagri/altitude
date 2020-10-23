@@ -1,7 +1,7 @@
 name: altitude
 description: A new Flutter project.
 
-version: 2.2.1
+version: 3.0.0
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
@@ -25,12 +25,13 @@ dependencies:
   vibration: ^1.2.2
   sliding_up_panel: ^0.3.6
   auto_size_text: ^2.0.2+1
-  firebase_core: ^0.4.4+3
-  firebase_auth: ^0.16.0
+  firebase_core: ^0.5.0
+  firebase_auth: ^0.18.0+1
   firebase_analytics: ^5.0.11
   firebase_messaging: ^6.0.13
   firebase_remote_config: ^0.3.0+3
-  cloud_functions: ^0.4.2+3
+  cloud_firestore: ^0.14.0+1
+  cloud_functions: ^0.6.0
   flutter_facebook_login: ^3.0.0
   google_sign_in: ^4.4.1
   url_launcher: ^5.4.5

@@ -71,7 +71,7 @@ class CueWidget extends StatelessWidget {
                       Expanded(
                         child: Align(
                           alignment: Alignment.center,
-                          child: _setCueWidget(data.cue),
+                          child: _setCueWidget(data.oldCue),
                         ),
                       ),
                     ],

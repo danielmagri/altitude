@@ -1,10 +1,13 @@
+import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
-import 'package:altitude/feature/home/enums/HabitFiltersType.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/view/BaseState.dart';
+import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/services/Database.dart';
+import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
 import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
@@ -13,7 +16,6 @@ import 'package:altitude/feature/home/view/widget/HomeDrawer.dart';
 import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -32,17 +34,39 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   @override
   initState() {
     super.initState();
-    controller.fetchData();
-    controller.fetchPendingStatus();
+
+    checkTransferData();
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  void checkTransferData() async {
+    if (await DatabaseService().existDB()) {
+      showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return TransferDataDialog(uid: FireAuth().getUid());
+          }).then((value) {
+        if (value) fetchData();
+      }).catchError(handleError);
+    } else {
+      fetchData();
+    }
+  }
+
+  void fetchData() {
+    controller.getUser();
+    controller.getHabits();
+    controller.fetchPendingStatus();
   }
 
   @override
   void onPageBack(Object value) {
-    controller.fetchData().then((_) {
+    controller.getUser().then((_) {
       hasLevelUp(controller.user.data.score);
     });
 
+    controller.getHabits();
     controller.fetchPendingStatus();
     super.onPageBack(value);
   }
@@ -70,16 +94,13 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     scaffoldKey.currentState.openDrawer();
   }
 
-  void setHabitDone(id) {
+  void setHabitDone(String id) {
     showLoading(true);
     controller.completeHabit(id).then((newScore) async {
       showLoading(false);
       vibratePhone();
       hasLevelUp(newScore);
-    }).catchError((error) {
-      showLoading(false);
-      showToast("Ocorreu um erro");
-    });
+    }).catchError(handleError);
   }
 
   void hasLevelUp(int score) async {
@@ -97,17 +118,17 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
     navigatePush('addHabit');
   }
 
-  void goHabitDetails(int id, int color) {
+  void goHabitDetails(String id, int color) {
     var arguments = HabitDetailsPageArguments(id, color);
     navigatePush('habitDetails', arguments: arguments);
   }
 
   void goFriends() {
-      navigatePopAndPush('friends');
+    navigatePopAndPush('friends');
   }
 
   void goStatistics() {
-      navigatePush('statistics');
+    navigatePush('statistics');
   }
 
   void goCompetition(bool pop) {
@@ -179,33 +200,16 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                         },
                         (data) {
                           return Column(children: <Widget>[
-                            Text(LevelControl.getLevelText(data.score)),
+                            Text(data.levelText),
                             const SizedBox(height: 4),
                             Score(color: AppColors.colorAccent, score: data.score),
                           ]);
                         },
                         (error) {
-                          return const SizedBox();
+                          return const DataError();
                         },
                       );
                     }),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 12, top: 24),
-                  child: Observer(
-                    builder: (_) => PopupMenuButton<HabitFiltersType>(
-                      initialValue: controller.filterSelected,
-                      onSelected: controller.selectFilter,
-                      itemBuilder: (_) => HabitFiltersType.values
-                          .map((type) => PopupMenuItem(value: type, child: Text(type.title)))
-                          .toList(),
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Text(controller.filterSelected.title, style: TextStyle(color: AppColors.popupMenuButtonHome)),
-                        Icon(Icons.arrow_drop_down, color: AppColors.popupMenuButtonHome),
-                      ]),
-                    ),
                   ),
                 ),
                 Expanded(child: HabitsPanel(goHabitDetails: goHabitDetails)),

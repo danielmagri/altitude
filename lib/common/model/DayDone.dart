@@ -1,17 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
+
 class DayDone {
-  final DateTime dateDone;
-  final int habitId;
+  final String habitId;
+  final DateTime date;
 
-  DayDone({this.dateDone, this.habitId});
+  DayDone({this.habitId, this.date});
 
-  factory DayDone.fromJson(Map<String, dynamic> json) => new DayDone(
-      dateDone: json.containsKey("date_done") && json["date_done"] != null
-          ? DateTime.parse(json["date_done"])
-          : null,
-      habitId: json["habit_id"]);
+  String get dateFormatted => date.dateFormatted;
 
-  Map<String, dynamic> toJson() => {
-        "date_done":
-            '${dateDone.year.toString()}-${dateDone.month.toString().padLeft(2, '0')}-${dateDone.day.toString().padLeft(2, '0')}'
-      };
+  static const DATE = "date";
+
+  factory DayDone.fromJson(Map<String, dynamic> json) =>
+      DayDone(date: DateTime.fromMillisecondsSinceEpoch((json[DATE] as Timestamp).millisecondsSinceEpoch));
+
+  factory DayDone.fromDB(Map<String, dynamic> json) => DayDone(
+      date: json.containsKey("date_done") && json["date_done"] != null ? DateTime.parse(json["date_done"]) : null);
+
+  Map<String, dynamic> toJson() => {DATE: date};
 }
