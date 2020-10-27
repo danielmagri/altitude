@@ -6,17 +6,9 @@ import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:altitude/feature/login/view/page/LoginPage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart'
-    show
-        Brightness,
-        Color,
-        Colors,
-        MaterialApp,
-        StatelessWidget,
-        ThemeData,
-        Widget,
-        WidgetsFlutterBinding,
-        runApp;
+    show Brightness, Color, Colors, FlutterError, MaterialApp, StatelessWidget, ThemeData, Widget, WidgetsFlutterBinding, runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome, SystemUiOverlayStyle;
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
@@ -27,8 +19,11 @@ void main() async {
   Getit.init();
   WidgetsFlutterBinding.ensureInitialized();
 
-  await GetIt.I.isReady<SharedPref>();
   await Firebase.initializeApp();
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+  await GetIt.I.isReady<SharedPref>();
   runApp(MyApp());
 }
 
