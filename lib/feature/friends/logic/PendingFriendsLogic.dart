@@ -13,21 +13,18 @@ abstract class _PendingFriendsLogicBase with Store {
   List<Person> addedFriends = [];
 
   Future<void> fetchData() async {
-    try {
-      var _pendingFriends = (await personUseCase.getPendingFriends()).asObservable();
-
-      personUseCase.pendingFriendsStatus = _pendingFriends.isNotEmpty;
-
-      pendingFriends.setData(_pendingFriends);
-    } catch (error) {
+    (await personUseCase.getPendingFriends()).result((data) {
+      personUseCase.pendingFriendsStatus = data.isNotEmpty;
+      pendingFriends.setData(data.asObservable());
+    }, (error) {
       pendingFriends.setError(error);
       throw error;
-    }
+    });
   }
 
   @action
   Future<void> acceptRequest(Person person) async {
-    await personUseCase.acceptRequest(person.uid);
+    (await personUseCase.acceptRequest(person.uid)).absoluteResult();
     addedFriends.add(person);
     pendingFriends.data.removeWhere((item) => item.uid == person.uid);
 
@@ -36,7 +33,7 @@ abstract class _PendingFriendsLogicBase with Store {
 
   @action
   Future<void> declineRequest(Person person) async {
-    await personUseCase.declineRequest(person.uid);
+    (await personUseCase.declineRequest(person.uid)).absoluteResult();
     pendingFriends.data.removeWhere((item) => item.uid == person.uid);
 
     if (pendingFriends.data.isEmpty) personUseCase.pendingFriendsStatus = false;
