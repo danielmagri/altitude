@@ -86,13 +86,12 @@ class PersonUseCase extends BaseUseCase {
   set pendingFriendsStatus(bool value) => SharedPref.instance.pendingFriends = value;
 
   Future<Result<List<Person>>> getFriends() => safeCall(() async {
-        List<Person> friends = await FireDatabase().getFriendsDetails();
-        return friends;
+        return await FireDatabase().getFriendsDetails();
       });
 
-  Future<List<Person>> getPendingFriends() async {
-    return await FireFunctions().getPendingFriends();
-  }
+  Future<Result<List<Person>>> getPendingFriends() => safeCall(() async {
+        return await FireDatabase().getPendingFriends();
+      });
 
   Future<Result<List<Person>>> searchEmail(String value) => safeCall(() async {
         if (value != email) {
@@ -103,35 +102,49 @@ class PersonUseCase extends BaseUseCase {
         }
       });
 
-  Future<void> friendRequest(String uid) async {
-    FireAnalytics().sendFriendRequest(false);
-    return await FireFunctions().friendRequest(uid);
-  }
+  Future<Result> friendRequest(String uid) => safeCall(() async {
+        FireAnalytics().sendFriendRequest(false);
+        return FireDatabase().friendRequest(uid).then((token) async {
+          if (_memory.person != null) {
+            _memory.person.pendingFriends.add(uid);
+          }
+          await FireFunctions().sendNotification("Pedido de amizade", "$name quer ser seu amigo.", token);
+        });
+      });
 
-  Future<void> acceptRequest(String uid) async {
-    FireAnalytics().sendFriendResponse(true);
-    return await FireFunctions().acceptRequest(uid);
-  }
+  Future<Result> acceptRequest(String uid) => safeCall(() async {
+        FireAnalytics().sendFriendResponse(true);
+        return FireDatabase().acceptRequest(uid).then((token) async {
+          if (_memory.person != null) {
+            _memory.person.friends.add(uid);
+          }
+          await FireFunctions().sendNotification("Pedido de amizade", "$name aceitou seu pedido.", token);
+        });
+      });
 
-  Future<void> declineRequest(String uid) async {
-    FireAnalytics().sendFriendResponse(false);
-    return await FireFunctions().declineRequest(uid);
-  }
+  Future<Result> declineRequest(String uid) => safeCall(() async {
+        FireAnalytics().sendFriendResponse(false);
+        return await FireDatabase().declineRequest(uid);
+      });
 
-  Future<void> cancelFriendRequest(String uid) async {
-    FireAnalytics().sendFriendRequest(true);
-    return await FireFunctions().cancelFriendRequest(uid);
-  }
+  Future<Result> cancelFriendRequest(String uid) => safeCall(() async {
+        FireAnalytics().sendFriendRequest(true);
+        return FireDatabase().cancelFriendRequest(uid).then((value) {
+          if (_memory.person != null) {
+            _memory.person.pendingFriends.remove(uid);
+          }
+        });
+      });
 
-  Future<void> removeFriend(String uid) async {
-    return await FireFunctions().removeFriend(uid);
-  }
+  Future<Result> removeFriend(String uid) => safeCall(() async {
+        return await FireDatabase().removeFriend(uid);
+      });
 
   Future<Result<List<Person>>> rankingFriends() => safeCall(() async {
         return await FireDatabase().getRankingFriends(3);
       });
 
-  Future<void> logout() async {
+  Future logout() async {
     _memory.clear();
     await FireAuth().logout();
   }

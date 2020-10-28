@@ -1,3 +1,4 @@
+import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/DayDone.dart';
@@ -261,6 +262,13 @@ class FireDatabase {
         .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
   }
 
+  Future<List<Person>> getPendingFriends() {
+    return userCollection
+        .where(Person.PENDING_FRIENDS, arrayContains: FireAuth().getUid())
+        .get()
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+  }
+
   Future<List<Person>> getRankingFriends(int limit) {
     return userCollection
         .orderBy(Person.SCORE, descending: true)
@@ -286,6 +294,78 @@ class FireDatabase {
           person.state = state;
           return person;
         }).toList());
+  }
+
+  Future<String> friendRequest(String uid) async {
+    var person = (await userDoc.get().then((value) => Person.fromJson(value.data(), value.id)));
+    if (person.friends.length >= MAX_FRIENDS) {
+      throw "Máximo de amigos atingido.";
+    }
+
+    if (person.friends.contains(uid)) {
+      throw "Vocês já são amigos.";
+    }
+
+    if (person.pendingFriends.contains(uid)) {
+      throw "Você já enviou um pedido.";
+    }
+
+    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data(), value.id)));
+    if (friendData.pendingFriends.contains(FireAuth().getUid())) {
+      throw "Já tem uma solicitação.";
+    }
+
+    return userDoc.update({
+      Person.PENDING_FRIENDS: FieldValue.arrayUnion([uid])
+    }).then((value) => friendData.fcmToken);
+  }
+
+  Future<String> acceptRequest(String uid) async {
+    if ((await userDoc.get().then((value) => Person.fromJson(value.data(), value.id))).friends.length >= MAX_FRIENDS) {
+      throw "Máximo de amigos atingido.";
+    }
+
+    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data(), value.id)));
+    if (friendData.friends.length >= MAX_FRIENDS) {
+      throw "Seu amigo atingiu o máximo de amigos.";
+    }
+
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    batch.update(userDoc, {
+      Person.FRIENDS: FieldValue.arrayUnion([uid])
+    });
+    batch.update(userCollection.doc(uid), {
+      Person.PENDING_FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()]),
+      Person.FRIENDS: FieldValue.arrayUnion([FireAuth().getUid()])
+    });
+
+    return batch.commit().then((value) => friendData.fcmToken);
+  }
+
+  Future declineRequest(String uid) {
+    return userCollection.doc(uid).update({
+      Person.PENDING_FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()])
+    });
+  }
+
+  Future cancelFriendRequest(String uid) {
+    return userDoc.update({
+      Person.PENDING_FRIENDS: FieldValue.arrayRemove([uid])
+    });
+  }
+
+  Future removeFriend(String uid) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    batch.update(userCollection.doc(uid), {
+      Person.FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()])
+    });
+    batch.update(userDoc, {
+      Person.FRIENDS: FieldValue.arrayRemove([uid])
+    });
+
+    return batch.commit();
   }
 
   // COMPETITION
