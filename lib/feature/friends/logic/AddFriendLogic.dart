@@ -17,15 +17,15 @@ abstract class _AddFriendLogicBase with Store {
     searchResult.setData(list);
   }
 
-  Future<void> sendFriendRequest(String uid) async {
-    return await personUseCase.friendRequest(uid);
+  Future sendFriendRequest(String uid) async {
+    return (await personUseCase.friendRequest(uid)).absoluteResult();
   }
 
   Future<void> cancelFriendRequest(String uid) async {
-    return await personUseCase.cancelFriendRequest(uid);
+    return (await personUseCase.cancelFriendRequest(uid)).absoluteResult();
   }
 
   Future<void> acceptFriendRequest(String uid) async {
-    return await personUseCase.acceptRequest(uid);
+    return (await personUseCase.acceptRequest(uid)).absoluteResult();
   }
 }

@@ -8,6 +8,7 @@ import 'package:altitude/feature/tutorialPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -151,6 +152,18 @@ class _SettingsPageState extends BaseState<SettingsPage> {
           ListTile(
             title: const Text("Ajuda"),
             onTap: () => navigatePush('help'),
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text("Siga o Altitude no Instagram"),
+            onTap: () async {
+              const INSTAGRAM_URL = 'https://www.instagram.com/sejaaltitude';
+              if (await canLaunch(INSTAGRAM_URL)) {
+                await launch(INSTAGRAM_URL);
+              } else {
+                throw 'Could not launch $INSTAGRAM_URL';
+              }
+            },
           ),
           const Divider(),
           ListTile(

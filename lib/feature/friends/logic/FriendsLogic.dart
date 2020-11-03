@@ -63,7 +63,7 @@ abstract class _FriendsLogicBase with Store {
 
   @action
   Future<void> removeFriend(String uid) async {
-    await personUseCase.removeFriend(uid);
+    (await personUseCase.removeFriend(uid)).absoluteResult();
     ranking.data.removeWhere((person) => person.uid == uid);
     friends.data.removeWhere((person) => person.uid == uid);
   }
