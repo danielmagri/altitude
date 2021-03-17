@@ -186,15 +186,6 @@ class HomeDrawer extends StatelessWidget {
             ),
             Divider(),
             ListTile(
-              title: const Text('Altitude Learn', style: const TextStyle(fontSize: 16)),
-              leading: const Icon(Icons.local_library, color: Colors.black),
-              trailing: controller.pendingLearnStatus
-                  ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
-                  : const SizedBox(),
-              onTap: goLearn,
-            ),
-            Divider(),
-            ListTile(
               title: const Text('Avalie o app', style: TextStyle(fontSize: 16)),
               leading: const Icon(Icons.star, color: Colors.black),
               onTap: () => goRateApp(context),

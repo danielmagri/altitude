@@ -16,7 +16,7 @@ class SkyScene extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
-      overflow: Overflow.visible,
+      clipBehavior: Clip.none,
       children: <Widget>[
         Cloud(
           duration: duration,
@@ -52,12 +52,7 @@ class SkyScene extends StatelessWidget {
 }
 
 class RocketAnimated extends StatefulWidget {
-  RocketAnimated(
-      {Key key,
-      @required this.size,
-      @required this.color,
-      @required this.force,
-      @required this.duration})
+  RocketAnimated({Key key, @required this.size, @required this.color, @required this.force, @required this.duration})
       : super(key: key);
 
   final Size size;
@@ -69,17 +64,13 @@ class RocketAnimated extends StatefulWidget {
   _RocketAnimatedState createState() => _RocketAnimatedState();
 }
 
-class _RocketAnimatedState extends State<RocketAnimated>
-    with SingleTickerProviderStateMixin {
+class _RocketAnimatedState extends State<RocketAnimated> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   @override
   void initState() {
     _controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration - 400),
-        vsync: this,
-        lowerBound: 2 * pi,
-        upperBound: 9 * pi);
+        duration: Duration(milliseconds: widget.duration - 400), vsync: this, lowerBound: 2 * pi, upperBound: 9 * pi);
 
     _controller.addListener(() {
       setState(() {});
@@ -125,12 +116,7 @@ class _RocketAnimatedState extends State<RocketAnimated>
 }
 
 class Cloud extends StatefulWidget {
-  Cloud(
-      {Key key,
-      @required this.duration,
-      this.startPoint = 0,
-      @required this.imagePath,
-      this.fromRight = false})
+  Cloud({Key key, @required this.duration, this.startPoint = 0, @required this.imagePath, this.fromRight = false})
       : super(key: key);
 
   final int duration;
@@ -156,8 +142,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration), vsync: this);
+    _controller = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
 
     _controller.addListener(() {
       if (_controller.value > 0.94 && update) {
@@ -240,9 +225,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
           opacity: opacityBottom.value,
           child: Image.asset(
             widget.imagePath,
-            alignment: !widget.fromRight
-                ? Alignment.centerLeft
-                : Alignment.centerRight,
+            alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
             fit: BoxFit.contain,
             color: AppColors.sky,
           ),

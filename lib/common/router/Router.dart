@@ -3,7 +3,6 @@ import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/router/arguments/LearnDetailPageArguments.dart';
 import 'package:altitude/feature/addHabit/view/page/AddHabitPage.dart';
 import 'package:altitude/feature/competition/view/page/CreateCompetitionPage.dart';
 import 'package:altitude/feature/competition/view/page/competitionDetailsPage.dart';
@@ -17,8 +16,6 @@ import 'package:altitude/feature/habitDetails/view/page/HabitDetailsPage.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:altitude/feature/login/view/page/LoginPage.dart';
 import 'package:altitude/feature/statistics/view/page/StatisticsPage.dart';
-import 'package:altitude/feature/learn/view/LearnDetailPage.dart';
-import 'package:altitude/feature/learn/view/LearnPage.dart';
 import 'package:altitude/feature/setting/view/page/HelpPage.dart';
 import 'package:altitude/feature/setting/view/page/SettingsPage.dart';
 import 'package:flutter/material.dart'
@@ -45,11 +42,6 @@ class Router {
         return _pageRoute(PendingFriendsPage(), 'pendingFriends');
       case 'competition':
         return _pageRoute(CompetitionPage(), 'competition');
-      case 'learn':
-        return _pageRoute(LearnPage(), 'learn');
-      case 'learnDetail':
-        var arguments = settings.arguments as LearnDetailPageArguments;
-        return _pageRoute(LearnDetailPage(arguments), 'learnDetail');
       case 'createCompetition':
         var arguments = settings.arguments as CreateCompetitionPageArguments;
         return _pageRoute(CreateCompetitionPage(arguments), 'createCompetition');
