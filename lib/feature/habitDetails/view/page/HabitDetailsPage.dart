@@ -120,7 +120,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
       if (donePageType == DonePageType.Calendar &&
           add &&
           SharedPref.instance.alarmTutorial < 2 &&
-          controller.reminders.data.hasAnyDay()) {
+          controller.reminders.data?.hasAnyDay() == true) {
         await Future.delayed(Duration(milliseconds: 600));
         scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         navigateSmooth(
@@ -230,11 +230,14 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
                   child: Observer(
                     builder: (_) => controller.isHabitDone.handleStateLoadable(
                       () => const Skeleton(width: double.maxFinite, height: 50),
-                      (data, loading) => RaisedButton(
-                        color: data ? controller.habitColor : Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        elevation: 5.0,
+                      (data, loading) => ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(data ? controller.habitColor : Colors.white),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                            overlayColor: MaterialStateProperty.all(controller.habitColor.withOpacity(0.2)),
+                            elevation: MaterialStateProperty.all(2)),
                         onPressed: () {
                           if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
                         },

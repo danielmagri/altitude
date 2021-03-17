@@ -124,7 +124,7 @@ class Rocket extends StatelessWidget {
   final double fireForce;
 
   List<Widget> _listPainters() {
-    List<Widget> widgets = new List();
+    List<Widget> widgets = [];
 
     if (isExtend && state != RocketState.ON_FIRE) {
       widgets.add(CustomPaint(

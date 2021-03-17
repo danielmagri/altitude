@@ -77,7 +77,7 @@ class CalendarWidget extends StatelessWidget {
                   availableCalendarFormats: const {
                     CalendarFormat.month: '',
                   },
-                  onDaySelected: null,
+                  onDaySelected: dayCalendarClick,
                   onDayLongPressed: dayCalendarClick,
                   onVisibleDaysChanged: controller.calendarMonthSwipe,
                   daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {

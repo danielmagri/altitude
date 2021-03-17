@@ -6,14 +6,15 @@ import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
         ChoiceChip,
+        Colors,
         Container,
         EdgeInsets,
-        FlatButton,
         FontWeight,
         Key,
         SingleChildScrollView,
         StatefulWidget,
         Text,
+        TextButton,
         TextStyle,
         Widget,
         Wrap,
@@ -86,9 +87,10 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
         ),
       ),
       action: <Widget>[
-        FlatButton(child: const Text('Cancelar'), onPressed: () => navigatePop),
-        FlatButton(
-            child: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: _addCompetitors)
+        TextButton(child: const Text('Cancelar', style: TextStyle(color: Colors.black)), onPressed: () => navigatePop),
+        TextButton(
+            child: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+            onPressed: _addCompetitors)
       ],
     );
   }

@@ -3,10 +3,10 @@ import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:flutter/material.dart'
     show
         Color,
+        Colors,
         Column,
         Container,
         EdgeInsets,
-        FlatButton,
         FontWeight,
         Key,
         MainAxisAlignment,
@@ -16,6 +16,7 @@ import 'package:flutter/material.dart'
         State,
         StatefulWidget,
         Text,
+        TextButton,
         TextStyle,
         Theme,
         Widget;
@@ -79,8 +80,12 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
         ),
       ),
       action: [
-        FlatButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Cancelar")),
-        FlatButton(onPressed: _validate, child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.black))),
+        TextButton(
+            onPressed: _validate,
+            child: const Text("Ok", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
       ],
     );
   }

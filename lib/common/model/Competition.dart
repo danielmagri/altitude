@@ -40,7 +40,7 @@ class Competition {
   }
 
   factory Competition.fromJson(Map<String, dynamic> json, String id) {
-    List<Competitor> competitorsList = List();
+    List<Competitor> competitorsList = [];
     if (json[COMPETITORS] is Map) {
       Map map = json[COMPETITORS] as Map;
       competitorsList = map.keys.map((e) => Competitor.fromJson(map[e], e)).toList();

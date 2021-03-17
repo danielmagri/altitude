@@ -194,7 +194,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
   }
 
   List<Widget> _competitorsWidget() {
-    List<Widget> widgets = List();
+    List<Widget> widgets = [];
 
     widgets.add(Metrics(height: getMaxHeight(context)));
 

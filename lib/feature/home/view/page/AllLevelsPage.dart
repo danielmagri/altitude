@@ -14,7 +14,7 @@ class AllLevelsPage extends StatefulWidget {
 
 class _AllLevelsPageState extends BaseState<AllLevelsPage> {
   List<Widget> _setLevelsWidget() {
-    List<Widget> widgets = List();
+    List<Widget> widgets = [];
     widgets.add(
       Container(
         margin: EdgeInsets.only(top: 40, bottom: 16),

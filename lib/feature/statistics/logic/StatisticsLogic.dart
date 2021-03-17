@@ -49,7 +49,7 @@ abstract class _StatisticsLogicBase with Store {
 
   Future<List<HistoricStatisticData>> handleHistoricData(
       Map<DateTime, List<DayDone>> dateGrouped, List<Habit> habits) async {
-    List<HistoricStatisticData> dayHistoric = List();
+    List<HistoricStatisticData> dayHistoric = [];
     int currentYear = 0;
     int lastMonth = 0;
 
@@ -91,7 +91,7 @@ abstract class _StatisticsLogicBase with Store {
   }
 
   List<FrequencyStatisticData> handleFrequencyData(Map<DateTime, List<DayDone>> dateGrouped, List<Habit> habits) {
-    List<FrequencyStatisticData> dayFrequency = List();
+    List<FrequencyStatisticData> dayFrequency = [];
 
     int currentYear = 0;
     int lastMonth = 0;
@@ -117,7 +117,7 @@ abstract class _StatisticsLogicBase with Store {
 
       if (key.month > lastMonth + 1 && lastMonth != 0) {
         List.generate(key.month - lastMonth - 1,
-            (i) => dayFrequency.add(FrequencyStatisticData(List(), Map(), lastMonth + 1 + i, key.year, false)));
+            (i) => dayFrequency.add(FrequencyStatisticData([], Map(), lastMonth + 1 + i, key.year, false)));
       }
 
       dayFrequency.add(FrequencyStatisticData(weekdayDone, habitsMap, key.month, key.year, currentYear != key.year));
@@ -132,7 +132,7 @@ abstract class _StatisticsLogicBase with Store {
       List.generate(
           DateTime.now().month - lastMonth,
           (i) => dayFrequency.add(FrequencyStatisticData(
-              List(), Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
+              [], Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
     }
 
     return dayFrequency.reversed.toList();

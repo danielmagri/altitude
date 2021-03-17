@@ -21,7 +21,7 @@ class Metrics extends StatelessWidget {
   final double height;
 
   List<Widget> _metricList() {
-    List<Widget> widgets = List();
+    List<Widget> widgets = [];
     var km = (height / 10) - 6;
 
     widgets.insert(0, _metricWidget("0", 60));

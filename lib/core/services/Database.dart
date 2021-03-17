@@ -338,7 +338,7 @@ class DatabaseService {
   /// Adiciona os alarmes do hábito.
   // Future<List<Reminder>> addReminders(int habitId, List<Reminder> reminders) async {
   // final db = await database;
-  // List<Reminder> remindersAdded = new List();
+  // List<Reminder> remindersAdded = new [];
 
   // for (Reminder reminder in reminders) {
   //   int reminderId =
@@ -511,7 +511,7 @@ class DatabaseService {
       result = await db.rawQuery('SELECT id FROM competition WHERE habit_id==$habitId;');
     }
 
-    List<String> list = List();
+    List<String> list = [];
     result.forEach((c) => list.add(c["id"]));
 
     return list;
