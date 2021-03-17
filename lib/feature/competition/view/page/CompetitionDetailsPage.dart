@@ -203,7 +203,7 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
         child: SizedBox(
           height: (competitor.score * 10.0) + 60,
           child: Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
             alignment: Alignment.topCenter,
             children: <Widget>[
               Positioned(
