@@ -5,14 +5,16 @@ import 'package:flutter/material.dart'
         BorderRadius,
         BoxDecoration,
         BuildContext,
+        ButtonStyle,
         Colors,
         Container,
         EdgeInsets,
+        ElevatedButton,
         FontWeight,
+        MaterialStateProperty,
         Navigator,
         Padding,
         RadialGradient,
-        RaisedButton,
         RichText,
         RoundedRectangleBorder,
         Scaffold,
@@ -73,16 +75,18 @@ class TutorialPresentation extends StatelessWidget {
             alignment: const Alignment(0, 0.92),
             child: SizedBox(
               width: 150,
-              child: RaisedButton(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                elevation: 5.0,
+              child: ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
                   hasNext ? "próximo" : "fechar",
                   style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                 ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 10)),
+                    overlayColor: MaterialStateProperty.all(Colors.black26),
+                    elevation: MaterialStateProperty.all(2)),
               ),
             ),
           )

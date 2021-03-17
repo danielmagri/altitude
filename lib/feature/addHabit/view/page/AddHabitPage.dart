@@ -88,13 +88,16 @@ class _AddHabitPageState extends BaseState<AddHabitPage> {
             Container(
               margin: const EdgeInsets.only(top: 20, bottom: 40),
               child: Observer(
-                builder: (_) => RaisedButton(
-                  color: controller.habitColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                  padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
-                  elevation: 5.0,
+                builder: (_) => ElevatedButton(
                   onPressed: _createHabitTap,
                   child: const Text("CRIAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(controller.habitColor),
+                      shape:
+                          MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0)),
+                      overlayColor: MaterialStateProperty.all(Colors.white24),
+                      elevation: MaterialStateProperty.all(2)),
                 ),
               ),
             ),

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart'
         Column,
         Container,
         EdgeInsets,
-        FlatButton,
         Flexible,
         GestureDetector,
         Hero,
@@ -30,6 +29,7 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Text,
         TextAlign,
+        TextButton,
         TextSpan,
         TextStyle,
         Widget,
@@ -89,7 +89,7 @@ class TutorialDialog extends StatelessWidget {
                   const SizedBox(height: 20.0),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },

@@ -88,7 +88,7 @@ class HistoricBar extends StatelessWidget {
   final String selectedHabitId;
 
   List<Widget> barWidget(BuildContext context) {
-    List<Widget> list = List();
+    List<Widget> list = [];
 
     if (data.totalScore == 0) {
       list.add(const SizedBox(width: 28));

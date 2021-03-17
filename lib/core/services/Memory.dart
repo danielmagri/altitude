@@ -7,12 +7,12 @@ class Memory {
   static Memory get getInstance => GetIt.I.get<Memory>();
 
   Person person;
-  List<Habit> habits = List();
-  List<Competition> competitions = List();
+  List<Habit> habits = [];
+  List<Competition> competitions = [];
 
   void clear() {
     person = null;
-    habits = List();
-    competitions = List();
+    habits = [];
+    competitions = [];
   }
 }

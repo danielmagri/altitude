@@ -79,10 +79,7 @@ class _TutorialPageState extends BaseState<TutorialPage> {
                     right: 0,
                     height: 60,
                     child: FlatButton(
-                      child: Text(
-                        "Avançar",
-                        style: TextStyle(fontSize: 20.0, color: Colors.white),
-                      ),
+                      child: const Text("Avançar", style: TextStyle(fontSize: 20.0, color: Colors.white)),
                       onPressed: _nextTap,
                     ),
                   ),

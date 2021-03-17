@@ -23,7 +23,7 @@ class Reminder {
       this.sunday});
 
   List<Day> getAllweekdays() {
-    List<Day> days = List();
+    List<Day> days = [];
     if (monday) days.add(Day.Monday);
     if (tuesday) days.add(Day.Tuesday);
     if (wednesday) days.add(Day.Wednesday);

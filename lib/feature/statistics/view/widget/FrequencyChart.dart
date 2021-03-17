@@ -100,7 +100,7 @@ class FrequencyCircle extends StatelessWidget {
   final String selectedHabitId;
 
   List<Widget> _content() {
-    List<Widget> content = List();
+    List<Widget> content = [];
 
     if (selectedHabitId == null) {
       data.weekdayDone.forEach((e) {

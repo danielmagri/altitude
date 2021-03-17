@@ -55,8 +55,8 @@ class Person {
       fcmToken: json[FCM_TOKEN],
       score: json[SCORE],
       reminderCounter: json[REMINDER_COUNTER] ?? 0,
-      friends: List<String>.from(json[FRIENDS] ?? List()),
-      pendingFriends: List<String>.from(json[PENDING_FRIENDS] ?? List()),
+      friends: List<String>.from(json[FRIENDS] ?? []),
+      pendingFriends: List<String>.from(json[PENDING_FRIENDS] ?? []),
       level: json[LEVEL],
       state: json[STATE]);
 

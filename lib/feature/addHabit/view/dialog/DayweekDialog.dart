@@ -11,7 +11,7 @@ import 'package:flutter/material.dart'
         Column,
         Container,
         EdgeInsets,
-        FlatButton,
+        TextButton,
         FontWeight,
         GestureDetector,
         Key,
@@ -115,8 +115,12 @@ class _DayweekDialogState extends State<DayweekDialog> {
         ],
       ),
       action: [
-        FlatButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Cancelar")),
-        FlatButton(onPressed: _validate, child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cancelar", style: TextStyle(color: Colors.black))),
+        TextButton(
+            onPressed: _validate,
+            child: const Text("Ok", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
       ],
     );
   }

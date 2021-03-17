@@ -95,10 +95,10 @@ class PersonUseCase extends BaseUseCase {
 
   Future<Result<List<Person>>> searchEmail(String value) => safeCall(() async {
         if (value != email) {
-          List<String> myPendingFriends = (await getPerson()).absoluteResult().pendingFriends ?? List();
+          List<String> myPendingFriends = (await getPerson()).absoluteResult().pendingFriends ?? [];
           return await FireDatabase().searchEmail(value, myPendingFriends);
         } else {
-          return List();
+          return [];
         }
       });
 

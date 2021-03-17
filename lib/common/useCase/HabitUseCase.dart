@@ -66,7 +66,7 @@ class HabitUseCase extends BaseUseCase {
           int score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
           totalScore += score;
 
-          List<Pair<String, int>> competitionsScore = List();
+          List<Pair<String, int>> competitionsScore = [];
 
           for (Competition competition in competitions.where((e) => e.getMyCompetitor().habitId == habit.id).toList()) {
             int competitionScore = ScoreControl().scoreEarnedTotal(habit.frequency,
@@ -257,7 +257,7 @@ class HabitUseCase extends BaseUseCase {
   /// Days Done
 
   Future<Result<List<DayDone>>> getAllDaysDone(List<Habit> habits) => safeCall(() async {
-        List<DayDone> list = List();
+        List<DayDone> list = [];
 
         for (Habit habit in habits) {
           list.addAll(

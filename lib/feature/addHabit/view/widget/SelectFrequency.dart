@@ -68,20 +68,20 @@ class SelectFrequency extends StatelessWidget {
               case FrequencyType.DAYWEEK:
                 showDialog(
                     context: context,
-                    child: DayweekDialog(
-                      color: color,
-                      frequency: currentFrequency is DayWeek ? currentFrequency : null,
-                    )).then((value) {
+                    builder: (_) => DayweekDialog(
+                          color: color,
+                          frequency: currentFrequency is DayWeek ? currentFrequency : null,
+                        )).then((value) {
                   if (value is Frequency) selectFrequency(value);
                 });
                 break;
               case FrequencyType.WEEKLY:
                 showDialog(
                     context: context,
-                    child: WeeklyDialog(
-                      color: color,
-                      frequency: currentFrequency is Weekly ? currentFrequency : null,
-                    )).then((value) {
+                    builder: (_) => WeeklyDialog(
+                          color: color,
+                          frequency: currentFrequency is Weekly ? currentFrequency : null,
+                        )).then((value) {
                   if (value is Frequency) selectFrequency(value);
                 });
                 break;
