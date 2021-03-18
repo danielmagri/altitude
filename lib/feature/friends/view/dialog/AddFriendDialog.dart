@@ -156,11 +156,14 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                     const SizedBox(width: 4),
                                     person.state == 1
                                         ? Container()
-                                        : RaisedButton(
-                                            color: Colors.black,
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                                            padding: const EdgeInsets.all(10),
-                                            elevation: 0,
+                                        : ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(Colors.black),
+                                                shape: MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                                padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
+                                                overlayColor: MaterialStateProperty.all(Colors.white24),
+                                                elevation: MaterialStateProperty.all(0)),
                                             onPressed: () => onClickButton(person),
                                             child: Text(
                                               buttonText(person.state),
@@ -182,15 +185,19 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      FlatButton(
-                        child: const Text("Cancelar", style: const TextStyle(fontSize: 17)),
+                      TextButton(
+                        child: const Text("Cancelar", style: const TextStyle(fontSize: 17, color: Colors.black)),
                         onPressed: () => navigatePop(),
                       ),
-                      RaisedButton(
-                        color: Colors.black,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                        elevation: 5.0,
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.black),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                            padding:
+                                MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
+                            overlayColor: MaterialStateProperty.all(Colors.white24),
+                            elevation: MaterialStateProperty.all(2)),
                         onPressed: search,
                         child: Text("Buscar", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                       ),

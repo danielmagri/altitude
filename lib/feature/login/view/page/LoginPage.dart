@@ -73,10 +73,13 @@ class _LoginPageState extends BaseState<LoginPage> {
             Container(
               margin: const EdgeInsets.only(left: 20, right: 20),
               width: double.maxFinite,
-              child: RaisedButton(
-                color: const Color.fromARGB(255, 59, 89, 152),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 13),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 59, 89, 152)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 13)),
+                    overlayColor: MaterialStateProperty.all(Colors.white24),
+                    elevation: MaterialStateProperty.all(2)),
                 onPressed: loginWithFacebook,
                 child: const Text("Entrar com Facebook",
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
@@ -85,10 +88,13 @@ class _LoginPageState extends BaseState<LoginPage> {
             Container(
               margin: const EdgeInsets.only(top: 8, left: 20, right: 20),
               width: double.maxFinite,
-              child: RaisedButton(
-                color: Color.fromARGB(255, 218, 67, 54),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(vertical: 13),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 218, 67, 54)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 13)),
+                    overlayColor: MaterialStateProperty.all(Colors.white24),
+                    elevation: MaterialStateProperty.all(2)),
                 onPressed: loginWithGoogle,
                 child:
                     const Text("Entrar com Google", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),

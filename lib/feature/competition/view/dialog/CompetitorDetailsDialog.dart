@@ -4,9 +4,9 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
+        Colors,
         Column,
         Expanded,
-        FlatButton,
         FontWeight,
         Key,
         Navigator,
@@ -14,6 +14,7 @@ import 'package:flutter/material.dart'
         Size,
         StatelessWidget,
         Text,
+        TextButton,
         TextStyle,
         Transform,
         Widget,
@@ -51,7 +52,9 @@ class CompetitorDetailsDialog extends StatelessWidget {
         ],
       ),
       action: <Widget>[
-        FlatButton(child: const Text('Fechar'), onPressed: () => Navigator.of(context).pop()),
+        TextButton(
+            child: const Text('Fechar', style: TextStyle(color: Colors.black)),
+            onPressed: () => Navigator.of(context).pop()),
       ],
     );
   }

@@ -102,9 +102,12 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
               onEditingComplete: saveTitle,
             ),
             action: <Widget>[
-              FlatButton(child: const Text('Cancelar'), onPressed: () => Navigator.of(context).pop()),
-              FlatButton(
-                  child: const Text('Salvar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: saveTitle)
+              TextButton(
+                  child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
+                  onPressed: () => Navigator.of(context).pop()),
+              TextButton(
+                  child: const Text('Salvar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                  onPressed: saveTitle)
             ],
           );
         });
@@ -135,8 +138,8 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
           title: "Sair da competição",
           body: "Tem certeza que deseja sair da competição?",
           action: <Widget>[
-            FlatButton(
-              child: const Text("Sim", style: TextStyle(fontSize: 17)),
+            TextButton(
+              child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
               onPressed: () {
                 showLoading(true);
                 controller.leaveCompetition(widget.arguments.competition.id).then((res) {
@@ -146,8 +149,8 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
                 }).catchError(handleError);
               },
             ),
-            FlatButton(
-              child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            TextButton(
+              child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -165,8 +168,8 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
           body:
               "Data de início: ${widget.arguments.competition.initialDate.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.year}",
           action: <Widget>[
-            FlatButton(
-              child: const Text("Fechar", style: TextStyle(fontSize: 17)),
+            TextButton(
+              child: const Text("Fechar", style: TextStyle(fontSize: 17, color: Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
           ],

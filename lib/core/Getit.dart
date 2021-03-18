@@ -21,7 +21,7 @@ import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:get_it/get_it.dart';
 
-class Getit {
+abstract class Getit {
   static init() {
     var getIt = GetIt.instance;
 

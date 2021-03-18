@@ -186,12 +186,12 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     controller.cue.isNotEmpty
-                        ? FlatButton(
+                        ? TextButton(
                             onPressed: remove,
-                            child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
+                            child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300, color: Colors.black)),
                           )
                         : SizedBox(),
-                    FlatButton(
+                    TextButton(
                       onPressed: save,
                       child: Text(
                         "Salvar",

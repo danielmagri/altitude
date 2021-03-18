@@ -78,8 +78,8 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
           title: "Largar competição",
           body: "Tem certeza que deseja sair da competição?",
           action: <Widget>[
-            FlatButton(
-              child: const Text("Sim", style: TextStyle(fontSize: 17)),
+            TextButton(
+              child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
               onPressed: () {
                 showLoading(true);
                 controller.exitCompetition(item).then((res) {
@@ -91,8 +91,9 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
                 });
               },
             ),
-            FlatButton(
-              child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            TextButton(
+              child:
+                  const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
               onPressed: navigatePop,
             ),
           ],
@@ -184,9 +185,14 @@ class _CompetitionPageState extends BaseState<CompetitionPage> {
               child: Row(
                 children: <Widget>[
                   const Expanded(child: Text("Minhas competições", style: TextStyle(fontSize: 18))),
-                  FlatButton(
-                    color: AppColors.colorAccent,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(AppColors.colorAccent),
+                        shape:
+                            MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
+                        overlayColor: MaterialStateProperty.all(Colors.white24),
+                        elevation: MaterialStateProperty.all(0)),
                     child: const Text("Criar", style: TextStyle(color: Colors.white)),
                     onPressed: createCompetition,
                   ),

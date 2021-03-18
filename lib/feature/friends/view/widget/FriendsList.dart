@@ -16,7 +16,7 @@ import 'package:flutter/material.dart'
         CrossAxisAlignment,
         EdgeInsets,
         Expanded,
-        FlatButton,
+        TextButton,
         FontWeight,
         InkWell,
         Key,
@@ -49,15 +49,15 @@ class FriendsList extends StatelessWidget {
       title: "Desfazer amizade",
       body: "Tem certeza que deseja desfazer amizade com ${person.name}?",
       action: <Widget>[
-        FlatButton(
-          child: const Text("SIM", style: const TextStyle(fontSize: 17)),
+        TextButton(
+          child: const Text("SIM", style: const TextStyle(fontSize: 17, color: Colors.black)),
           onPressed: () {
             Navigator.of(context).pop();
             removeFriend(person.uid);
           },
         ),
-        FlatButton(
-          child: const Text("NÃO", style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+        TextButton(
+          child: const Text("NÃO", style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
           onPressed: () => Navigator.pop(context),
         ),
       ],

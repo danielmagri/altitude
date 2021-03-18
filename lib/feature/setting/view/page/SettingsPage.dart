@@ -44,8 +44,8 @@ class _SettingsPageState extends BaseState<SettingsPage> {
         body: "Tem certeza que deseja sair?",
         subBody: "Você não vai poder mais competir com seus amigos..",
         action: <Widget>[
-          FlatButton(
-            child: const Text("Sim", style: TextStyle(fontSize: 17)),
+          TextButton(
+            child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
             onPressed: () async {
               showLoading(true);
               controller.logout().then((_) {
@@ -54,8 +54,8 @@ class _SettingsPageState extends BaseState<SettingsPage> {
               }).catchError(handleError);
             },
           ),
-          FlatButton(
-            child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          TextButton(
+            child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -76,9 +76,12 @@ class _SettingsPageState extends BaseState<SettingsPage> {
           onEditingComplete: saveName,
         ),
         action: <Widget>[
-          FlatButton(child: const Text('Cancelar'), onPressed: () => Navigator.of(context).pop()),
-          FlatButton(
-              child: const Text('Salvar', style: const TextStyle(fontWeight: FontWeight.bold)), onPressed: saveName)
+          TextButton(
+              child: const Text('Cancelar', style: const TextStyle(color: Colors.black)),
+              onPressed: () => Navigator.of(context).pop()),
+          TextButton(
+              child: const Text('Salvar', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+              onPressed: saveName)
         ],
       ),
     );
@@ -105,12 +108,12 @@ class _SettingsPageState extends BaseState<SettingsPage> {
         title: "Pontuação",
         body: "Deseja recalcular sua pontuação?",
         action: <Widget>[
-          FlatButton(
-            child: const Text("Não", style: TextStyle(fontSize: 17)),
+          TextButton(
+            child: const Text("Não", style: TextStyle(fontSize: 17, color: Colors.black)),
             onPressed: () => Navigator.pop(context),
           ),
-          FlatButton(
-            child: const Text("Sim", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          TextButton(
+            child: const Text("Sim", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
             onPressed: () async {
               showLoading(true);
               controller.recalculateScore().then((_) {
