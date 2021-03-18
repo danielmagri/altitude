@@ -112,7 +112,8 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
+                          Rocket(
+                              size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
                           const SizedBox(width: 10),
                           Text(habit.habit, style: const TextStyle(color: Colors.black)),
                         ],
@@ -126,8 +127,13 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
             Container(
               padding: const EdgeInsets.only(right: 16, left: 16),
               alignment: Alignment.topCenter,
-              child: FlatButton(
-                color: AppColors.colorAccent,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(AppColors.colorAccent),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
+                    overlayColor: MaterialStateProperty.all(Colors.white24),
+                    elevation: MaterialStateProperty.all(0)),
                 child: const Text("ou crie um novo", style: TextStyle(color: Colors.white)),
                 onPressed: goAddHabit,
               ),
@@ -158,11 +164,13 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
             Container(
               margin: const EdgeInsets.only(top: 38, bottom: 28),
               alignment: Alignment.topCenter,
-              child: RaisedButton(
-                color: AppColors.colorAccent,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0),
-                elevation: 5.0,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(AppColors.colorAccent),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 50, vertical: 16)),
+                    overlayColor: MaterialStateProperty.all(Colors.white24),
+                    elevation: MaterialStateProperty.all(2)),
                 onPressed: createCompetition,
                 child: const Text("CRIAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
               ),

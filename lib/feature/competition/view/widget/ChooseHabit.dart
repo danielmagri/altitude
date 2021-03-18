@@ -19,7 +19,7 @@ import 'package:flutter/material.dart'
         DropdownButton,
         DropdownMenuItem,
         EdgeInsets,
-        FlatButton,
+        TextButton,
         FontWeight,
         Key,
         Row,
@@ -103,9 +103,11 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
             }),
       ),
       action: <Widget>[
-        FlatButton(child: const Text('Cancelar'), onPressed: () => navigatePop()),
-        FlatButton(
-            child: const Text('Competir', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: acceptRequest),
+        TextButton(
+            child: const Text('Cancelar', style: TextStyle(color: Colors.black)), onPressed: () => navigatePop()),
+        TextButton(
+            child: const Text('Competir', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+            onPressed: acceptRequest),
       ],
     );
   }

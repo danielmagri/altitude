@@ -22,8 +22,7 @@ class NewLevelDialog extends StatelessWidget {
           Center(
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
+              margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
               decoration: new BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.0),
@@ -40,10 +39,8 @@ class NewLevelDialog extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     "Parabéns!",
-                    style: TextStyle(
-                        color: LevelControl.getLevelColor(score),
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: LevelControl.getLevelColor(score), fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 24.0),
                   Text(
@@ -59,22 +56,17 @@ class NewLevelDialog extends StatelessWidget {
                   SizedBox(height: 20.0),
                   Text(
                     LevelControl.getLevelText(score),
-                    style: TextStyle(
-                        color: LevelControl.getLevelColor(score),
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
+                    style:
+                        TextStyle(color: LevelControl.getLevelColor(score), fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20.0),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(
-                        "Ok",
-                        style: TextStyle(fontSize: 18.0, color: Colors.black),
-                      ),
+                      child: const Text("Ok", style: TextStyle(fontSize: 18.0, color: Colors.black)),
                     ),
                   ),
                 ],
@@ -92,8 +84,7 @@ class BackgroundAnimated extends StatefulWidget {
   _BackgroundAnimatedState createState() => _BackgroundAnimatedState();
 }
 
-class _BackgroundAnimatedState extends State<BackgroundAnimated>
-    with SingleTickerProviderStateMixin {
+class _BackgroundAnimatedState extends State<BackgroundAnimated> with SingleTickerProviderStateMixin {
   AnimationController _controller;
 
   Animatable<Color> background = TweenSequence<Color>([
@@ -170,8 +161,7 @@ class _BackgroundAnimatedState extends State<BackgroundAnimated>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: background
-          .evaluate(AlwaysStoppedAnimation(_controller.value)).withOpacity(0.75),
+      color: background.evaluate(AlwaysStoppedAnimation(_controller.value)).withOpacity(0.75),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:altitude/common/view/generic/DataError.dart';
-import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
@@ -29,7 +28,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   HomeLogic controller = GetIt.I.get<HomeLogic>();
-  bool isPageActived = true;
 
   @override
   initState() {
