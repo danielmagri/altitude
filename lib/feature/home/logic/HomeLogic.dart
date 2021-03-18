@@ -1,10 +1,8 @@
-import 'package:altitude/common/constant/Books.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
@@ -31,9 +29,6 @@ abstract class _HomeLogicBase with Store {
   @observable
   bool pendingFriendStatus = false;
 
-  @observable
-  bool pendingLearnStatus = false;
-
   Future<void> getUser() async {
     (await _personUseCase.getPerson()).result((data) {
       user.setData(data);
@@ -54,7 +49,6 @@ abstract class _HomeLogicBase with Store {
   void fetchPendingStatus() {
     pendingCompetitionStatus = _competitionUseCase.pendingCompetitionsStatus;
     pendingFriendStatus = _personUseCase.pendingFriendsStatus;
-    pendingLearnStatus = books.length != SharedPref.instance.pendingLearn ? true : false;
   }
 
   @action

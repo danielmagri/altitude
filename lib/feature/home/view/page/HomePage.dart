@@ -162,11 +162,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                   padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
                   child: Row(
                     children: <Widget>[
-                      Observer(
-                          builder: (_) => IconButtonStatus(
-                              icon: const Icon(Icons.menu),
-                              onPressed: showDrawer,
-                              status: controller.pendingLearnStatus)),
+                      IconButton(icon: const Icon(Icons.menu), onPressed: showDrawer),
                       const Spacer(),
                     ],
                   ),
