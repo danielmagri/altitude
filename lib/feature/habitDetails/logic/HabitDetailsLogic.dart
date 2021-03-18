@@ -1,7 +1,5 @@
-import 'package:altitude/common/constant/Books.dart';
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
-import 'package:altitude/common/model/Book.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
@@ -9,7 +7,6 @@ import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/model/DataState.dart';
-import 'package:altitude/core/services/FireConfig.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
@@ -40,8 +37,6 @@ abstract class _HabitDetailsLogicBase with Store {
 
   @observable
   BottomSheetType panelType = BottomSheetType.NONE;
-
-  Book get bookAdvertisement => books[FireConfig.instance.copyBook1];
 
   void fetchData(String habitId, int color) async {
     _id = habitId;

@@ -4,7 +4,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
-    show Animation, BuildContext, Color, Colors, CurvedAnimation, Curves, FadeTransition, Navigator, PageRouteBuilder, Route, State, StatefulWidget, Widget, protected;
+    show
+        Animation,
+        BuildContext,
+        Color,
+        Colors,
+        CurvedAnimation,
+        Curves,
+        FadeTransition,
+        Navigator,
+        PageRouteBuilder,
+        Route,
+        State,
+        StatefulWidget,
+        Widget,
+        protected;
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
@@ -47,7 +61,6 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
         backgroundColor: Color.fromARGB(255, 220, 220, 220),
         textColor: Colors.black,
         fontSize: 16.0);

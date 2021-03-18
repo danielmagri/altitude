@@ -18,7 +18,7 @@ class CalendarWidget extends StatelessWidget {
   final Function(bool add, DateTime date, DonePageType donePageType) completeHabit;
   final CalendarController calendarController;
 
-  void dayCalendarClick(DateTime date, List events) {
+  void dayCalendarClick(DateTime date, List events, List holidays) {
     DateTime day = DateTime(date.year, date.month, date.day);
     bool add = events.length == 0;
 
