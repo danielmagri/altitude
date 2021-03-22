@@ -10,7 +10,6 @@ import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
   CreateCompetitionPage(this.arguments);
@@ -21,9 +20,7 @@ class CreateCompetitionPage extends StatefulWidget {
   _CreateCompetitionPageState createState() => _CreateCompetitionPageState();
 }
 
-class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
-  CreateCompetitionLogic controller = GetIt.I.get<CreateCompetitionLogic>();
-
+class _CreateCompetitionPageState extends BaseStateWithLogic<CreateCompetitionPage, CreateCompetitionLogic> {
   final TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -34,7 +31,6 @@ class _CreateCompetitionPageState extends BaseState<CreateCompetitionPage> {
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<CreateCompetitionLogic>();
     textEditingController.dispose();
     super.dispose();
   }

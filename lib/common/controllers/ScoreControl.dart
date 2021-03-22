@@ -1,11 +1,12 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:get_it/get_it.dart';
 
 enum ScoreType { ADD, SUBTRACT }
 
 class ScoreControl {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  final PersonUseCase personUseCase = GetIt.I.get<PersonUseCase>();
 
   static const int DAY_DONE_POINT = 2;
   static const int CYCLE_DONE_POINT = 1;

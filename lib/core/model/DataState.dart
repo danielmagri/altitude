@@ -14,6 +14,8 @@ abstract class _DataStateBase<T> with Store {
   @observable
   StateType _state = StateType.INITIAL;
 
+  StateType get state => _state;
+
   @observable
   bool _loading = false;
 

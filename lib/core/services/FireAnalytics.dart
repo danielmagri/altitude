@@ -1,14 +1,18 @@
+import 'package:altitude/core/di/get_it_config.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:injectable/injectable.dart';
 
-class FireAnalytics {
-  static final FireAnalytics _singleton = new FireAnalytics._internal();
-  FirebaseAnalytics analytics = FirebaseAnalytics();
+@service
+@Singleton(as: IFireAnalytics)
+class FireAnalytics implements IFireAnalytics {
+  FirebaseAnalytics _analytics = FirebaseAnalytics();
 
-  factory FireAnalytics() {
-    return _singleton;
+  FirebaseAnalytics get analytics => _analytics;
+
+  void setUserId(String uid) {
+    analytics.setUserId(uid);
   }
-
-  FireAnalytics._internal();
 
   void sendNewHabit(String habit, String color, String freqType, int freqTime, String hasReminder) {
     try {

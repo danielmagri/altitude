@@ -1,7 +1,7 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/model/Pair.dart';
-import 'package:altitude/core/services/LocalNotification.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
@@ -12,19 +12,28 @@ import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/services/FireDatabase.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/services/Memory.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
+@usecase
+@Injectable()
 class HabitUseCase extends BaseUseCase {
-  static HabitUseCase get getInstance => GetIt.I.get<HabitUseCase>();
+  static HabitUseCase get getI => GetIt.I.get<HabitUseCase>();
 
-  final Memory _memory = Memory.getInstance;
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final Memory _memory;
+  final PersonUseCase _personUseCase;
+  final CompetitionUseCase _competitionUseCase;
+  final IFireDatabase _fireDatabase;
+  final ILocalNotification _localNotification;
+  final IFireAnalytics _fireAnalytics;
+
+  HabitUseCase(this._memory, this._personUseCase, this._competitionUseCase, this._fireDatabase, this._localNotification, this._fireAnalytics);
 
   // Transfer data
 
@@ -36,32 +45,32 @@ class HabitUseCase extends BaseUseCase {
         }
 
         if (habit.reminder != null) {
-          await LocalNotification().addNotification(habit);
+          await _localNotification.addNotification(habit);
         }
 
         if (daysDone.length > 450) {
           String id =
-              await FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone.sublist(0, 450));
-          return FireDatabase().transferDayDonePlus(id, daysDone.sublist(450, daysDone.length));
+              await _fireDatabase.transferHabit(habit, reminderCounter, competitionsId, daysDone.sublist(0, 450));
+          return _fireDatabase.transferDayDonePlus(id, daysDone.sublist(450, daysDone.length));
         } else {
-          return FireDatabase().transferHabit(habit, reminderCounter, competitionsId, daysDone);
+          return _fireDatabase.transferHabit(habit, reminderCounter, competitionsId, daysDone);
         }
       });
 
       Future<Result> updateTotalScore(int score) => safeCall(() {
         _memory.clear();
-        return FireDatabase().updateTotalScore(score, LevelControl.getLevel(score));
+        return _fireDatabase.updateTotalScore(score, LevelControl.getLevel(score));
       });
 
   Future<Result> recalculateScore() => safeCall(() async {
         int totalScore = 0;
         _memory.clear();
 
-        List<Habit> habits = await FireDatabase().getHabits();
-        List<Competition> competitions = await FireDatabase().getCompetitions();
+        List<Habit> habits = await _fireDatabase.getHabits();
+        List<Competition> competitions = await _fireDatabase.getCompetitions();
 
         for (Habit habit in habits) {
-          List<DayDone> daysDone = await FireDatabase().getAllDaysDone(habit.id);
+          List<DayDone> daysDone = await _fireDatabase.getAllDaysDone(habit.id);
 
           int score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
           totalScore += score;
@@ -75,10 +84,10 @@ class HabitUseCase extends BaseUseCase {
             competitionsScore.add(Pair(competition.id, competitionScore));
           }
 
-          await FireDatabase().updateHabitScore(habit.id, score, competitionsScore);
+          await _fireDatabase.updateHabitScore(habit.id, score, competitionsScore);
         }
 
-        await FireDatabase().updateTotalScore(totalScore, LevelControl.getLevel(totalScore));
+        await _fireDatabase.updateTotalScore(totalScore, LevelControl.getLevel(totalScore));
 
         _memory.clear();
       });
@@ -87,7 +96,7 @@ class HabitUseCase extends BaseUseCase {
 
   Future<Result<List<Habit>>> getHabits({bool notSave = false}) => safeCall(() async {
         if (_memory.habits.isEmpty) {
-          var data = await FireDatabase().getHabits();
+          var data = await _fireDatabase.getHabits();
           if (!notSave) {
             _memory.habits = data;
           }
@@ -98,7 +107,7 @@ class HabitUseCase extends BaseUseCase {
       });
 
   Future<Result<Habit>> getHabit(String id) => safeCall(() async {
-        var data = await FireDatabase().getHabit(id);
+        var data = await _fireDatabase.getHabit(id);
 
         int index = _memory.habits.indexWhere((e) => e.id == id);
         if (index == -1) {
@@ -121,8 +130,8 @@ class HabitUseCase extends BaseUseCase {
           reminderCounter = await _getReminderCounter();
           habit.reminder.id = reminderCounter;
         }
-        var data = await FireDatabase().addHabit(habit, reminderCounter);
-        FireAnalytics().sendNewHabit(
+        var data = await _fireDatabase.addHabit(habit, reminderCounter);
+        _fireAnalytics.sendNewHabit(
             habit.habit,
             AppColors.habitsColorName[habit.colorCode],
             habit.frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
@@ -132,7 +141,7 @@ class HabitUseCase extends BaseUseCase {
         _memory.habits.add(data);
 
         if (habit.reminder != null) {
-          await LocalNotification().addNotification(habit);
+          await _localNotification.addNotification(habit);
         }
 
         return data;
@@ -144,7 +153,7 @@ class HabitUseCase extends BaseUseCase {
             .where((e) => e.getMyCompetitor().habitId == habit.id)
             .map((e) => e.id)
             .toList();
-        await FireDatabase().updateHabit(habit, inititalHabit, competitions);
+        await _fireDatabase.updateHabit(habit, inititalHabit, competitions);
         int index = _memory.habits.indexWhere((e) => e.id == habit.id);
         if (index != -1) {
           _memory.habits[index] = habit;
@@ -157,7 +166,7 @@ class HabitUseCase extends BaseUseCase {
 
   Future<Result<void>> updateReminder(int reminderId, Habit habit) => safeCall(() async {
         if (reminderId != null) {
-          await LocalNotification().removeNotification(reminderId);
+          await _localNotification.removeNotification(reminderId);
         }
 
         if (habit.reminder != null) {
@@ -167,14 +176,14 @@ class HabitUseCase extends BaseUseCase {
             habit.reminder.id = reminderCounter;
           }
 
-          await FireDatabase().updateReminder(habit.id, reminderCounter, habit.reminder);
+          await _fireDatabase.updateReminder(habit.id, reminderCounter, habit.reminder);
           int index = _memory.habits.indexWhere((e) => e.id == habit.id);
           if (index != -1) {
             _memory.habits[index] = habit;
           }
-          await LocalNotification().addNotification(habit);
+          await _localNotification.addNotification(habit);
         } else {
-          await FireDatabase().updateReminder(habit.id, null, null);
+          await _fireDatabase.updateReminder(habit.id, null, null);
           int index = _memory.habits.indexWhere((e) => e.id == habit.id);
           if (index != -1) {
             _memory.habits[index] = habit;
@@ -192,7 +201,7 @@ class HabitUseCase extends BaseUseCase {
           DateTime endDate = date.lastWeekDay();
 
           List<DateTime> days =
-              daysDone ?? (await FireDatabase().getDaysDone(habitId, startDate, endDate)).map((e) => e.date).toList();
+              daysDone ?? (await _fireDatabase.getDaysDone(habitId, startDate, endDate)).map((e) => e.date).toList();
 
           var score =
               ScoreControl().calculateScore(isAdd ? ScoreType.ADD : ScoreType.SUBTRACT, habit.frequency, days, date);
@@ -205,7 +214,7 @@ class HabitUseCase extends BaseUseCase {
               .where((e) => e.getMyCompetitor().habitId == habitId && e.initialDate.isBeforeOrSameDay(date))
               .toList();
 
-          await FireDatabase()
+          await _fireDatabase
               .completeHabit(habitId, isAdd, score, isLastDone, dayDone, competitions.map((e) => e.id).toList());
           _personUseCase.setLocalScore(await _personUseCase.getScore() + score);
           int index = _memory.habits.indexWhere((e) => e.id == habitId);
@@ -230,11 +239,11 @@ class HabitUseCase extends BaseUseCase {
 
   Future<Result<void>> deleteHabit(Habit habit) => safeCall(() async {
         if (habit.reminder != null) {
-          LocalNotification().removeNotification(habit.reminder.id);
+          _localNotification.removeNotification(habit.reminder.id);
         }
-        FireAnalytics().sendRemoveHabit(habit.habit);
+        _fireAnalytics.sendRemoveHabit(habit.habit);
 
-        await FireDatabase().deleteHabit(habit.id);
+        await _fireDatabase.deleteHabit(habit.id);
 
         int index = _memory.habits.indexWhere((e) => e.id == habit.id);
         if (index != -1) {
@@ -261,21 +270,21 @@ class HabitUseCase extends BaseUseCase {
 
         for (Habit habit in habits) {
           list.addAll(
-              (await FireDatabase().getAllDaysDone(habit.id)).map((e) => DayDone(date: e.date, habitId: habit.id)));
+              (await _fireDatabase.getAllDaysDone(habit.id)).map((e) => DayDone(date: e.date, habitId: habit.id)));
         }
 
         return list;
       });
 
   Future<Result<List<DayDone>>> getDaysDone(String id, DateTime start, DateTime end) => safeCall(() {
-        return FireDatabase().getDaysDone(id, start, end);
+        return _fireDatabase.getDaysDone(id, start, end);
       });
 
   Future<Result<Map<DateTime, List>>> getCalendarDaysDone(String id, DateTime start, DateTime end) =>
       safeCall(() async {
         DateTime startDate = start.subtract(const Duration(days: 1));
         DateTime endDate = end.add(const Duration(days: 1));
-        var data = await FireDatabase().getDaysDone(id, startDate, endDate);
+        var data = await _fireDatabase.getDaysDone(id, startDate, endDate);
         Map<DateTime, List> map = Map();
         bool before = false;
         bool after = false;

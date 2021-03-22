@@ -1,17 +1,16 @@
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/core/di/get_it_config.dart';
+import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:injectable/injectable.dart';
 
-class LocalNotification {
-  static final LocalNotification _singleton = LocalNotification._internal();
-
+@service
+@LazySingleton(as: ILocalNotification)
+class LocalNotification implements ILocalNotification {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  factory LocalNotification() {
-    return _singleton;
-  }
-
-  LocalNotification._internal() {
+  LocalNotification() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     var initializationSettingsAndroid = AndroidInitializationSettings('ic_notification');

@@ -1,13 +1,17 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'PendingFriendsLogic.g.dart';
 
+@LazySingleton()
 class PendingFriendsLogic = _PendingFriendsLogicBase with _$PendingFriendsLogic;
 
 abstract class _PendingFriendsLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  final PersonUseCase personUseCase;
+
+  _PendingFriendsLogicBase(this.personUseCase);
 
   DataState<ObservableList<Person>> pendingFriends = DataState();
   List<Person> addedFriends = [];

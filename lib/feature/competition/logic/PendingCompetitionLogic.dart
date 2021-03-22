@@ -3,14 +3,18 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'PendingCompetitionLogic.g.dart';
 
+@LazySingleton()
 class PendingCompetitionLogic = _PendingCompetitionLogicBase with _$PendingCompetitionLogic;
 
 abstract class _PendingCompetitionLogicBase with Store {
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase;
+  final HabitUseCase _habitUseCase;
+
+  _PendingCompetitionLogicBase(this._competitionUseCase, this._habitUseCase);
 
   DataState<ObservableList<Competition>> pendingCompetition = DataState();
   List<Competition> addedCompetitions = [];

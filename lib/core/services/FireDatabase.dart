@@ -5,12 +5,19 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/model/Pair.dart';
-import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
-class FireDatabase {
+import 'interfaces/i_fire_auth.dart';
+
+@service
+@Injectable(as: IFireDatabase)
+class FireDatabase implements IFireDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   static const _USERS = 'users';
@@ -19,7 +26,7 @@ class FireDatabase {
   static const _DAYS_DONE = 'days_done';
 
   CollectionReference get userCollection => firestore.collection(_USERS);
-  DocumentReference get userDoc => userCollection.doc(FireAuth().getUid());
+  DocumentReference get userDoc => userCollection.doc(GetIt.I.get<IFireAuth>().getUid());
   CollectionReference get habitsCollection => userDoc.collection(_HABITS);
   CollectionReference get competitionCollection => firestore.collection(_COMPETITIONS);
 
@@ -40,7 +47,7 @@ class FireDatabase {
           competitionCollection.doc(competitionId),
           {
             Competition.COMPETITORS: {
-              FireAuth().getUid(): {Competitor.HABIT_ID: habit.id}
+              GetIt.I.get<IFireAuth>().getUid(): {Competitor.HABIT_ID: habit.id}
             }
           },
           SetOptions(merge: true));
@@ -82,7 +89,7 @@ class FireDatabase {
           competitionCollection.doc(item.first),
           {
             Competition.COMPETITORS: {
-              FireAuth().getUid(): {Competitor.SCORE: item.second}
+              GetIt.I.get<IFireAuth>().getUid(): {Competitor.SCORE: item.second}
             }
           },
           SetOptions(merge: true));
@@ -112,7 +119,7 @@ class FireDatabase {
             competitionCollection.doc(item),
             {
               Competition.COMPETITORS: {
-                FireAuth().getUid(): {Competitor.NAME: name}
+                GetIt.I.get<IFireAuth>().getUid(): {Competitor.NAME: name}
               }
             },
             SetOptions(merge: true));
@@ -157,7 +164,7 @@ class FireDatabase {
             competitionCollection.doc(item),
             {
               Competition.COMPETITORS: {
-                FireAuth().getUid(): {Competitor.COLOR: habit.colorCode}
+                GetIt.I.get<IFireAuth>().getUid(): {Competitor.COLOR: habit.colorCode}
               }
             },
             SetOptions(merge: true));
@@ -194,7 +201,7 @@ class FireDatabase {
               competitionCollection.doc(item),
               {
                 Competition.COMPETITORS: {
-                  FireAuth().getUid(): {Competitor.SCORE: FieldValue.increment(score)}
+                  GetIt.I.get<IFireAuth>().getUid(): {Competitor.SCORE: FieldValue.increment(score)}
                 }
               },
               SetOptions(merge: true));
@@ -257,14 +264,14 @@ class FireDatabase {
 
   Future<List<Person>> getFriendsDetails() {
     return userCollection
-        .where(Person.FRIENDS, arrayContains: FireAuth().getUid())
+        .where(Person.FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
         .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
   }
 
   Future<List<Person>> getPendingFriends() {
     return userCollection
-        .where(Person.PENDING_FRIENDS, arrayContains: FireAuth().getUid())
+        .where(Person.PENDING_FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
         .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
   }
@@ -272,7 +279,7 @@ class FireDatabase {
   Future<List<Person>> getRankingFriends(int limit) {
     return userCollection
         .orderBy(Person.SCORE, descending: true)
-        .where(Person.FRIENDS, arrayContains: FireAuth().getUid())
+        .where(Person.FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .limit(limit)
         .get()
         .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
@@ -283,11 +290,11 @@ class FireDatabase {
           Person person = Person.fromJson(e.data(), e.id);
           var state = 0;
 
-          if (person.friends.contains(FireAuth().getUid())) {
+          if (person.friends.contains(GetIt.I.get<IFireAuth>().getUid())) {
             state = 1;
           } else if (myPendingFriends.contains(person.uid)) {
             state = 2;
-          } else if (person.pendingFriends.contains(FireAuth().getUid())) {
+          } else if (person.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
             state = 3;
           }
 
@@ -311,7 +318,7 @@ class FireDatabase {
     }
 
     var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data(), value.id)));
-    if (friendData.pendingFriends.contains(FireAuth().getUid())) {
+    if (friendData.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
       throw "Já tem uma solicitação.";
     }
 
@@ -336,8 +343,8 @@ class FireDatabase {
       Person.FRIENDS: FieldValue.arrayUnion([uid])
     });
     batch.update(userCollection.doc(uid), {
-      Person.PENDING_FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()]),
-      Person.FRIENDS: FieldValue.arrayUnion([FireAuth().getUid()])
+      Person.PENDING_FRIENDS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()]),
+      Person.FRIENDS: FieldValue.arrayUnion([GetIt.I.get<IFireAuth>().getUid()])
     });
 
     return batch.commit().then((value) => friendData.fcmToken);
@@ -345,7 +352,7 @@ class FireDatabase {
 
   Future declineRequest(String uid) {
     return userCollection.doc(uid).update({
-      Person.PENDING_FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()])
+      Person.PENDING_FRIENDS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });
   }
 
@@ -359,7 +366,7 @@ class FireDatabase {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     batch.update(userCollection.doc(uid), {
-      Person.FRIENDS: FieldValue.arrayRemove([FireAuth().getUid()])
+      Person.FRIENDS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });
     batch.update(userDoc, {
       Person.FRIENDS: FieldValue.arrayRemove([uid])
@@ -372,7 +379,7 @@ class FireDatabase {
 
   Future<List<Competition>> getCompetitions() {
     return competitionCollection
-        .where(Competition.COMPETITORS_ID, arrayContains: FireAuth().getUid())
+        .where(Competition.COMPETITORS_ID, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
         .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
   }
@@ -383,7 +390,7 @@ class FireDatabase {
 
   Future<List<Competition>> getPendingCompetitions() {
     return competitionCollection
-        .where(Competition.INVITATIONS, arrayContains: FireAuth().getUid())
+        .where(Competition.INVITATIONS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
         .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
   }
@@ -402,7 +409,7 @@ class FireDatabase {
   Future updateCompetitor(String competitionId, String habitId) {
     return competitionCollection.doc(competitionId).set({
       Competition.COMPETITORS: {
-        FireAuth().getUid(): {Competitor.HABIT_ID: habitId}
+        GetIt.I.get<IFireAuth>().getUid(): {Competitor.HABIT_ID: habitId}
       }
     }, SetOptions(merge: true));
   }
@@ -437,15 +444,15 @@ class FireDatabase {
     batch.set(
         doc,
         {
-          Competition.COMPETITORS: {FireAuth().getUid(): competitor.toJson()}
+          Competition.COMPETITORS: {GetIt.I.get<IFireAuth>().getUid(): competitor.toJson()}
         },
         SetOptions(merge: true));
 
     batch.update(doc, {
-      Competition.COMPETITORS_ID: FieldValue.arrayUnion([FireAuth().getUid()])
+      Competition.COMPETITORS_ID: FieldValue.arrayUnion([GetIt.I.get<IFireAuth>().getUid()])
     });
     batch.update(doc, {
-      Competition.INVITATIONS: FieldValue.arrayRemove([FireAuth().getUid()])
+      Competition.INVITATIONS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });
 
     return batch.commit();
@@ -453,7 +460,7 @@ class FireDatabase {
 
   Future declineCompetitionRequest(String competitionId) {
     return competitionCollection.doc(competitionId).update({
-      Competition.INVITATIONS: FieldValue.arrayRemove([FireAuth().getUid()])
+      Competition.INVITATIONS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });
   }
 }

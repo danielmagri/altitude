@@ -8,7 +8,6 @@ import 'package:altitude/feature/friends/view/widget/RankingList.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
 class FriendsPage extends StatefulWidget {
@@ -16,20 +15,12 @@ class FriendsPage extends StatefulWidget {
   _FriendsPageState createState() => _FriendsPageState();
 }
 
-class _FriendsPageState extends BaseState<FriendsPage> {
-  FriendsLogic controller = GetIt.I.get<FriendsLogic>();
-
+class _FriendsPageState extends BaseStateWithLogic<FriendsPage, FriendsLogic> {
   @override
   void initState() {
     super.initState();
 
     controller.fetchData().catchError(handleError);
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<FriendsLogic>();
-    super.dispose();
   }
 
   @override

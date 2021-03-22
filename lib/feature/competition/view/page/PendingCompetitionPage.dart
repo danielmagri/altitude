@@ -7,27 +7,18 @@ import 'package:altitude/feature/competition/logic/PendingCompetitionLogic.dart'
 import 'package:altitude/feature/competition/view/widget/ChooseHabit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class PendingCompetitionPage extends StatefulWidget {
   @override
   _PendingCompetitionPageState createState() => _PendingCompetitionPageState();
 }
 
-class _PendingCompetitionPageState extends BaseState<PendingCompetitionPage> {
-  PendingCompetitionLogic controller = GetIt.I.get<PendingCompetitionLogic>();
-
+class _PendingCompetitionPageState extends BaseStateWithLogic<PendingCompetitionPage, PendingCompetitionLogic> {
   @override
   void initState() {
     super.initState();
 
     controller.fetchData().catchError(handleError);
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<PendingCompetitionLogic>();
-    super.dispose();
   }
 
   void acceptRequest(Competition competition) async {

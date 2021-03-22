@@ -11,7 +11,6 @@ import 'package:altitude/feature/addHabit/view/widget/SelectFrequency.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class AddHabitPage extends StatefulWidget {
   AddHabitPage({Key key, this.backTo = false}) : super(key: key);
@@ -22,14 +21,11 @@ class AddHabitPage extends StatefulWidget {
   _AddHabitPageState createState() => _AddHabitPageState();
 }
 
-class _AddHabitPageState extends BaseState<AddHabitPage> {
-  final AddHabitLogic controller = GetIt.I.get<AddHabitLogic>();
-
+class _AddHabitPageState extends BaseStateWithLogic<AddHabitPage, AddHabitLogic> {
   final habitTextController = TextEditingController();
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<AddHabitLogic>();
     habitTextController.dispose();
     super.dispose();
   }

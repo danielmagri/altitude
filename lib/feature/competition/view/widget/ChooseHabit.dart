@@ -30,6 +30,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         required;
+import 'package:get_it/get_it.dart';
 
 class ChooseHabit extends StatefulWidget {
   ChooseHabit({Key key, @required this.competition, @required this.habits}) : super(key: key);
@@ -42,9 +43,9 @@ class ChooseHabit extends StatefulWidget {
 }
 
 class _ChooseHabitState extends BaseState<ChooseHabit> {
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
+  final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
+  final CompetitionUseCase _competitionUseCase = GetIt.I.get<CompetitionUseCase>();
 
   Habit selectedHabit;
 

@@ -1,31 +1,43 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
+import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/model/Result.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
-import 'package:altitude/core/services/FireAuth.dart';
-import 'package:altitude/core/services/FireDatabase.dart';
-import 'package:altitude/core/services/FireFunctions.dart';
-import 'package:altitude/core/services/FireMenssaging.dart';
 import 'package:altitude/core/services/Memory.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
 import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
+@usecase
+@Injectable()
 class PersonUseCase extends BaseUseCase {
-  static PersonUseCase get getInstance => GetIt.I.get<PersonUseCase>();
+  static PersonUseCase get getI => GetIt.I.get<PersonUseCase>();
 
-  final Memory _memory = Memory.getInstance;
+  final Memory _memory;
+  final IFireAuth _fireAuth;
+  final IFireMessaging _fireMessaging;
+  final IFireDatabase _fireDatabase;
+  final IFireAnalytics _fireAnalytics;
+  final IFireFunctions _fireFunctions;
 
-  bool get isLogged => FireAuth().isLogged();
+  PersonUseCase(
+      this._memory, this._fireAuth, this._fireMessaging, this._fireDatabase, this._fireAnalytics, this._fireFunctions);
 
-  String get uid => FireAuth().getUid();
+  bool get isLogged => _fireAuth.isLogged();
 
-  String get name => FireAuth().getName();
+  String get uid => _fireAuth.getUid();
 
-  String get email => FireAuth().getEmail();
+  String get name => _fireAuth.getName();
 
-  String get photoUrl => FireAuth().getPhotoUrl();
+  String get email => _fireAuth.getEmail();
 
-  Future<String> get fcmToken => FireMessaging().getToken();
+  String get photoUrl => _fireAuth.getPhotoUrl();
+
+  Future<String> get fcmToken => _fireMessaging.getToken;
 
   Future<Result> createPerson(
           {int level, int reminderCounter, int score, List<String> friends, List<String> pendingFriends}) =>
@@ -42,7 +54,7 @@ class PersonUseCase extends BaseUseCase {
               score: score ?? 0,
               friends: friends ?? [],
               pendingFriends: pendingFriends ?? []);
-          await FireDatabase().createPerson(person);
+          await _fireDatabase.createPerson(person);
           person.photoUrl = photoUrl;
           _memory.person = person;
         });
@@ -50,7 +62,7 @@ class PersonUseCase extends BaseUseCase {
 
   Future<Result<Person>> getPerson({bool fromServer = false}) => safeCall(() async {
         if (_memory.person == null || fromServer) {
-          var data = await FireDatabase().getPerson();
+          var data = await _fireDatabase.getPerson();
           data.photoUrl = photoUrl ?? "";
           _memory.person = data;
           return data;
@@ -70,14 +82,14 @@ class PersonUseCase extends BaseUseCase {
   }
 
   Future<Result<void>> updateLevel(int level) => safeCall(() async {
-        await FireDatabase().updateLevel(level);
+        await _fireDatabase.updateLevel(level);
         _memory.person.level = level;
         return;
       });
 
   Future<Result> updateName(String name, List<String> competitionsId) => safeCall(() async {
-        await FireAuth().setName(name);
-        await FireDatabase().updateName(name, competitionsId);
+        await _fireAuth.setName(name);
+        await _fireDatabase.updateName(name, competitionsId);
         _memory.person?.name = name;
         return;
       });
@@ -86,50 +98,50 @@ class PersonUseCase extends BaseUseCase {
   set pendingFriendsStatus(bool value) => SharedPref.instance.pendingFriends = value;
 
   Future<Result<List<Person>>> getFriends() => safeCall(() async {
-        return await FireDatabase().getFriendsDetails();
+        return await _fireDatabase.getFriendsDetails();
       });
 
   Future<Result<List<Person>>> getPendingFriends() => safeCall(() async {
-        return await FireDatabase().getPendingFriends();
+        return await _fireDatabase.getPendingFriends();
       });
 
   Future<Result<List<Person>>> searchEmail(String value) => safeCall(() async {
         if (value != email) {
           List<String> myPendingFriends = (await getPerson()).absoluteResult().pendingFriends ?? [];
-          return await FireDatabase().searchEmail(value, myPendingFriends);
+          return await _fireDatabase.searchEmail(value, myPendingFriends);
         } else {
           return [];
         }
       });
 
   Future<Result> friendRequest(String uid) => safeCall(() async {
-        FireAnalytics().sendFriendRequest(false);
-        return FireDatabase().friendRequest(uid).then((token) async {
+        _fireAnalytics.sendFriendRequest(false);
+        return _fireDatabase.friendRequest(uid).then((token) async {
           if (_memory.person != null) {
             _memory.person.pendingFriends.add(uid);
           }
-          await FireFunctions().sendNotification("Pedido de amizade", "$name quer ser seu amigo.", token);
+          await _fireFunctions.sendNotification("Pedido de amizade", "$name quer ser seu amigo.", token);
         });
       });
 
   Future<Result> acceptRequest(String uid) => safeCall(() async {
-        FireAnalytics().sendFriendResponse(true);
-        return FireDatabase().acceptRequest(uid).then((token) async {
+        _fireAnalytics.sendFriendResponse(true);
+        return _fireDatabase.acceptRequest(uid).then((token) async {
           if (_memory.person != null) {
             _memory.person.friends.add(uid);
           }
-          await FireFunctions().sendNotification("Pedido de amizade", "$name aceitou seu pedido.", token);
+          await _fireFunctions.sendNotification("Pedido de amizade", "$name aceitou seu pedido.", token);
         });
       });
 
   Future<Result> declineRequest(String uid) => safeCall(() async {
-        FireAnalytics().sendFriendResponse(false);
-        return await FireDatabase().declineRequest(uid);
+        _fireAnalytics.sendFriendResponse(false);
+        return await _fireDatabase.declineRequest(uid);
       });
 
   Future<Result> cancelFriendRequest(String uid) => safeCall(() async {
-        FireAnalytics().sendFriendRequest(true);
-        return FireDatabase().cancelFriendRequest(uid).then((value) {
+        _fireAnalytics.sendFriendRequest(true);
+        return _fireDatabase.cancelFriendRequest(uid).then((value) {
           if (_memory.person != null) {
             _memory.person.pendingFriends.remove(uid);
           }
@@ -137,15 +149,15 @@ class PersonUseCase extends BaseUseCase {
       });
 
   Future<Result> removeFriend(String uid) => safeCall(() async {
-        return await FireDatabase().removeFriend(uid);
+        return await _fireDatabase.removeFriend(uid);
       });
 
   Future<Result<List<Person>>> rankingFriends() => safeCall(() async {
-        return await FireDatabase().getRankingFriends(3);
+        return await _fireDatabase.getRankingFriends(3);
       });
 
   Future logout() async {
     _memory.clear();
-    await FireAuth().logout();
+    await _fireAuth.logout();
   }
 }

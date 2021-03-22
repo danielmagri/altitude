@@ -5,21 +5,26 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/model/DataState.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart' show Color;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 import 'package:table_calendar/table_calendar.dart' show CalendarFormat;
 part 'HabitDetailsLogic.g.dart';
 
+@LazySingleton()
 class HabitDetailsLogic = _HabitDetailsLogicBase with _$HabitDetailsLogic;
 
 abstract class _HabitDetailsLogicBase with Store {
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final HabitUseCase _habitUseCase;
+  final CompetitionUseCase _competitionUseCase;
+  final IFireAnalytics _fireAnalytics;
+
+  _HabitDetailsLogicBase(this._habitUseCase, this._competitionUseCase, this._fireAnalytics);
 
   String _id;
   int _color;
@@ -91,7 +96,7 @@ abstract class _HabitDetailsLogicBase with Store {
 
   @action
   void switchPanelType(BottomSheetType type) {
-    if (type == BottomSheetType.CUE) FireAnalytics().sendReadCue();
+    if (type == BottomSheetType.CUE) _fireAnalytics.sendReadCue();
     panelType = type;
   }
 

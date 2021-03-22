@@ -7,13 +7,15 @@ import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'AddHabitLogic.g.dart';
 
+@LazySingleton()
 class AddHabitLogic = _AddHabitLogicBase with _$AddHabitLogic;
 
 abstract class _AddHabitLogicBase with Store {
-  final HabitUseCase habitUseCase = HabitUseCase.getInstance;
+  final HabitUseCase habitUseCase;
 
   @observable
   int color;
@@ -43,7 +45,7 @@ abstract class _AddHabitLogicBase with Store {
   @computed
   Color get habitColor => AppColors.habitsColor[color];
 
-  _AddHabitLogicBase() {
+  _AddHabitLogicBase(this.habitUseCase) {
     color = Random().nextInt(AppColors.habitsColor.length);
     reminderTime = TimeOfDay.now();
   }

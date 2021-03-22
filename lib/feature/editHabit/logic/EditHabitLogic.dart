@@ -6,13 +6,17 @@ import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'EditHabitLogic.g.dart';
 
+@LazySingleton()
 class EditHabitLogic = _EditHabitLogicBase with _$EditHabitLogic;
 
 abstract class _EditHabitLogicBase with Store {
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final HabitUseCase _habitUseCase;
+
+  _EditHabitLogicBase(this._habitUseCase);
 
   Habit initialHabit;
 

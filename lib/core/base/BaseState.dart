@@ -1,6 +1,7 @@
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:cloud_functions/cloud_functions.dart' show CloudFunctionsException;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_it/get_it.dart';
 import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
@@ -19,6 +20,17 @@ import 'package:flutter/material.dart'
         StatefulWidget,
         Widget,
         protected;
+
+abstract class BaseStateWithLogic<T extends StatefulWidget, L> extends BaseState<T> {
+  L controller = GetIt.I.get<L>();
+
+  @override
+  dispose() {
+    super.dispose();
+    GetIt.I.resetLazySingleton(instance: controller);
+    print("Disposed $L");
+  }
+}
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;

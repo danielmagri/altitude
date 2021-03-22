@@ -23,16 +23,20 @@ import 'package:flutter/material.dart'
         Widget,
         required;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class HomebottomNavigation extends StatelessWidget {
-  HomebottomNavigation({Key key, @required this.goAddHabit, @required this.goStatistics, @required this.goCompetition})
+  HomebottomNavigation(
+      {Key key,
+      @required this.controller,
+      @required this.goAddHabit,
+      @required this.goStatistics,
+      @required this.goCompetition})
       : super(key: key);
 
   final Function goAddHabit;
   final Function goStatistics;
   final Function(bool) goCompetition;
-  final HomeLogic controller = GetIt.I.get<HomeLogic>();
+  final HomeLogic controller;
 
   void _addHabitTap() async {
     if (!await controller.canAddHabit()) {

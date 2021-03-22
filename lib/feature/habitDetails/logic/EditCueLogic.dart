@@ -3,15 +3,16 @@ import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:flutter/material.dart' show Color;
-import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'EditCueLogic.g.dart';
 
+@LazySingleton()
 class EditCueLogic = _EditCueLogicBase with _$EditCueLogic;
 
 abstract class _EditCueLogicBase with Store {
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final HabitDetailsLogic habitDetailsLogic = GetIt.I.get<HabitDetailsLogic>();
+  final HabitUseCase _habitUseCase;
+  final HabitDetailsLogic habitDetailsLogic;
 
   Color get habitColor => habitDetailsLogic.habitColor;
   String get cue => habitDetailsLogic.habit.data.oldCue;
@@ -22,7 +23,7 @@ abstract class _EditCueLogicBase with Store {
   @observable
   ObservableList<String> suggestions = ObservableList();
 
-  _EditCueLogicBase() {
+  _EditCueLogicBase(this._habitUseCase, this.habitDetailsLogic) {
     fetchSuggestions(habitDetailsLogic.habit.data.oldCue);
   }
 

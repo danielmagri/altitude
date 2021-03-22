@@ -2,11 +2,11 @@ import 'dart:async' show Timer;
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
 import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
@@ -31,12 +31,10 @@ class HabitDetailsPage extends StatefulWidget {
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
+class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitDetailsLogic> {
   final ScrollController scrollController = ScrollController();
   final PanelController panelController = PanelController();
   final CalendarController calendarController = CalendarController();
-
-  final HabitDetailsLogic controller = GetIt.I.get<HabitDetailsLogic>();
 
   @override
   void initState() {
@@ -90,7 +88,6 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<HabitDetailsLogic>();
     scrollController.dispose();
     calendarController.dispose();
     super.dispose();
@@ -156,7 +153,7 @@ class _HabitDetailsPageState extends BaseState<HabitDetailsPage> {
   }
 
   void competition(int index) {
-    FireAnalytics().sendGoCompetition(index.toString());
+    GetIt.I.get<IFireAnalytics>().sendGoCompetition(index.toString());
     navigatePush('competition');
   }
 

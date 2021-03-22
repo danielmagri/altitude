@@ -1,14 +1,18 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'AddFriendLogic.g.dart';
 
+@LazySingleton()
 class AddFriendLogic = _AddFriendLogicBase with _$AddFriendLogic;
 
 abstract class _AddFriendLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
-  
+  final PersonUseCase personUseCase;
+
+  _AddFriendLogicBase(this.personUseCase);
+
   DataState<List<Person>> searchResult = DataState();
 
   Future<void> searchFriend(String email) async {

@@ -9,7 +9,6 @@ import 'package:altitude/feature/addHabit/view/widget/SelectFrequency.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage(this.arguments);
@@ -20,10 +19,8 @@ class EditHabitPage extends StatefulWidget {
   _EditHabitPageState createState() => _EditHabitPageState();
 }
 
-class _EditHabitPageState extends BaseState<EditHabitPage> {
+class _EditHabitPageState extends BaseStateWithLogic<EditHabitPage, EditHabitLogic> {
   final habitTextController = TextEditingController();
-
-  final EditHabitLogic controller = GetIt.I.get<EditHabitLogic>();
 
   @override
   void initState() {
@@ -33,12 +30,6 @@ class _EditHabitPageState extends BaseState<EditHabitPage> {
 
     controller.color = widget.arguments.habit.colorCode;
     habitTextController.text = widget.arguments.habit.habit;
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<EditHabitLogic>();
-    super.dispose();
   }
 
   void updateHabit() {
