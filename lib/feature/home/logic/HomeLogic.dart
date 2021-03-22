@@ -2,20 +2,25 @@ import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'HomeLogic.g.dart';
 
+@LazySingleton()
 class HomeLogic = _HomeLogicBase with _$HomeLogic;
 
 abstract class _HomeLogicBase with Store {
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final HabitUseCase _habitUseCase;
+  final PersonUseCase _personUseCase;
+  final CompetitionUseCase _competitionUseCase;
+  final IFireAnalytics _fireAnalytics;
+
+  _HomeLogicBase(this._habitUseCase, this._personUseCase, this._competitionUseCase, this._fireAnalytics);
 
   DataState<Person> user = DataState();
   DataState<ObservableList<Habit>> habits = DataState();
@@ -72,7 +77,7 @@ abstract class _HomeLogicBase with Store {
     if (newLevel != oldLevel) _personUseCase.updateLevel(newLevel);
 
     if (newLevel > oldLevel) {
-      FireAnalytics().sendNextLevel(LevelControl.getLevelText(newScore));
+      _fireAnalytics.sendNextLevel(LevelControl.getLevelText(newScore));
       return true;
     } else {
       return false;

@@ -2,13 +2,15 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'CreateCompetitionLogic.g.dart';
 
+@LazySingleton()
 class CreateCompetitionLogic = _CreateCompetitionLogicBase with _$CreateCompetitionLogic;
 
 abstract class _CreateCompetitionLogicBase with Store {
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase;
 
   @observable
   Habit selectedHabit;
@@ -17,6 +19,8 @@ abstract class _CreateCompetitionLogicBase with Store {
   ObservableList<Person> selectedFriends = ObservableList();
 
   List<Habit> habits;
+
+  _CreateCompetitionLogicBase(this._competitionUseCase);
 
   @action
   void selectHabit(Habit value) {

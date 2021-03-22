@@ -13,7 +13,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_mobx: ^1.1.0
   mobx: ^1.1.1
-  get_it: ^4.0.1
+  get_it: ^5.0.6
+  injectable: ^1.1.2
   package_info: ^0.4.0+13
   sqflite: ^1.1.7+1
   table_calendar: ^2.1.0
@@ -41,9 +42,11 @@ dependencies:
 
 dev_dependencies:
   mobx_codegen:
-  build_runner: ^1.10.0
+  build_runner: any
   flutter_test:
     sdk: flutter
+  mockito: any
+  injectable_generator: any
 
 flutter:
   uses-material-design: true

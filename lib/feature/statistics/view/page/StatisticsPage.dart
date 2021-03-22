@@ -2,6 +2,7 @@ import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
+import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/view/widget/FrequencyChart.dart';
@@ -10,7 +11,6 @@ import 'package:altitude/feature/statistics/view/widget/Indicator.dart';
 import 'package:altitude/feature/statistics/view/widget/PieChartScore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class Statisticspage extends StatefulWidget {
@@ -18,19 +18,11 @@ class Statisticspage extends StatefulWidget {
   _StatisticspageState createState() => _StatisticspageState();
 }
 
-class _StatisticspageState extends State<Statisticspage> {
-  StatisticsLogic controller = GetIt.I.get<StatisticsLogic>();
-
+class _StatisticspageState extends BaseStateWithLogic<Statisticspage, StatisticsLogic> {
   @override
   void initState() {
     super.initState();
     controller.fetchData();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<StatisticsLogic>();
-    super.dispose();
   }
 
   void showPercentageTutorial() {

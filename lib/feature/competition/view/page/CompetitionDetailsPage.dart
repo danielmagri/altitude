@@ -16,7 +16,6 @@ import 'package:altitude/feature/competition/view/widget/Metrics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
-import 'package:get_it/get_it.dart';
 
 class CompetitionDetailsPage extends StatefulWidget {
   CompetitionDetailsPage(this.arguments);
@@ -27,9 +26,7 @@ class CompetitionDetailsPage extends StatefulWidget {
   _CompetitionDetailsPageState createState() => _CompetitionDetailsPageState();
 }
 
-class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
-  CompetitionDetailsLogic controller = GetIt.I.get<CompetitionDetailsLogic>();
-
+class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetailsPage, CompetitionDetailsLogic> {
   TextEditingController titleTextController = TextEditingController();
 
   @override
@@ -44,7 +41,6 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<CompetitionDetailsLogic>();
     titleTextController.dispose();
     super.dispose();
   }
@@ -150,7 +146,8 @@ class _CompetitionDetailsPageState extends BaseState<CompetitionDetailsPage> {
               },
             ),
             TextButton(
-              child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
+              child:
+                  const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
               onPressed: () => Navigator.pop(context),
             ),
           ],

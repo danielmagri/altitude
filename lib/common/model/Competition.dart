@@ -1,6 +1,7 @@
 import 'package:altitude/common/model/Competitor.dart';
-import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_it/get_it.dart';
 
 class Competition {
   String id;
@@ -22,7 +23,7 @@ class Competition {
     }
   }
 
-  Competitor getMyCompetitor() => competitors.firstWhere((element) => element.uid == FireAuth().getUid());
+  Competitor getMyCompetitor() => competitors.firstWhere((element) => element.uid == GetIt.I.get<IFireAuth>().getUid());
 
   String listCompetitors() {
     String list = "";

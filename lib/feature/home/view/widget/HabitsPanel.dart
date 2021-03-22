@@ -22,12 +22,9 @@ import 'package:flutter/material.dart'
         WrapAlignment,
         required;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class HabitsPanel extends StatelessWidget {
-  HabitsPanel({Key key, @required this.goHabitDetails})
-      : controller = GetIt.I.get<HomeLogic>(),
-        super(key: key);
+  HabitsPanel({Key key, @required this.controller, @required this.goHabitDetails}) : super(key: key);
 
   final HomeLogic controller;
   final Function(String id, int color) goHabitDetails;

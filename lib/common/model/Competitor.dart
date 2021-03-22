@@ -1,4 +1,5 @@
-import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:get_it/get_it.dart';
 
 class Competitor {
   final String uid;
@@ -18,7 +19,7 @@ class Competitor {
   static const SCORE = "score";
 
   Competitor({this.uid, this.name, this.fcmToken, this.habitId, this.color, this.score, this.you}) {
-    this.you = you ?? FireAuth().getUid() == uid;
+    this.you = you ?? GetIt.I.get<IFireAuth>().getUid() == uid;
     this.score = score ?? 0;
   }
 

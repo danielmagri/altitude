@@ -7,7 +7,6 @@ import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -17,9 +16,7 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends BaseState<SettingsPage> {
-  SettingsLogic controller = GetIt.I.get<SettingsLogic>();
-
+class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic> {
   TextEditingController _nameTextController = TextEditingController();
 
   @override
@@ -31,7 +28,6 @@ class _SettingsPageState extends BaseState<SettingsPage> {
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<SettingsLogic>();
     _nameTextController.dispose();
     super.dispose();
   }

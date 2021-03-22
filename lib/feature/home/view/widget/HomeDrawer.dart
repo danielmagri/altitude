@@ -4,7 +4,6 @@ import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart'
     show
@@ -45,12 +44,12 @@ import 'package:flutter/material.dart'
 class HomeDrawer extends StatelessWidget {
   HomeDrawer(
       {Key key,
+      @required this.controller,
       @required this.goFriends,
       @required this.goLearn,
       @required this.goCompetition,
       @required this.goSettings})
-      : controller = GetIt.I.get<HomeLogic>(),
-        super(key: key);
+      : super(key: key);
 
   final HomeLogic controller;
   final Function goFriends;

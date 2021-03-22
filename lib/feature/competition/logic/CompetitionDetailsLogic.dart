@@ -2,19 +2,23 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'CompetitionDetailsLogic.g.dart';
 
+@LazySingleton()
 class CompetitionDetailsLogic = _CompetitionDetailsLogicBase with _$CompetitionDetailsLogic;
 
 abstract class _CompetitionDetailsLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final PersonUseCase personUseCase;
+  final CompetitionUseCase _competitionUseCase;
 
   @observable
   String title = "";
 
   Competition competition;
+
+  _CompetitionDetailsLogicBase(this.personUseCase, this._competitionUseCase);
 
   Future<List<Person>> getFriends() async {
     return (await personUseCase.getFriends()).absoluteResult();

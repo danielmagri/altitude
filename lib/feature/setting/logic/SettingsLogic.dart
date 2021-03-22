@@ -1,15 +1,19 @@
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'SettingsLogic.g.dart';
 
+@LazySingleton()
 class SettingsLogic = _SettingsLogicBase with _$SettingsLogic;
 
 abstract class _SettingsLogicBase with Store {
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final PersonUseCase _personUseCase;
+  final HabitUseCase _habitUseCase;
+  final CompetitionUseCase _competitionUseCase;
+
+  _SettingsLogicBase(this._personUseCase, this._habitUseCase, this._competitionUseCase);
 
   @observable
   String name = "";
@@ -25,7 +29,8 @@ abstract class _SettingsLogicBase with Store {
 
   @action
   Future<void> changeName(String newName) async {
-    List<String> competitionsId = (await _competitionUseCase.getCompetitions(fromServer: true)).absoluteResult().map((e) => e.id).toList();
+    List<String> competitionsId =
+        (await _competitionUseCase.getCompetitions(fromServer: true)).absoluteResult().map((e) => e.id).toList();
     (await _personUseCase.updateName(newName, competitionsId)).absoluteResult();
     name = newName;
   }

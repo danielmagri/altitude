@@ -4,26 +4,17 @@ import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class PendingFriendsPage extends StatefulWidget {
   @override
   _PendingFriendsPageState createState() => _PendingFriendsPageState();
 }
 
-class _PendingFriendsPageState extends BaseState<PendingFriendsPage> {
-  PendingFriendsLogic controller = GetIt.I.get<PendingFriendsLogic>();
-
+class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, PendingFriendsLogic> {
   @override
   void initState() {
     super.initState();
     controller.fetchData().catchError(handleError);
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<PendingFriendsLogic>();
-    super.dispose();
   }
 
   void acceptRequest(Person person) {

@@ -5,7 +5,7 @@ import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/services/Database.dart';
-import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
@@ -24,10 +24,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
+class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  HomeLogic controller = GetIt.I.get<HomeLogic>();
 
   @override
   initState() {
@@ -43,7 +41,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
           context: context,
           barrierDismissible: false,
           builder: (context) {
-            return TransferDataDialog(uid: FireAuth().getUid());
+            return TransferDataDialog(uid: GetIt.I.get<IFireAuth>().getUid());
           }).then((value) {
         if (value) fetchData();
       }).catchError(handleError);
@@ -71,7 +69,6 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    GetIt.I.resetLazySingleton<HomeLogic>();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -148,18 +145,22 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
   Widget build(context) {
     return Scaffold(
         key: scaffoldKey,
-        drawer:
-            HomeDrawer(goFriends: goFriends, goCompetition: goCompetition, goLearn: goLearn, goSettings: goSettings),
+        drawer: HomeDrawer(
+            controller: controller,
+            goFriends: goFriends,
+            goCompetition: goCompetition,
+            goLearn: goLearn,
+            goSettings: goSettings),
         drawerScrimColor: Colors.black12,
         body: Stack(
-          children: <Widget>[
+          children: [
             Column(
-              children: <Widget>[
+              children: [
                 Container(
                   width: double.maxFinite,
                   padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
                   child: Row(
-                    children: <Widget>[
+                    children: [
                       IconButton(icon: const Icon(Icons.menu), onPressed: showDrawer),
                       const Spacer(),
                     ],
@@ -193,7 +194,7 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                           );
                         },
                         (data) {
-                          return Column(children: <Widget>[
+                          return Column(children: [
                             Text(data.levelText),
                             const SizedBox(height: 4),
                             Score(color: AppColors.colorAccent, score: data.score),
@@ -206,13 +207,13 @@ class _HomePageState extends BaseState<HomePage> with WidgetsBindingObserver {
                     }),
                   ),
                 ),
-                Expanded(child: HabitsPanel(goHabitDetails: goHabitDetails)),
+                Expanded(child: HabitsPanel(controller: controller, goHabitDetails: goHabitDetails)),
               ],
             ),
             Observer(builder: (_) => SkyDragTarget(visibilty: controller.visibilty, setHabitDone: setHabitDone)),
           ],
         ),
-        bottomNavigationBar:
-            HomebottomNavigation(goAddHabit: goAddHabit, goStatistics: goStatistics, goCompetition: goCompetition));
+        bottomNavigationBar: HomebottomNavigation(
+            controller: controller, goAddHabit: goAddHabit, goStatistics: goStatistics, goCompetition: goCompetition));
   }
 }

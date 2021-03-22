@@ -2,10 +2,11 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/BaseState.dart';
-import 'package:altitude/core/services/FireAuth.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:get_it/get_it.dart';
 import 'package:package_info/package_info.dart';
 
 class TutorialPage extends StatefulWidget {
@@ -40,7 +41,7 @@ class _TutorialPageState extends BaseState<TutorialPage> {
     if (pageIndex == 3) {
       int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
       SharedPref.instance.version = version;
-      if (FireAuth().isLogged()) {
+      if (GetIt.I.get<IFireAuth>().isLogged()) {
         navigatePushReplacement('/');
       } else {
         navigatePushReplacement('login');

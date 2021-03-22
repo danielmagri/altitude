@@ -6,15 +6,19 @@ import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/core/model/Pair.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'CompetitionLogic.g.dart';
 
+@LazySingleton()
 class CompetitionLogic = _CompetitionLogicBase with _$CompetitionLogic;
 
 abstract class _CompetitionLogicBase with Store {
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final PersonUseCase _personUseCase;
+  final HabitUseCase _habitUseCase;
+  final CompetitionUseCase _competitionUseCase;
+
+  _CompetitionLogicBase(this._personUseCase, this._habitUseCase, this._competitionUseCase);
 
   @observable
   bool pendingStatus = false;

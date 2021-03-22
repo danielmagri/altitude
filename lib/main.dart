@@ -1,24 +1,33 @@
 import 'package:altitude/common/router/Router.dart';
-import 'package:altitude/core/services/FireAuth.dart';
-import 'package:altitude/core/services/FireMenssaging.dart';
-import 'package:altitude/core/GetIt.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
 import 'package:altitude/feature/login/view/page/LoginPage.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart'
-    show Brightness, Color, Colors, FlutterError, MaterialApp, StatelessWidget, ThemeData, Widget, WidgetsFlutterBinding, runApp;
+    show
+        Brightness,
+        Color,
+        Colors,
+        FlutterError,
+        MaterialApp,
+        StatelessWidget,
+        ThemeData,
+        Widget,
+        WidgetsFlutterBinding,
+        runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome, SystemUiOverlayStyle;
 import 'package:altitude/feature/tutorialPage.dart';
-import 'package:altitude/core/services/FireAnalytics.dart';
 import 'package:get_it/get_it.dart';
 import 'common/sharedPref/SharedPref.dart';
+import 'core/di/get_it_config.dart';
+import 'core/services/interfaces/i_fire_analytics.dart';
+import 'core/services/interfaces/i_fire_messaging.dart';
 
 void main() async {
-  Getit.init();
   WidgetsFlutterBinding.ensureInitialized();
-
+  configureDependencies();
   await Firebase.initializeApp();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -31,9 +40,9 @@ class MyApp extends StatelessWidget {
   MyApp();
 
   Widget initialPage() {
-    if (!SharedPref.instance.habitTutorial && !FireAuth().isLogged()) {
+    if (!SharedPref.instance.habitTutorial && !getIt.get<IFireAuth>().isLogged()) {
       return TutorialPage();
-    } else if (!FireAuth().isLogged()) {
+    } else if (!getIt.get<IFireAuth>().isLogged()) {
       return LoginPage();
     } else {
       return HomePage();
@@ -43,7 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    FireMessaging().configure();
+    getIt.get<IFireMessaging>().configure();
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Color.fromARGB(100, 250, 250, 250),
@@ -59,7 +68,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: initialPage(),
-      navigatorObservers: [FirebaseAnalyticsObserver(analytics: FireAnalytics().analytics)],
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: getIt.get<IFireAnalytics>().analytics)],
       onGenerateRoute: Router.generateRoute,
     );
   }

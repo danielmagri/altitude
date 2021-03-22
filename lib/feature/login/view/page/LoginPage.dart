@@ -2,7 +2,6 @@ import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,15 +12,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends BaseState<LoginPage> {
-  final LoginLogic controller = GetIt.I.get<LoginLogic>();
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<LoginLogic>();
-    super.dispose();
-  }
-
+class _LoginPageState extends BaseStateWithLogic<LoginPage, LoginLogic> {
   void loginWithFacebook() {
     showLoading(true);
     controller.loginFacebook().then((uid) {

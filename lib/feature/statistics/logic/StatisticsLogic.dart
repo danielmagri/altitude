@@ -8,14 +8,18 @@ import "package:collection/collection.dart";
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'StatisticsLogic.g.dart';
 
+@LazySingleton()
 class StatisticsLogic = _StatisticsLogicBase with _$StatisticsLogic;
 
 abstract class _StatisticsLogicBase with Store {
-  final PersonUseCase _personUseCase = PersonUseCase.getInstance;
-  final HabitUseCase _habitUseCase = HabitUseCase.getInstance;
+  final PersonUseCase _personUseCase;
+  final HabitUseCase _habitUseCase;
+
+  _StatisticsLogicBase(this._personUseCase, this._habitUseCase);
 
   DataState<ObservableList<HabitStatisticData>> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
@@ -131,8 +135,8 @@ abstract class _StatisticsLogicBase with Store {
     if (DateTime.now().month > lastMonth) {
       List.generate(
           DateTime.now().month - lastMonth,
-          (i) => dayFrequency.add(FrequencyStatisticData(
-              [], Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
+          (i) => dayFrequency.add(
+              FrequencyStatisticData([], Map(), lastMonth + 1 + i, DateTime.now().year, DateTime.now().month == 1)));
     }
 
     return dayFrequency.reversed.toList();

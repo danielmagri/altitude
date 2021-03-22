@@ -13,27 +13,18 @@ import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class CompetitionPage extends StatefulWidget {
   @override
   _CompetitionPageState createState() => _CompetitionPageState();
 }
 
-class _CompetitionPageState extends BaseState<CompetitionPage> {
-  CompetitionLogic controller = GetIt.I.get<CompetitionLogic>();
-
+class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, CompetitionLogic> {
   @override
   void initState() {
     super.initState();
 
     controller.fetchData();
-  }
-
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<CompetitionLogic>();
-    super.dispose();
   }
 
   @override

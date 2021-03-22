@@ -21,6 +21,7 @@ import 'package:flutter/material.dart'
         WrapAlignment,
         required;
 import 'package:altitude/utils/Color.dart';
+import 'package:get_it/get_it.dart';
 
 class AddCompetitorsDialog extends StatefulWidget {
   AddCompetitorsDialog({Key key, @required this.id, @required this.friends, @required this.competitors})
@@ -35,7 +36,7 @@ class AddCompetitorsDialog extends StatefulWidget {
 }
 
 class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
-  final CompetitionUseCase _competitionUseCase = CompetitionUseCase.getInstance;
+  final CompetitionUseCase _competitionUseCase = GetIt.I.get<CompetitionUseCase>();
 
   List<Person> selectedFriends = [];
 

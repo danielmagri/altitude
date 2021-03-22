@@ -1,13 +1,17 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'FriendsLogic.g.dart';
 
+@LazySingleton()
 class FriendsLogic = _FriendsLogicBase with _$FriendsLogic;
 
 abstract class _FriendsLogicBase with Store {
-  final PersonUseCase personUseCase = PersonUseCase.getInstance;
+  final PersonUseCase personUseCase;
+
+  _FriendsLogicBase(this.personUseCase);
 
   @observable
   bool pendingStatus = false;
