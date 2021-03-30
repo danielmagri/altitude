@@ -20,6 +20,7 @@ import 'package:flutter/material.dart'
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome, SystemUiOverlayStyle;
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'common/sharedPref/SharedPref.dart';
 import 'core/di/get_it_config.dart';
 import 'core/services/interfaces/i_fire_analytics.dart';
@@ -27,6 +28,7 @@ import 'core/services/interfaces/i_fire_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   configureDependencies();
   await Firebase.initializeApp();
 
