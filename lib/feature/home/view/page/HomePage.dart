@@ -105,7 +105,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   void goAllLevels() {
-    var arguments = AllLevelsPageArguments(controller.user.data.score);
+    var arguments = AllLevelsPageArguments(controller.user?.data?.score ?? 0);
     navigatePush('allLevels', arguments: arguments);
   }
 

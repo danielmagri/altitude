@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 abstract class AdsHandler {
-  static const _ANDROID_BANNER_UNIT_ID_TEST = "ca-app-pub-3940256099942544/6300978111";
+  static String get habitDetailsbannerAdUnitId => 'ca-app-pub-4496000445589212/7843041207';
 
-  static String get habitDetailsbannerAdUnitId =>
-      kReleaseMode ? 'ca-app-pub-4496000445589212/7843041207' : _ANDROID_BANNER_UNIT_ID_TEST;
+  static AdRequest get adRequest => kReleaseMode ? AdRequest() : AdRequest(testDevices: ["E5BCE9B277498E2110B5F4F43C1A0E6C"]);
 }
