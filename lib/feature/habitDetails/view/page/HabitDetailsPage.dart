@@ -39,11 +39,14 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
   final CalendarController calendarController = CalendarController();
 
   final BannerAd banner = BannerAd(
-    adUnitId: AdsHandler.habitDetailsbannerAdUnitId,
-    size: AdSize.largeBanner,
-    request: AdRequest(),
-    listener: AdListener(),
-  );
+      adUnitId: AdsHandler.habitDetailsbannerAdUnitId,
+      size: AdSize.largeBanner,
+      request: AdsHandler.adRequest,
+      listener: AdListener(
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
+        }
+      ));
 
   @override
   void initState() {
