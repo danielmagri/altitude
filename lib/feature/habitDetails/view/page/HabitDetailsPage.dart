@@ -6,6 +6,7 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
@@ -18,6 +19,7 @@ import 'package:altitude/feature/habitDetails/view/widgets/headerWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:table_calendar/table_calendar.dart' show CalendarController;
@@ -36,9 +38,17 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
   final PanelController panelController = PanelController();
   final CalendarController calendarController = CalendarController();
 
+  final BannerAd banner = BannerAd(
+    adUnitId: AdsHandler.habitDetailsbannerAdUnitId,
+    size: AdSize.largeBanner,
+    request: AdRequest(),
+    listener: AdListener(),
+  );
+
   @override
   void initState() {
     super.initState();
+    banner.load();
 
     controller.fetchData(widget.arguments.id, widget.arguments.color);
 
@@ -90,6 +100,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
   void dispose() {
     scrollController.dispose();
     calendarController.dispose();
+    banner.dispose();
     super.dispose();
   }
 
@@ -270,12 +281,13 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
                 ),
                 CueWidget(openBottomSheet: openBottomSheet),
                 const SizedBox(height: 16),
-                // AdvertisementBox(
-                //     color: controller.habitColor,
-                //     title: controller.bookAdvertisement.title,
-                //     message: controller.bookAdvertisement.subtitle,
-                //     onTap: goBuyBook),
-                // const SizedBox(height: 16),
+                Container(
+                  alignment: Alignment.center,
+                  child: AdWidget(ad: banner),
+                  width: 320,
+                  height: 100,
+                ),
+                const SizedBox(height: 16),
                 CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
                 const SizedBox(height: 16),
                 CoolDataWidget(),
