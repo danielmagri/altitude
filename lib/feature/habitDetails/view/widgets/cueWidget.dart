@@ -1,5 +1,4 @@
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:flutter/material.dart'
     show
@@ -30,7 +29,7 @@ class CueWidget extends StatelessWidget {
         super(key: key);
 
   final HabitDetailsLogic controller;
-  final Function(BottomSheetType) openBottomSheet;
+  final Function openBottomSheet;
 
   Widget _setCueWidget(String cue) {
     if (cue.isEmpty) {
@@ -55,7 +54,7 @@ class CueWidget extends StatelessWidget {
               margin: const EdgeInsets.all(12),
               elevation: 4,
               child: InkWell(
-                onTap: () => openBottomSheet(BottomSheetType.CUE),
+                onTap: openBottomSheet,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(

@@ -10,7 +10,6 @@ import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditCueDialog.dart';
-import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/calendarWidget.dart';
 import 'package:altitude/feature/habitDetails/view/widgets/coolDataWidget.dart';
@@ -20,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:table_calendar/table_calendar.dart' show CalendarController;
 
@@ -35,18 +33,15 @@ class HabitDetailsPage extends StatefulWidget {
 
 class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitDetailsLogic> {
   final ScrollController scrollController = ScrollController();
-  final PanelController panelController = PanelController();
   final CalendarController calendarController = CalendarController();
 
   final BannerAd banner = BannerAd(
       adUnitId: AdsHandler.habitDetailsbannerAdUnitId,
       size: AdSize.largeBanner,
       request: AdsHandler.adRequest,
-      listener: AdListener(
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          ad.dispose();
-        }
-      ));
+      listener: AdListener(onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        ad.dispose();
+      }));
 
   @override
   void initState() {
@@ -117,14 +112,6 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
     }
   }
 
-  Future<bool> onBackPress() {
-    if (panelController.isPanelOpen()) {
-      closeBottomSheet();
-      return Future.value(false);
-    }
-    return Future.value(true);
-  }
-
   void completeHabit(bool add, DateTime date, DonePageType donePageType) {
     controller.setDoneHabit(add, date, donePageType).then((_) async {
       vibratePhone();
@@ -152,13 +139,22 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
     }).catchError(handleError);
   }
 
-  void openBottomSheet(BottomSheetType type) {
-    controller.switchPanelType(type);
-    panelController.open();
+  void openReminderBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+        isScrollControlled: true,
+        builder: (_) => EditAlarmDialog());
   }
 
-  void closeBottomSheet() {
-    controller.switchPanelType(BottomSheetType.NONE);
+  void openCueBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+        isScrollControlled: true,
+        builder: (_) => EditCueDialog());
   }
 
   void goEditHabitPage() async {
@@ -171,133 +167,106 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
     navigatePush('competition');
   }
 
-  Widget _bottomSheetBuilder(BottomSheetType type) {
-    switch (type) {
-      case BottomSheetType.CUE:
-        return const EditCueDialog();
-      case BottomSheetType.REMINDER:
-        return const EditAlarmDialog();
-      default:
-        panelController.close();
-        return const SizedBox();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBackPress,
-      child: Scaffold(
-        body: SlidingUpPanel(
-          controller: panelController,
-          borderRadius: const BorderRadius.only(topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-          backdropEnabled: true,
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-          minHeight: 0,
-          onPanelClosed: closeBottomSheet,
-          panel: Observer(builder: (_) => _bottomSheetBuilder(controller.panelType)),
-          body: SingleChildScrollView(
-            controller: scrollController,
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 75,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      BackButton(color: controller.habitColor),
-                      const Spacer(),
-                      Observer(
-                        builder: (_) => controller.reminders.handleState(
-                          () =>
-                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
-                          (data) => IconButton(
-                              icon: Icon(data != null && data.hasAnyDay() ? Icons.alarm_on : Icons.add_alarm,
-                                  size: 25, color: controller.habitColor),
-                              onPressed: () => openBottomSheet(BottomSheetType.REMINDER)),
-                          (error) => const SizedBox(),
-                        ),
-                      ),
-                      Observer(
-                        builder: (_) => controller.habit.handleState(
-                          () =>
-                              const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
-                          (data) => IconButton(
-                            icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
-                            onPressed: goEditHabitPage,
-                          ),
-                          (error) => const SizedBox(),
-                        ),
-                      ),
-                    ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        controller: scrollController,
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 75,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  BackButton(color: controller.habitColor),
+                  const Spacer(),
+                  Observer(
+                    builder: (_) => controller.reminders.handleState(
+                      () => const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                      (data) => IconButton(
+                          icon: Icon(data != null && data.hasAnyDay() ? Icons.alarm_on : Icons.add_alarm,
+                              size: 25, color: controller.habitColor),
+                          onPressed: openReminderBottomSheet),
+                      (error) => const SizedBox(),
+                    ),
                   ),
-                ),
-                HeaderWidget(),
-                Container(
-                  margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
-                  width: double.maxFinite,
-                  height: 50,
-                  child: Observer(
-                    builder: (_) => controller.isHabitDone.handleStateLoadable(
-                      () => const Skeleton(width: double.maxFinite, height: 50),
-                      (data, loading) => ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(data ? controller.habitColor : Colors.white),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
-                            overlayColor: MaterialStateProperty.all(controller.habitColor.withOpacity(0.2)),
-                            elevation: MaterialStateProperty.all(2)),
-                        onPressed: () {
-                          if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
-                        },
-                        child: loading
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
-                            : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: data ? Colors.white : controller.habitColor,
-                                    fontWeight: FontWeight.bold)),
+                  Observer(
+                    builder: (_) => controller.habit.handleState(
+                      () => const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                      (data) => IconButton(
+                        icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
+                        onPressed: goEditHabitPage,
                       ),
                       (error) => const SizedBox(),
                     ),
                   ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  child: Observer(
-                    builder: (_) => controller.frequency.handleState(
-                      () => const Skeleton(width: 200, height: 20),
-                      (data) => Text(data.frequencyText(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54)),
-                      (error) => const SizedBox(),
-                    ),
-                  ),
-                ),
-                CueWidget(openBottomSheet: openBottomSheet),
-                const SizedBox(height: 16),
-                Container(
-                  alignment: Alignment.center,
-                  child: AdWidget(ad: banner),
-                  width: 320,
-                  height: 100,
-                ),
-                const SizedBox(height: 16),
-                CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
-                const SizedBox(height: 16),
-                CoolDataWidget(),
-                const SizedBox(height: 48),
-              ],
+                ],
+              ),
             ),
-          ),
+            HeaderWidget(),
+            Container(
+              margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
+              width: double.maxFinite,
+              height: 50,
+              child: Observer(
+                builder: (_) => controller.isHabitDone.handleStateLoadable(
+                  () => const Skeleton(width: double.maxFinite, height: 50),
+                  (data, loading) => ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(data ? controller.habitColor : Colors.white),
+                        shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
+                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                        overlayColor: MaterialStateProperty.all(controller.habitColor.withOpacity(0.2)),
+                        elevation: MaterialStateProperty.all(2)),
+                    onPressed: () {
+                      if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
+                    },
+                    child: loading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
+                        : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: data ? Colors.white : controller.habitColor,
+                                fontWeight: FontWeight.bold)),
+                  ),
+                  (error) => const SizedBox(),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: Observer(
+                builder: (_) => controller.frequency.handleState(
+                  () => const Skeleton(width: 200, height: 20),
+                  (data) => Text(data.frequencyText(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54)),
+                  (error) => const SizedBox(),
+                ),
+              ),
+            ),
+            CueWidget(openBottomSheet: openCueBottomSheet),
+            const SizedBox(height: 16),
+            Container(
+              alignment: Alignment.center,
+              child: AdWidget(ad: banner),
+              width: 320,
+              height: 100,
+            ),
+            const SizedBox(height: 16),
+            CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
+            const SizedBox(height: 16),
+            CoolDataWidget(),
+            const SizedBox(height: 48),
+          ],
         ),
       ),
     );

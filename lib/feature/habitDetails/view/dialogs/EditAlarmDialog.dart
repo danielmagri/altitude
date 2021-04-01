@@ -60,6 +60,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
       controller.saveReminders().then((_) {
         showToast("Alarme salvo");
         showLoading(false);
+        navigatePop();
       }).catchError(handleError);
     }
   }
@@ -69,6 +70,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
     controller.removeReminders().then((_) {
       showLoading(false);
       showToast("Alarme removido");
+      navigatePop();
     }).catchError(handleError);
   }
 
@@ -107,96 +109,102 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
-      child: Column(
-        children: <Widget>[
-          const BottomSheetLine(),
-          Container(
-            margin: const EdgeInsets.only(top: 18),
-            height: 30,
-            child: Text("Alarme",
-                style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor)),
-          ),
-          const Spacer(flex: 1),
-          const Padding(
-            padding: const EdgeInsets.all(8),
-            child: const Text("Você deseja ser lembrado do hábito ou do gatilho?",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
-          ),
-          Observer(
-            builder: (_) {
-              return Row(
-                  children: controller.reminderCards
-                      .map((item) => _reminderCard(controller.cardTypeSelected == item.type, item))
-                      .toList());
-            },
-          ),
-          const SizedBox(height: 32),
-          const Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text("Selecione os dias e o horário que deseja ser lembrado:",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
-          ),
-          Observer(
-            builder: (_) {
-              return Row(
-                children: controller.reminderWeekdaySelection
-                    .map((item) => ReminderDay(
-                        day: item.title,
-                        state: item.state,
-                        color: controller.habitColor,
-                        onTap: () => controller.reminderWeekdayClick(item.id, !item.state)))
-                    .toList(),
-              );
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 24),
-            child: InkWell(
-              onTap: reminderTimeClick,
-              child: Observer(
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height * 0.7, maxHeight: MediaQuery.of(context).size.height * 0.9),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
+          child: Column(
+            children: [
+              const BottomSheetLine(),
+              Container(
+                margin: const EdgeInsets.only(top: 18),
+                height: 30,
+                child: Text("Alarme",
+                    style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor)),
+              ),
+              const Padding(
+                padding: const EdgeInsets.all(8),
+                child: const Text("Você deseja ser lembrado do hábito ou do gatilho?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
+              ),
+              Observer(
                 builder: (_) {
-                  return RichText(
-                    text: TextSpan(
-                      style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: controller.timeText, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                        const TextSpan(text: " hrs"),
-                      ],
-                    ),
+                  return Row(
+                      children: controller.reminderCards
+                          .map((item) => _reminderCard(controller.cardTypeSelected == item.type, item))
+                          .toList());
+                },
+              ),
+              const SizedBox(height: 32),
+              const Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text("Selecione os dias e o horário que deseja ser lembrado:",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
+              ),
+              Observer(
+                builder: (_) {
+                  return Row(
+                    children: controller.reminderWeekdaySelection
+                        .map((item) => ReminderDay(
+                            day: item.title,
+                            state: item.state,
+                            color: controller.habitColor,
+                            onTap: () => controller.reminderWeekdayClick(item.id, !item.state)))
+                        .toList(),
                   );
                 },
               ),
-            ),
-          ),
-          const Spacer(flex: 3),
-          Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                controller.reminder != null && controller.reminder.hasAnyDay()
-                    ? TextButton(
-                        onPressed: remove,
-                        child: const Text("Remover", style: TextStyle(fontSize: 16, color: Colors.black)),
-                      )
-                    : const SizedBox(),
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(controller.habitColor),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
-                      overlayColor: MaterialStateProperty.all(Colors.white24),
-                      elevation: MaterialStateProperty.all(2)),
-                  onPressed: save,
-                  child: const Text("SALVAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              Container(
+                margin: const EdgeInsets.only(top: 24),
+                child: InkWell(
+                  onTap: reminderTimeClick,
+                  child: Observer(
+                    builder: (_) {
+                      return RichText(
+                        text: TextSpan(
+                          style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: controller.timeText, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            const TextSpan(text: " hrs"),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 16, top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    controller.reminder != null && controller.reminder.hasAnyDay()
+                        ? TextButton(
+                            onPressed: remove,
+                            child: const Text("Remover", style: TextStyle(fontSize: 16, color: Colors.black)),
+                          )
+                        : const SizedBox(),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(controller.habitColor),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
+                          overlayColor: MaterialStateProperty.all(Colors.white24),
+                          elevation: MaterialStateProperty.all(2)),
+                      onPressed: save,
+                      child: const Text("SALVAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

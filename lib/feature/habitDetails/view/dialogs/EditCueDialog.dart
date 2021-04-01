@@ -61,6 +61,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
       showLoading(true);
       controller.saveCue(textEditingController.text).then((_) {
         showLoading(false);
+        navigatePop();
       }).catchError(handleError);
     } else {
       showToast(validate);
@@ -71,6 +72,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
     showLoading(true);
     controller.removeCue().then((_) {
       showLoading(false);
+      navigatePop();
     }).catchError(handleError);
   }
 
@@ -113,98 +115,103 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      controller: scrollController,
-      physics: BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
-      child: Column(
-        children: <Widget>[
-          const BottomSheetLine(),
-          Container(
-            margin: const EdgeInsets.only(top: 12, bottom: 4),
-            height: 30,
-            child: Text(
-              "Gatilho",
-              style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height * 0.7, maxHeight: MediaQuery.of(context).size.height * 0.9),
+      child: SingleChildScrollView(
+        controller: scrollController,
+        physics: BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
+        child: Column(
+          children: <Widget>[
+            const BottomSheetLine(),
+            Container(
+              margin: const EdgeInsets.only(top: 12, bottom: 4),
+              height: 30,
+              child: Text(
+                "Gatilho",
+                style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor),
+              ),
             ),
-          ),
-          Observer(builder: (_) {
-            return RichText(
-              textAlign: TextAlign.justify,
-              text: TextSpan(children: _texts(controller.showAllTutorialText)),
-            );
-          }),
-          Container(
-            height: (MediaQuery.of(context).size.height * 0.8) - 140,
-            width: double.maxFinite,
-            child: Column(
-              children: <Widget>[
-                const Spacer(),
-                TextField(
-                  controller: textEditingController,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.go,
-                  onSubmitted: (text) => save(),
-                  onChanged: onTextChanged,
-                  minLines: 1,
-                  maxLines: 2,
-                  style: TextStyle(fontSize: 19),
-                  cursorColor: controller.habitColor,
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: controller.habitColor)),
-                      hintText: "Escreva aqui seu gatilho",
-                      hintStyle: TextStyle(fontWeight: FontWeight.w300)),
-                ),
-                Observer(builder: (_) {
-                  var suggestions = controller.suggestions;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    padding:
-                        suggestions.isNotEmpty ? const EdgeInsets.only(top: 12, bottom: 8) : const EdgeInsets.all(0),
-                    itemCount: suggestions.length < 3 ? suggestions.length : 3,
-                    itemBuilder: (context, position) {
-                      return GestureDetector(
-                        onTap: () {
-                          String text = suggestions[position];
-                          textEditingController.value = new TextEditingValue(text: text);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            suggestions[position],
-                            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
+            Observer(builder: (_) {
+              return RichText(
+                textAlign: TextAlign.justify,
+                text: TextSpan(children: _texts(controller.showAllTutorialText)),
+              );
+            }),
+            Container(
+              height: (MediaQuery.of(context).size.height * 0.8) - 140,
+              width: double.maxFinite,
+              child: Column(
+                children: <Widget>[
+                  const Spacer(),
+                  TextField(
+                    controller: textEditingController,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.go,
+                    onSubmitted: (text) => save(),
+                    onChanged: onTextChanged,
+                    minLines: 1,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 19),
+                    cursorColor: controller.habitColor,
+                    decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: controller.habitColor)),
+                        hintText: "Escreva aqui seu gatilho",
+                        hintStyle: TextStyle(fontWeight: FontWeight.w300)),
+                  ),
+                  Observer(builder: (_) {
+                    var suggestions = controller.suggestions;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding:
+                          suggestions.isNotEmpty ? const EdgeInsets.only(top: 12, bottom: 8) : const EdgeInsets.all(0),
+                      itemCount: suggestions.length < 3 ? suggestions.length : 3,
+                      itemBuilder: (context, position) {
+                        return GestureDetector(
+                          onTap: () {
+                            String text = suggestions[position];
+                            textEditingController.value = new TextEditingValue(text: text);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Text(
+                              suggestions[position],
+                              style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
+                            ),
                           ),
+                        );
+                      },
+                    );
+                  }),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      controller.cue.isNotEmpty
+                          ? TextButton(
+                              onPressed: remove,
+                              child: Text("Remover",
+                                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300, color: Colors.black)),
+                            )
+                          : SizedBox(),
+                      TextButton(
+                        onPressed: save,
+                        child: Text(
+                          "Salvar",
+                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: controller.habitColor),
                         ),
-                      );
-                    },
-                  );
-                }),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    controller.cue.isNotEmpty
-                        ? TextButton(
-                            onPressed: remove,
-                            child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300, color: Colors.black)),
-                          )
-                        : SizedBox(),
-                    TextButton(
-                      onPressed: save,
-                      child: Text(
-                        "Salvar",
-                        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: controller.habitColor),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

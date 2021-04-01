@@ -6,8 +6,6 @@ import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
-import 'package:altitude/feature/habitDetails/enums/BottomSheetType.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart' show Color;
@@ -22,9 +20,8 @@ class HabitDetailsLogic = _HabitDetailsLogicBase with _$HabitDetailsLogic;
 abstract class _HabitDetailsLogicBase with Store {
   final HabitUseCase _habitUseCase;
   final CompetitionUseCase _competitionUseCase;
-  final IFireAnalytics _fireAnalytics;
 
-  _HabitDetailsLogicBase(this._habitUseCase, this._competitionUseCase, this._fireAnalytics);
+  _HabitDetailsLogicBase(this._habitUseCase, this._competitionUseCase);
 
   String _id;
   int _color;
@@ -39,9 +36,6 @@ abstract class _HabitDetailsLogicBase with Store {
   DataState<double> rocketForce = DataState();
 
   Map<DateTime, List> currentMonth = Map();
-
-  @observable
-  BottomSheetType panelType = BottomSheetType.NONE;
 
   void fetchData(String habitId, int color) async {
     _id = habitId;
@@ -92,12 +86,6 @@ abstract class _HabitDetailsLogicBase with Store {
     } catch (error) {
       rocketForce.setError(error);
     }
-  }
-
-  @action
-  void switchPanelType(BottomSheetType type) {
-    if (type == BottomSheetType.CUE) _fireAnalytics.sendReadCue();
-    panelType = type;
   }
 
   void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) async {
@@ -177,13 +165,11 @@ abstract class _HabitDetailsLogicBase with Store {
     }
 
     habit.setData(newHabit);
-    switchPanelType(BottomSheetType.NONE);
   }
 
   void editAlarmCallback(Reminder newReminder) {
     reminders.setData(newReminder);
     habit.data.reminder = newReminder;
-    switchPanelType(BottomSheetType.NONE);
   }
 
   void updateHabitDetailsPageData(Habit newHabit) {

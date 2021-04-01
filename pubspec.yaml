@@ -24,7 +24,6 @@ dependencies:
   numberpicker: ^1.0.0
   flutter_local_notifications: ^1.4.4+2
   vibration: ^1.2.2
-  sliding_up_panel: ^0.3.6
   auto_size_text: ^2.0.2+1
   firebase_core: ^0.5.0
   firebase_auth: ^0.18.0+1
