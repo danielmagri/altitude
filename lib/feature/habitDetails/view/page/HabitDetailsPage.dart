@@ -36,12 +36,10 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
   final CalendarController calendarController = CalendarController();
 
   final BannerAd banner = BannerAd(
-      adUnitId: AdsHandler.habitDetailsbannerAdUnitId,
+      adUnitId: AdsHandler.habitDetailsBannerAdUnitId,
       size: AdSize.largeBanner,
       request: AdsHandler.adRequest,
-      listener: AdListener(onAdFailedToLoad: (Ad ad, LoadAdError error) {
-        ad.dispose();
-      }));
+      listener: AdsHandler.adListener);
 
   @override
   void initState() {
@@ -258,8 +256,8 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
             Container(
               alignment: Alignment.center,
               child: AdWidget(ad: banner),
-              width: 320,
-              height: 100,
+              width: banner.size.width.toDouble(),
+              height: banner.size.height.toDouble(),
             ),
             const SizedBox(height: 16),
             CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),

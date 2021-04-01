@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
+import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -10,6 +11,7 @@ import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
   CreateCompetitionPage(this.arguments);
@@ -23,8 +25,15 @@ class CreateCompetitionPage extends StatefulWidget {
 class _CreateCompetitionPageState extends BaseStateWithLogic<CreateCompetitionPage, CreateCompetitionLogic> {
   final TextEditingController textEditingController = TextEditingController();
 
+  final InterstitialAd myInterstitial = InterstitialAd(
+    adUnitId: AdsHandler.competitionOnCreateIntersticialAdUnitId,
+    request: AdsHandler.adRequest,
+    listener: AdsHandler.adListener,
+  );
+
   @override
   void initState() {
+    myInterstitial.load();
     controller.habits = widget.arguments.habits;
     super.initState();
   }
@@ -32,6 +41,7 @@ class _CreateCompetitionPageState extends BaseStateWithLogic<CreateCompetitionPa
   @override
   void dispose() {
     textEditingController.dispose();
+    myInterstitial.dispose();
     super.dispose();
   }
 
@@ -55,8 +65,9 @@ class _CreateCompetitionPageState extends BaseStateWithLogic<CreateCompetitionPa
       showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
-      controller.createCompetition(textEditingController.text).then((res) {
+      controller.createCompetition(textEditingController.text).then((res) async {
         showLoading(false);
+        if (await myInterstitial.isLoaded()) myInterstitial.show();
         navigatePop(result: BackDataItem.added(res));
       }).catchError(handleError);
     }

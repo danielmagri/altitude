@@ -46,53 +46,93 @@ const String _usecase = 'usecase';
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]
-_i1.GetIt $initGetIt(_i1.GetIt get, {String environment, _i2.EnvironmentFilter environmentFilter}) {
+_i1.GetIt $initGetIt(_i1.GetIt get,
+    {String environment, _i2.EnvironmentFilter environmentFilter}) {
   final gh = _i2.GetItHelper(get, environment, environmentFilter);
   gh.factory<_i3.IFireAuth>(() => _i4.FireAuth(), registerFor: {_service});
-  gh.factory<_i5.IFireDatabase>(() => _i6.FireDatabase(), registerFor: {_service});
-  gh.factory<_i7.IFireFunctions>(() => _i8.FireFunctions(), registerFor: {_service});
-  gh.factory<_i9.IFireMessaging>(() => _i10.FireMessaging(), registerFor: {_service});
-  gh.lazySingleton<_i11.ILocalNotification>(() => _i12.LocalNotification(), registerFor: {_service});
+  gh.factory<_i5.IFireDatabase>(() => _i6.FireDatabase(),
+      registerFor: {_service});
+  gh.factory<_i7.IFireFunctions>(() => _i8.FireFunctions(),
+      registerFor: {_service});
+  gh.factory<_i9.IFireMessaging>(() => _i10.FireMessaging(),
+      registerFor: {_service});
+  gh.lazySingleton<_i11.ILocalNotification>(() => _i12.LocalNotification(),
+      registerFor: {_service});
   gh.lazySingleton<_i13.LoginLogic>(() => _i13.LoginLogic());
   gh.factory<_i14.PersonUseCase>(
-      () => _i14.PersonUseCase(get<_i15.Memory>(), get<_i3.IFireAuth>(), get<_i9.IFireMessaging>(),
-          get<_i5.IFireDatabase>(), get<_i16.IFireAnalytics>(), get<_i7.IFireFunctions>()),
+      () => _i14.PersonUseCase(
+          get<_i15.Memory>(),
+          get<_i3.IFireAuth>(),
+          get<_i9.IFireMessaging>(),
+          get<_i5.IFireDatabase>(),
+          get<_i16.IFireAnalytics>(),
+          get<_i7.IFireFunctions>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i17.AddFriendLogic>(() => _i17.AddFriendLogic(get<_i14.PersonUseCase>()));
+  gh.lazySingleton<_i17.AddFriendLogic>(
+      () => _i17.AddFriendLogic(get<_i14.PersonUseCase>()));
   gh.factory<_i18.CompetitionUseCase>(
-      () => _i18.CompetitionUseCase(get<_i15.Memory>(), get<_i14.PersonUseCase>(), get<_i5.IFireDatabase>(),
-          get<_i9.IFireMessaging>(), get<_i7.IFireFunctions>(), get<_i16.IFireAnalytics>()),
+      () => _i18.CompetitionUseCase(
+          get<_i15.Memory>(),
+          get<_i14.PersonUseCase>(),
+          get<_i5.IFireDatabase>(),
+          get<_i9.IFireMessaging>(),
+          get<_i7.IFireFunctions>(),
+          get<_i16.IFireAnalytics>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i19.CreateCompetitionLogic>(() => _i19.CreateCompetitionLogic(get<_i18.CompetitionUseCase>()));
-  gh.lazySingleton<_i20.FriendsLogic>(() => _i20.FriendsLogic(get<_i14.PersonUseCase>()));
+  gh.lazySingleton<_i19.CreateCompetitionLogic>(
+      () => _i19.CreateCompetitionLogic(get<_i18.CompetitionUseCase>()));
+  gh.lazySingleton<_i20.FriendsLogic>(
+      () => _i20.FriendsLogic(get<_i14.PersonUseCase>()));
   gh.factory<_i21.HabitUseCase>(
-      () => _i21.HabitUseCase(get<_i15.Memory>(), get<_i14.PersonUseCase>(), get<_i18.CompetitionUseCase>(),
-          get<_i5.IFireDatabase>(), get<_i11.ILocalNotification>(), get<_i16.IFireAnalytics>()),
+      () => _i21.HabitUseCase(
+          get<_i15.Memory>(),
+          get<_i14.PersonUseCase>(),
+          get<_i18.CompetitionUseCase>(),
+          get<_i5.IFireDatabase>(),
+          get<_i11.ILocalNotification>(),
+          get<_i16.IFireAnalytics>()),
       registerFor: {_usecase});
   gh.lazySingleton<_i22.HomeLogic>(() => _i22.HomeLogic(
-      get<_i21.HabitUseCase>(), get<_i14.PersonUseCase>(), get<_i18.CompetitionUseCase>(), get<_i16.IFireAnalytics>()));
-  gh.lazySingleton<_i23.PendingCompetitionLogic>(
-      () => _i23.PendingCompetitionLogic(get<_i18.CompetitionUseCase>(), get<_i21.HabitUseCase>()));
-  gh.lazySingleton<_i24.PendingFriendsLogic>(() => _i24.PendingFriendsLogic(get<_i14.PersonUseCase>()));
-  gh.lazySingleton<_i25.SettingsLogic>(
-      () => _i25.SettingsLogic(get<_i14.PersonUseCase>(), get<_i21.HabitUseCase>(), get<_i18.CompetitionUseCase>()));
-  gh.lazySingleton<_i26.StatisticsLogic>(
-      () => _i26.StatisticsLogic(get<_i14.PersonUseCase>(), get<_i21.HabitUseCase>()));
-  gh.lazySingleton<_i27.AddHabitLogic>(() => _i27.AddHabitLogic(get<_i21.HabitUseCase>()));
-  gh.lazySingleton<_i28.CompetitionDetailsLogic>(
-      () => _i28.CompetitionDetailsLogic(get<_i14.PersonUseCase>(), get<_i18.CompetitionUseCase>()));
-  gh.lazySingleton<_i29.CompetitionLogic>(
-      () => _i29.CompetitionLogic(get<_i14.PersonUseCase>(), get<_i21.HabitUseCase>(), get<_i18.CompetitionUseCase>()));
-  gh.lazySingleton<_i30.EditHabitLogic>(() => _i30.EditHabitLogic(get<_i21.HabitUseCase>()));
+      get<_i21.HabitUseCase>(),
+      get<_i14.PersonUseCase>(),
+      get<_i18.CompetitionUseCase>(),
+      get<_i16.IFireAnalytics>()));
+  gh.lazySingleton<_i23.PendingCompetitionLogic>(() =>
+      _i23.PendingCompetitionLogic(
+          get<_i18.CompetitionUseCase>(), get<_i21.HabitUseCase>()));
+  gh.lazySingleton<_i24.PendingFriendsLogic>(
+      () => _i24.PendingFriendsLogic(get<_i14.PersonUseCase>()));
+  gh.lazySingleton<_i25.SettingsLogic>(() => _i25.SettingsLogic(
+      get<_i14.PersonUseCase>(),
+      get<_i21.HabitUseCase>(),
+      get<_i18.CompetitionUseCase>()));
+  gh.lazySingleton<_i26.StatisticsLogic>(() => _i26.StatisticsLogic(
+      get<_i14.PersonUseCase>(), get<_i21.HabitUseCase>()));
+  gh.lazySingleton<_i27.AddHabitLogic>(
+      () => _i27.AddHabitLogic(get<_i21.HabitUseCase>()));
+  gh.lazySingleton<_i28.CompetitionDetailsLogic>(() =>
+      _i28.CompetitionDetailsLogic(
+          get<_i14.PersonUseCase>(), get<_i18.CompetitionUseCase>()));
+  gh.lazySingleton<_i29.CompetitionLogic>(() => _i29.CompetitionLogic(
+      get<_i14.PersonUseCase>(),
+      get<_i21.HabitUseCase>(),
+      get<_i18.CompetitionUseCase>()));
+  gh.lazySingleton<_i30.EditHabitLogic>(
+      () => _i30.EditHabitLogic(get<_i21.HabitUseCase>()));
   gh.lazySingleton<_i31.HabitDetailsLogic>(() => _i31.HabitDetailsLogic(
-        get<_i21.HabitUseCase>(),
-        get<_i18.CompetitionUseCase>(),
-      ));
-  gh.lazySingleton<_i32.EditAlarmLogic>(
-      () => _i32.EditAlarmLogic(get<_i31.HabitDetailsLogic>(), get<_i21.HabitUseCase>(), get<_i16.IFireAnalytics>()));
-  gh.lazySingleton<_i33.EditCueLogic>(() => _i33.EditCueLogic(get<_i21.HabitUseCase>(), get<_i31.HabitDetailsLogic>()));
-  gh.singleton<_i16.IFireAnalytics>(_i34.FireAnalytics(), registerFor: {_service});
+      get<_i21.HabitUseCase>(), get<_i18.CompetitionUseCase>()));
+  gh.lazySingleton<_i32.EditAlarmLogic>(() => _i32.EditAlarmLogic(
+      get<_i31.HabitDetailsLogic>(),
+      get<_i21.HabitUseCase>(),
+      get<_i16.IFireAnalytics>()));
+  gh.lazySingleton<_i33.EditCueLogic>(() => _i33.EditCueLogic(
+      get<_i21.HabitUseCase>(),
+      get<_i16.IFireAnalytics>(),
+      get<_i31.HabitDetailsLogic>()));
+  gh.singleton<_i16.IFireAnalytics>(_i34.FireAnalytics(),
+      registerFor: {_service});
   gh.singleton<_i15.Memory>(_i15.Memory());
-  gh.singletonAsync<_i35.SharedPref>(() => _i35.SharedPref.initialize(), registerFor: {_service});
+  gh.singletonAsync<_i35.SharedPref>(() => _i35.SharedPref.initialize(),
+      registerFor: {_service});
   return get;
 }

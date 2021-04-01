@@ -1,6 +1,7 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
+import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/addHabit/view/widget/HabitText.dart';
@@ -9,6 +10,7 @@ import 'package:altitude/feature/addHabit/view/widget/SelectFrequency.dart';
 import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class EditHabitPage extends StatefulWidget {
   EditHabitPage(this.arguments);
@@ -22,14 +24,28 @@ class EditHabitPage extends StatefulWidget {
 class _EditHabitPageState extends BaseStateWithLogic<EditHabitPage, EditHabitLogic> {
   final habitTextController = TextEditingController();
 
+  final InterstitialAd myInterstitial = InterstitialAd(
+    adUnitId: AdsHandler.edithabitOnSaveIntersticialAdUnitId,
+    request: AdsHandler.adRequest,
+    listener: AdsHandler.adListener,
+  );
+
   @override
   void initState() {
     super.initState();
+    myInterstitial.load();
 
     controller.setData(widget.arguments.habit);
 
     controller.color = widget.arguments.habit.colorCode;
     habitTextController.text = widget.arguments.habit.habit;
+  }
+
+  @override
+  void dispose() {
+    habitTextController.dispose();
+    myInterstitial.dispose();
+    super.dispose();
   }
 
   void updateHabit() {
@@ -40,11 +56,12 @@ class _EditHabitPageState extends BaseStateWithLogic<EditHabitPage, EditHabitLog
       showToast("Escolha qual será a frequência.");
     } else {
       showLoading(true);
-      controller.updateHabit(habitTextController.text).then((_) {
+      controller.updateHabit(habitTextController.text).then((_) async {
         showLoading(false);
+        showToast("O hábito foi editado!");
+        if (await myInterstitial.isLoaded()) myInterstitial.show();
         Navigator.pop(context);
       }).catchError(handleError);
-      showToast("O hábito foi editado!");
     }
   }
 

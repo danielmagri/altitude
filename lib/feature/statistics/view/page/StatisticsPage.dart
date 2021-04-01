@@ -3,6 +3,7 @@ import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/feature/statistics/logic/StatisticsLogic.dart';
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:altitude/feature/statistics/view/widget/FrequencyChart.dart';
@@ -12,6 +13,7 @@ import 'package:altitude/feature/statistics/view/widget/PieChartScore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Statisticspage extends StatefulWidget {
   @override
@@ -19,10 +21,23 @@ class Statisticspage extends StatefulWidget {
 }
 
 class _StatisticspageState extends BaseStateWithLogic<Statisticspage, StatisticsLogic> {
+  final BannerAd banner = BannerAd(
+      adUnitId: AdsHandler.statisticsBannerAdUnitId,
+      size: AdSize.largeBanner,
+      request: AdsHandler.adRequest,
+      listener: AdsHandler.adListener);
+
   @override
   void initState() {
     super.initState();
+    banner.load();
     controller.fetchData();
+  }
+
+  @override
+  void dispose() {
+    banner.dispose();
+    super.dispose();
   }
 
   void showPercentageTutorial() {
@@ -131,7 +146,14 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
                   (data) => HistoricChart(list: data, selectedHabitId: controller.selectedId),
                   (error) => DataError()),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 25),
+            Container(
+              alignment: Alignment.center,
+              child: AdWidget(ad: banner),
+              width: banner.size.width.toDouble(),
+              height: banner.size.height.toDouble(),
+            ),
+            const SizedBox(height: 25),
             Padding(
               padding: const EdgeInsets.only(bottom: 16, left: 24),
               child: Row(
