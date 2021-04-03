@@ -24,17 +24,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'common/sharedPref/SharedPref.dart';
 import 'core/di/get_it_config.dart';
 import 'core/services/interfaces/i_fire_analytics.dart';
-import 'core/services/interfaces/i_fire_messaging.dart';
 
 void main() async {
+  configureDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  configureDependencies();
   await Firebase.initializeApp();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
   await GetIt.I.isReady<SharedPref>();
+
   runApp(MyApp());
 }
 
@@ -54,7 +53,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    getIt.get<IFireMessaging>().configure();
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Color.fromARGB(100, 250, 250, 250),

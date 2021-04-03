@@ -16,6 +16,7 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:altitude/utils/Color.dart';
 import 'package:get_it/get_it.dart';
@@ -32,8 +33,17 @@ class HabitUseCase extends BaseUseCase {
   final IFireDatabase _fireDatabase;
   final ILocalNotification _localNotification;
   final IFireAnalytics _fireAnalytics;
+  final IFireFunctions _fireFunctions;
 
-  HabitUseCase(this._memory, this._personUseCase, this._competitionUseCase, this._fireDatabase, this._localNotification, this._fireAnalytics);
+  HabitUseCase(
+    this._memory,
+    this._personUseCase,
+    this._competitionUseCase,
+    this._fireDatabase,
+    this._localNotification,
+    this._fireAnalytics,
+    this._fireFunctions,
+  );
 
   // Transfer data
 
@@ -57,7 +67,7 @@ class HabitUseCase extends BaseUseCase {
         }
       });
 
-      Future<Result> updateTotalScore(int score) => safeCall(() {
+  Future<Result> updateTotalScore(int score) => safeCall(() {
         _memory.clear();
         return _fireDatabase.updateTotalScore(score, LevelControl.getLevel(score));
       });
@@ -214,8 +224,11 @@ class HabitUseCase extends BaseUseCase {
               .where((e) => e.getMyCompetitor().habitId == habitId && e.initialDate.isBeforeOrSameDay(date))
               .toList();
 
-          await _fireDatabase
-              .completeHabit(habitId, isAdd, score, isLastDone, dayDone, competitions.map((e) => e.id).toList());
+          await _fireDatabase.completeHabit(
+              habitId, isAdd, score, isLastDone, dayDone, competitions.map((e) => e.id).toList());
+
+          sendCompetitionNotification(score, competitions);
+
           _personUseCase.setLocalScore(await _personUseCase.getScore() + score);
           int index = _memory.habits.indexWhere((e) => e.id == habitId);
           if (index != -1) {
@@ -236,6 +249,29 @@ class HabitUseCase extends BaseUseCase {
           return;
         }, (error) => throw error);
       });
+
+  void sendCompetitionNotification(int earnedScore, List<Competition> competitions) {
+    final String name = _personUseCase.name;
+
+    competitions.forEach((competition) {
+      int oldScore = competition.competitors.firstWhere((e) => e.you).score;
+
+      competition.competitors.forEach((competitor) {
+        if (!competitor.you) {
+          if (competitor.score >= oldScore && (oldScore + earnedScore) > competitor.score) {
+            _fireFunctions.sendNotification("Tem alguém comendo poeira!",
+                "$name acabou de te ultrapassar em ${competition.title}", competitor.fcmToken);
+          } else if (earnedScore >= 4 && (oldScore + earnedScore) <= competitor.score) {
+            _fireFunctions.sendNotification(
+                "Cuidado!", "$name está se aproximando rapidamente em ${competition.title}", competitor.fcmToken);
+          } else if (earnedScore >= 4 && oldScore > competitor.score) {
+            _fireFunctions.sendNotification("Sempre é hora de reagir!",
+                "$name está se distanciando cada vez mais de você em ${competition.title}", competitor.fcmToken);
+          }
+        }
+      });
+    });
+  }
 
   Future<Result<void>> deleteHabit(Habit habit) => safeCall(() async {
         if (habit.reminder != null) {

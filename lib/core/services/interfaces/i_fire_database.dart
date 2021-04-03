@@ -21,6 +21,8 @@ abstract class IFireDatabase {
 
   Future updateName(String name, List<String> competitionsId);
 
+  Future updateFcmToken(String name, List<String> competitionsId);
+
   Future updateLevel(int level);
 
   Future<Habit> addHabit(Habit habit, int reminderCounter);

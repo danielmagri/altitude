@@ -11,6 +11,7 @@ import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
+import 'CompetitionUseCase.dart';
 
 @usecase
 @Injectable()
@@ -42,7 +43,8 @@ class PersonUseCase extends BaseUseCase {
   Future<Result> createPerson(
           {int level, int reminderCounter, int score, List<String> friends, List<String> pendingFriends}) =>
       safeCall(() async {
-        return (await getPerson(fromServer: true)).result((data) {
+        return (await getPerson(fromServer: true)).result((data) async {
+          updateFcmToken();
           return;
         }, (error) async {
           Person person = Person(
@@ -65,6 +67,11 @@ class PersonUseCase extends BaseUseCase {
           var data = await _fireDatabase.getPerson();
           data.photoUrl = photoUrl ?? "";
           _memory.person = data;
+
+          if (data.fcmToken != await fcmToken) {
+            updateFcmToken();
+          }
+
           return data;
         } else {
           return Future.value(_memory.person);
@@ -91,6 +98,18 @@ class PersonUseCase extends BaseUseCase {
         await _fireAuth.setName(name);
         await _fireDatabase.updateName(name, competitionsId);
         _memory.person?.name = name;
+        return;
+      });
+
+  Future<Result> updateFcmToken() => safeCall(() async {
+        List<String> competitionsId = (await CompetitionUseCase.getI.getCompetitions(fromServer: true))
+            .absoluteResult()
+            .map((e) => e.id)
+            .toList();
+        final token = await fcmToken;
+
+        await _fireDatabase.updateFcmToken(token, competitionsId);
+        _memory.person?.fcmToken = token;
         return;
       });
 

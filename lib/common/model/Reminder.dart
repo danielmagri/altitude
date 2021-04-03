@@ -24,13 +24,26 @@ class Reminder {
 
   List<Day> getAllweekdays() {
     List<Day> days = [];
-    if (monday) days.add(Day.Monday);
-    if (tuesday) days.add(Day.Tuesday);
-    if (wednesday) days.add(Day.Wednesday);
-    if (thursday) days.add(Day.Thursday);
-    if (friday) days.add(Day.Friday);
-    if (saturday) days.add(Day.Saturday);
-    if (sunday) days.add(Day.Sunday);
+    if (monday) days.add(Day.monday);
+    if (tuesday) days.add(Day.tuesday);
+    if (wednesday) days.add(Day.wednesday);
+    if (thursday) days.add(Day.thursday);
+    if (friday) days.add(Day.friday);
+    if (saturday) days.add(Day.saturday);
+    if (sunday) days.add(Day.sunday);
+
+    return days;
+  }
+
+  List<int> getAllweekdaysDateTime() {
+    List<int> days = [];
+    if (monday) days.add(DateTime.monday);
+    if (tuesday) days.add(DateTime.tuesday);
+    if (wednesday) days.add(DateTime.wednesday);
+    if (thursday) days.add(DateTime.thursday);
+    if (friday) days.add(DateTime.friday);
+    if (saturday) days.add(DateTime.saturday);
+    if (sunday) days.add(DateTime.sunday);
 
     return days;
   }

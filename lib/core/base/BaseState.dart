@@ -1,5 +1,4 @@
 import 'package:altitude/common/view/generic/Loading.dart';
-import 'package:cloud_functions/cloud_functions.dart' show CloudFunctionsException;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:vibration/vibration.dart';
@@ -112,12 +111,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   @protected
   void handleError(dynamic error) {
     showLoading(false);
-    if (error is CloudFunctionsException) {
-      if (error.details == true) {
-        showToast(error.message);
-        return;
-      }
-    } else if (error is String) {
+    if (error is String) {
       showToast(error);
     } else {
       showToast("Ocorreu um erro");

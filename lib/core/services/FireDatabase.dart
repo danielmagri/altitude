@@ -129,6 +129,27 @@ class FireDatabase implements IFireDatabase {
     return batch.commit();
   }
 
+  Future updateFcmToken(String token, List<String> competitionsId) {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    userDoc.update({Person.FCM_TOKEN: token});
+
+    if (competitionsId != null) {
+      for (String item in competitionsId) {
+        batch.set(
+            competitionCollection.doc(item),
+            {
+              Competition.COMPETITORS: {
+                GetIt.I.get<IFireAuth>().getUid(): {Competitor.FCM_TOKEN: token}
+              }
+            },
+            SetOptions(merge: true));
+      }
+    }
+
+    return batch.commit();
+  }
+
   Future updateLevel(int level) {
     return userDoc.update({Person.LEVEL: level});
   }

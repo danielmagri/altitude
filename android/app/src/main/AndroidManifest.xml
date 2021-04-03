@@ -18,9 +18,7 @@
         <meta-data android:name="flutterEmbedding" android:value="2" />
 
         <!-- Ads -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4496000445589212~4548639936"/>
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-4496000445589212~4548639936"/>
 
         <!-- Facebook -->
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id" />
@@ -40,6 +38,7 @@
 
         <!-- FCM -->
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_notification" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="high_importance_channel" />
 
         <!-- Local Notifications -->
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
