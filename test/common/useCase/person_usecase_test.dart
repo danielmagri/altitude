@@ -15,11 +15,12 @@ void main() {
     initConfig();
   });
 
-  // group('createPerson', () {
+  group('createPerson', () {
+    //TODO
   //   test('returns a Result.success', () async {
   //     expect(await PersonUseCase.getInstance.createPerson(), isA<RSuccess>());
   //   });
-  // });
+  });
 
   group('getPerson', () {
     test('returns a Person with Result.success from FireDatabase', () async {
@@ -51,5 +52,61 @@ void main() {
 
       expect(await PersonUseCase.getI.getPerson(fromServer: true), isA<RError<Person>>());
     });
+  });
+
+  group('getScore', () {
+    //TODO
+  });
+
+  group('updateLevel', () {
+    //TODO
+  });
+
+  group('updateName', () {
+    //TODO
+  });
+
+  group('updateFcmToken', () {
+    //TODO
+  });
+
+  group('getFriends', () {
+    //TODO
+  });
+
+  group('getPendingFriends', () {
+    //TODO
+  });
+
+  group('searchEmail', () {
+    //TODO
+  });
+
+  group('friendRequest', () {
+    //TODO
+  });
+
+  group('acceptRequest', () {
+    //TODO
+  });
+
+  group('declineRequest', () {
+    //TODO
+  });
+
+  group('cancelFriendRequest', () {
+    //TODO
+  });
+
+  group('removeFriend', () {
+    //TODO
+  });
+
+  group('rankingFriends', () {
+    //TODO
+  });
+
+  group('logout', () {
+    //TODO
   });
 }

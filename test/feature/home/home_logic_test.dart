@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
@@ -6,6 +7,7 @@ import 'package:altitude/core/enums/StateType.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart' as mobx;
 import 'package:mockito/mockito.dart';
@@ -19,7 +21,37 @@ void main() {
   });
 
   group('getUser', () {
-    //TODO});
+    test('returns person data success', () async {
+      final personUseCase = PersonUseCase.getI;
+      final Person data = Person();
+
+      expect(logic.user.state, StateType.INITIAL);
+
+      when(personUseCase.getPerson()).thenAnswer((_) => Future.value(Result.success(data)));
+
+      logic.getUser();
+
+      await mobx.asyncWhen((_) => logic.user.state != StateType.INITIAL);
+
+      expect(logic.user.state, StateType.SUCESS);
+      expect(logic.user.data, data);
+    });
+
+    test('returns person data error', () async {
+      final personUseCase = PersonUseCase.getI;
+      final dynamic error = "error";
+
+      expect(logic.user.state, StateType.INITIAL);
+
+      when(personUseCase.getPerson()).thenAnswer((_) => Future.value(Result.error(error)));
+
+      logic.getUser();
+
+      await mobx.asyncWhen((_) => logic.user.state != StateType.INITIAL);
+
+      expect(logic.user.state, StateType.ERROR);
+      expect(logic.user.error, error);
+    });
   });
 
   group('getHabits', () {
@@ -121,7 +153,19 @@ void main() {
   });
 
   group('completeHabit', () {
-    //TODO
+    test('returns complete habit success with 2 points', () async {
+      final personUseCase = PersonUseCase.getI;
+      final habitUseCase = HabitUseCase.getI;
+
+      final List<Habit> dataHabits = [Habit()];
+      final Person dataPerson = Person(score: 2);
+
+      when(habitUseCase.completeHabit("", DateTime.now().today)).thenAnswer((_) => Future.value(Result.success(null)));
+      when(habitUseCase.getHabits()).thenAnswer((_) => Future.value(Result.success(dataHabits)));
+      when(personUseCase.getPerson()).thenAnswer((_) => Future.value(Result.success(dataPerson)));
+
+      expect(await logic.completeHabit(""), 2);
+    });
   });
 
   group('checkLevelUp', () {

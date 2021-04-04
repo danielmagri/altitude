@@ -203,7 +203,7 @@ class HabitUseCase extends BaseUseCase {
         return;
       });
 
-  Future<Result<void>> completeHabit(String habitId, DateTime date, [bool isAdd = true, List<DateTime> daysDone]) =>
+  Future<Result> completeHabit(String habitId, DateTime date, [bool isAdd = true, List<DateTime> daysDone]) =>
       safeCall(() async {
         return (await getHabit(habitId)).result((habit) async {
           int weekDay = date.weekday == 7 ? 0 : date.weekday;

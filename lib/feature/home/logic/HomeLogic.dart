@@ -63,8 +63,8 @@ abstract class _HomeLogicBase with Store {
 
   @action
   Future<int> completeHabit(String id) async {
-    return (await _habitUseCase.completeHabit(id, DateTime.now().today)).result((value) {
-      getUser();
+    return (await _habitUseCase.completeHabit(id, DateTime.now().today)).result((_) async {
+      await getUser();
       getHabits();
       return user.data.score;
     }, (error) => throw error);
