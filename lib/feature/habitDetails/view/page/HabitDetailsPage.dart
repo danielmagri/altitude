@@ -3,6 +3,7 @@ import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -170,7 +171,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
     return Scaffold(
       body: SingleChildScrollView(
         controller: scrollController,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: <Widget>[
             SizedBox(
@@ -213,7 +214,8 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
                   () => const Skeleton(width: double.maxFinite, height: 50),
                   (data, loading) => ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(data ? controller.habitColor : Colors.white),
+                        backgroundColor: MaterialStateProperty.all(
+                            data ? controller.habitColor : AppTheme.of(context).materialTheme.accentColor),
                         shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
@@ -245,8 +247,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
                 builder: (_) => controller.frequency.handleState(
                   () => const Skeleton(width: 200, height: 20),
                   (data) => Text(data.frequencyText(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black54)),
+                      textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300)),
                   (error) => const SizedBox(),
                 ),
               ),

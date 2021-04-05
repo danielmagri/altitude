@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:altitude/common/theme/app_theme.dart';
+import 'package:flutter/material.dart' show BorderRadius, BoxDecoration, BuildContext, Colors, Container, EdgeInsets, Key, StatelessWidget, Widget, required;
+import 'package:shimmer/shimmer.dart' show Shimmer;
 
 class Skeleton extends StatelessWidget {
   const Skeleton({Key key, @required this.width, @required this.height, this.margin = const EdgeInsets.all(0)})
@@ -20,8 +21,8 @@ class Skeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300],
-      highlightColor: Colors.grey[100],
+      baseColor: AppTheme.of(context).shimmerBase,
+      highlightColor: AppTheme.of(context).shimmerHighlight,
       child: child != null
           ? child
           : Container(

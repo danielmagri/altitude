@@ -16,6 +16,7 @@ import 'package:altitude/feature/competition/view/widget/Metrics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/utils/Color.dart';
+import 'package:flutter/services.dart' show Brightness, SystemUiOverlayStyle, TextCapitalization, TextInputAction;
 
 class CompetitionDetailsPage extends StatefulWidget {
   CompetitionDetailsPage(this.arguments);
@@ -42,6 +43,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
   @override
   void dispose() {
     titleTextController.dispose();
+    resetSystemStyle();
     super.dispose();
   }
 
@@ -247,59 +249,66 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.sky,
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 106,
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 50, child: BackButton()),
-                Expanded(
-                    child: Text(controller.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
-                SizedBox(
-                  width: 50,
-                  child: PopupMenuButton<int>(
-                    onSelected: (int result) {
-                      switch (result) {
-                        case 1:
-                          _showTitleDialog();
-                          break;
-                        case 2:
-                          _addCompetitor();
-                          break;
-                        case 3:
-                          _leaveCompetition();
-                          break;
-                        case 4:
-                          _aboutCompetition();
-                          break;
-                      }
-                    },
-                    itemBuilder: (_) => <PopupMenuEntry<int>>[
-                      const PopupMenuItem<int>(value: 1, child: Text('Alterar título')),
-                      const PopupMenuItem<int>(value: 2, child: Text('Adicionar amigos')),
-                      const PopupMenuItem<int>(value: 3, child: Text('Sair da competição')),
-                      const PopupMenuItem<int>(value: 4, child: Text('Sobre')),
-                    ],
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          systemNavigationBarColor: Colors.brown,
+          systemNavigationBarIconBrightness: Brightness.light),
+      child: Scaffold(
+        backgroundColor: AppColors.sky,
+        body: Column(
+          children: <Widget>[
+            Container(
+              height: 106,
+              child: Row(
+                children: <Widget>[
+                  const SizedBox(width: 50, child: BackButton()),
+                  Expanded(
+                      child: Text(controller.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
+                  SizedBox(
+                    width: 50,
+                    child: PopupMenuButton<int>(
+                      onSelected: (int result) {
+                        switch (result) {
+                          case 1:
+                            _showTitleDialog();
+                            break;
+                          case 2:
+                            _addCompetitor();
+                            break;
+                          case 3:
+                            _leaveCompetition();
+                            break;
+                          case 4:
+                            _aboutCompetition();
+                            break;
+                        }
+                      },
+                      itemBuilder: (_) => <PopupMenuEntry<int>>[
+                        const PopupMenuItem<int>(value: 1, child: Text('Alterar título')),
+                        const PopupMenuItem<int>(value: 2, child: Text('Adicionar amigos')),
+                        const PopupMenuItem<int>(value: 3, child: Text('Sair da competição')),
+                        const PopupMenuItem<int>(value: 4, child: Text('Sobre')),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SingleChildScrollView(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: _competitorsWidget(),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: _competitorsWidget(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

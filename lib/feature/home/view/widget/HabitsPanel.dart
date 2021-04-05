@@ -47,7 +47,7 @@ class HabitsPanel extends StatelessWidget {
           (data) {
             if (data.isEmpty) {
               return Text("Crie um novo hábito pelo botão \"+\" na tela principal.",
-                  textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, color: Colors.black26));
+                  textAlign: TextAlign.center, style: const TextStyle(fontSize: 22));
             } else {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),

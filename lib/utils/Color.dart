@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+@deprecated
 abstract class AppColors {
   static const Color disableHabitCreation = Colors.grey;
   static Color colorAccent = Color.fromARGB(255, 51, 51, 51);

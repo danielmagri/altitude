@@ -36,7 +36,6 @@ class CoolDataWidget extends StatelessWidget {
                 child: RichText(
                   text: TextSpan(
                     style: const TextStyle(
-                        color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
                         height: 1.2,

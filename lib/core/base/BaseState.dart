@@ -1,6 +1,8 @@
+import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get_it/get_it.dart' show GetIt;
 import 'package:vibration/vibration.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
@@ -18,6 +20,7 @@ import 'package:flutter/material.dart'
         State,
         StatefulWidget,
         Widget,
+        WidgetsBinding,
         protected;
 
 abstract class BaseStateWithLogic<T extends StatefulWidget, L> extends BaseState<T> {
@@ -64,6 +67,18 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   @protected
   void navigateRemoveUntil(String route) {
     Navigator.of(context).pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+  }
+
+  @protected
+  void changeSystemStyle(SystemUiOverlayStyle style) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      GetIt.I.get<AppLogic>().changeSystemStyle(style: style);
+    });
+  }
+
+  @protected
+  void resetSystemStyle() {
+    GetIt.I.get<AppLogic>().changeSystemStyle();
   }
 
   @protected

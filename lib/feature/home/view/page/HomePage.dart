@@ -1,3 +1,4 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
@@ -13,9 +14,7 @@ import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
 import 'package:altitude/feature/home/view/widget/HomeBottomNavigation.dart';
 import 'package:altitude/feature/home/view/widget/HomeDrawer.dart';
 import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -78,10 +77,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
       controller.fetchPendingStatus();
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Color.fromARGB(100, 250, 250, 250),
-          systemNavigationBarColor: Color.fromARGB(255, 250, 250, 250),
-          systemNavigationBarIconBrightness: Brightness.dark));
+      controller.updateSystemStyle();
     }
   }
 
@@ -123,6 +119,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   void goStatistics() {
+    // AppTheme.changeTheme(context, AppTheme.isDark(context) ? ThemeMode.light : ThemeMode.dark);
     navigatePush('statistics');
   }
 
@@ -169,7 +166,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
                 GestureDetector(
                   onTap: goAllLevels,
                   child: Container(
-                    color: Theme.of(context).canvasColor,
+                    color: AppTheme.of(context).materialTheme.backgroundColor,
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Observer(builder: (_) {
                       return controller.user.handleState(
@@ -197,7 +194,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
                           return Column(children: [
                             Text(data.levelText),
                             const SizedBox(height: 4),
-                            Score(color: AppColors.colorAccent, score: data.score),
+                            Score(score: data.score),
                           ]);
                         },
                         (error) {

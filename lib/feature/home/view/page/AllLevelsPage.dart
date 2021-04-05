@@ -17,7 +17,7 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
     List<Widget> widgets = [];
     widgets.add(
       Container(
-        margin: EdgeInsets.only(top: 40, bottom: 16),
+        margin: EdgeInsets.only(top: 20, bottom: 16),
         child: Row(
           children: <Widget>[
             SizedBox(
@@ -87,10 +87,12 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          children: _setLevelsWidget(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: _setLevelsWidget(),
+          ),
         ),
       ),
     );

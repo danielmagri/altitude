@@ -1,7 +1,7 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/feature/home/logic/HomeLogic.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
         BorderRadius,
@@ -54,14 +54,15 @@ class HomebottomNavigation extends StatelessWidget {
       child: Container(
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 24, left: 24),
-        decoration: BoxDecoration(color: AppColors.colorAccent, borderRadius: BorderRadius.circular(22)),
+        decoration: BoxDecoration(
+            color: AppTheme.of(context).materialTheme.accentColor, borderRadius: BorderRadius.circular(22)),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButtonStatus(
                 status: false,
-                backgroundColor: AppColors.colorAccent,
+                backgroundColor: AppTheme.of(context).materialTheme.accentColor,
                 icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
                 onPressed: () => goStatistics()),
             InkWell(
@@ -69,13 +70,13 @@ class HomebottomNavigation extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-                child: Icon(Icons.add, color: AppColors.colorAccent, size: 28),
+                child: Icon(Icons.add, color: AppTheme.of(context).materialTheme.accentColor, size: 28),
               ),
             ),
             Observer(
                 builder: (_) => IconButtonStatus(
                       status: controller.pendingCompetitionStatus,
-                      backgroundColor: AppColors.colorAccent,
+                      backgroundColor: AppTheme.of(context).materialTheme.accentColor,
                       icon: Image.asset("assets/ic_award.png", width: 28, color: Colors.white),
                       onPressed: () => goCompetition(false),
                     )),

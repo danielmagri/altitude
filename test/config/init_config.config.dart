@@ -4,11 +4,12 @@
 // InjectableConfigGenerator
 // **************************************************************************
 
-import 'package:altitude/common/sharedPref/SharedPref.dart' as _i38;
+import 'package:altitude/common/app_logic.dart' as _i31;
+import 'package:altitude/common/sharedPref/SharedPref.dart' as _i39;
 import 'package:altitude/common/useCase/CompetitionUseCase.dart' as _i4;
 import 'package:altitude/common/useCase/HabitUseCase.dart' as _i17;
 import 'package:altitude/common/useCase/PersonUseCase.dart' as _i18;
-import 'package:altitude/core/services/FireAnalytics.dart' as _i35;
+import 'package:altitude/core/services/FireAnalytics.dart' as _i36;
 import 'package:altitude/core/services/FireAuth.dart' as _i6;
 import 'package:altitude/core/services/FireDatabase.dart' as _i8;
 import 'package:altitude/core/services/FireFunctions.dart' as _i10;
@@ -22,7 +23,7 @@ import 'package:altitude/core/services/interfaces/i_fire_messaging.dart'
     as _i11;
 import 'package:altitude/core/services/interfaces/i_local_notification.dart'
     as _i13;
-import 'package:altitude/core/services/LocalNotification.dart' as _i36;
+import 'package:altitude/core/services/LocalNotification.dart' as _i37;
 import 'package:altitude/core/services/Memory.dart' as _i19;
 import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart' as _i24;
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart'
@@ -37,10 +38,10 @@ import 'package:altitude/feature/editHabit/logic/EditHabitLogic.dart' as _i27;
 import 'package:altitude/feature/friends/logic/AddFriendLogic.dart' as _i23;
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart' as _i28;
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart'
-    as _i31;
-import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart'
     as _i32;
-import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart' as _i33;
+import 'package:altitude/feature/habitDetails/logic/EditAlarmLogic.dart'
+    as _i33;
+import 'package:altitude/feature/habitDetails/logic/EditCueLogic.dart' as _i34;
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart'
     as _i29;
 import 'package:altitude/feature/home/logic/HomeLogic.dart' as _i30;
@@ -51,8 +52,8 @@ import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
 import 'mocks/services_mocks.dart' as _i14;
-import 'mocks/shared_pref_mock.dart' as _i37;
-import 'mocks/use_case_mocks.dart' as _i34;
+import 'mocks/shared_pref_mock.dart' as _i38;
+import 'mocks/use_case_mocks.dart' as _i35;
 
 const String _usecase_test = 'usecase_test';
 const String _service_test = 'service_test';
@@ -134,24 +135,26 @@ _i1.GetIt $initGetItTest(_i1.GetIt get,
       get<_i17.HabitUseCase>(),
       get<_i18.PersonUseCase>(),
       get<_i4.CompetitionUseCase>(),
-      get<_i20.IFireAnalytics>()));
-  gh.lazySingleton<_i31.PendingFriendsLogic>(
-      () => _i31.PendingFriendsLogic(get<_i18.PersonUseCase>()));
-  gh.lazySingleton<_i32.EditAlarmLogic>(() => _i32.EditAlarmLogic(
+      get<_i20.IFireAnalytics>(),
+      get<_i31.AppLogic>()));
+  gh.lazySingleton<_i32.PendingFriendsLogic>(
+      () => _i32.PendingFriendsLogic(get<_i18.PersonUseCase>()));
+  gh.lazySingleton<_i33.EditAlarmLogic>(() => _i33.EditAlarmLogic(
       get<_i29.HabitDetailsLogic>(),
       get<_i17.HabitUseCase>(),
       get<_i20.IFireAnalytics>()));
-  gh.lazySingleton<_i33.EditCueLogic>(() => _i33.EditCueLogic(
+  gh.lazySingleton<_i34.EditCueLogic>(() => _i34.EditCueLogic(
       get<_i17.HabitUseCase>(),
       get<_i20.IFireAnalytics>(),
       get<_i29.HabitDetailsLogic>()));
-  gh.singleton<_i4.CompetitionUseCase>(_i34.MockCompetitionUseCase(),
+  gh.singleton<_i31.AppLogic>(_i31.AppLogic());
+  gh.singleton<_i4.CompetitionUseCase>(_i35.MockCompetitionUseCase(),
       registerFor: {_usecase_test});
-  gh.singleton<_i17.HabitUseCase>(_i34.MockHabitUseCase(),
+  gh.singleton<_i17.HabitUseCase>(_i35.MockHabitUseCase(),
       registerFor: {_usecase_test});
   gh.singleton<_i20.IFireAnalytics>(_i14.MockFireAnalytics(),
       registerFor: {_service_test});
-  gh.singleton<_i20.IFireAnalytics>(_i35.FireAnalytics(),
+  gh.singleton<_i20.IFireAnalytics>(_i36.FireAnalytics(),
       registerFor: {_service});
   gh.singleton<_i5.IFireAuth>(_i14.MockFireAuth(),
       registerFor: {_service_test});
@@ -162,14 +165,14 @@ _i1.GetIt $initGetItTest(_i1.GetIt get,
   gh.singleton<_i11.IFireMessaging>(_i14.MockFireMessaging(),
       registerFor: {_service_test});
   gh.singletonAsync<_i13.ILocalNotification>(
-      () => _i36.LocalNotification.initialize(),
+      () => _i37.LocalNotification.initialize(),
       registerFor: {_service});
   gh.singleton<_i19.Memory>(_i19.Memory());
-  gh.singleton<_i37.MockSharedPref>(_i37.MockSharedPref(),
+  gh.singleton<_i38.MockSharedPref>(_i38.MockSharedPref(),
       registerFor: {_service_test});
-  gh.singleton<_i18.PersonUseCase>(_i34.MockPersonUseCase(),
+  gh.singleton<_i18.PersonUseCase>(_i35.MockPersonUseCase(),
       registerFor: {_usecase_test});
-  gh.singletonAsync<_i38.SharedPref>(() => _i38.SharedPref.initialize(),
+  gh.singletonAsync<_i39.SharedPref>(() => _i39.SharedPref.initialize(),
       registerFor: {_service});
   return get;
 }

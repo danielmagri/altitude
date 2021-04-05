@@ -1,7 +1,35 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        Alignment,
+        Animation,
+        AnimationController,
+        BoxFit,
+        BuildContext,
+        Clip,
+        Color,
+        Colors,
+        Container,
+        CurvedAnimation,
+        Curves,
+        GestureDetector,
+        Image,
+        Interval,
+        Key,
+        Opacity,
+        Positioned,
+        SingleTickerProviderStateMixin,
+        Size,
+        Stack,
+        State,
+        StatefulWidget,
+        StatelessWidget,
+        Transform,
+        Tween,
+        Widget,
+        required;
 import 'dart:math';
-import 'package:altitude/utils/Color.dart';
 
 class SkyScene extends StatelessWidget {
   SkyScene({Key key, this.size, @required this.color, this.force = 0})
@@ -227,7 +255,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
             widget.imagePath,
             alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
             fit: BoxFit.contain,
-            color: AppColors.sky,
+            color: AppTheme.of(context).cloud,
           ),
         ),
       ),

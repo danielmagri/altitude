@@ -1,3 +1,4 @@
+import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
@@ -19,8 +20,10 @@ abstract class _HomeLogicBase with Store {
   final PersonUseCase _personUseCase;
   final CompetitionUseCase _competitionUseCase;
   final IFireAnalytics _fireAnalytics;
+  final AppLogic _appLogic;
 
-  _HomeLogicBase(this._habitUseCase, this._personUseCase, this._competitionUseCase, this._fireAnalytics);
+  _HomeLogicBase(
+      this._habitUseCase, this._personUseCase, this._competitionUseCase, this._fireAnalytics, this._appLogic);
 
   DataState<Person> user = DataState();
   DataState<ObservableList<Habit>> habits = DataState();
@@ -85,4 +88,6 @@ abstract class _HomeLogicBase with Store {
   }
 
   Future<bool> canAddHabit() => _habitUseCase.maximumNumberReached();
+
+  void updateSystemStyle() => _appLogic.updateSystemStyle();
 }

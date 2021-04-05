@@ -1,4 +1,4 @@
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:flutter/material.dart'
     show
         Align,
@@ -7,7 +7,6 @@ import 'package:flutter/material.dart'
         AnimationController,
         BoxDecoration,
         BoxFit,
-        Color,
         Colors,
         Container,
         CurvedAnimation,
@@ -27,7 +26,6 @@ import 'package:flutter/material.dart'
         StatefulWidget,
         Text,
         TextStyle,
-        Theme,
         Tween,
         Widget;
 
@@ -112,7 +110,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   stops: [0.7, 1],
-                  colors: [AppColors.sky, Theme.of(context).canvasColor])),
+                  colors: [AppTheme.of(context).sky, AppTheme.of(context).materialTheme.backgroundColor])),
           child: DragTarget<String>(
             builder: (context, List<String> candidateData, rejectedData) {
               return Stack(
@@ -132,7 +130,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
                       child: Text("ARRASTE AQUI PARA COMPLETAR",
                           style: TextStyle(
                               fontSize: 18,
-                              color: hover ? Color.fromARGB(255, 78, 173, 176) : Colors.white,
+                              color: hover ? AppTheme.of(context).skyHighlight : Colors.white,
                               fontWeight: FontWeight.bold)),
                     ),
                   ),
