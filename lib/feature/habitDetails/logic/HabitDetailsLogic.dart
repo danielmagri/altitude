@@ -6,7 +6,7 @@ import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:injectable/injectable.dart';

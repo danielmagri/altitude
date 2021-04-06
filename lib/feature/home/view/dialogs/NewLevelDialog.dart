@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 
 class NewLevelDialog extends StatelessWidget {
   final int score;
@@ -23,7 +23,7 @@ class NewLevelDialog extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16.0),
               margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.0),
                 boxShadow: [

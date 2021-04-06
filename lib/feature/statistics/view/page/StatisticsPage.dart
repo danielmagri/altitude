@@ -69,7 +69,7 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
-          children: <Widget>[
+          children: [
             Header(title: "ESTATÍSTICAS"),
             const SizedBox(height: 20),
             Observer(

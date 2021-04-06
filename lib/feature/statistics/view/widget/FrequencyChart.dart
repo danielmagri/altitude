@@ -1,16 +1,16 @@
 import 'dart:math' show min;
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
         AlignmentDirectional,
         Axis,
-        BoxShape,
         BouncingScrollPhysics,
         BoxDecoration,
-        Colors,
+        BoxShape,
+        BuildContext,
         Column,
         Container,
         EdgeInsets,
@@ -24,7 +24,6 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Text,
         TextStyle,
-        Theme,
         Widget,
         required;
 
@@ -41,13 +40,15 @@ class FrequencyChart extends StatelessWidget {
 
   double get space => ((FREQUENCY_CHART_HEIGHT - 30) / (linesCount - 1) - 1);
 
-  List<Widget> lines() {
+  List<Widget> lines(BuildContext context) {
     List<Widget> lines;
 
     lines = List.generate(
         linesCount,
         (i) => Container(
-            height: 1, color: Colors.grey[300], margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space)));
+            height: 1,
+            color: AppTheme.of(context).statisticLine,
+            margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space)));
 
     lines.add(const SizedBox(height: 29));
 
@@ -63,7 +64,7 @@ class FrequencyChart extends StatelessWidget {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: lines(),
+            children: lines(context),
           ),
           ListView.builder(
               itemCount: list.length,
@@ -75,7 +76,7 @@ class FrequencyChart extends StatelessWidget {
               itemBuilder: (context, index) =>
                   FrequencyCircle(data: list[index], space: space, selectedHabitId: selectedHabitId)),
           Container(
-            color: Theme.of(context).canvasColor.withAlpha(200),
+            color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Column(
                 children: weekday
                     .map((e) => Container(
@@ -99,7 +100,7 @@ class FrequencyCircle extends StatelessWidget {
   final double space;
   final String selectedHabitId;
 
-  List<Widget> _content() {
+  List<Widget> _content(BuildContext context) {
     List<Widget> content = [];
 
     if (selectedHabitId == null) {
@@ -112,7 +113,8 @@ class FrequencyCircle extends StatelessWidget {
             child: Container(
               height: size,
               width: size,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.colorAccent.withAlpha(alpha)),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: AppTheme.of(context).frequencyDot.withAlpha(alpha)),
             )));
       });
     } else {
@@ -147,6 +149,10 @@ class FrequencyCircle extends StatelessWidget {
   Widget build(context) {
     return SizedBox(
         width: 28,
-        child: Column(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.end, children: _content()));
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: _content(context),
+        ));
   }
 }

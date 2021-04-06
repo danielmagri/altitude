@@ -1,3 +1,4 @@
+import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/router/Router.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/home/view/page/HomePage.dart';
@@ -6,7 +7,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart'
-    show FlutterError, MaterialApp, StatelessWidget, Widget, WidgetsFlutterBinding, runApp, ThemeMode;
+    show FlutterError, MaterialApp, StatelessWidget, Widget, WidgetsFlutterBinding, runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:get_it/get_it.dart';
@@ -51,11 +52,12 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return AppTheme(
+        initialTheme: getThemeType(GetIt.I.get<SharedPref>().theme).toThemeMode,
         themeChanged: (theme) {
           GetIt.I.get<AppLogic>().setDefaultStyle(theme.defaultSystemOverlayStyle);
         },
         builder: (mode) => MaterialApp(
-              themeMode: ThemeMode.light,
+              themeMode: mode,
               theme: LightTheme().materialTheme,
               darkTheme: DarkTheme().materialTheme,
               debugShowCheckedModeBanner: false,

@@ -7,11 +7,11 @@ class HelpPage extends StatefulWidget {
 
 class _HelpPageState extends State<HelpPage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Column(children: <Widget>[
+        child: Column(children: [
           Container(
             margin: const EdgeInsets.only(top: 40, bottom: 16),
             child: Row(
@@ -26,10 +26,9 @@ class _HelpPageState extends State<HelpPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-            child: RichText(
-              textAlign: TextAlign.justify,
-              text: const TextSpan(
-                style: const TextStyle(color: Colors.black, fontSize: 16, height: 1.15, fontFamily: "Montserrat"),
+            child: Text.rich(
+              const TextSpan(
+                style: const TextStyle(fontSize: 16, height: 1.15),
                 children: <TextSpan>[
                   TextSpan(text: "Pontuação", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
                   TextSpan(
@@ -41,6 +40,7 @@ class _HelpPageState extends State<HelpPage> {
                           "\n O gatilho do hábito é uma técnica utilizada para que você consiga criar a rotina do hábito, mais rapidamente no seu cérebro. Sempre antes de você fazer realmente o hábito tente criar alguma ação consciente antes, como calçar os sapatos de corrida, deixar livro do lado da cama, algo relacionado ao seu hábito. Dessa forma sempre que você fizer essa ação anterior você se sentirá mais motivado a fazer o hábito.")
                 ],
               ),
+              textAlign: TextAlign.justify,
             ),
           ),
         ]),

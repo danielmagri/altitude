@@ -115,12 +115,8 @@ class _DayweekDialogState extends State<DayweekDialog> {
         ],
       ),
       action: [
-        TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancelar", style: TextStyle(color: Colors.black))),
-        TextButton(
-            onPressed: _validate,
-            child: const Text("Ok", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Cancelar")),
+        TextButton(onPressed: _validate, child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))),
       ],
     );
   }

@@ -69,7 +69,7 @@ class HabitCardItem extends StatelessWidget {
                               border: Border.all(color: Colors.black, width: 0.5),
                               borderRadius: BorderRadius.circular(15)),
                           child:
-                              const Text("Feito!", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10)),
+                              const Text("Feito!", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.black)),
                         ),
                       ),
                     ],

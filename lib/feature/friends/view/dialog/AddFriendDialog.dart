@@ -1,9 +1,54 @@
+import 'dart:ui' show ImageFilter;
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/common/view/generic/focus_fixer.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/friends/logic/AddFriendLogic.dart';
-import 'package:flutter/material.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:flutter/material.dart'
+    show
+        AlwaysStoppedAnimation,
+        BackdropFilter,
+        BorderRadius,
+        BorderSide,
+        BouncingScrollPhysics,
+        BoxDecoration,
+        BoxShadow,
+        ButtonStyle,
+        Center,
+        CircularProgressIndicator,
+        Colors,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        EdgeInsets,
+        ElevatedButton,
+        Expanded,
+        FontWeight,
+        InputDecoration,
+        ListView,
+        MainAxisAlignment,
+        MainAxisSize,
+        Material,
+        MaterialStateProperty,
+        Navigator,
+        Offset,
+        RoundedRectangleBorder,
+        Row,
+        SizedBox,
+        StatefulWidget,
+        Text,
+        TextAlign,
+        TextButton,
+        TextDecoration,
+        TextEditingController,
+        TextField,
+        TextInputAction,
+        TextInputType,
+        TextOverflow,
+        TextStyle,
+        UnderlineInputBorder,
+        Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -70,21 +115,21 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Stack(
-        children: <Widget>[
-          Container(color: Colors.black.withOpacity(0.2)),
-          Center(
+  Widget build(context) {
+    return FocusFixer(
+      child: Material(
+        color: Colors.black54,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+          child: Center(
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 10),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.of(context).materialTheme.cardColor,
                 borderRadius: BorderRadius.circular(16.0),
-                boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10.0, offset: const Offset(0.0, 10.0))],
+                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10.0, offset: Offset(0.0, 10.0))],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -96,7 +141,9 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     minLines: 1,
                     style: const TextStyle(fontSize: 16),
                     decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.colorAccent)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: AppTheme.of(context).materialTheme.textTheme.headline1.color)),
                         hintText: "Escreva o email do seu amigo",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
@@ -111,7 +158,8 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                           return Column(
                             children: <Widget>[
                               const SizedBox(height: 32),
-                              const CircularProgressIndicator(),
+                              CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(AppTheme.of(context).loading)),
                               const SizedBox(height: 12),
                               const Text("Buscando...")
                             ],
@@ -186,9 +234,10 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                        child: const Text("Cancelar", style: const TextStyle(fontSize: 17, color: Colors.black)),
+                        child: const Text("Cancelar", style: const TextStyle(fontSize: 15)),
                         onPressed: () => navigatePop(),
                       ),
+                      const SizedBox(width: 5),
                       ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(Colors.black),
@@ -207,7 +256,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

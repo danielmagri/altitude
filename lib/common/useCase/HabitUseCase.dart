@@ -18,7 +18,7 @@ import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 

@@ -1,10 +1,10 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
@@ -121,7 +121,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
-        child: SimpleDialog(backgroundColor: Colors.white, children: <Widget>[
+        child: SimpleDialog(backgroundColor: AppTheme.of(context).materialTheme.cardColor, children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(10),
             child: Center(
@@ -131,7 +131,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                 const SizedBox(height: 16),
                 LinearProgressIndicator(
                     value: progress,
-                    backgroundColor: AppColors.lightGrey,
+                    backgroundColor: Color.fromARGB(255, 211, 211, 211),
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)),
                 const SizedBox(height: 16),
                 const Text("Carregando...."),

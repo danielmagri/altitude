@@ -126,12 +126,14 @@ class CompetitionUseCase extends BaseUseCase {
         Competition competition = (await getCompetition(competitionId)).absoluteResult();
         if (competition.competitors.length < MAX_COMPETITORS) {
           await _fireDatabase.acceptCompetitionRequest(competitionId, competitor);
-          _memory.competitions.add(competition);
 
           for (Competitor friend in competition.competitors) {
             await _fireFunctions.sendNotification(
                 "Novo competidor", "${_personUseCase.name} entrou em  ${competition.title}", friend.fcmToken);
           }
+
+          competition.competitors.add(competitor);
+          _memory.competitions.add(competition);
         } else {
           throw "Máximo de competidores atingido.";
         }

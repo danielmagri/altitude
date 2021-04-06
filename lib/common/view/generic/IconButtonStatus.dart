@@ -1,3 +1,4 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -19,7 +20,7 @@ class IconButtonStatus extends StatelessWidget {
       @required this.icon,
       @required this.onPressed,
       this.color = Colors.orange,
-      this.backgroundColor = Colors.white});
+      this.backgroundColor});
 
   final Widget icon;
   final Function onPressed;
@@ -28,24 +29,22 @@ class IconButtonStatus extends StatelessWidget {
   final bool status;
 
   @override
-  Widget build(_) {
+  Widget build(context) {
     return Stack(
       alignment: const Alignment(0.55, -0.4),
-      children: <Widget>[
+      children: [
         IconButton(icon: icon, onPressed: onPressed),
         status
             ? Container(
                 width: 12,
                 height: 12,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: backgroundColor),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: backgroundColor ?? AppTheme.of(context).materialTheme.backgroundColor),
               )
             : const SizedBox(height: 10, width: 10),
         status
-            ? Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-              )
+            ? Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: color))
             : const SizedBox(height: 10, width: 10),
       ],
     );

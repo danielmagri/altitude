@@ -4,8 +4,8 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/services.dart';
-import 'package:altitude/utils/Color.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info/package_info.dart';
 
@@ -34,6 +34,7 @@ class _TutorialPageState extends BaseState<TutorialPage> {
   @override
   void dispose() {
     _controller.dispose();
+    resetSystemStyle();
     super.dispose();
   }
 
@@ -113,24 +114,25 @@ class Initial extends StatelessWidget {
           Expanded(
             flex: 2,
             child: Center(
-              child: Container(
-                height: 250,
-                width: 250,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 250, 250, 250),
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
-                child: SizedBox(
-                  width: 200,
-                  height: 190,
-                  child: Transform.rotate(
-                    angle: 0.8,
-                    child: Rocket(
-                      size: const Size(200, 190),
-                      color: AppColors.habitsColor[3],
-                      state: RocketState.ON_FIRE,
-                      fireForce: 1,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 250, 250, 250),
+                      borderRadius: BorderRadius.circular(50),
+                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                  child: SizedBox(
+                    width: 200,
+                    height: 190,
+                    child: Transform.rotate(
+                      angle: 0.8,
+                      child: Rocket(
+                        size: const Size(200, 190),
+                        color: AppColors.habitsColor[3],
+                        state: RocketState.ON_FIRE,
+                        fireForce: 1,
+                      ),
                     ),
                   ),
                 ),
@@ -206,11 +208,11 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
               child: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: new AssetImage('assets/createHabit.png'),
+                      image: AssetImage('assets/createHabit.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                    boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
                 child: LayoutBuilder(builder: (context, constraint) {
                   return Align(
                     alignment: Alignment(1.15 + _controller.value, 1.55 + _controller.value),
@@ -351,7 +353,7 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
               child: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: new AssetImage('assets/completeHabit.png'),
+                      image: AssetImage('assets/completeHabit.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
@@ -473,7 +475,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
               child: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: new AssetImage('assets/score.png'),
+                      image: AssetImage('assets/score.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),

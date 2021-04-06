@@ -1,6 +1,19 @@
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/material.dart'
-    show AlwaysStoppedAnimation, Animatable, AnimationController, BuildContext, Color, ColorTween, Key, SingleTickerProviderStateMixin, State, StatefulWidget, TweenSequence, TweenSequenceItem, Widget;
+    show
+        AlwaysStoppedAnimation,
+        Animatable,
+        AnimationController,
+        BuildContext,
+        Color,
+        ColorTween,
+        Key,
+        SingleTickerProviderStateMixin,
+        State,
+        StatefulWidget,
+        TweenSequence,
+        TweenSequenceItem,
+        Widget;
 
 class RainbowAnimated extends StatefulWidget {
   const RainbowAnimated({Key key, this.child}) : super(key: key);

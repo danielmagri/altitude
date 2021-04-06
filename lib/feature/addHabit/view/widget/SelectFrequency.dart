@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/feature/addHabit/enums/FrquencyType.dart';
 import 'package:altitude/feature/addHabit/view/dialog/DayweekDialog.dart';
@@ -37,7 +38,6 @@ import 'package:flutter/material.dart'
         Widget,
         required,
         showDialog;
-import 'package:altitude/utils/Color.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class SelectFrequency extends StatelessWidget {
@@ -89,7 +89,7 @@ class SelectFrequency extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: currentFrequency?.frequencyType() == type ? color : AppColors.disableHabitCreation,
+              color: currentFrequency?.frequencyType() == type ? color : AppTheme.of(context).disableHabitCreationCard,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [const BoxShadow(blurRadius: 5, color: Colors.black38)],
             ),

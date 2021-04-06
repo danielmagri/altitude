@@ -82,33 +82,14 @@ class _EditHabitPageState extends BaseStateWithLogic<EditHabitPage, EditHabitLog
             );
           });
     } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return BaseTextDialog(
-              title: "Deletar",
-              body: "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
-              subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)",
-              action: <Widget>[
-                TextButton(
-                  child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
-                  onPressed: () async {
-                    showLoading(true);
-                    (await controller.removeHabit()).result((data) {
-                      showLoading(false);
-                      Navigator.pop(context);
-                      navigatePop(result: false);
-                    }, (error) => handleError);
-                  },
-                ),
-                TextButton(
-                  child: const Text("Não",
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            );
-          });
+      showSimpleDialog("Deletar", "Você estava indo tão bem... Tem certeza que quer deletá-lo?",
+          subBody: "(Todo o progresso dele será perdido e a quilômetragem perdida)", confirmCallback: () async {
+        showLoading(true);
+        (await controller.removeHabit()).result((data) {
+          showLoading(false);
+          navigatePop(result: false);
+        }, (error) => handleError);
+      });
     }
   }
 

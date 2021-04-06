@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/feature/statistics/model/HistoricStatisticData.dart';
 import 'package:flutter/material.dart'
     show
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart'
         Axis,
         BouncingScrollPhysics,
         BuildContext,
-        Colors,
         Column,
         Container,
         EdgeInsets,
@@ -21,7 +21,6 @@ import 'package:flutter/material.dart'
         Text,
         TextAlign,
         TextStyle,
-        Theme,
         Widget,
         required;
 
@@ -38,14 +37,16 @@ class HistoricChart extends StatelessWidget {
 
   static const int linesCount = 6;
 
-  List<Widget> lines() {
+  List<Widget> lines(BuildContext context) {
     List<Widget> lines;
     double space = (HISTORIC_CHART_HEIGHT - 30) / (linesCount - 1);
 
     lines = List.generate(
         linesCount,
         (i) => Container(
-            height: 1, color: Colors.grey[300], margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1)));
+            height: 1,
+            color: AppTheme.of(context).statisticLine,
+            margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1)));
 
     lines.add(const SizedBox(height: 29));
 
@@ -61,7 +62,7 @@ class HistoricChart extends StatelessWidget {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: lines(),
+            children: lines(context),
           ),
           ListView.builder(
               itemCount: list.length,
@@ -96,12 +97,12 @@ class HistoricBar extends StatelessWidget {
       list.add(Container(
           height: 16,
           padding: const EdgeInsets.symmetric(horizontal: 3),
-          color: Theme.of(context).canvasColor,
+          color: AppTheme.of(context).materialTheme.backgroundColor,
           child: Text(data.totalScore.toString(), textAlign: TextAlign.center)));
       list.add(Container(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           margin: const EdgeInsets.only(top: 3),
-          color: Theme.of(context).canvasColor,
+          color: AppTheme.of(context).materialTheme.backgroundColor,
           child: Column(
               children: data.habitsMap.keys
                   .map((key) => Container(color: key.color, height: multiplier * data.habitsMap[key], width: 20))
@@ -115,12 +116,12 @@ class HistoricBar extends StatelessWidget {
         list.add(Container(
             height: 16,
             padding: const EdgeInsets.symmetric(horizontal: 3),
-            color: Theme.of(context).canvasColor,
+            color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Text(value.toString(), textAlign: TextAlign.center)));
         list.add(Container(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             margin: const EdgeInsets.only(top: 3),
-            color: Theme.of(context).canvasColor,
+            color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Container(color: habit.color, height: multiplier * value, width: 20)));
       } else {
         list.add(const SizedBox(width: 28));

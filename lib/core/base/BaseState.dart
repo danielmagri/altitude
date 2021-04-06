@@ -1,5 +1,7 @@
 import 'package:altitude/common/app_logic.dart';
+import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart' show GetIt;
@@ -19,9 +21,11 @@ import 'package:flutter/material.dart'
         Route,
         State,
         StatefulWidget,
+        TextButton,
         Widget,
         WidgetsBinding,
-        protected;
+        protected,
+        showDialog;
 
 abstract class BaseStateWithLogic<T extends StatefulWidget, L> extends BaseState<T> {
   L controller = GetIt.I.get<L>();
@@ -112,6 +116,35 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       Navigator.of(context).pop();
       _loading = false;
     }
+  }
+
+  @protected
+  void showSimpleDialog(String title, String body,
+      {String subBody, Function confirmCallback, Function cancelCallback}) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => BaseTextDialog(
+              title: title,
+              body: body,
+              subBody: subBody,
+              action: [
+                TextButton(
+                  child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    navigatePop();
+                    cancelCallback();
+                  },
+                ),
+                TextButton(
+                  child: const Text("Sim", style: TextStyle(fontSize: 17)),
+                  onPressed: () {
+                    navigatePop();
+                    confirmCallback();
+                  },
+                ),
+              ],
+            ));
   }
 
   @protected

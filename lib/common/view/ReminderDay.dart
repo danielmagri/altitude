@@ -1,3 +1,4 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:flutter/material.dart'
     show
         BoxDecoration,
@@ -32,10 +33,14 @@ class ReminderDay extends StatelessWidget {
         decoration: BoxDecoration(shape: BoxShape.circle, color: state ? color : Colors.transparent),
         child: InkWell(
           onTap: onTap,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           child: Text(
             day,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: state ? Colors.white : Colors.black),
+            style: TextStyle(
+                fontSize: 18,
+                color: state ? Colors.white : AppTheme.of(context).materialTheme.textTheme.headline1.color),
           ),
         ),
       ),

@@ -1,10 +1,11 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/ReminderDay.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/feature/addHabit/logic/AddHabitLogic.dart';
 import 'package:flutter/material.dart'
     show
         BuildContext,
-        Colors,
+        ColorScheme,
         Column,
         Container,
         EdgeInsets,
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart'
         InkWell,
         Navigator,
         Padding,
-        RichText,
         Row,
         State,
         StatefulWidget,
@@ -24,7 +24,6 @@ import 'package:flutter/material.dart'
         TextSpan,
         TextStyle,
         Theme,
-        ThemeData,
         Widget,
         showTimePicker;
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -50,7 +49,8 @@ class _SelectAlarmState extends State<SelectAlarm> {
       hero: "helpAlarm",
       texts: const [
         TextSpan(text: "  Caso queira, nós podemos te lembrar na hora e nos dias que desejar. "),
-        TextSpan(text: "Escolha quais dias deseja ser avisado e o horário.", style: TextStyle(fontWeight: FontWeight.bold)),
+        TextSpan(
+            text: "Escolha quais dias deseja ser avisado e o horário.", style: TextStyle(fontWeight: FontWeight.bold)),
       ],
     ));
   }
@@ -61,10 +61,13 @@ class _SelectAlarmState extends State<SelectAlarm> {
         context: context,
         builder: (context, child) {
           return Theme(
-              data: ThemeData.light().copyWith(
-                accentColor: controller.habitColor,
-                primaryColor: controller.habitColor,
-              ),
+              data: AppTheme.of(context).materialTheme.copyWith(
+                    accentColor: controller.habitColor,
+                    primaryColor: controller.habitColor,
+                    colorScheme: AppTheme.isDark(context)
+                        ? ColorScheme.dark(primary: controller.habitColor)
+                        : ColorScheme.light(primary: controller.habitColor),
+                  ),
               child: child);
         }).then(controller.selectReminderTime);
   }
@@ -94,9 +97,9 @@ class _SelectAlarmState extends State<SelectAlarm> {
             child: InkWell(
               onTap: () => reminderTimeClick(context),
               child: Observer(
-                builder: (_) => RichText(
-                  text: TextSpan(
-                    style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
+                builder: (_) => Text.rich(
+                  TextSpan(
+                    style: const TextStyle(fontSize: 20, fontFamily: "Montserrat"),
                     children: [
                       TextSpan(
                           text: controller.timeText, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),

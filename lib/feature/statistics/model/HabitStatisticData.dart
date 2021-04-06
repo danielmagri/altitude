@@ -1,5 +1,5 @@
 import 'dart:ui' show Color;
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 
 class HabitStatisticData {
   HabitStatisticData(this.id, this._value, this.habit, this._color, this._totalScore);

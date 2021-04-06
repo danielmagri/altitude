@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart'
-    show AnimatedContainer, Border, BorderRadius, BoxDecoration, BoxShadow, Colors, EdgeInsets, GestureDetector, Key, SizedBox, StatelessWidget, Widget, Wrap, WrapAlignment, WrapCrossAlignment;
-import 'package:altitude/utils/Color.dart';
+    show
+        AnimatedContainer,
+        Border,
+        BorderRadius,
+        BoxDecoration,
+        BoxShadow,
+        Colors,
+        EdgeInsets,
+        GestureDetector,
+        Key,
+        SizedBox,
+        StatelessWidget,
+        Widget,
+        Wrap,
+        WrapAlignment,
+        WrapCrossAlignment;
+import 'package:altitude/common/constant/app_colors.dart';
 
 class SelectColor extends StatelessWidget {
   SelectColor({Key key, this.currentColor, this.onSelectColor}) : super(key: key);

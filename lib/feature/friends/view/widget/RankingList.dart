@@ -3,29 +3,7 @@ import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:flutter/material.dart'
-    show
-        BorderRadius,
-        BouncingScrollPhysics,
-        BoxDecoration,
-        Colors,
-        Column,
-        Container,
-        CrossAxisAlignment,
-        EdgeInsets,
-        Expanded,
-        FontWeight,
-        Image,
-        Key,
-        ListView,
-        Padding,
-        Row,
-        SizedBox,
-        StatelessWidget,
-        Text,
-        TextDecoration,
-        TextOverflow,
-        TextStyle,
-        Widget;
+    show BorderRadius, BouncingScrollPhysics, BoxDecoration, Colors, Column, Container, CrossAxisAlignment, Divider, EdgeInsets, Expanded, FontWeight, Image, Key, ListView, Padding, Row, SizedBox, StatelessWidget, Text, TextDecoration, TextOverflow, TextStyle, Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -95,10 +73,7 @@ class RankingList extends StatelessWidget {
           );
         }, (data) {
           return ListView.separated(
-              separatorBuilder: (_, index) {
-                return Container(
-                    height: 1, width: double.maxFinite, decoration: const BoxDecoration(color: Colors.black12));
-              },
+              separatorBuilder: (_, index) => Divider(),
               padding: const EdgeInsets.only(bottom: 80),
               physics: const BouncingScrollPhysics(),
               itemCount: data.length,

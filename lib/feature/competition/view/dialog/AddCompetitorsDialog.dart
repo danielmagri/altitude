@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
         ChoiceChip,
-        Colors,
         Container,
         EdgeInsets,
         FontWeight,
@@ -20,7 +20,6 @@ import 'package:flutter/material.dart'
         Wrap,
         WrapAlignment,
         required;
-import 'package:altitude/utils/Color.dart';
 import 'package:get_it/get_it.dart';
 
 class AddCompetitorsDialog extends StatefulWidget {
@@ -72,9 +71,9 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
             alignment: WrapAlignment.center,
             children: widget.friends.map((friend) {
               return ChoiceChip(
-                label: Text(friend.name, style: const TextStyle(fontSize: 15)),
+                label: Text(friend.name),
                 selected: selectedFriends.contains(friend),
-                selectedColor: AppColors.colorAccent,
+                selectedColor: AppTheme.of(context).chipSelected,
                 onSelected: widget.competitors.contains(friend.uid)
                     ? null
                     : (selected) {
@@ -88,10 +87,9 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
         ),
       ),
       action: <Widget>[
-        TextButton(child: const Text('Cancelar', style: TextStyle(color: Colors.black)), onPressed: () => navigatePop),
+        TextButton(child: const Text('Cancelar'), onPressed: navigatePop),
         TextButton(
-            child: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-            onPressed: _addCompetitors)
+            child: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: _addCompetitors)
       ],
     );
   }

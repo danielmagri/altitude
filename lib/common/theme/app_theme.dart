@@ -9,6 +9,7 @@ typedef Builder = Widget Function(ThemeMode themeMode);
 
 class AppTheme extends StatefulWidget {
   final Builder builder;
+  final ThemeMode initialTheme;
   final Function(IAppTheme theme) themeChanged;
 
   static IAppTheme of(BuildContext context) {
@@ -27,7 +28,7 @@ class AppTheme extends StatefulWidget {
     (context.dependOnInheritedWidgetOfExactType<_InheritedThemeState>()).state.changeTheme(mode);
   }
 
-  const AppTheme({Key key, this.builder, this.themeChanged}) : super(key: key);
+  const AppTheme({Key key, this.builder, this.themeChanged, this.initialTheme}) : super(key: key);
 
   @override
   _AppThemeState createState() => _AppThemeState();
@@ -41,6 +42,7 @@ class _AppThemeState extends State<AppTheme> {
 
   @override
   void initState() {
+    mode = widget.initialTheme ?? ThemeMode.system;
     widget.themeChanged(theme);
     super.initState();
   }

@@ -2,6 +2,7 @@ import 'package:altitude/common/model/Competitor.dart';
 import 'dart:async' show Timer;
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
@@ -13,9 +14,8 @@ import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart'
 import 'package:altitude/feature/competition/view/dialog/AddCompetitorsDialog.dart';
 import 'package:altitude/feature/competition/view/dialog/CompetitorDetailsDialog.dart';
 import 'package:altitude/feature/competition/view/widget/Metrics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/services.dart' show Brightness, SystemUiOverlayStyle, TextCapitalization, TextInputAction;
 
 class CompetitionDetailsPage extends StatefulWidget {
@@ -100,12 +100,9 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
               onEditingComplete: saveTitle,
             ),
             action: <Widget>[
+              TextButton(child: const Text('Cancelar'), onPressed: () => Navigator.of(context).pop()),
               TextButton(
-                  child: const Text('Cancelar', style: TextStyle(color: Colors.black)),
-                  onPressed: () => Navigator.of(context).pop()),
-              TextButton(
-                  child: const Text('Salvar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-                  onPressed: saveTitle)
+                  child: const Text('Salvar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: saveTitle)
             ],
           );
         });
@@ -129,33 +126,13 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
   }
 
   void _leaveCompetition() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return BaseTextDialog(
-          title: "Sair da competição",
-          body: "Tem certeza que deseja sair da competição?",
-          action: <Widget>[
-            TextButton(
-              child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
-              onPressed: () {
-                showLoading(true);
-                controller.leaveCompetition(widget.arguments.competition.id).then((res) {
-                  showLoading(false);
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop(BackDataItem.removed(widget.arguments.competition));
-                }).catchError(handleError);
-              },
-            ),
-            TextButton(
-              child:
-                  const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
+    showSimpleDialog("Sair da competição", "Tem certeza que deseja sair da competição?", confirmCallback: () {
+      showLoading(true);
+      controller.leaveCompetition(widget.arguments.competition.id).then((res) {
+        showLoading(false);
+        Navigator.of(context).pop(BackDataItem.removed(widget.arguments.competition));
+      }).catchError(handleError);
+    });
   }
 
   void _aboutCompetition() {
@@ -168,7 +145,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
               "Data de início: ${widget.arguments.competition.initialDate.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.year}",
           action: <Widget>[
             TextButton(
-              child: const Text("Fechar", style: TextStyle(fontSize: 17, color: Colors.black)),
+              child: const Text("Fechar"),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -216,8 +193,8 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
               ),
               InkWell(
                 onTap: () => showCompetitorDetails(competitor),
-                splashColor: AppColors.sky,
-                highlightColor: AppColors.sky,
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
                 child: Rocket(
                   size: const Size(100, 100),
                   color: AppColors.habitsColor[competitor.color],
@@ -255,7 +232,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
           systemNavigationBarColor: Colors.brown,
           systemNavigationBarIconBrightness: Brightness.light),
       child: Scaffold(
-        backgroundColor: AppColors.sky,
+        backgroundColor: AppTheme.of(context).sky,
         body: Column(
           children: <Widget>[
             Container(

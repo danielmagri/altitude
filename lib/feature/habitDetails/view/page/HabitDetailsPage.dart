@@ -215,7 +215,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
                   (data, loading) => ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            data ? controller.habitColor : AppTheme.of(context).materialTheme.accentColor),
+                            data ? controller.habitColor : AppTheme.of(context).materialTheme.cardColor),
                         shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),

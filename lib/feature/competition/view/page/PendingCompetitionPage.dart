@@ -1,5 +1,6 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -86,18 +87,11 @@ class _PendingCompetitionPageState extends BaseStateWithLogic<PendingCompetition
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma competição pendente",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
+                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1.color.withOpacity(0.2))),
                   );
                 else
                   return ListView.separated(
-                    separatorBuilder: (_, __) {
-                      return Container(
-                        height: 1,
-                        width: double.maxFinite,
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(color: Colors.black12),
-                      );
-                    },
+                    separatorBuilder: (_, __) => Divider(endIndent: 16, indent: 16),
                     padding: const EdgeInsets.only(bottom: 20),
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,

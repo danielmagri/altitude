@@ -1,6 +1,21 @@
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        BuildContext,
+        Column,
+        Container,
+        CrossAxisAlignment,
+        EdgeInsets,
+        FontWeight,
+        Key,
+        Padding,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextSpan,
+        TextStyle,
+        Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
@@ -33,13 +48,10 @@ class CoolDataWidget extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: RichText(
-                  text: TextSpan(
+                child: Text.rich(
+                  TextSpan(
                     style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        height: 1.2,
-                        fontFamily: "Montserrat"),
+                        fontSize: 18, fontWeight: FontWeight.w300, height: 1.2, fontFamily: "Montserrat"),
                     children: <TextSpan>[
                       TextSpan(text: "Começou em "),
                       TextSpan(

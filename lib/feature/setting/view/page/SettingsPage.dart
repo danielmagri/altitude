@@ -1,6 +1,6 @@
+import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
@@ -22,7 +22,6 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
   @override
   initState() {
     super.initState();
-
     controller.fetchData().catchError(handleError);
   }
 
@@ -33,30 +32,13 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
   }
 
   void logout() {
-    showDialog(
-      context: context,
-      builder: (_) => BaseTextDialog(
-        title: "Logout",
-        body: "Tem certeza que deseja sair?",
-        subBody: "Você não vai poder mais competir com seus amigos..",
-        action: <Widget>[
-          TextButton(
-            child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
-            onPressed: () async {
-              showLoading(true);
-              controller.logout().then((_) {
-                showLoading(false);
-                navigateRemoveUntil('login');
-              }).catchError(handleError);
-            },
-          ),
-          TextButton(
-            child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ],
-      ),
-    );
+    showSimpleDialog("Logout", "Tem certeza que deseja sair?", confirmCallback: () {
+      showLoading(true);
+      controller.logout().then((_) {
+        showLoading(false);
+        navigateRemoveUntil('login');
+      }).catchError(handleError);
+    });
   }
 
   void editName() async {
@@ -71,13 +53,10 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
           textCapitalization: TextCapitalization.words,
           onEditingComplete: saveName,
         ),
-        action: <Widget>[
+        action: [
+          TextButton(child: const Text('Cancelar'), onPressed: () => Navigator.of(context).pop()),
           TextButton(
-              child: const Text('Cancelar', style: const TextStyle(color: Colors.black)),
-              onPressed: () => Navigator.of(context).pop()),
-          TextButton(
-              child: const Text('Salvar', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-              onPressed: saveName)
+              child: const Text('Salvar', style: const TextStyle(fontWeight: FontWeight.bold)), onPressed: saveName)
         ],
       ),
     );
@@ -98,28 +77,55 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
   }
 
   void recalculateScore() {
+    showSimpleDialog("Pontuação", "Deseja recalcular sua pontuação?", confirmCallback: () {
+      showLoading(true);
+      controller.recalculateScore().then((_) {
+        showLoading(false);
+        navigatePop();
+        showToast("Pontuação recalculada.");
+      }).catchError(handleError);
+    });
+  }
+
+  void setTheme() {
     showDialog(
       context: context,
-      builder: (_) => BaseTextDialog(
-        title: "Pontuação",
-        body: "Deseja recalcular sua pontuação?",
-        action: <Widget>[
-          TextButton(
-            child: const Text("Não", style: TextStyle(fontSize: 17, color: Colors.black)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          TextButton(
-            child: const Text("Sim", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-            onPressed: () async {
-              showLoading(true);
-              controller.recalculateScore().then((_) {
-                showLoading(false);
-                navigatePop();
-                showToast("Pontuação recalculada.");
-              }).catchError(handleError);
-            },
-          ),
-        ],
+      builder: (_) => BaseDialog(
+        title: "Tema",
+        body: Observer(builder: (_) {
+          return Column(
+            children: <Widget>[
+              ListTile(
+                title: Text(ThemeType.LIGHT.themePrettyString),
+                leading: Radio<ThemeType>(
+                  value: ThemeType.LIGHT,
+                  groupValue: controller.theme,
+                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                ),
+                onTap: () => controller.changeTheme(context, ThemeType.LIGHT),
+              ),
+              ListTile(
+                title: Text(ThemeType.DARK.themePrettyString),
+                leading: Radio<ThemeType>(
+                  value: ThemeType.DARK,
+                  groupValue: controller.theme,
+                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                ),
+                onTap: () => controller.changeTheme(context, ThemeType.DARK),
+              ),
+              ListTile(
+                title: Text(ThemeType.SYSTEM.themePrettyString),
+                leading: Radio<ThemeType>(
+                  value: ThemeType.SYSTEM,
+                  groupValue: controller.theme,
+                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                ),
+                onTap: () => controller.changeTheme(context, ThemeType.SYSTEM),
+              ),
+            ],
+          );
+        }),
+        action: [TextButton(child: const Text('Fechar'), onPressed: () => Navigator.of(context).pop())],
       ),
     );
   }
@@ -129,7 +135,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Column(children: <Widget>[
+        child: Column(children: [
           const Header(title: "CONFIGURAÇÕES"),
           const SizedBox(height: 16),
           ListTile(
@@ -138,6 +144,14 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
               return Text(controller.name, style: TextStyle(color: Colors.grey));
             }),
             onTap: editName,
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text("Tema"),
+            trailing: Observer(builder: (_) {
+              return Text(controller.theme.themePrettyString, style: TextStyle(color: Colors.grey));
+            }),
+            onTap: setTheme,
           ),
           const Divider(),
           ListTile(

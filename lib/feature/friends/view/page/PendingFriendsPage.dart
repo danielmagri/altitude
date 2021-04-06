@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart';
@@ -48,7 +49,7 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
       child: Scaffold(
         body: Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
+          children: [
             const Header(title: "Solicitações de amizade"),
             const SizedBox(height: 16),
             Observer(builder: (_) {
@@ -67,18 +68,11 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma amizade pendente",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
+                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1.color.withOpacity(0.2))),
                   );
                 else
                   return ListView.separated(
-                    separatorBuilder: (_, __) {
-                      return Container(
-                        height: 1,
-                        width: double.maxFinite,
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(color: Colors.black12),
-                      );
-                    },
+                    separatorBuilder: (_, __) => Divider(endIndent: 16, indent: 16),
                     padding: const EdgeInsets.only(bottom: 20),
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -88,7 +82,7 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                         child: Row(
-                          children: <Widget>[
+                          children: [
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,8 +115,6 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
                       );
                     },
                   );
-              }, (error) {
-                return const SizedBox();
               });
             }),
           ],

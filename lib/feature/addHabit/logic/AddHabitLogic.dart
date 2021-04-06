@@ -5,7 +5,7 @@ import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/ReminderWeekday.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';

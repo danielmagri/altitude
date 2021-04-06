@@ -1,5 +1,4 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
@@ -8,20 +7,18 @@ import 'package:flutter/material.dart'
         BorderRadius,
         BouncingScrollPhysics,
         BoxDecoration,
-        BuildContext,
         Center,
         Colors,
         Column,
         Container,
         CrossAxisAlignment,
+        Divider,
         EdgeInsets,
         Expanded,
-        TextButton,
         FontWeight,
         InkWell,
         Key,
         ListView,
-        Navigator,
         Padding,
         Row,
         SizedBox,
@@ -34,7 +31,6 @@ import 'package:flutter/material.dart'
         required;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class FriendsList extends StatelessWidget {
   FriendsList({Key key, @required this.removeFriend})
@@ -42,27 +38,7 @@ class FriendsList extends StatelessWidget {
         super(key: key);
 
   final FriendsLogic controller;
-  final Function(String) removeFriend;
-
-  void friendLongClick(BuildContext context, Person person) {
-    Navigator.of(context).smooth(BaseTextDialog(
-      title: "Desfazer amizade",
-      body: "Tem certeza que deseja desfazer amizade com ${person.name}?",
-      action: <Widget>[
-        TextButton(
-          child: const Text("SIM", style: const TextStyle(fontSize: 17, color: Colors.black)),
-          onPressed: () {
-            Navigator.of(context).pop();
-            removeFriend(person.uid);
-          },
-        ),
-        TextButton(
-          child: const Text("NÃO", style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
-    ));
-  }
+  final Function(Person person) removeFriend;
 
   @override
   Widget build(context) {
@@ -111,17 +87,14 @@ class FriendsList extends StatelessWidget {
           );
         else
           return ListView.separated(
-            separatorBuilder: (_, index) {
-              return Container(
-                  height: 1, width: double.maxFinite, decoration: const BoxDecoration(color: Colors.black12));
-            },
+            separatorBuilder: (_, index) => Divider(),
             padding: const EdgeInsets.only(bottom: 80),
             physics: const BouncingScrollPhysics(),
             itemCount: data.length,
             itemBuilder: (_, index) {
               Person person = data[index];
               return InkWell(
-                onLongPress: () => friendLongClick(context, person),
+                onLongPress: () => removeFriend(person),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                   child: Row(

@@ -10,10 +10,10 @@ import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:flutter/material.dart'
     show
-        Colors,
         Container,
         CrossAxisAlignment,
         DropdownButton,
@@ -65,6 +65,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
           fcmToken: await _personUseCase.fcmToken,
           color: selectedHabit.colorCode,
           habitId: selectedHabit.id,
+          uid: GetIt.I.get<IFireAuth>().getUid(),
           score: ScoreControl().scoreEarnedTotal(selectedHabit.frequency, days),
           you: true);
       _competitionUseCase.acceptCompetitionRequest(widget.competition.id, widget.competition, competitor).then((_) {
@@ -89,10 +90,10 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
                 value: habit,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
+                  children: [
                     Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
                     const SizedBox(width: 10),
-                    Text(habit.habit, style: const TextStyle(color: Colors.black)),
+                    Text(habit.habit),
                   ],
                 ),
               );
@@ -104,11 +105,9 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
             }),
       ),
       action: <Widget>[
+        TextButton(child: const Text('Cancelar'), onPressed: () => navigatePop()),
         TextButton(
-            child: const Text('Cancelar', style: TextStyle(color: Colors.black)), onPressed: () => navigatePop()),
-        TextButton(
-            child: const Text('Competir', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-            onPressed: acceptRequest),
+            child: const Text('Competir', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: acceptRequest),
       ],
     );
   }

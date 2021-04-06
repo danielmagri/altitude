@@ -1,7 +1,7 @@
 import 'dart:ui' show Color;
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
 class Habit {

@@ -3,7 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/Result.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';

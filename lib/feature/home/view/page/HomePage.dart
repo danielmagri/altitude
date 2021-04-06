@@ -119,7 +119,6 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   void goStatistics() {
-    // AppTheme.changeTheme(context, AppTheme.isDark(context) ? ThemeMode.light : ThemeMode.dark);
     navigatePush('statistics');
   }
 

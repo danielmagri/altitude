@@ -1,8 +1,38 @@
 import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/feature/habitDetails/logic/HabitDetailsLogic.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show
+        Alignment,
+        Border,
+        BorderRadius,
+        BoxDecoration,
+        BoxShape,
+        BuildContext,
+        Center,
+        CircularProgressIndicator,
+        Colors,
+        Container,
+        EdgeInsets,
+        FontWeight,
+        Hero,
+        Icon,
+        IconButton,
+        Icons,
+        Key,
+        Navigator,
+        Positioned,
+        Radius,
+        SizedBox,
+        Stack,
+        StatelessWidget,
+        Text,
+        TextSpan,
+        TextStyle,
+        Widget,
+        required;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -31,11 +61,10 @@ class CalendarWidget extends StatelessWidget {
       texts: [
         TextSpan(
           text: "  No calendário você tem o controle de todos os dias feitos!",
-          style: TextStyle(color: Colors.black, fontSize: 18.0, fontWeight: FontWeight.w300, height: 1.2),
+          style: TextStyle(fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text: "\n\nMantenha pressionado no dia desejado para marcar como feito ou desmarcar.",
-          style: TextStyle(color: Colors.black, fontSize: 18.0, height: 1.2),
         ),
       ],
     ));
@@ -56,14 +85,13 @@ class CalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
-        return controller.calendarMonth.handleStateLoadable(() {
-          return Skeleton(
+        return controller.calendarMonth.handleStateLoadable(
+          () => Skeleton(
             width: double.maxFinite,
             height: 240,
             margin: EdgeInsets.symmetric(horizontal: 8),
-          );
-        }, (data, loading) {
-          return Container(
+          ),
+          (data, loading) => Container(
             width: double.maxFinite,
             child: Stack(
               children: <Widget>[
@@ -111,7 +139,7 @@ class CalendarWidget extends StatelessWidget {
                   ),
                   builders: CalendarBuilders(
                       markersBuilder: (context, date, event, list) {
-                        return <Widget>[
+                        return [
                           Container(
                               child: Text(
                                 date.day.toString(),
@@ -120,7 +148,7 @@ class CalendarWidget extends StatelessWidget {
                               alignment: Alignment.center,
                               margin:
                                   EdgeInsets.only(top: 5, bottom: 5, left: event[0] ? 0 : 5, right: event[1] ? 0 : 5),
-                              decoration: new BoxDecoration(
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.horizontal(
                                     left: event[0] ? Radius.circular(0) : Radius.circular(20),
                                     right: event[1] ? Radius.circular(0) : Radius.circular(20)),
@@ -153,7 +181,7 @@ class CalendarWidget extends StatelessWidget {
                 loading
                     ? Positioned.fill(
                         child: Container(
-                          color: Colors.white54,
+                          color: AppTheme.of(context).materialTheme.backgroundColor.withOpacity(0.5),
                           child: Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -162,10 +190,8 @@ class CalendarWidget extends StatelessWidget {
                     : SizedBox()
               ],
             ),
-          );
-        }, (error) {
-          return const SizedBox();
-        });
+          ),
+        );
       },
     );
   }

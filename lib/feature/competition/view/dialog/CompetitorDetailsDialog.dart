@@ -1,10 +1,9 @@
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/material.dart'
     show
-        Colors,
         Column,
         Expanded,
         FontWeight,
@@ -52,9 +51,7 @@ class CompetitorDetailsDialog extends StatelessWidget {
         ],
       ),
       action: <Widget>[
-        TextButton(
-            child: const Text('Fechar', style: TextStyle(color: Colors.black)),
-            onPressed: () => Navigator.of(context).pop()),
+        TextButton(child: const Text('Fechar'), onPressed: () => Navigator.of(context).pop()),
       ],
     );
   }

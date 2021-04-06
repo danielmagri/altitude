@@ -1,17 +1,19 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:flutter/material.dart'
     show
-        StatelessWidget,
-        Widget,
+        AlwaysStoppedAnimation,
+        Animation,
+        BuildContext,
         Center,
         CircularProgressIndicator,
-        BuildContext,
-        Navigator,
-        PageRouteBuilder,
         Colors,
-        Animation,
-        FadeTransition,
         CurvedAnimation,
         Curves,
+        FadeTransition,
+        Navigator,
+        PageRouteBuilder,
+        StatelessWidget,
+        Widget,
         WillPopScope;
 
 abstract class Loading {
@@ -24,9 +26,9 @@ abstract class Loading {
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
           transitionDuration: Duration(milliseconds: 100),
-          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
-                  Widget child) =>
-              new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+          transitionsBuilder:
+              (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) =>
+                  FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
           pageBuilder: (BuildContext context, _, __) {
             return LoadingWidget();
           }));
@@ -44,6 +46,9 @@ abstract class Loading {
 
 class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
-    return WillPopScope(onWillPop: () => Future.value(false), child: Center(child: CircularProgressIndicator()));
+    return WillPopScope(
+        onWillPop: () => Future.value(false),
+        child:
+            Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(AppTheme.of(context).loading))));
   }
 }

@@ -81,33 +81,33 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
       return [
         TextSpan(
           text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+          style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text: "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, height: 1.2),
+          style: TextStyle(fontSize: 17.0, height: 1.2),
         ),
         TextSpan(
           text:
               " Por exemplo ao deixar sua roupa de corrida do lado da cama pode ser uma boa forma de iniciar seu hábito de correr de manhã.",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+          style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text:
               "\n\n  Qual seria um gatilho (ação) a ser tomado para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
-          style: TextStyle(color: Colors.black, fontSize: 17.0),
+          style: TextStyle(fontSize: 17.0),
         ),
       ];
     } else {
       return [
         TextSpan(
           text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
-          style: TextStyle(color: Colors.black, fontSize: 17.0, fontWeight: FontWeight.w300),
+          style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text: "Continuar lendo...",
           recognizer: tapGestureRecognizer,
-          style: TextStyle(color: Colors.black, fontSize: 18.0, decoration: TextDecoration.underline),
+          style: TextStyle(fontSize: 18.0, decoration: TextDecoration.underline),
         ),
       ];
     }
@@ -133,10 +133,11 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                 style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor),
               ),
             ),
+            const SizedBox(height: 40),
             Observer(builder: (_) {
-              return RichText(
+              return Text.rich(
+                TextSpan(children: _texts(controller.showAllTutorialText)),
                 textAlign: TextAlign.justify,
-                text: TextSpan(children: _texts(controller.showAllTutorialText)),
               );
             }),
             Container(
@@ -144,7 +145,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
               width: double.maxFinite,
               child: Column(
                 children: <Widget>[
-                  const Spacer(),
+                  const SizedBox(height: 40),
                   TextField(
                     controller: textEditingController,
                     keyboardType: TextInputType.multiline,
@@ -185,7 +186,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                       },
                     );
                   }),
-                  const Spacer(),
+                  const SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -193,8 +194,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                       controller.cue.isNotEmpty
                           ? TextButton(
                               onPressed: remove,
-                              child: Text("Remover",
-                                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300, color: Colors.black)),
+                              child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
                             )
                           : SizedBox(),
                       TextButton(

@@ -1,8 +1,8 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
@@ -11,7 +11,7 @@ import 'package:altitude/common/view/generic/Toast.dart';
 import 'package:altitude/core/base/BaseState.dart';
 import 'package:altitude/feature/competition/logic/CompetitionLogic.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/utils/Color.dart';
+import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CompetitionPage extends StatefulWidget {
@@ -62,35 +62,14 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
   }
 
   void competitionLongTap(Competition item) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return BaseTextDialog(
-          title: "Largar competição",
-          body: "Tem certeza que deseja sair da competição?",
-          action: <Widget>[
-            TextButton(
-              child: const Text("Sim", style: TextStyle(fontSize: 17, color: Colors.black)),
-              onPressed: () {
-                showLoading(true);
-                controller.exitCompetition(item).then((res) {
-                  showLoading(false);
-                  Navigator.of(context).pop();
-                }).catchError((error) {
-                  handleError(error);
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            TextButton(
-              child:
-                  const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black)),
-              onPressed: navigatePop,
-            ),
-          ],
-        );
-      },
-    );
+    showSimpleDialog("Largar competição", "Tem certeza que deseja sair da competição?", confirmCallback: () {
+      showLoading(true);
+      controller.exitCompetition(item).then((res) {
+        showLoading(false);
+      }).catchError((error) {
+        handleError(error);
+      });
+    });
   }
 
   Widget _positionWidget(int position) {
@@ -178,7 +157,7 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
                   const Expanded(child: Text("Minhas competições", style: TextStyle(fontSize: 18))),
                   ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(AppColors.colorAccent),
+                        backgroundColor: MaterialStateProperty.all(AppTheme.of(context).materialTheme.accentColor),
                         shape:
                             MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),

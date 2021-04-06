@@ -1,3 +1,4 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/ReminderDay.dart';
 import 'package:altitude/common/view/generic/BottomSheetLine.dart';
 import 'package:altitude/core/base/BaseState.dart';
@@ -43,10 +44,13 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
       context: context,
       builder: (BuildContext context, Widget child) {
         return Theme(
-            data: ThemeData.light().copyWith(
-              accentColor: controller.habitColor,
-              primaryColor: controller.habitColor,
-            ),
+            data: AppTheme.of(context).materialTheme.copyWith(
+                  accentColor: controller.habitColor,
+                  primaryColor: controller.habitColor,
+                  colorScheme: AppTheme.isDark(context)
+                      ? ColorScheme.dark(primary: controller.habitColor)
+                      : ColorScheme.light(primary: controller.habitColor),
+                ),
             child: child);
       },
     ).then(controller.updateReminderTime);
@@ -78,7 +82,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
         child: Card(
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           elevation: 4,
-          color: isSelected ? controller.habitColor : Colors.white,
+          color: isSelected ? controller.habitColor : AppTheme.of(context).alarmUnselectedCard,
           child: SizedBox(
             height: 60,
             child: InkWell(
@@ -91,12 +95,18 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                       value: isSelected ? true : false,
                       groupValue: true,
                       activeColor: Colors.white,
+                      fillColor: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.white;
+                        }
+                        return AppTheme.of(context).alarmUnselectedText;
+                      }),
                       onChanged: (state) => switchReminderType(item.type),
                     ),
                     Expanded(
                       child: Text(
                         item.title,
-                        style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+                        style: TextStyle(color: isSelected ? Colors.white : AppTheme.of(context).alarmUnselectedText),
                       ),
                     ),
                   ],
@@ -163,10 +173,10 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                   onTap: reminderTimeClick,
                   child: Observer(
                     builder: (_) {
-                      return RichText(
-                        text: TextSpan(
-                          style: const TextStyle(color: Colors.black, fontSize: 20, fontFamily: "Montserrat"),
-                          children: <TextSpan>[
+                      return Text.rich(
+                        TextSpan(
+                          style: const TextStyle(fontSize: 20, fontFamily: "Montserrat"),
+                          children: [
                             TextSpan(
                                 text: controller.timeText, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                             const TextSpan(text: " hrs"),
@@ -185,7 +195,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                     controller.reminder != null && controller.reminder.hasAnyDay()
                         ? TextButton(
                             onPressed: remove,
-                            child: const Text("Remover", style: TextStyle(fontSize: 16, color: Colors.black)),
+                            child: const Text("Remover", style: TextStyle(fontSize: 16)),
                           )
                         : const SizedBox(),
                     ElevatedButton(
