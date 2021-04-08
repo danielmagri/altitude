@@ -234,11 +234,11 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
       child: Scaffold(
         backgroundColor: AppTheme.of(context).sky,
         body: Column(
-          children: <Widget>[
+          children: [
             Container(
               height: 106,
               child: Row(
-                children: <Widget>[
+                children: [
                   const SizedBox(width: 50, child: BackButton()),
                   Expanded(
                       child: Text(controller.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
