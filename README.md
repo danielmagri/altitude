@@ -6,7 +6,7 @@ It's an app where you can add your habits to track them and participate in compe
 
 ## Technologies
 
-Project made with Flutter (v2.5), using:
+Project made with Flutter (v2.0.0), using:
 
 - [mobx](https://pub.dev/packages/mobx) (State management)
 - [get_it](https://pub.dev/packages/get_it) (Dependecy injections)
