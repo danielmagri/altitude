@@ -2,6 +2,8 @@
 
 It's an app where you can add your habits to track them and participate in competitions with your friends.
 
+> The app has been downloaded over 10,000 times on the Play Store
+
 ## Technologies
 
 Project made with Flutter (v2.5), using:
@@ -20,4 +22,4 @@ Was used the firebase as backend, saving the data on Firestore and sending FCM n
 
 ### Preview
 
-You can access the running project on [Play Store](https://play.google.com/store/apps/details?id=com.magrizo.habit)
+You can get it on [Play Store](https://play.google.com/store/apps/details?id=com.magrizo.habit)
