@@ -56,8 +56,8 @@ import 'mocks/shared_pref_mock.dart' as _i39;
 import 'mocks/use_case_mocks.dart' as _i36;
 
 const String _usecase_test = 'usecase_test';
-const String _service_test = 'service_test';
 const String _service = 'service';
+const String _service_test = 'service_test';
 const String _usecase = 'usecase';
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -153,10 +153,10 @@ _i1.GetIt $initGetItTest(_i1.GetIt get,
       registerFor: {_usecase_test});
   gh.singleton<_i17.HabitUseCase>(_i36.MockHabitUseCase(),
       registerFor: {_usecase_test});
-  gh.singleton<_i20.IFireAnalytics>(_i14.MockFireAnalytics(),
-      registerFor: {_service_test});
   gh.singleton<_i20.IFireAnalytics>(_i37.FireAnalytics(),
       registerFor: {_service});
+  gh.singleton<_i20.IFireAnalytics>(_i14.MockFireAnalytics(),
+      registerFor: {_service_test});
   gh.singleton<_i5.IFireAuth>(_i14.MockFireAuth(),
       registerFor: {_service_test});
   gh.singleton<_i7.IFireDatabase>(_i14.MockFireDatabase(),
