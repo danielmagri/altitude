@@ -1,6 +1,6 @@
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/TransferDataDialog.dart';
-import 'package:altitude/feature/login/logic/LoginLogic.dart';
+import 'package:altitude/feature/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends BaseStateWithLogic<LoginPage, LoginLogic> {
+class _LoginPageState extends BaseStateWithLogic<LoginPage, LoginController> {
   void loginWithFacebook() {
     showLoading(true);
     controller.loginFacebook().then((uid) {

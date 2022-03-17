@@ -14,7 +14,7 @@ import 'package:altitude/feature/friends/view/page/FriendsPage.dart';
 import 'package:altitude/feature/friends/view/page/PendingFriendsPage.dart';
 import 'package:altitude/feature/habitDetails/view/page/HabitDetailsPage.dart';
 import 'package:altitude/feature/home/presentation/pages/home_page.dart';
-import 'package:altitude/feature/login/view/page/LoginPage.dart';
+import 'package:altitude/feature/login/presentation/pages/login_page.dart';
 import 'package:altitude/feature/statistics/view/page/StatisticsPage.dart';
 import 'package:altitude/feature/setting/view/page/HelpPage.dart';
 import 'package:altitude/feature/setting/view/page/SettingsPage.dart';

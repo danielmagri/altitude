@@ -2,7 +2,7 @@ import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/router/Router.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/home/presentation/pages/home_page.dart';
-import 'package:altitude/feature/login/view/page/LoginPage.dart';
+import 'package:altitude/feature/login/presentation/pages/login_page.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';

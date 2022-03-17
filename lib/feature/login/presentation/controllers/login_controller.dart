@@ -1,14 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/feature/login/domain/usecases/auth_google_usecase.dart';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
-part 'LoginLogic.g.dart';
+part 'login_controller.g.dart';
 
 @LazySingleton()
-class LoginLogic = _LoginLogicBase with _$LoginLogic;
+class LoginController = _LoginControllerBase with _$LoginController;
 
-abstract class _LoginLogicBase with Store {
+abstract class _LoginControllerBase with Store {
+  final AuthGoogleUsecase _authGoogleUsecase;
+
+  _LoginControllerBase(this._authGoogleUsecase);
 
   Future<String?> loginFacebook() async {
     // var result = await FacebookLogin().logIn(['email', 'public_profile']);
@@ -30,19 +33,8 @@ abstract class _LoginLogicBase with Store {
   }
 
   Future<String?> loginGoogle() async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
-
-    GoogleSignInAccount? result = await googleSignIn.signIn();
-    if (result != null) {
-      GoogleSignInAuthentication googleAuth = await result.authentication;
-      AuthCredential credential =
-          GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      return fireResult.user!.uid;
-    } else {
-      return null;
-    }
+    return _authGoogleUsecase
+        .call()
+        .resultComplete((data) => data, ((error) => null));
   }
-
-  
 }
