@@ -8,7 +8,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class RankingList extends StatelessWidget {
-  RankingList({Key key})
+  RankingList({Key? key})
       : controller = GetIt.I.get<FriendsLogic>(),
         super(key: key);
 
@@ -76,7 +76,7 @@ class RankingList extends StatelessWidget {
               separatorBuilder: (_, index) => Divider(),
               padding: const EdgeInsets.only(bottom: 80),
               physics: const BouncingScrollPhysics(),
-              itemCount: data.length,
+              itemCount: data!.length,
               itemBuilder: (_, int index) {
                 Person person = data[index];
                 return Padding(
@@ -87,13 +87,13 @@ class RankingList extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          person.you ? "Eu" : person.name,
+                          person.you! ? "Eu" : person.name!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            decoration: person.you ? TextDecoration.underline : TextDecoration.none,
+                            decoration: person.you! ? TextDecoration.underline : TextDecoration.none,
                           ),
                         ),
                       ),

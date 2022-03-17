@@ -32,7 +32,7 @@ class FireDatabase implements IFireDatabase {
 
   // TRANSFER DATA
 
-  Future<String> transferHabit(Habit habit, int reminderCounter, List<String> competitionsId, List<DayDone> daysDone) {
+  Future<String> transferHabit(Habit habit, int? reminderCounter, List<String?> competitionsId, List<DayDone> daysDone) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference doc = habitsCollection.doc();
@@ -42,7 +42,7 @@ class FireDatabase implements IFireDatabase {
       batch.update(userDoc, {Person.REMINDER_COUNTER: reminderCounter});
     }
 
-    for (String competitionId in competitionsId) {
+    for (String? competitionId in competitionsId) {
       batch.set(
           competitionCollection.doc(competitionId),
           {
@@ -73,18 +73,18 @@ class FireDatabase implements IFireDatabase {
     return batch.commit();
   }
 
-  Future updateTotalScore(int score, int level) {
+  Future updateTotalScore(int? score, int level) {
     return userDoc.update({Person.SCORE: score, Person.LEVEL: level});
   }
 
-  Future updateHabitScore(String habitId, int score, List<Pair<String, int>> competitionsScore) async {
+  Future updateHabitScore(String? habitId, int score, List<Pair<String?, int>> competitionsScore) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference habitDoc = habitsCollection.doc(habitId);
 
     batch.update(habitDoc, {Habit.SCORE: score});
 
-    for (Pair<String, int> item in competitionsScore) {
+    for (Pair<String?, int> item in competitionsScore) {
       batch.set(
           competitionCollection.doc(item.first),
           {
@@ -105,16 +105,16 @@ class FireDatabase implements IFireDatabase {
   }
 
   Future<Person> getPerson() {
-    return userDoc.get().then((value) => Person.fromJson(value.data(), value.id));
+    return userDoc.get().then((value) => Person.fromJson(value.data() as Map<String, dynamic>, value.id));
   }
 
-  Future updateName(String name, List<String> competitionsId) {
+  Future updateName(String name, List<String?> competitionsId) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     userDoc.update({Person.NAME: name});
 
     if (competitionsId != null) {
-      for (String item in competitionsId) {
+      for (String? item in competitionsId) {
         batch.set(
             competitionCollection.doc(item),
             {
@@ -129,13 +129,13 @@ class FireDatabase implements IFireDatabase {
     return batch.commit();
   }
 
-  Future updateFcmToken(String token, List<String> competitionsId) {
+  Future updateFcmToken(String? token, List<String?> competitionsId) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     userDoc.update({Person.FCM_TOKEN: token});
 
     if (competitionsId != null) {
-      for (String item in competitionsId) {
+      for (String? item in competitionsId) {
         batch.set(
             competitionCollection.doc(item),
             {
@@ -156,7 +156,7 @@ class FireDatabase implements IFireDatabase {
 
   // HABIT
 
-  Future<Habit> addHabit(Habit habit, int reminderCounter) {
+  Future<Habit> addHabit(Habit habit, int? reminderCounter) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
     DocumentReference doc = habitsCollection.doc();
     habit.id = doc.id;
@@ -169,18 +169,18 @@ class FireDatabase implements IFireDatabase {
   }
 
   Future<List<Habit>> getHabits() {
-    return habitsCollection.get().then((value) => value.docs.map((e) => Habit.fromJson(e.data())).toList());
+    return habitsCollection.get().then((value) => value.docs.map((e) => Habit.fromJson(e.data() as Map<String, dynamic>)).toList());
   }
 
-  Future<Habit> getHabit(String id) {
-    return habitsCollection.doc(id).get().then((value) => Habit.fromJson(value.data()));
+  Future<Habit> getHabit(String? id) {
+    return habitsCollection.doc(id).get().then((value) => Habit.fromJson(value.data() as Map<String, dynamic>));
   }
 
-  Future updateHabit(Habit habit, [Habit inititalHabit, List<String> competitionsId]) async {
+  Future updateHabit(Habit habit, [Habit? inititalHabit, List<String?>? competitionsId]) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     if (inititalHabit != null && competitionsId != null && habit.colorCode != inititalHabit.colorCode) {
-      for (String item in competitionsId) {
+      for (String? item in competitionsId) {
         batch.set(
             competitionCollection.doc(item),
             {
@@ -197,7 +197,7 @@ class FireDatabase implements IFireDatabase {
     return batch.commit();
   }
 
-  Future updateReminder(String habitId, int reminderCounter, Reminder reminder) {
+  Future updateReminder(String? habitId, int? reminderCounter, Reminder? reminder) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     batch.update(habitsCollection.doc(habitId), {Habit.REMINDER: reminder?.toJson()});
@@ -209,7 +209,7 @@ class FireDatabase implements IFireDatabase {
   }
 
   Future completeHabit(
-      String habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<String> competitions) {
+      String? habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<String?> competitions) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection(_DAYS_DONE);
 
@@ -217,7 +217,7 @@ class FireDatabase implements IFireDatabase {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
       if (competitions != null) {
-        for (String item in competitions) {
+        for (String? item in competitions) {
           batch.set(
               competitionCollection.doc(item),
               {
@@ -253,13 +253,13 @@ class FireDatabase implements IFireDatabase {
     });
   }
 
-  Future deleteHabit(String id) {
+  Future deleteHabit(String? id) {
     return habitsCollection.doc(id).delete();
   }
 
   // DAYS DONE
 
-  Future<List<DayDone>> getAllDaysDone(String id) {
+  Future<List<DayDone>> getAllDaysDone(String? id) {
     return habitsCollection
         .doc(id)
         .collection(_DAYS_DONE)
@@ -267,7 +267,7 @@ class FireDatabase implements IFireDatabase {
         .then((value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList());
   }
 
-  Future<List<DayDone>> getDaysDone(String id, DateTime startDate, DateTime endDate) {
+  Future<List<DayDone>> getDaysDone(String? id, DateTime? startDate, DateTime endDate) {
     return habitsCollection
         .doc(id)
         .collection(_DAYS_DONE)
@@ -277,7 +277,7 @@ class FireDatabase implements IFireDatabase {
         .then((value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList());
   }
 
-  Future<bool> hasDoneAtDay(String id, DateTime date) {
+  Future<bool> hasDoneAtDay(String? id, DateTime date) {
     return habitsCollection.doc(id).collection(_DAYS_DONE).doc(date.dateFormatted).get().then((value) => value.exists);
   }
 
@@ -287,14 +287,14 @@ class FireDatabase implements IFireDatabase {
     return userCollection
         .where(Person.FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
-        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data() as Map<String, dynamic>, e.id)).toList());
   }
 
   Future<List<Person>> getPendingFriends() {
     return userCollection
         .where(Person.PENDING_FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
-        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data() as Map<String, dynamic>, e.id)).toList());
   }
 
   Future<List<Person>> getRankingFriends(int limit) {
@@ -303,19 +303,19 @@ class FireDatabase implements IFireDatabase {
         .where(Person.FRIENDS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .limit(limit)
         .get()
-        .then((value) => value.docs.map((e) => Person.fromJson(e.data(), e.id)).toList());
+        .then((value) => value.docs.map((e) => Person.fromJson(e.data() as Map<String, dynamic>, e.id)).toList());
   }
 
-  Future<List<Person>> searchEmail(String email, List<String> myPendingFriends) {
+  Future<List<Person>> searchEmail(String email, List<String?> myPendingFriends) {
     return userCollection.where(Person.EMAIL, isEqualTo: email).get().then((value) => value.docs.map((e) {
-          Person person = Person.fromJson(e.data(), e.id);
+          Person person = Person.fromJson(e.data() as Map<String, dynamic>, e.id);
           var state = 0;
 
-          if (person.friends.contains(GetIt.I.get<IFireAuth>().getUid())) {
+          if (person.friends!.contains(GetIt.I.get<IFireAuth>().getUid())) {
             state = 1;
           } else if (myPendingFriends.contains(person.uid)) {
             state = 2;
-          } else if (person.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
+          } else if (person.pendingFriends!.contains(GetIt.I.get<IFireAuth>().getUid())) {
             state = 3;
           }
 
@@ -324,37 +324,37 @@ class FireDatabase implements IFireDatabase {
         }).toList());
   }
 
-  Future<String> friendRequest(String uid) async {
-    var person = (await userDoc.get().then((value) => Person.fromJson(value.data(), value.id)));
-    if (person.friends.length >= MAX_FRIENDS) {
+  Future<String> friendRequest(String? uid) async {
+    var person = (await userDoc.get().then((value) => Person.fromJson(value.data() as Map<String, dynamic>, value.id)));
+    if (person.friends!.length >= MAX_FRIENDS) {
       throw "Máximo de amigos atingido.";
     }
 
-    if (person.friends.contains(uid)) {
+    if (person.friends!.contains(uid)) {
       throw "Vocês já são amigos.";
     }
 
-    if (person.pendingFriends.contains(uid)) {
+    if (person.pendingFriends!.contains(uid)) {
       throw "Você já enviou um pedido.";
     }
 
-    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data(), value.id)));
-    if (friendData.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
+    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data() as Map<String, dynamic>, value.id)));
+    if (friendData.pendingFriends!.contains(GetIt.I.get<IFireAuth>().getUid())) {
       throw "Já tem uma solicitação.";
     }
 
     return userDoc.update({
       Person.PENDING_FRIENDS: FieldValue.arrayUnion([uid])
-    }).then((value) => friendData.fcmToken);
+    }).then((value) => friendData.fcmToken!);
   }
 
-  Future<String> acceptRequest(String uid) async {
-    if ((await userDoc.get().then((value) => Person.fromJson(value.data(), value.id))).friends.length >= MAX_FRIENDS) {
+  Future<String> acceptRequest(String? uid) async {
+    if ((await userDoc.get().then((value) => Person.fromJson(value.data() as Map<String, dynamic>, value.id))).friends!.length >= MAX_FRIENDS) {
       throw "Máximo de amigos atingido.";
     }
 
-    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data(), value.id)));
-    if (friendData.friends.length >= MAX_FRIENDS) {
+    var friendData = (await userCollection.doc(uid).get().then((value) => Person.fromJson(value.data() as Map<String, dynamic>, value.id)));
+    if (friendData.friends!.length >= MAX_FRIENDS) {
       throw "Seu amigo atingiu o máximo de amigos.";
     }
 
@@ -368,22 +368,22 @@ class FireDatabase implements IFireDatabase {
       Person.FRIENDS: FieldValue.arrayUnion([GetIt.I.get<IFireAuth>().getUid()])
     });
 
-    return batch.commit().then((value) => friendData.fcmToken);
+    return batch.commit().then((value) => friendData.fcmToken!);
   }
 
-  Future declineRequest(String uid) {
+  Future declineRequest(String? uid) {
     return userCollection.doc(uid).update({
       Person.PENDING_FRIENDS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });
   }
 
-  Future cancelFriendRequest(String uid) {
+  Future cancelFriendRequest(String? uid) {
     return userDoc.update({
       Person.PENDING_FRIENDS: FieldValue.arrayRemove([uid])
     });
   }
 
-  Future removeFriend(String uid) {
+  Future removeFriend(String? uid) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     batch.update(userCollection.doc(uid), {
@@ -402,18 +402,18 @@ class FireDatabase implements IFireDatabase {
     return competitionCollection
         .where(Competition.COMPETITORS_ID, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
-        .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
+        .then((value) => value.docs.map((e) => Competition.fromJson(e.data() as Map<String, dynamic>, e.id)).toList());
   }
 
-  Future<Competition> getCompetition(String id) {
-    return competitionCollection.doc(id).get().then((value) => Competition.fromJson(value.data(), value.id));
+  Future<Competition> getCompetition(String? id) {
+    return competitionCollection.doc(id).get().then((value) => Competition.fromJson(value.data() as Map<String, dynamic>, value.id));
   }
 
   Future<List<Competition>> getPendingCompetitions() {
     return competitionCollection
         .where(Competition.INVITATIONS, arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
-        .then((value) => value.docs.map((e) => Competition.fromJson(e.data(), e.id)).toList());
+        .then((value) => value.docs.map((e) => Competition.fromJson(e.data() as Map<String, dynamic>, e.id)).toList());
   }
 
   Future<Competition> createCompetition(Competition competition) {
@@ -423,7 +423,7 @@ class FireDatabase implements IFireDatabase {
     return doc.set(competition.toJson()).then((value) => competition);
   }
 
-  Future updateCompetition(String competitionId, String title) {
+  Future updateCompetition(String? competitionId, String title) {
     return competitionCollection.doc(competitionId).update({Competition.TITLE: title});
   }
 
@@ -435,13 +435,13 @@ class FireDatabase implements IFireDatabase {
     }, SetOptions(merge: true));
   }
 
-  Future inviteCompetitor(String competitionId, List<String> competitorId) {
+  Future inviteCompetitor(String? competitionId, List<String?> competitorId) {
     return competitionCollection
         .doc(competitionId)
         .update({Competition.INVITATIONS: FieldValue.arrayUnion(competitorId)});
   }
 
-  Future removeCompetitor(String competitionId, String uid, bool removeAll) {
+  Future removeCompetitor(String? competitionId, String uid, bool removeAll) {
     if (removeAll) {
       return competitionCollection.doc(competitionId).delete();
     } else {
@@ -457,7 +457,7 @@ class FireDatabase implements IFireDatabase {
     }
   }
 
-  Future acceptCompetitionRequest(String competitionId, Competitor competitor) {
+  Future acceptCompetitionRequest(String? competitionId, Competitor competitor) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference doc = competitionCollection.doc(competitionId);
@@ -479,7 +479,7 @@ class FireDatabase implements IFireDatabase {
     return batch.commit();
   }
 
-  Future declineCompetitionRequest(String competitionId) {
+  Future declineCompetitionRequest(String? competitionId) {
     return competitionCollection.doc(competitionId).update({
       Competition.INVITATIONS: FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()])
     });

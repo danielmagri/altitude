@@ -72,7 +72,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
   }
 
   void saveTitle() async {
-    String result = ValidationHandler.competitionNameValidate(titleTextController.text);
+    String? result = ValidationHandler.competitionNameValidate(titleTextController.text);
 
     if (result != null) {
       showToast(result);
@@ -86,7 +86,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
   }
 
   void _showTitleDialog() async {
-    titleTextController.text = controller.title;
+    titleTextController.text = controller.title!;
 
     return showDialog(
         context: context,
@@ -115,8 +115,8 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
       if (friends == null) {
         showToast("Ocorreu um erro");
       } else {
-        List<String> competitors =
-            widget.arguments.competition.competitors.map((competitor) => competitor.uid).toList();
+        List<String?> competitors =
+            widget.arguments.competition.competitors!.map((competitor) => competitor.uid).toList();
         showDialog(
             context: context,
             builder: (context) =>
@@ -142,7 +142,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
         return BaseTextDialog(
           title: "Sobre",
           body:
-              "Data de início: ${widget.arguments.competition.initialDate.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.year}",
+              "Data de início: ${widget.arguments.competition.initialDate!.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate!.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate!.year}",
           action: <Widget>[
             TextButton(
               child: const Text("Fechar"),
@@ -161,8 +161,8 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    if (widget.arguments.competition.competitors != null && widget.arguments.competition.competitors.isNotEmpty) {
-      height = (widget.arguments.competition.competitors[0].score * 10.0) + 200;
+    if (widget.arguments.competition.competitors != null && widget.arguments.competition.competitors!.isNotEmpty) {
+      height = (widget.arguments.competition.competitors![0].score* 10.0) + 200;
     }
 
     if (height < MediaQuery.of(context).size.height) {
@@ -177,7 +177,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
 
     widgets.add(Metrics(height: getMaxHeight(context)));
 
-    for (Competitor competitor in widget.arguments.competition.competitors) {
+    for (Competitor competitor in widget.arguments.competition.competitors!) {
       widgets.add(Expanded(
         child: SizedBox(
           height: (competitor.score * 10.0) + 60,
@@ -197,7 +197,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
                 splashColor: Colors.transparent,
                 child: Rocket(
                   size: const Size(100, 100),
-                  color: AppColors.habitsColor[competitor.color],
+                  color: AppColors.habitsColor[competitor.color!],
                   state: RocketState.ON_FIRE,
                   fireForce: 2,
                 ),
@@ -208,11 +208,11 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
                   translation: const Offset(0.75, 0),
                   child: SizedBox(
                     width: 100,
-                    child: Text(competitor.you ? "Eu" : competitor.name,
+                    child: Text(competitor.you! ? "Eu" : competitor.name!,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: competitor.you ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        style: competitor.you! ? const TextStyle(fontWeight: FontWeight.bold) : null),
                   ),
                 ),
               ),
@@ -241,7 +241,7 @@ class _CompetitionDetailsPageState extends BaseStateWithLogic<CompetitionDetails
                 children: [
                   const SizedBox(width: 50, child: BackButton()),
                   Expanded(
-                      child: Text(controller.title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
+                      child: Text(controller.title!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
                   SizedBox(
                     width: 50,
                     child: PopupMenuButton<int>(

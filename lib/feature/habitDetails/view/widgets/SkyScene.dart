@@ -27,16 +27,15 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Transform,
         Tween,
-        Widget,
-        required;
+        Widget;
 import 'dart:math';
 
 class SkyScene extends StatelessWidget {
-  SkyScene({Key key, this.size, @required this.color, this.force = 0})
+  SkyScene({Key? key, this.size, required this.color, this.force = 0})
       : duration = 2000 - (900 * force).toInt(),
         super(key: key);
 
-  final Size size;
+  final Size? size;
   final Color color;
   final double force;
   final int duration;
@@ -80,10 +79,15 @@ class SkyScene extends StatelessWidget {
 }
 
 class RocketAnimated extends StatefulWidget {
-  RocketAnimated({Key key, @required this.size, @required this.color, @required this.force, @required this.duration})
+  RocketAnimated(
+      {Key? key,
+      required this.size,
+      required this.color,
+      required this.force,
+      required this.duration})
       : super(key: key);
 
-  final Size size;
+  final Size? size;
   final Color color;
   final double force;
   final int duration;
@@ -92,13 +96,17 @@ class RocketAnimated extends StatefulWidget {
   _RocketAnimatedState createState() => _RocketAnimatedState();
 }
 
-class _RocketAnimatedState extends State<RocketAnimated> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+class _RocketAnimatedState extends State<RocketAnimated>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
 
   @override
   void initState() {
     _controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration - 400), vsync: this, lowerBound: 2 * pi, upperBound: 9 * pi);
+        duration: Duration(milliseconds: widget.duration - 400),
+        vsync: this,
+        lowerBound: 2 * pi,
+        upperBound: 9 * pi);
 
     _controller.addListener(() {
       setState(() {});
@@ -144,7 +152,12 @@ class _RocketAnimatedState extends State<RocketAnimated> with SingleTickerProvid
 }
 
 class Cloud extends StatefulWidget {
-  Cloud({Key key, @required this.duration, this.startPoint = 0, @required this.imagePath, this.fromRight = false})
+  Cloud(
+      {Key? key,
+      required this.duration,
+      this.startPoint = 0,
+      required this.imagePath,
+      this.fromRight = false})
       : super(key: key);
 
   final int duration;
@@ -157,10 +170,10 @@ class Cloud extends StatefulWidget {
 }
 
 class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> top;
-  Animation<double> opacityTop;
-  Animation<double> opacityBottom;
+  late AnimationController _controller;
+  late Animation<double> top;
+  late Animation<double> opacityTop;
+  late Animation<double> opacityBottom;
 
   Random rnd = new Random();
 
@@ -170,7 +183,8 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller = AnimationController(duration: Duration(milliseconds: widget.duration), vsync: this);
+    _controller = AnimationController(
+        duration: Duration(milliseconds: widget.duration), vsync: this);
 
     _controller.addListener(() {
       if (_controller.value > 0.94 && update) {
@@ -253,7 +267,9 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
           opacity: opacityBottom.value,
           child: Image.asset(
             widget.imagePath,
-            alignment: !widget.fromRight ? Alignment.centerLeft : Alignment.centerRight,
+            alignment: !widget.fromRight
+                ? Alignment.centerLeft
+                : Alignment.centerRight,
             fit: BoxFit.contain,
             color: AppTheme.of(context).cloud,
           ),

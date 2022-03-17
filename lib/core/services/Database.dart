@@ -11,7 +11,7 @@ class DatabaseService {
   static final _databaseName = "habitus.db";
   static final _databaseVersion = 6;
 
-  static Database _database;
+  static Database? _database;
 
   factory DatabaseService() {
     return _singleton;
@@ -19,7 +19,7 @@ class DatabaseService {
 
   DatabaseService._internal();
 
-  Future<Database> get database async {
+  Future<Database?> get database async {
     if (_database != null) return _database;
 
     _database = await _initDatabase();
@@ -135,25 +135,25 @@ class DatabaseService {
   }
 
   Future<int> getReminderMaxId() async {
-    final db = await database;
+    final db = await (database as Future<Database>);
 
     var result = await db.rawQuery('SELECT id FROM reminder ORDER BY id DESC LIMIT 1;');
 
-    return result.first["id"] ?? 100;
+    return result.first["id"] as int? ?? 100;
   }
 
   /// Retorna a quantidade de hábitos registrados.
-  Future<int> getAllHabitsCount() async {
-    final db = await database;
+  Future<int?> getAllHabitsCount() async {
+    final db = await (database as Future<Database>);
     var result = await db.rawQuery('SELECT COUNT(*) as qtd FROM habit;');
 
-    int qtd = result.first["qtd"] != null ? result.first["qtd"] : 0;
+    int? qtd = result.first["qtd"] != null ? result.first["qtd"] as int? : 0;
     return qtd;
   }
 
   /// Retorna todos os hábitos registrados.
   Future<List<Habit>> getAllHabits() async {
-    final db = await database;
+    final db = await (database as Future<Database>);
     var result = await db.rawQuery('SELECT * FROM habit;');
 
     List<Habit> list = result.isNotEmpty ? result.map((c) => Habit.fromDB(c)).toList() : [];
@@ -161,19 +161,19 @@ class DatabaseService {
   }
 
   /// Retorna a lista de alarmes do hábito.
-  Future<Reminder> getReminders(int id) async {
-    final db = await database;
+  Future<Reminder?> getReminders(int? id) async {
+    final db = await (database as Future<Database>);
 
     var result = await db.rawQuery('SELECT * FROM reminder WHERE habit_id=$id;');
 
-    if (result == null || result.length == 0) {
+    if (result.length == 0) {
       return null;
     }
 
     Reminder reminder = Reminder(
-      type: result.first["type"],
-      hour: result.first["hour"],
-      minute: result.first["minute"],
+      type: result.first["type"] as int?,
+      hour: result.first["hour"] as int?,
+      minute: result.first["minute"] as int?,
     );
 
     reminder.sunday = false;
@@ -215,8 +215,8 @@ class DatabaseService {
   }
 
   /// Retorna a frequência do hábito.
-  Future<Frequency> getFrequency(int id) async {
-    final db = await database;
+  Future<Frequency?> getFrequency(int? id) async {
+    final db = await (database as Future<Database>);
 
     var resultDayWeek = await db.rawQuery('SELECT * FROM freq_day_week WHERE habit_id=$id;');
 
@@ -232,25 +232,25 @@ class DatabaseService {
   }
 
   /// Retorna uma lista com os dias feitos do hábito.
-  Future<List<DayDone>> getDaysDone(int id, {DateTime startDate, DateTime endDate}) async {
+  Future<List<DayDone>> getDaysDone(int? id, {DateTime? startDate, DateTime? endDate}) async {
     final db = await database;
     List<dynamic> result;
 
     if (startDate != null && endDate != null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+      result = await db!.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
                                                                  AND date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate != null && endDate == null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+      result = await db!.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
                                                                  AND date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate == null && endDate != null) {
-      result = await db.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
+      result = await db!.rawQuery('''SELECT * FROM day_done WHERE habit_id=$id
                                                                  AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else {
-      result = await db.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
+      result = await db!.rawQuery('SELECT * FROM day_done WHERE habit_id=$id ORDER BY date_done;');
     }
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromDB(c)).toList() : [];
@@ -258,25 +258,25 @@ class DatabaseService {
   }
 
   /// Retorna uma lista com todos os dias feitos.
-  Future<List<DayDone>> getAllDaysDone({DateTime startDate, DateTime endDate}) async {
+  Future<List<DayDone>> getAllDaysDone({DateTime? startDate, DateTime? endDate}) async {
     final db = await database;
     List<dynamic> result;
 
     if (startDate != null && endDate != null) {
-      result = await db.rawQuery(
+      result = await db!.rawQuery(
           '''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  AND date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate != null && endDate == null) {
-      result = await db.rawQuery(
+      result = await db!.rawQuery(
           '''SELECT * FROM day_done WHERE date_done>=\'${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else if (startDate == null && endDate != null) {
-      result = await db.rawQuery(
+      result = await db!.rawQuery(
           '''SELECT * FROM day_done WHERE date_done<=\'${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}\'
                                                                  ORDER BY date_done;''');
     } else {
-      result = await db.rawQuery('SELECT * FROM day_done ORDER BY date_done;');
+      result = await db!.rawQuery('SELECT * FROM day_done ORDER BY date_done;');
     }
 
     List<DayDone> list = result.isNotEmpty ? result.map((c) => DayDone.fromJson(c)).toList() : [];
@@ -284,7 +284,7 @@ class DatabaseService {
   }
 
   Future<bool> checkDayDone(int id, DateTime date) async {
-    final db = await database;
+    final db = await (database as Future<Database>);
 
     var result = await db.rawQuery(
         'SELECT * FROM day_done WHERE habit_id=$id AND date_done=\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\';');
@@ -296,7 +296,7 @@ class DatabaseService {
   Future<bool> setDayDone(int id, DateTime date) async {
     final db = await database;
     if (!await checkDayDone(id, date)) {
-      await db.rawInsert(
+      await db!.rawInsert(
           '''INSERT INTO day_done (date_done, habit_id) VALUES (\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\',
                                                                 $id);''');
 
@@ -307,7 +307,7 @@ class DatabaseService {
 
   /// Atualiza a pontuação do hábito.
   Future<bool> updateScore(int id, int score, DateTime date) async {
-    final db = await database;
+    final db = await (database as Future<Database>);
 
     await db.rawInsert('UPDATE habit SET score = score+$score WHERE id=$id;');
 
@@ -446,8 +446,8 @@ class DatabaseService {
   // }
 
   /// Deleta o hábito.
-  Future<bool> deleteHabit(int id) async {
-    final db = await database;
+  Future<bool> deleteHabit(int? id) async {
+    final db = await (database as Future<Database>);
 
     await db.rawDelete('''DELETE FROM habit WHERE id=$id;''');
 
@@ -465,7 +465,7 @@ class DatabaseService {
 
   /// Deleta o dia feito do hábito.
   Future<bool> deleteDayDone(int id, DateTime date) async {
-    final db = await database;
+    final db = await (database as Future<Database>);
 
     await db.rawDelete(
         '''DELETE FROM day_done WHERE date_done=\'${date.year.toString()}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}\'
@@ -500,18 +500,18 @@ class DatabaseService {
   // }
 
   /// Listar competições
-  Future<List<String>> listCompetitionsIds({int habitId}) async {
+  Future<List<String?>> listCompetitionsIds({int? habitId}) async {
     final db = await database;
 
     List<Map<String, dynamic>> result;
 
     if (habitId == null) {
-      result = await db.rawQuery('SELECT id FROM competition;');
+      result = await db!.rawQuery('SELECT id FROM competition;');
     } else {
-      result = await db.rawQuery('SELECT id FROM competition WHERE habit_id==$habitId;');
+      result = await db!.rawQuery('SELECT id FROM competition WHERE habit_id==$habitId;');
     }
 
-    List<String> list = [];
+    List<String?> list = [];
     result.forEach((c) => list.add(c["id"]));
 
     return list;
@@ -541,7 +541,7 @@ class DatabaseService {
 
   /// Remover competição
   Future<bool> removeCompetition(String id) async {
-    final db = await database;
+    final db = await (database as Future<Database>);
 
     await db.rawDelete('''DELETE FROM competition WHERE id=\'$id\';''');
 

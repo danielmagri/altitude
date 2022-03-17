@@ -8,7 +8,7 @@ import 'package:injectable/injectable.dart';
 class Memory {
   static Memory get getI => GetIt.I.get<Memory>();
 
-  Person person;
+  Person? person;
   List<Habit> habits = [];
   List<Competition> competitions = [];
 

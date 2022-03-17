@@ -25,15 +25,14 @@ import 'package:flutter/material.dart'
         TextAlign,
         TextSpan,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class TutorialPresentation extends StatelessWidget {
   TutorialPresentation(
-      {@required this.focusAlignment,
-      @required this.focusRadius,
-      @required this.textAlignment,
-      @required this.text,
+      {required this.focusAlignment,
+      required this.focusRadius,
+      required this.textAlignment,
+      required this.text,
       this.hasNext = false});
 
   final Alignment focusAlignment;

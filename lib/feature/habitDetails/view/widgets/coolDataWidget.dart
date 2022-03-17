@@ -20,7 +20,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class CoolDataWidget extends StatelessWidget {
-  CoolDataWidget({Key key})
+  CoolDataWidget({Key? key})
       : controller = GetIt.I.get<HabitDetailsLogic>(),
         super(key: key);
 
@@ -56,11 +56,11 @@ class CoolDataWidget extends StatelessWidget {
                       TextSpan(text: "Começou em "),
                       TextSpan(
                         style: TextStyle(fontWeight: FontWeight.normal),
-                        text: data.initialDate.day.toString().padLeft(2, '0') +
+                        text: data!.initialDate!.day.toString().padLeft(2, '0') +
                             "/" +
-                            data.initialDate.month.toString().padLeft(2, '0') +
+                            data.initialDate!.month.toString().padLeft(2, '0') +
                             "/" +
-                            data.initialDate.year.toString() +
+                            data.initialDate!.year.toString() +
                             "\n",
                       ),
                       TextSpan(

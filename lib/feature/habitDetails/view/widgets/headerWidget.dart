@@ -30,7 +30,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class HeaderWidget extends StatelessWidget {
-  HeaderWidget({Key key})
+  HeaderWidget({Key? key})
       : controller = GetIt.I.get<HabitDetailsLogic>(),
         super(key: key);
 
@@ -49,7 +49,7 @@ class HeaderWidget extends StatelessWidget {
                 return controller.rocketForce.handleState(() {
                   return Skeleton.custom(child: Rocket(size: const Size(140, 140), color: Colors.white));
                 }, (data) {
-                  return SkyScene(size: const Size(140, 140), color: controller.habitColor, force: data);
+                  return SkyScene(size: const Size(140, 140), color: controller.habitColor, force: data!);
                 }, (error) {
                   return const SizedBox();
                 });
@@ -86,7 +86,7 @@ class HeaderWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        data.habit,
+                        data!.habit!,
                         textAlign: TextAlign.center,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,

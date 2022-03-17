@@ -13,17 +13,17 @@ class FireAuth implements IFireAuth {
   }
 
   String getUid() {
-    User user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     return user != null ? user.uid : "";
   }
 
-  String getName() {
-    User user = FirebaseAuth.instance.currentUser;
+  String? getName() {
+    User? user = FirebaseAuth.instance.currentUser;
     return user != null ? user.displayName : "";
   }
 
   Future<bool> setName(String name) async {
-    User user = FirebaseAuth.instance.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       user.updateProfile(displayName: name);
       return true;
@@ -32,13 +32,13 @@ class FireAuth implements IFireAuth {
     }
   }
 
-  String getEmail() {
-    User user = FirebaseAuth.instance.currentUser;
+  String? getEmail() {
+    User? user = FirebaseAuth.instance.currentUser;
     return user != null ? user.email : "";
   }
 
-  String getPhotoUrl() {
-    User user = FirebaseAuth.instance.currentUser;
+  String? getPhotoUrl() {
+    User? user = FirebaseAuth.instance.currentUser;
     return user != null ? user.photoURL : "";
   }
 

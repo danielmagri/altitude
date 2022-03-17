@@ -1,22 +1,22 @@
 import 'package:altitude/common/controllers/LevelControl.dart';
 
 class Person {
-  String uid;
+  String? uid;
 
-  String name;
-  String email;
+  String? name;
+  String? email;
 
-  int score;
-  int level;
-  String fcmToken;
-  String photoUrl;
+  int? score;
+  int? level;
+  String? fcmToken;
+  String? photoUrl;
   int reminderCounter;
 
-  List<String> friends;
-  List<String> pendingFriends;
+  List<String?>? friends;
+  List<String?>? pendingFriends;
 
-  bool you;
-  int state; // 0-null 1-Amigo 2-Amigo pendente 3-Solicitação
+  bool? you;
+  int? state; // 0-null 1-Amigo 2-Amigo pendente 3-Solicitação
 
   static const UID = "uid";
   static const NAME = "display_name";
@@ -37,7 +37,7 @@ class Person {
       this.level,
       this.fcmToken,
       this.photoUrl,
-      this.reminderCounter,
+      this.reminderCounter = 0,
       this.friends,
       this.pendingFriends,
       this.you,
@@ -46,9 +46,9 @@ class Person {
     if (state == null) state = 0;
   }
 
-  String get levelText => score == null ? "" : LevelControl.getLevelText(score);
+  String get levelText => score == null ? "" : LevelControl.getLevelText(score!);
 
-  factory Person.fromJson(Map<String, dynamic> json, [String id]) => Person(
+  factory Person.fromJson(Map<String, dynamic> json, [String? id]) => Person(
       uid: id ?? json[UID],
       name: json[NAME],
       email: json[EMAIL],

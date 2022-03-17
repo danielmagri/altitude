@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 @service
 @Injectable(as: IFireFunctions)
 class FireFunctions implements IFireFunctions {
-  Future sendNotification(String title, String body, String token) async {
+  Future sendNotification(String title, String body, String? token) async {
     try {
       await FirebaseFunctions.instance
           .httpsCallable('sendNotification')

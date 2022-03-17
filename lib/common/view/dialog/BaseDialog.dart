@@ -31,13 +31,12 @@ import 'package:flutter/material.dart'
         Text,
         TextAlign,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class BaseDialog extends StatefulWidget {
-  BaseDialog({Key key, @required this.title, @required this.body, @required this.action}) : super(key: key);
+  BaseDialog({Key? key, required this.title, required this.body, required this.action}) : super(key: key);
 
-  final String title;
+  final String? title;
   final Widget body;
   final List<Widget> action;
 
@@ -46,8 +45,8 @@ class BaseDialog extends StatefulWidget {
 }
 
 class _BaseDialogState extends State<BaseDialog> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _scaleAnimation;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -85,7 +84,7 @@ class _BaseDialogState extends State<BaseDialog> with SingleTickerProviderStateM
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    widget.title,
+                    widget.title!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),

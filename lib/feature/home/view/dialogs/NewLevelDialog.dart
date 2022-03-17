@@ -6,7 +6,7 @@ class NewLevelDialog extends StatelessWidget {
   final int score;
 
   NewLevelDialog({
-    @required this.score,
+    required this.score,
   });
 
   @override
@@ -85,9 +85,9 @@ class BackgroundAnimated extends StatefulWidget {
 }
 
 class _BackgroundAnimatedState extends State<BackgroundAnimated> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  Animatable<Color> background = TweenSequence<Color>([
+  Animatable<Color?> background = TweenSequence<Color?>([
     TweenSequenceItem(
       weight: 1.0,
       tween: ColorTween(
@@ -161,7 +161,7 @@ class _BackgroundAnimatedState extends State<BackgroundAnimated> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: background.evaluate(AlwaysStoppedAnimation(_controller.value)).withOpacity(0.75),
+      color: background.evaluate(AlwaysStoppedAnimation(_controller.value))!.withOpacity(0.75),
     );
   }
 }

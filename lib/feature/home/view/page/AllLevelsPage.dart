@@ -6,7 +6,7 @@ import 'package:altitude/common/controllers/LevelControl.dart';
 class AllLevelsPage extends StatefulWidget {
   AllLevelsPage(this.arguments);
 
-  final AllLevelsPageArguments arguments;
+  final AllLevelsPageArguments? arguments;
 
   @override
   _AllLevelsPageState createState() => _AllLevelsPageState();
@@ -41,7 +41,7 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
     for (int i = 0; i < 10; i++) {
       widgets.add(
         Opacity(
-          opacity: LevelControl.getLevel(widget.arguments.score) >= i ? 1 : 0.3,
+          opacity: LevelControl.getLevel(widget.arguments!.score) >= i ? 1 : 0.3,
           child: Container(
             padding: const EdgeInsets.all(8),
             height: 90,

@@ -12,7 +12,7 @@ import 'FireMenssaging.dart';
 @service
 @Singleton(as: ILocalNotification)
 class LocalNotification implements ILocalNotification {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @factoryMethod
   static Future<LocalNotification> initialize() async {
@@ -36,15 +36,15 @@ class LocalNotification implements ILocalNotification {
     return instance;
   }
 
-  static Future onSelectNotification(String payload) async {
+  static Future onSelectNotification(String? payload) async {
     if (payload != null) {
       print('notification payload: ' + payload);
     }
   }
 
   Future<void> addNotification(Habit habit) async {
-    Time time = Time(habit.reminder.hour, habit.reminder.minute);
-    String title = habit.reminder.type == 0 ? habit.habit : habit.oldCue;
+    Time time = Time(habit.reminder!.hour!, habit.reminder!.minute!);
+    String? title = habit.reminder!.type == 0 ? habit.habit : habit.oldCue;
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       "1", // channel id
@@ -52,16 +52,16 @@ class LocalNotification implements ILocalNotification {
       "Aviso para não esquecer sobre o hábito", // channel description
       importance: Importance.max,
       priority: Priority.high,
-      color: AppColors.habitsColor[habit.colorCode],
+      color: AppColors.habitsColor[habit.colorCode!],
     );
     var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
 
     tz.initializeTimeZones();
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
-    for (int day in habit.reminder.getAllweekdaysDateTime()) {
+    for (int day in habit.reminder!.getAllweekdaysDateTime()) {
       await flutterLocalNotificationsPlugin.zonedSchedule(
-          habit.reminder.id, title, null, _scheduleWeekly(now, day, time), platformChannelSpecifics,
+          habit.reminder!.id!, title, null, _scheduleWeekly(now, day, time), platformChannelSpecifics,
           androidAllowWhileIdle: true,
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
@@ -79,8 +79,8 @@ class LocalNotification implements ILocalNotification {
     return scheduledDate;
   }
 
-  Future<void> removeNotification(int id) async {
-    return await flutterLocalNotificationsPlugin.cancel(id);
+  Future<void> removeNotification(int? id) async {
+    return await flutterLocalNotificationsPlugin.cancel(id!);
   }
 
   Future<void> removeAllNotification() async {

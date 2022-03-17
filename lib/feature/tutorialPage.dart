@@ -10,7 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:package_info/package_info.dart';
 
 class TutorialPage extends StatefulWidget {
-  TutorialPage({Key key}) : super(key: key);
+  TutorialPage({Key? key}) : super(key: key);
 
   @override
   _TutorialPageState createState() => _TutorialPageState();
@@ -166,7 +166,7 @@ class CreateHabit extends StatefulWidget {
 }
 
 class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -254,11 +254,11 @@ class CompleteHabit extends StatefulWidget {
 }
 
 class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> positionYRocketAnimation;
-  Animation<double> positionXRocketAnimation;
-  Animation<double> positionYFingerAnimation;
-  Animation<double> positionXFingerAnimation;
+  late AnimationController _controller;
+  late Animation<double> positionYRocketAnimation;
+  late Animation<double> positionXRocketAnimation;
+  late Animation<double> positionYFingerAnimation;
+  late Animation<double> positionXFingerAnimation;
 
   @override
   void initState() {
@@ -418,8 +418,8 @@ class Score extends StatefulWidget {
 }
 
 class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> scoreAnimation;
+  late AnimationController _controller;
+  late Animation<double> scoreAnimation;
 
   @override
   void initState() {

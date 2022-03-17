@@ -9,7 +9,7 @@ part 'PendingFriendsLogic.g.dart';
 class PendingFriendsLogic = _PendingFriendsLogicBase with _$PendingFriendsLogic;
 
 abstract class _PendingFriendsLogicBase with Store {
-  final PersonUseCase personUseCase;
+  final PersonUseCase? personUseCase;
 
   _PendingFriendsLogicBase(this.personUseCase);
 
@@ -17,8 +17,8 @@ abstract class _PendingFriendsLogicBase with Store {
   List<Person> addedFriends = [];
 
   Future<void> fetchData() async {
-    (await personUseCase.getPendingFriends()).result((data) {
-      personUseCase.pendingFriendsStatus = data.isNotEmpty;
+    (await personUseCase!.getPendingFriends()).result((data) {
+      personUseCase!.pendingFriendsStatus = data.isNotEmpty;
       pendingFriends.setData(data.asObservable());
     }, (error) {
       pendingFriends.setError(error);
@@ -28,18 +28,18 @@ abstract class _PendingFriendsLogicBase with Store {
 
   @action
   Future<void> acceptRequest(Person person) async {
-    (await personUseCase.acceptRequest(person.uid)).absoluteResult();
+    (await personUseCase!.acceptRequest(person.uid)).absoluteResult();
     addedFriends.add(person);
-    pendingFriends.data.removeWhere((item) => item.uid == person.uid);
+    pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 
-    if (pendingFriends.data.isEmpty) personUseCase.pendingFriendsStatus = false;
+    if (pendingFriends.data!.isEmpty) personUseCase!.pendingFriendsStatus = false;
   }
 
   @action
   Future<void> declineRequest(Person person) async {
-    (await personUseCase.declineRequest(person.uid)).absoluteResult();
-    pendingFriends.data.removeWhere((item) => item.uid == person.uid);
+    (await personUseCase!.declineRequest(person.uid)).absoluteResult();
+    pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 
-    if (pendingFriends.data.isEmpty) personUseCase.pendingFriendsStatus = false;
+    if (pendingFriends.data!.isEmpty) personUseCase!.pendingFriendsStatus = false;
   }
 }

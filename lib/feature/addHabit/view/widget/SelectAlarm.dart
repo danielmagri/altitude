@@ -57,7 +57,7 @@ class _SelectAlarmState extends State<SelectAlarm> {
 
   void reminderTimeClick(BuildContext context) {
     showTimePicker(
-        initialTime: controller.reminderTime,
+        initialTime: controller.reminderTime!,
         context: context,
         builder: (context, child) {
           return Theme(
@@ -68,7 +68,7 @@ class _SelectAlarmState extends State<SelectAlarm> {
                         ? ColorScheme.dark(primary: controller.habitColor)
                         : ColorScheme.light(primary: controller.habitColor),
                   ),
-              child: child);
+              child: child!);
         }).then(controller.selectReminderTime);
   }
 

@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class AddHabitPage extends StatefulWidget {
-  AddHabitPage({Key key, this.backTo = false}) : super(key: key);
+  AddHabitPage({Key? key, this.backTo = false}) : super(key: key);
 
   final bool backTo;
 

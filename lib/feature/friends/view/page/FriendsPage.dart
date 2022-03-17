@@ -24,7 +24,7 @@ class _FriendsPageState extends BaseStateWithLogic<FriendsPage, FriendsLogic> {
   }
 
   @override
-  void onPageBack(Object value) {
+  void onPageBack(Object? value) {
     if (value is List<Person>) {
       controller.addPersons(value.asObservable());
     }

@@ -30,21 +30,21 @@ import 'package:flutter/material.dart'
         Widget;
 
 class SkyDragTarget extends StatefulWidget {
-  SkyDragTarget({Key key, this.visibilty, this.setHabitDone}) : super(key: key);
+  SkyDragTarget({Key? key, this.visibilty, this.setHabitDone}) : super(key: key);
 
-  final bool visibilty;
-  final Function(String id) setHabitDone;
+  final bool? visibilty;
+  final Function(String id)? setHabitDone;
 
   @override
   _SkyDragTargetState createState() => _SkyDragTargetState();
 }
 
 class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _opacity;
-  Animation<double> _offsetSky;
-  Animation<double> _offsetCloud;
-  Animation<double> _opacityText;
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  late Animation<double> _offsetSky;
+  late Animation<double> _offsetCloud;
+  late Animation<double> _opacityText;
 
   bool hover = false;
 
@@ -90,7 +90,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
   }
 
   void runAnimation() {
-    if (widget.visibilty) {
+    if (widget.visibilty!) {
       _controller.forward().orCancel;
     } else {
       _controller.reverse().orCancel;
@@ -112,7 +112,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
                   stops: [0.7, 1],
                   colors: [AppTheme.of(context).sky, AppTheme.of(context).materialTheme.backgroundColor])),
           child: DragTarget<String>(
-            builder: (context, List<String> candidateData, rejectedData) {
+            builder: (context, List<String?> candidateData, rejectedData) {
               return Stack(
                 children: <Widget>[
                   Align(
@@ -143,7 +143,7 @@ class _SkyDragTargetState extends State<SkyDragTarget> with SingleTickerProvider
             },
             onAccept: (data) {
               hover = false;
-              widget.setHabitDone(data);
+              widget.setHabitDone!(data);
             },
             onLeave: (data) {
               hover = false;

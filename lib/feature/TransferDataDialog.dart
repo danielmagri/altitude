@@ -15,7 +15,7 @@ import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:get_it/get_it.dart';
 
 class TransferDataDialog extends StatefulWidget {
-  const TransferDataDialog({Key key, @required this.uid}) : super(key: key);
+  const TransferDataDialog({Key? key, required this.uid}) : super(key: key);
 
   final String uid;
 
@@ -29,7 +29,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   final ILocalNotification _localNotification = GetIt.I.get<ILocalNotification>();
   final IFireAnalytics _fireAnalytics = GetIt.I.get<IFireAnalytics>();
 
-  double progress;
+  double? progress;
 
   @override
   initState() {
@@ -61,7 +61,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         } else {
           Person person = (result as RSuccess).data;
           score = (await _habitUseCase.getHabits(notSave: true))
-              .result((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a + b), (error) => 0);
+              .result(((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a! + b!)!) as int Function(List<Habit>), (error) => 0);
 
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(score),
@@ -84,12 +84,12 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
-          List<String> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
+          List<String?> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
           List<DayDone> daysDone = await DatabaseService().getDaysDone(habit.oldId);
           habit.daysDone = daysDone.length;
           habit.score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
 
-          score += habit.score;
+          score += habit.score!;
 
           await (await _habitUseCase.transferHabit(habit, competitionsId, daysDone)).result((data) async {
             counter++;

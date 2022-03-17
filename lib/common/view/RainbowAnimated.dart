@@ -16,18 +16,18 @@ import 'package:flutter/material.dart'
         Widget;
 
 class RainbowAnimated extends StatefulWidget {
-  const RainbowAnimated({Key key, this.child}) : super(key: key);
+  const RainbowAnimated({Key? key, this.child}) : super(key: key);
 
-  final Widget Function(Color color) child;
+  final Widget Function(Color? color)? child;
 
   @override
   _RainbowAnimatedState createState() => _RainbowAnimatedState();
 }
 
 class _RainbowAnimatedState extends State<RainbowAnimated> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  Animatable<Color> background = TweenSequence<Color>([
+  Animatable<Color?> background = TweenSequence<Color?>([
     TweenSequenceItem(
       weight: 1.0,
       tween: ColorTween(begin: AppColors.habitsColor[0], end: AppColors.habitsColor[1]),
@@ -61,6 +61,6 @@ class _RainbowAnimatedState extends State<RainbowAnimated> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return widget.child(background.evaluate(AlwaysStoppedAnimation(_controller.value)));
+    return widget.child!(background.evaluate(AlwaysStoppedAnimation(_controller.value)));
   }
 }

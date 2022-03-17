@@ -1,7 +1,7 @@
 enum ReminderType { CUE, HABIT }
 
 extension ReminderTypeExtension on ReminderType {
-  int get value {
+  int? get value {
     switch (this) {
       case ReminderType.CUE:
         return 1;

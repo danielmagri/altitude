@@ -16,27 +16,27 @@ part 'StatisticsLogic.g.dart';
 class StatisticsLogic = _StatisticsLogicBase with _$StatisticsLogic;
 
 abstract class _StatisticsLogicBase with Store {
-  final PersonUseCase _personUseCase;
-  final HabitUseCase _habitUseCase;
+  final PersonUseCase? _personUseCase;
+  final HabitUseCase? _habitUseCase;
 
   _StatisticsLogicBase(this._personUseCase, this._habitUseCase);
 
-  DataState<ObservableList<HabitStatisticData>> habitsData = DataState();
+  DataState<ObservableList<HabitStatisticData>?> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
   DataState<List<FrequencyStatisticData>> frequencyData = DataState();
 
   @observable
-  String selectedId;
+  String? selectedId;
 
   @action
   Future<void> fetchData() async {
     try {
-      List<Habit> habits = (await _habitUseCase.getHabits()).absoluteResult().asObservable();
-      int totalScore = await _personUseCase.getScore();
-      List<DayDone> daysDone = (await _habitUseCase.getAllDaysDone(habits)).absoluteResult();
+      List<Habit> habits = (await _habitUseCase!.getHabits()).absoluteResult().asObservable();
+      int? totalScore = await _personUseCase!.getScore();
+      List<DayDone> daysDone = (await _habitUseCase!.getAllDaysDone(habits)).absoluteResult();
 
       Map<DateTime, List<DayDone>> dateGrouped =
-          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date.year, e.date.month));
+          groupBy<DayDone, DateTime>(daysDone, (e) => DateTime(e.date!.year, e.date!.month));
 
       historicData.setData(await handleHistoricData(dateGrouped, habits));
       frequencyData.setData(handleFrequencyData(dateGrouped, habits));
@@ -60,11 +60,11 @@ abstract class _StatisticsLogicBase with Store {
     // Passa por cada grupo de mês
     dateGrouped.forEach((key, value) {
       // Separa o grupo por hábitos para somar a pontuação total
-      Map<String, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String>(value, (e) => e.habitId);
+      Map<String?, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String?>(value, (e) => e.habitId);
       Map<Habit, int> habitsMap = Map();
       // Faz o calcula da pontuação total
       dayGroupedHabit.forEach((key, value) {
-        Habit habit = habits.firstWhere((e) => e.id == key, orElse: () => null);
+        Habit? habit = habits.firstWhereOrNull((e) => e.id == key);
         if (habit != null) {
           habitsMap.putIfAbsent(
               habit, () => ScoreControl().scoreEarnedTotal(habit.frequency, value.map((e) => e.date).toList()));
@@ -102,17 +102,17 @@ abstract class _StatisticsLogicBase with Store {
 
     dateGrouped.forEach((key, value) {
       Map<DateTime, List<DayDone>> dayGrouped =
-          groupBy<DayDone, DateTime>(value, (e) => DateTime(e.date.year, e.date.month, e.date.day));
-      Map<String, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String>(value, (e) => e.habitId);
+          groupBy<DayDone, DateTime>(value, (e) => DateTime(e.date!.year, e.date!.month, e.date!.day));
+      Map<String?, List<DayDone>> dayGroupedHabit = groupBy<DayDone, String?>(value, (e) => e.habitId);
 
       Map<Habit, List<int>> habitsMap = Map();
       dayGroupedHabit.forEach((key, value) {
-        Habit habit = habits.firstWhere((e) => e.id == key, orElse: () => null);
+        Habit? habit = habits.firstWhereOrNull((e) => e.id == key);
         if (habit != null) {
           habitsMap.putIfAbsent(
               habit,
               () => List.generate(
-                  7, (i) => value.where((e) => e.date.weekday == i || (e.date.weekday == 7 && i == 0)).length));
+                  7, (i) => value.where((e) => e.date!.weekday == i || (e.date!.weekday == 7 && i == 0)).length));
         }
       });
 
@@ -143,13 +143,13 @@ abstract class _StatisticsLogicBase with Store {
   }
 
   @action
-  void selectHabit(String id) {
+  void selectHabit(String? id) {
     if (selectedId != null) {
-      habitsData.data.firstWhere((e) => e.id == selectedId).selected = false;
+      habitsData.data!.firstWhere((e) => e.id == selectedId).selected = false;
     }
 
     if (selectedId != id) {
-      habitsData.data.firstWhere((e) => e.id == id).selected = true;
+      habitsData.data!.firstWhere((e) => e.id == id).selected = true;
       selectedId = id;
     } else {
       selectedId = null;

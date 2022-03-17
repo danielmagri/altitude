@@ -16,11 +16,11 @@ import 'package:flutter/material.dart'
         TextButton,
         TextStyle,
         Transform,
-        Widget,
-        required;
+        Widget;
 
 class CompetitorDetailsDialog extends StatelessWidget {
-  const CompetitorDetailsDialog({Key key, @required this.competitor}) : super(key: key);
+  const CompetitorDetailsDialog({Key? key, required this.competitor})
+      : super(key: key);
 
   final Competitor competitor;
 
@@ -35,7 +35,7 @@ class CompetitorDetailsDialog extends StatelessWidget {
                 angle: 0.52,
                 child: Rocket(
                     size: const Size(200, 200),
-                    color: AppColors.habitsColor[competitor.color],
+                    color: AppColors.habitsColor[competitor.color!],
                     state: RocketState.ON_FIRE,
                     fireForce: 1)),
           ),
@@ -45,13 +45,16 @@ class CompetitorDetailsDialog extends StatelessWidget {
                 competitor.score.toString(),
                 style: const TextStyle(fontSize: 20),
               ),
-              const Text("Km", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
+              const Text("Km",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
             ]),
           )
         ],
       ),
       action: <Widget>[
-        TextButton(child: const Text('Fechar'), onPressed: () => Navigator.of(context).pop()),
+        TextButton(
+            child: const Text('Fechar'),
+            onPressed: () => Navigator.of(context).pop()),
       ],
     );
   }

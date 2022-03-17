@@ -18,35 +18,43 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         Wrap,
-        WrapAlignment,
-        required;
+        WrapAlignment;
 import 'package:get_it/get_it.dart';
 
 class AddCompetitorsDialog extends StatefulWidget {
-  AddCompetitorsDialog({Key key, @required this.id, @required this.friends, @required this.competitors})
+  AddCompetitorsDialog(
+      {Key? key,
+      required this.id,
+      required this.friends,
+      required this.competitors})
       : super(key: key);
 
-  final String id;
+  final String? id;
   final List<Person> friends;
-  final List<String> competitors;
+  final List<String?> competitors;
 
   @override
   _AddCompetitorsDialogState createState() => _AddCompetitorsDialogState();
 }
 
 class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
-  final CompetitionUseCase _competitionUseCase = GetIt.I.get<CompetitionUseCase>();
+  final CompetitionUseCase _competitionUseCase =
+      GetIt.I.get<CompetitionUseCase>();
 
   List<Person> selectedFriends = [];
 
   void _addCompetitors() async {
     if (selectedFriends.isNotEmpty) {
-      List<String> invitations = selectedFriends.map((person) => person.uid).toList();
-      List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
+      List<String?> invitations =
+          selectedFriends.map((person) => person.uid).toList();
+      List<String?> invitationsToken =
+          selectedFriends.map((person) => person.fcmToken).toList();
 
       showLoading(true);
 
-      _competitionUseCase.inviteCompetitor(widget.id, invitations, invitationsToken).then((res) {
+      _competitionUseCase
+          .inviteCompetitor(widget.id, invitations, invitationsToken)
+          .then((res) {
         showLoading(false);
         navigatePop();
         showToast("Convite enviado!");
@@ -71,14 +79,16 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
             alignment: WrapAlignment.center,
             children: widget.friends.map((friend) {
               return ChoiceChip(
-                label: Text(friend.name),
+                label: Text(friend.name!),
                 selected: selectedFriends.contains(friend),
                 selectedColor: AppTheme.of(context).chipSelected,
                 onSelected: widget.competitors.contains(friend.uid)
                     ? null
                     : (selected) {
                         setState(() {
-                          selected ? selectedFriends.add(friend) : selectedFriends.remove(friend);
+                          selected
+                              ? selectedFriends.add(friend)
+                              : selectedFriends.remove(friend);
                         });
                       },
               );
@@ -89,7 +99,9 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
       action: <Widget>[
         TextButton(child: const Text('Cancelar'), onPressed: navigatePop),
         TextButton(
-            child: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: _addCompetitors)
+            child: const Text('Adicionar',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: _addCompetitors)
       ],
     );
   }

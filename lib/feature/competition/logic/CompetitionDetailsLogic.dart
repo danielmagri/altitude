@@ -10,27 +10,27 @@ part 'CompetitionDetailsLogic.g.dart';
 class CompetitionDetailsLogic = _CompetitionDetailsLogicBase with _$CompetitionDetailsLogic;
 
 abstract class _CompetitionDetailsLogicBase with Store {
-  final PersonUseCase personUseCase;
-  final CompetitionUseCase _competitionUseCase;
+  final PersonUseCase? personUseCase;
+  final CompetitionUseCase? _competitionUseCase;
 
   @observable
-  String title = "";
+  String? title = "";
 
-  Competition competition;
+  Competition? competition;
 
   _CompetitionDetailsLogicBase(this.personUseCase, this._competitionUseCase);
 
   Future<List<Person>> getFriends() async {
-    return (await personUseCase.getFriends()).absoluteResult();
+    return (await personUseCase!.getFriends()).absoluteResult();
   }
 
-  Future leaveCompetition(String id) {
-    return _competitionUseCase.removeCompetitor(competition);
+  Future leaveCompetition(String? id) {
+    return _competitionUseCase!.removeCompetitor(competition);
   }
 
   @action
-  Future changeTitle(String id, String newTitle) async {
-    (await _competitionUseCase.updateCompetition(id, newTitle)).result((data) {
+  Future changeTitle(String? id, String newTitle) async {
+    (await _competitionUseCase!.updateCompetition(id, newTitle)).result((data) {
       title = newTitle;
       return true;
     }, (error) => throw error);

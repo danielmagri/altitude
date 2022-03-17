@@ -5,21 +5,21 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 
 class Habit {
-  String id;
-  int oldId;
+  String? id;
+  int? oldId;
 
-  String habit;
-  int colorCode;
-  int score;
+  String? habit;
+  int? colorCode;
+  int? score;
 
-  String oldCue;
+  String? oldCue;
 
-  Frequency frequency;
-  Reminder reminder;
+  Frequency? frequency;
+  Reminder? reminder;
 
-  DateTime lastDone;
-  DateTime initialDate;
-  int daysDone;
+  DateTime? lastDone;
+  DateTime? initialDate;
+  int? daysDone;
 
   Habit(
       {this.id,
@@ -34,7 +34,7 @@ class Habit {
       this.initialDate,
       this.daysDone});
 
-  Color get color => AppColors.habitsColor[colorCode];
+  Color get color => AppColors.habitsColor[colorCode!];
 
   static const ID = "id";
   static const HABIT = "habit";

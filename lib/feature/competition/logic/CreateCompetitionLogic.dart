@@ -10,20 +10,20 @@ part 'CreateCompetitionLogic.g.dart';
 class CreateCompetitionLogic = _CreateCompetitionLogicBase with _$CreateCompetitionLogic;
 
 abstract class _CreateCompetitionLogicBase with Store {
-  final CompetitionUseCase _competitionUseCase;
+  final CompetitionUseCase? _competitionUseCase;
 
   @observable
-  Habit selectedHabit;
+  Habit? selectedHabit;
 
   @observable
   ObservableList<Person> selectedFriends = ObservableList();
 
-  List<Habit> habits;
+  late List<Habit> habits;
 
   _CreateCompetitionLogicBase(this._competitionUseCase);
 
   @action
-  void selectHabit(Habit value) {
+  void selectHabit(Habit? value) {
     selectedHabit = value;
   }
 
@@ -39,12 +39,12 @@ abstract class _CreateCompetitionLogicBase with Store {
   }
 
   Future<Competition> createCompetition(String title) async {
-    List<String> invitations = selectedFriends.map((person) => person.uid).toList();
-    List<String> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
+    List<String?> invitations = selectedFriends.map((person) => person.uid).toList();
+    List<String?> invitationsToken = selectedFriends.map((person) => person.fcmToken).toList();
 
-    return (await _competitionUseCase.createCompetition(title, selectedHabit, invitations, invitationsToken))
+    return (await _competitionUseCase!.createCompetition(title, selectedHabit, invitations, invitationsToken))
         .absoluteResult();
   }
 
-  Future<bool> checkHabitCompetitionLimit() => _competitionUseCase.maximumNumberReachedByHabit(selectedHabit.id);
+  Future<bool> checkHabitCompetitionLimit() => _competitionUseCase!.maximumNumberReachedByHabit(selectedHabit!.id);
 }

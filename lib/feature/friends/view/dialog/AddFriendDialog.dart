@@ -69,7 +69,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
     super.dispose();
   }
 
-  String buttonText(int state) {
+  String buttonText(int? state) {
     if (state == 0) {
       return "Adicionar";
     } else if (state == 2) {
@@ -104,12 +104,12 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
   }
 
   void search() {
-    String result = ValidationHandler.email(_textEditingController.text);
+    String? result = ValidationHandler.email(_textEditingController.text);
     if (result != null) {
       showToast(result);
     } else {
       controller.searchFriend(_textEditingController.text).then((_) {
-        if (controller.searchResult.data.isEmpty) showToast("Esse email não foi encontrado.");
+        if (controller.searchResult.data!.isEmpty) showToast("Esse email não foi encontrado.");
       }).catchError(handleError);
     }
   }
@@ -143,7 +143,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                BorderSide(color: AppTheme.of(context).materialTheme.textTheme.headline1.color)),
+                                BorderSide(color: AppTheme.of(context).materialTheme.textTheme.headline1!.color!)),
                         hintText: "Escreva o email do seu amigo",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
@@ -167,7 +167,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                         else
                           return ListView.builder(
                             physics: const BouncingScrollPhysics(),
-                            itemCount: data.length,
+                            itemCount: data!.length,
                             itemBuilder: (_, index) {
                               Person person = data[index];
                               return Container(
@@ -182,18 +182,18 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            person.name,
+                                            person.name!,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
                                               fontSize: 17,
                                               fontWeight: FontWeight.bold,
-                                              decoration: person.you ? TextDecoration.underline : TextDecoration.none,
+                                              decoration: person.you! ? TextDecoration.underline : TextDecoration.none,
                                             ),
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            person.email,
+                                            person.email!,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: const TextStyle(fontSize: 15),

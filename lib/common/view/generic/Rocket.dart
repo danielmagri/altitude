@@ -109,16 +109,16 @@ class _FirePainter extends CustomPainter {
 /// isExtend se estiver em true desenha o foguete em completo no tamanho entregue
 class Rocket extends StatelessWidget {
   Rocket(
-      {Key key,
-      @required this.size,
-      @required this.color,
+      {Key? key,
+      required this.size,
+      required this.color,
       this.state = RocketState.STOPPED,
       this.isExtend = false,
       this.fireForce = 0})
       : super(key: key);
 
   final RocketState state;
-  final Size size;
+  final Size? size;
   final Color color;
   final bool isExtend;
   final double fireForce;
@@ -128,18 +128,18 @@ class Rocket extends StatelessWidget {
 
     if (isExtend && state != RocketState.ON_FIRE) {
       widgets.add(CustomPaint(
-        size: size,
+        size: size!,
         foregroundPainter: _RocketPainter(color),
       ));
     } else {
       widgets.add(CustomPaint(
-        size: Size(size.width * 0.6, size.height * 0.6),
+        size: Size(size!.width * 0.6, size!.height * 0.6),
         foregroundPainter: _RocketPainter(color),
       ));
 
       if (state == RocketState.ON_FIRE) {
         widgets.add(CustomPaint(
-          size: Size(size.width, size.height * 0.4),
+          size: Size(size!.width, size!.height * 0.4),
           foregroundPainter: _FirePainter(fireForce),
         ));
       }

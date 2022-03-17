@@ -1,7 +1,7 @@
 enum HabitFiltersType { TODAY_HABITS, ALL_HABITS }
 
 extension HabitFiltersTypeExtension on HabitFiltersType {
-  String get title {
+  String? get title {
     switch (this) {
       case HabitFiltersType.TODAY_HABITS:
         return "Hábitos de hoje";
@@ -12,7 +12,7 @@ extension HabitFiltersTypeExtension on HabitFiltersType {
     }
   }
 
-  String get emptyMessage {
+  String? get emptyMessage {
     switch (this) {
       case HabitFiltersType.TODAY_HABITS:
         return "Você não tem hábitos para hoje.";

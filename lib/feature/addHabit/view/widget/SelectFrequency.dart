@@ -36,15 +36,18 @@ import 'package:flutter/material.dart'
         TextSpan,
         TextStyle,
         Widget,
-        required,
         showDialog;
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class SelectFrequency extends StatelessWidget {
-  SelectFrequency({Key key, @required this.color, @required this.currentFrequency, @required this.selectFrequency})
+  SelectFrequency(
+      {Key? key,
+      required this.color,
+      required this.currentFrequency,
+      required this.selectFrequency})
       : super(key: key);
 
-  final Frequency currentFrequency;
+  final Frequency? currentFrequency;
   final Color color;
   final Function(Frequency) selectFrequency;
 
@@ -52,8 +55,12 @@ class SelectFrequency extends StatelessWidget {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpFrequency",
       texts: const [
-        TextSpan(text: "  Quais dias ou quantas vezes na semana você deseja fazer o hábito?"),
-        TextSpan(text: "\nSelecione qual opção achar melhor.", style: TextStyle(fontWeight: FontWeight.bold)),
+        TextSpan(
+            text:
+                "  Quais dias ou quantas vezes na semana você deseja fazer o hábito?"),
+        TextSpan(
+            text: "\nSelecione qual opção achar melhor.",
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ],
     ));
   }
@@ -70,7 +77,9 @@ class SelectFrequency extends StatelessWidget {
                     context: context,
                     builder: (_) => DayweekDialog(
                           color: color,
-                          frequency: currentFrequency is DayWeek ? currentFrequency : null,
+                          frequency: currentFrequency is DayWeek
+                              ? currentFrequency as DayWeek?
+                              : null,
                         )).then((value) {
                   if (value is Frequency) selectFrequency(value);
                 });
@@ -80,7 +89,9 @@ class SelectFrequency extends StatelessWidget {
                     context: context,
                     builder: (_) => WeeklyDialog(
                           color: color,
-                          frequency: currentFrequency is Weekly ? currentFrequency : null,
+                          frequency: currentFrequency is Weekly
+                              ? currentFrequency as Weekly?
+                              : null,
                         )).then((value) {
                   if (value is Frequency) selectFrequency(value);
                 });
@@ -89,23 +100,34 @@ class SelectFrequency extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: currentFrequency?.frequencyType() == type ? color : AppTheme.of(context).disableHabitCreationCard,
+              color: currentFrequency?.frequencyType() == type
+                  ? color
+                  : AppTheme.of(context).disableHabitCreationCard,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [const BoxShadow(blurRadius: 5, color: Colors.black38)],
+              boxShadow: [
+                const BoxShadow(blurRadius: 5, color: Colors.black38)
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(type.title,
-                    style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(type.title!,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
-                      currentFrequency?.frequencyType() == type ? currentFrequency.frequencyText() : type.exampleText,
+                      currentFrequency?.frequencyType() == type
+                          ? currentFrequency!.frequencyText()
+                          : type.exampleText!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.white,
-                          fontWeight: currentFrequency?.frequencyType() == type ? FontWeight.normal : FontWeight.w200)),
+                          fontWeight: currentFrequency?.frequencyType() == type
+                              ? FontWeight.normal
+                              : FontWeight.w200)),
                 )
               ],
             ),
@@ -124,9 +146,11 @@ class SelectFrequency extends StatelessWidget {
         children: [
           Row(children: [
             const Text("Qual a frequência do hábito?",
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
             IconButton(
-                icon: const Hero(tag: "helpFrequency", child: Icon(Icons.help_outline)),
+                icon: const Hero(
+                    tag: "helpFrequency", child: Icon(Icons.help_outline)),
                 onPressed: () => showTutorial(context))
           ]),
           const SizedBox(height: 8),

@@ -11,8 +11,8 @@ part 'PendingCompetitionLogic.g.dart';
 class PendingCompetitionLogic = _PendingCompetitionLogicBase with _$PendingCompetitionLogic;
 
 abstract class _PendingCompetitionLogicBase with Store {
-  final CompetitionUseCase _competitionUseCase;
-  final HabitUseCase _habitUseCase;
+  final CompetitionUseCase? _competitionUseCase;
+  final HabitUseCase? _habitUseCase;
 
   _PendingCompetitionLogicBase(this._competitionUseCase, this._habitUseCase);
 
@@ -21,9 +21,9 @@ abstract class _PendingCompetitionLogicBase with Store {
 
   Future<void> fetchData() async {
     try {
-      var _pendingCompetition = (await _competitionUseCase.getPendingCompetitions()).absoluteResult().asObservable();
+      var _pendingCompetition = (await _competitionUseCase!.getPendingCompetitions()).absoluteResult().asObservable();
 
-      _competitionUseCase.pendingCompetitionsStatus = _pendingCompetition.isNotEmpty;
+      _competitionUseCase!.pendingCompetitionsStatus = _pendingCompetition.isNotEmpty;
 
       pendingCompetition.setData(_pendingCompetition);
     } catch (error) {
@@ -32,23 +32,23 @@ abstract class _PendingCompetitionLogicBase with Store {
     }
   }
 
-  Future<bool> checkCreateCompetition() => _competitionUseCase.maximumNumberReached();
+  Future<bool> checkCreateCompetition() => _competitionUseCase!.maximumNumberReached();
 
   Future<List<Habit>> getAllHabits() async {
-    return (await _habitUseCase.getHabits()).absoluteResult();
+    return (await _habitUseCase!.getHabits()).absoluteResult();
   }
 
   void acceptedCompetitionRequest(Competition competition) {
-    pendingCompetition.data.removeWhere((item) => item.id == competition.id);
+    pendingCompetition.data!.removeWhere((item) => item.id == competition.id);
     addedCompetitions.add(competition);
-    if (pendingCompetition.data.isEmpty) _competitionUseCase.pendingCompetitionsStatus = false;
+    if (pendingCompetition.data!.isEmpty) _competitionUseCase!.pendingCompetitionsStatus = false;
   }
 
-  Future declineCompetitionRequest(String id) async {
-    return (await _competitionUseCase.declineCompetitionRequest(id)).result((data) {
-      pendingCompetition.data.removeWhere((item) => item.id == id);
+  Future declineCompetitionRequest(String? id) async {
+    return (await _competitionUseCase!.declineCompetitionRequest(id)).result((data) {
+      pendingCompetition.data!.removeWhere((item) => item.id == id);
 
-      if (pendingCompetition.data.isEmpty) _competitionUseCase.pendingCompetitionsStatus = false;
+      if (pendingCompetition.data!.isEmpty) _competitionUseCase!.pendingCompetitionsStatus = false;
     }, (error) => throw error);
   }
 }

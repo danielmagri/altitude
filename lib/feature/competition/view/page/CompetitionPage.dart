@@ -28,7 +28,7 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
   }
 
   @override
-  void onPageBack(Object value) {
+  void onPageBack(Object? value) {
     controller.fetchCompetitions();
     super.onPageBack(value);
   }
@@ -115,7 +115,7 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
                     width: double.maxFinite,
                     padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                     child: Column(
-                        children: data.asMap().entries.map((entry) {
+                        children: data!.asMap().entries.map((entry) {
                       var index = entry.key;
                       var person = entry.value;
                       return Padding(
@@ -126,11 +126,11 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                person.name,
+                                person.name!,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(
-                                    fontSize: 16, fontWeight: person.you ? FontWeight.bold : FontWeight.normal),
+                                    fontSize: 16, fontWeight: person.you! ? FontWeight.bold : FontWeight.normal),
                               ),
                             ),
                             Column(
@@ -185,7 +185,7 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
                       }),
                 );
               }, (data) {
-                if (data.isEmpty)
+                if (data!.isEmpty)
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Center(
@@ -220,13 +220,13 @@ class _CompetitionPageState extends BaseStateWithLogic<CompetitionPage, Competit
                                       angle: 0.523,
                                       child: Rocket(
                                           size: Size(constraints.maxWidth, constraints.maxWidth),
-                                          color: AppColors.habitsColor[competition.getMyCompetitor().color],
+                                          color: AppColors.habitsColor[competition.getMyCompetitor().color!],
                                           isExtend: true));
                                 }),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(16),
-                                child: Text(competition.title, maxLines: 2, style: const TextStyle(fontSize: 16)),
+                                child: Text(competition.title!, maxLines: 2, style: const TextStyle(fontSize: 16)),
                               ),
                             ],
                           ),

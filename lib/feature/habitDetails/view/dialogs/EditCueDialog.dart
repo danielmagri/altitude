@@ -17,7 +17,7 @@ class EditCueDialog extends StatefulWidget {
 }
 
 class _EditCueDialogState extends BaseState<EditCueDialog> {
-  StreamSubscription<bool> keyboardVisibility;
+  late StreamSubscription<bool> keyboardVisibility;
   ScrollController scrollController = ScrollController();
   TextEditingController textEditingController = TextEditingController();
   TapGestureRecognizer tapGestureRecognizer = TapGestureRecognizer();
@@ -28,9 +28,10 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
   void initState() {
     super.initState();
     // Seta o gatilho no textField
-    textEditingController.text = controller.cue;
+    textEditingController.text = controller.cue!;
 
-    keyboardVisibility = KeyboardVisibility.onChange.listen((visible) {
+    keyboardVisibility =
+        KeyboardVisibilityController().onChange.listen((visible) {
       if (visible)
         scrollController.animateTo(scrollController.position.maxScrollExtent,
             duration: Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -55,7 +56,8 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
   }
 
   void save() {
-    String validate = ValidationHandler.cueTextValidate(textEditingController.text);
+    String? validate =
+        ValidationHandler.cueTextValidate(textEditingController.text);
 
     if (validate == null) {
       showLoading(true);
@@ -80,11 +82,13 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
     if (showAll) {
       return [
         TextSpan(
-          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
+          text:
+              "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
           style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
-          text: "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
+          text:
+              "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
           style: TextStyle(fontSize: 17.0, height: 1.2),
         ),
         TextSpan(
@@ -101,13 +105,15 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
     } else {
       return [
         TextSpan(
-          text: "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
+          text:
+              "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
           style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
         TextSpan(
           text: "Continuar lendo...",
           recognizer: tapGestureRecognizer,
-          style: TextStyle(fontSize: 18.0, decoration: TextDecoration.underline),
+          style:
+              TextStyle(fontSize: 18.0, decoration: TextDecoration.underline),
         ),
       ];
     }
@@ -117,7 +123,8 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
-          minHeight: MediaQuery.of(context).size.height * 0.7, maxHeight: MediaQuery.of(context).size.height * 0.9),
+          minHeight: MediaQuery.of(context).size.height * 0.7,
+          maxHeight: MediaQuery.of(context).size.height * 0.9),
       child: SingleChildScrollView(
         controller: scrollController,
         physics: BouncingScrollPhysics(),
@@ -130,7 +137,10 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
               height: 30,
               child: Text(
                 "Gatilho",
-                style: TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold, color: controller.habitColor),
+                style: TextStyle(
+                    fontSize: 21.0,
+                    fontWeight: FontWeight.bold,
+                    color: controller.habitColor),
               ),
             ),
             const SizedBox(height: 40),
@@ -157,7 +167,9 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                     style: TextStyle(fontSize: 19),
                     cursorColor: controller.habitColor,
                     decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: controller.habitColor)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: controller.habitColor)),
                         hintText: "Escreva aqui seu gatilho",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
@@ -166,20 +178,24 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      padding:
-                          suggestions.isNotEmpty ? const EdgeInsets.only(top: 12, bottom: 8) : const EdgeInsets.all(0),
-                      itemCount: suggestions.length < 3 ? suggestions.length : 3,
+                      padding: suggestions.isNotEmpty
+                          ? const EdgeInsets.only(top: 12, bottom: 8)
+                          : const EdgeInsets.all(0),
+                      itemCount:
+                          suggestions.length < 3 ? suggestions.length : 3,
                       itemBuilder: (context, position) {
                         return GestureDetector(
                           onTap: () {
                             String text = suggestions[position];
-                            textEditingController.value = new TextEditingValue(text: text);
+                            textEditingController.value =
+                                new TextEditingValue(text: text);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: Text(
                               suggestions[position],
-                              style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300),
+                              style: const TextStyle(
+                                  fontSize: 16.0, fontWeight: FontWeight.w300),
                             ),
                           ),
                         );
@@ -191,17 +207,23 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      controller.cue.isNotEmpty
+                      controller.cue!.isNotEmpty
                           ? TextButton(
                               onPressed: remove,
-                              child: Text("Remover", style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w300)),
+                              child: Text("Remover",
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w300)),
                             )
                           : SizedBox(),
                       TextButton(
                         onPressed: save,
                         child: Text(
                           "Salvar",
-                          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: controller.habitColor),
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: controller.habitColor),
                         ),
                       ),
                     ],

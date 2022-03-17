@@ -27,7 +27,7 @@ import 'package:flutter/material.dart'
         protected,
         showDialog;
 
-abstract class BaseStateWithLogic<T extends StatefulWidget, L> extends BaseState<T> {
+abstract class BaseStateWithLogic<T extends StatefulWidget, L extends Object> extends BaseState<T> {
   L controller = GetIt.I.get<L>();
 
   @override
@@ -41,30 +41,30 @@ abstract class BaseStateWithLogic<T extends StatefulWidget, L> extends BaseState
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
   static bool _loading = false;
 
-  void onPageBack(Object value) {}
+  void onPageBack(Object? value) {}
 
   @protected
-  Future<R> navigateSmooth<R>(Widget page) {
+  Future<R?> navigateSmooth<R>(Widget page) {
     return Navigator.of(context).smooth<R>(page);
   }
 
   @protected
-  void navigatePush(String route, {Object arguments}) {
+  void navigatePush(String route, {Object? arguments}) {
     Navigator.pushNamed(context, route, arguments: arguments).then(onPageBack);
   }
 
   @protected
-  void navigatePushReplacement(String route, {Object arguments}) {
+  void navigatePushReplacement(String route, {Object? arguments}) {
     Navigator.pushReplacementNamed(context, route, arguments: arguments).then(onPageBack);
   }
 
   @protected
-  void navigatePopAndPush(String route, {Object arguments}) {
+  void navigatePopAndPush(String route, {Object? arguments}) {
     Navigator.popAndPushNamed(context, route, arguments: arguments).then(onPageBack);
   }
 
   @protected
-  void navigatePop<R>({R result}) {
+  void navigatePop<R>({R? result}) {
     Navigator.pop<R>(context, result);
   }
 
@@ -75,7 +75,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void changeSystemStyle(SystemUiOverlayStyle style) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       GetIt.I.get<AppLogic>().changeSystemStyle(style: style);
     });
   }
@@ -120,7 +120,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void showSimpleDialog(String title, String body,
-      {String subBody, Function confirmCallback, Function cancelCallback}) {
+      {String? subBody, Function? confirmCallback, Function? cancelCallback}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -133,14 +133,14 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
                   child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                   onPressed: () {
                     navigatePop();
-                    cancelCallback();
+                    cancelCallback!();
                   },
                 ),
                 TextButton(
                   child: const Text("Sim", style: TextStyle(fontSize: 17)),
                   onPressed: () {
                     navigatePop();
-                    confirmCallback();
+                    confirmCallback!();
                   },
                 ),
               ],

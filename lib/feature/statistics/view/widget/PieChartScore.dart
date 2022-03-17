@@ -1,12 +1,12 @@
 import 'package:altitude/feature/statistics/model/HabitStatisticData.dart';
 import 'package:fl_chart/fl_chart.dart' show FlBorderData, PieChart, PieChartData, PieChartSectionData, PieTouchData;
-import 'package:flutter/material.dart' show Color, FontWeight, Key, StatelessWidget, TextStyle, Widget, required;
+import 'package:flutter/material.dart' show Color, FontWeight, Key, StatelessWidget, TextStyle, Widget;
 
 class PieChartScore extends StatelessWidget {
-  PieChartScore({Key key, @required this.data, this.onClick}) : super(key: key);
+  PieChartScore({Key? key, required this.data, this.onClick}) : super(key: key);
 
   final List<HabitStatisticData> data;
-  final Function(String) onClick;
+  final Function(String?)? onClick;
 
   @override
   Widget build(context) {
@@ -14,7 +14,7 @@ class PieChartScore extends StatelessWidget {
       PieChartData(
         pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
           if (pieTouchResponse.touchedSectionIndex != null) {
-            onClick(data[pieTouchResponse.touchedSectionIndex].id);
+            onClick!(data[pieTouchResponse.touchedSectionIndex].id);
           }
         }),
         borderData: FlBorderData(show: false),
@@ -24,7 +24,7 @@ class PieChartScore extends StatelessWidget {
             .map((e) => PieChartSectionData(
                 color: e.habitColor,
                 value: e.porcentage,
-                title: e.porcentage < 5 ? '' : '${e.porcentage?.round() ?? 0}%',
+                title: e.porcentage < 5 ? '' : '${e.porcentage.round()}%',
                 radius: e.selected ? 100 : 90,
                 titleStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xffffffff))))
             .toList(),

@@ -25,7 +25,7 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
       adUnitId: AdsHandler.statisticsBannerAdUnitId,
       size: AdSize.largeBanner,
       request: AdsHandler.adRequest,
-      listener: AdsHandler.adListener);
+      listener: AdsHandler.adBannerListener);
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
                     (data) => Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
-                          children: data.map((data) => Indicator(data: data, onClick: controller.selectHabit)).toList(),
+                          children: data!.map((data) => Indicator(data: data, onClick: controller.selectHabit)).toList(),
                         ),
                     (error) => DataError())),
             const SizedBox(height: 20),
@@ -121,7 +121,7 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
                             HabitStatisticData("", 25, "", 1, 100),
                             HabitStatisticData("", 25, "", 1, 100),
                           ])),
-                      (data) => PieChartScore(data: data.toList(), onClick: controller.selectHabit),
+                      (data) => PieChartScore(data: data!.toList(), onClick: controller.selectHabit),
                       (error) => DataError()),
                 )),
             const SizedBox(height: 50),
@@ -143,7 +143,7 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Skeleton(width: double.maxFinite, height: HISTORIC_CHART_HEIGHT),
                       ),
-                  (data) => HistoricChart(list: data, selectedHabitId: controller.selectedId),
+                  (data) => HistoricChart(list: data!, selectedHabitId: controller.selectedId),
                   (error) => DataError()),
             ),
             const SizedBox(height: 25),
@@ -184,11 +184,11 @@ class _StatisticspageState extends BaseStateWithLogic<Statisticspage, Statistics
 }
 
 class HeaderSection extends StatelessWidget {
-  const HeaderSection({Key key, this.title}) : super(key: key);
+  const HeaderSection({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20));
+    return Text(title!, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20));
   }
 }

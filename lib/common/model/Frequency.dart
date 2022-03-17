@@ -1,7 +1,7 @@
 import 'package:altitude/feature/addHabit/enums/FrquencyType.dart';
 
 abstract class Frequency {
-  int daysCount();
+  int? daysCount();
   String frequencyText();
   FrequencyType frequencyType();
   Map<String, dynamic> toJson();
@@ -40,7 +40,7 @@ abstract class Frequency {
 }
 
 class DayWeek extends Frequency {
-  bool monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+  bool? monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
   DayWeek({this.monday, this.tuesday, this.wednesday, this.thursday, this.friday, this.saturday, this.sunday});
 
@@ -48,13 +48,13 @@ class DayWeek extends Frequency {
   int daysCount() {
     int days = 0;
 
-    if (monday) days++;
-    if (tuesday) days++;
-    if (wednesday) days++;
-    if (thursday) days++;
-    if (friday) days++;
-    if (saturday) days++;
-    if (sunday) days++;
+    if (monday!) days++;
+    if (tuesday!) days++;
+    if (wednesday!) days++;
+    if (thursday!) days++;
+    if (friday!) days++;
+    if (saturday!) days++;
+    if (sunday!) days++;
 
     return days;
   }
@@ -65,42 +65,42 @@ class DayWeek extends Frequency {
     bool hasOne = false;
     int count = daysCount();
 
-    if (monday) {
+    if (monday!) {
       text += "Segunda";
       hasOne = true;
       count--;
     }
-    if (tuesday) {
+    if (tuesday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Terça";
       hasOne = true;
       count--;
     }
-    if (wednesday) {
+    if (wednesday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Quarta";
       hasOne = true;
       count--;
     }
-    if (thursday) {
+    if (thursday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Quinta";
       hasOne = true;
       count--;
     }
-    if (friday) {
+    if (friday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Sexta";
       hasOne = true;
       count--;
     }
-    if (saturday) {
+    if (saturday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Sábado";
       hasOne = true;
       count--;
     }
-    if (sunday) {
+    if (sunday!) {
       text += _frequencyTextSeparator(hasOne, count);
       text += "Domingo";
     }
@@ -119,13 +119,13 @@ class DayWeek extends Frequency {
   }
 
   bool isADoneDay(DateTime day) {
-    if (monday && day.weekday == 1) return true;
-    if (tuesday && day.weekday == 2) return true;
-    if (wednesday && day.weekday == 3) return true;
-    if (thursday && day.weekday == 4) return true;
-    if (friday && day.weekday == 5) return true;
-    if (saturday && day.weekday == 6) return true;
-    if (sunday && day.weekday == 7) return true;
+    if (monday! && day.weekday == 1) return true;
+    if (tuesday! && day.weekday == 2) return true;
+    if (wednesday! && day.weekday == 3) return true;
+    if (thursday! && day.weekday == 4) return true;
+    if (friday! && day.weekday == 5) return true;
+    if (saturday! && day.weekday == 6) return true;
+    if (sunday! && day.weekday == 7) return true;
 
     return false;
   }
@@ -146,12 +146,12 @@ class DayWeek extends Frequency {
 }
 
 class Weekly extends Frequency {
-  int daysTime;
+  int? daysTime;
 
   Weekly({this.daysTime});
 
   @override
-  int daysCount() => daysTime;
+  int? daysCount() => daysTime;
 
   @override
   String frequencyText() {

@@ -10,7 +10,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key key}) : super(key: key);
+  SettingsPage({Key? key}) : super(key: key);
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
@@ -42,7 +42,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
   }
 
   void editName() async {
-    _nameTextController.text = controller.name;
+    _nameTextController.text = controller.name!;
     showDialog(
       context: context,
       builder: (_) => BaseDialog(
@@ -63,7 +63,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
   }
 
   void saveName() async {
-    String result = ValidationHandler.nameTextValidate(_nameTextController.text);
+    String? result = ValidationHandler.nameTextValidate(_nameTextController.text);
 
     if (result == null) {
       showLoading(true);
@@ -100,7 +100,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
                 leading: Radio<ThemeType>(
                   value: ThemeType.LIGHT,
                   groupValue: controller.theme,
-                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                  onChanged: (ThemeType? value) => controller.changeTheme(context, value),
                 ),
                 onTap: () => controller.changeTheme(context, ThemeType.LIGHT),
               ),
@@ -109,7 +109,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
                 leading: Radio<ThemeType>(
                   value: ThemeType.DARK,
                   groupValue: controller.theme,
-                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                  onChanged: (ThemeType? value) => controller.changeTheme(context, value),
                 ),
                 onTap: () => controller.changeTheme(context, ThemeType.DARK),
               ),
@@ -118,7 +118,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
                 leading: Radio<ThemeType>(
                   value: ThemeType.SYSTEM,
                   groupValue: controller.theme,
-                  onChanged: (ThemeType value) => controller.changeTheme(context, value),
+                  onChanged: (ThemeType? value) => controller.changeTheme(context, value),
                 ),
                 onTap: () => controller.changeTheme(context, ThemeType.SYSTEM),
               ),
@@ -141,7 +141,7 @@ class _SettingsPageState extends BaseStateWithLogic<SettingsPage, SettingsLogic>
           ListTile(
             title: const Text("Seu nome"),
             trailing: Observer(builder: (_) {
-              return Text(controller.name, style: TextStyle(color: Colors.grey));
+              return Text(controller.name!, style: TextStyle(color: Colors.grey));
             }),
             onTap: editName,
           ),

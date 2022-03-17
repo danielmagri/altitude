@@ -11,14 +11,14 @@ abstract class _AppLogicBase with Store {
 
   SystemUiOverlayStyle _defaultStyle = SystemUiOverlayStyle();
 
-  SystemUiOverlayStyle _lastStyle;
+  late SystemUiOverlayStyle _lastStyle;
 
   void setDefaultStyle(SystemUiOverlayStyle value) {
     _defaultStyle = value;
     changeSystemStyle();
   }
 
-  void changeSystemStyle({SystemUiOverlayStyle style}) {
+  void changeSystemStyle({SystemUiOverlayStyle? style}) {
     if (style == null) {
       style = _defaultStyle;
     }

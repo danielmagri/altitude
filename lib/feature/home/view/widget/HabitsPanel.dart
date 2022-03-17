@@ -19,15 +19,14 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         Wrap,
-        WrapAlignment,
-        required;
+        WrapAlignment;
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class HabitsPanel extends StatelessWidget {
-  HabitsPanel({Key key, @required this.controller, @required this.goHabitDetails}) : super(key: key);
+  HabitsPanel({Key? key, required this.controller, required this.goHabitDetails}) : super(key: key);
 
   final HomeLogic controller;
-  final Function(String id, int color) goHabitDetails;
+  final Function(String? id, int? color) goHabitDetails;
 
   @override
   Widget build(context) {
@@ -45,7 +44,7 @@ class HabitsPanel extends StatelessWidget {
             ),
           ),
           (data) {
-            if (data.isEmpty) {
+            if (data!.isEmpty) {
               return Text("Crie um novo hábito pelo botão \"+\" na tela principal.",
                   textAlign: TextAlign.center, style: const TextStyle(fontSize: 22));
             } else {

@@ -17,15 +17,14 @@ import 'package:flutter/material.dart'
         Text,
         TextAlign,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 import 'dart:math';
 
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class CompetitionWidget extends StatelessWidget {
-  CompetitionWidget({Key key, @required this.goCompetition})
+  CompetitionWidget({Key? key, required this.goCompetition})
       : controller = GetIt.I.get<HabitDetailsLogic>(),
         super(key: key);
 
@@ -71,7 +70,9 @@ class CompetitionWidget extends StatelessWidget {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: Text(_setTex(), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+                    child: Text(_setTex(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 16)),
                   ),
                 ),
               ],

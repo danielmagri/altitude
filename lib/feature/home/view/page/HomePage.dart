@@ -31,7 +31,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
     super.initState();
 
     checkTransferData();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   void checkTransferData() async {
@@ -42,7 +42,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
           builder: (context) {
             return TransferDataDialog(uid: GetIt.I.get<IFireAuth>().getUid());
           }).then((value) {
-        if (value) fetchData();
+        if (value!) fetchData();
       }).catchError(handleError);
     } else {
       fetchData();
@@ -56,9 +56,9 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   @override
-  void onPageBack(Object value) {
+  void onPageBack(Object? value) {
     controller.getUser().then((_) {
-      hasLevelUp(controller.user.data.score);
+      hasLevelUp(controller.user.data!.score!);
     });
 
     controller.getHabits();
@@ -68,7 +68,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
@@ -82,7 +82,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   void showDrawer() {
-    scaffoldKey.currentState.openDrawer();
+    scaffoldKey.currentState!.openDrawer();
   }
 
   void setHabitDone(String id) {
@@ -90,7 +90,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
     controller.completeHabit(id).then((newScore) async {
       showLoading(false);
       vibratePhone();
-      hasLevelUp(newScore);
+      hasLevelUp(newScore!);
     }).catchError(handleError);
   }
 
@@ -101,7 +101,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
   }
 
   void goAllLevels() {
-    var arguments = AllLevelsPageArguments(controller.user?.data?.score ?? 0);
+    var arguments = AllLevelsPageArguments(controller.user.data?.score ?? 0);
     navigatePush('allLevels', arguments: arguments);
   }
 
@@ -109,7 +109,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
     navigatePush('addHabit');
   }
 
-  void goHabitDetails(String id, int color) {
+  void goHabitDetails(String? id, int? color) {
     var arguments = HabitDetailsPageArguments(id, color);
     navigatePush('habitDetails', arguments: arguments);
   }
@@ -191,7 +191,7 @@ class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with Widget
                         },
                         (data) {
                           return Column(children: [
-                            Text(data.levelText),
+                            Text(data!.levelText),
                             const SizedBox(height: 4),
                             Score(score: data.score),
                           ]);

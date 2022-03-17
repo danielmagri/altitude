@@ -31,11 +31,10 @@ import 'package:flutter/material.dart'
         TextButton,
         TextSpan,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class TutorialDialog extends StatelessWidget {
-  TutorialDialog({@required this.texts, @required this.hero, this.icon = Icons.help_outline});
+  TutorialDialog({required this.texts, required this.hero, this.icon = Icons.help_outline});
 
   final String hero;
   final List<TextSpan> texts;

@@ -38,17 +38,16 @@ import 'package:flutter/material.dart'
         Text,
         TextOverflow,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class HomeDrawer extends StatelessWidget {
   HomeDrawer(
-      {Key key,
-      @required this.controller,
-      @required this.goFriends,
-      @required this.goLearn,
-      @required this.goCompetition,
-      @required this.goSettings})
+      {Key? key,
+      required this.controller,
+      required this.goFriends,
+      required this.goLearn,
+      required this.goCompetition,
+      required this.goSettings})
       : super(key: key);
 
   final HomeLogic controller;
@@ -61,7 +60,8 @@ class HomeDrawer extends StatelessWidget {
     Navigator.of(context).pop();
     //const APP_STORE_URL =
     //    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
-    const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.magrizo.habit';
+    const PLAY_STORE_URL =
+        'https://play.google.com/store/apps/details?id=com.magrizo.habit';
     if (await canLaunch(PLAY_STORE_URL)) {
       await launch(PLAY_STORE_URL);
     } else {
@@ -79,7 +79,8 @@ class HomeDrawer extends StatelessWidget {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 10),
-              decoration: BoxDecoration(color: AppTheme.of(context).materialTheme.accentColor),
+              decoration: BoxDecoration(
+                  color: AppTheme.of(context).materialTheme.accentColor),
               child: Observer(builder: (_) {
                 return controller.user.handleState(() {
                   return Skeleton.custom(
@@ -91,34 +92,48 @@ class HomeDrawer extends StatelessWidget {
                           Container(
                               width: 40,
                               height: 40,
-                              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white)),
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.white)),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                              Container(
-                                  width: double.maxFinite,
-                                  height: 20,
-                                  margin: const EdgeInsets.only(right: 64),
-                                  decoration:
-                                      BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15))),
-                              const SizedBox(height: 2),
-                              Container(
-                                  width: double.maxFinite,
-                                  height: 14,
-                                  decoration:
-                                      BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)))
-                            ]),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      width: double.maxFinite,
+                                      height: 20,
+                                      margin: const EdgeInsets.only(right: 64),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15))),
+                                  const SizedBox(height: 2),
+                                  Container(
+                                      width: double.maxFinite,
+                                      height: 14,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15)))
+                                ]),
                           )
                         ]),
                         const SizedBox(height: 12),
-                        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                          Container(
-                              width: 120,
-                              height: 16,
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15))),
-                          const SizedBox(width: 4),
-                          Rocket(size: const Size(25, 25), color: Colors.white, isExtend: true),
-                        ]),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                  width: 120,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15))),
+                              const SizedBox(width: 4),
+                              Rocket(
+                                  size: const Size(25, 25),
+                                  color: Colors.white,
+                                  isExtend: true),
+                            ]),
                       ],
                     ),
                   );
@@ -131,38 +146,56 @@ class HomeDrawer extends StatelessWidget {
                               Container(
                                 width: 40,
                                 height: 40,
-                                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
                                 alignment: Alignment.center,
-                                child: data.photoUrl.isNotEmpty
+                                child: data!.photoUrl!.isNotEmpty
                                     ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(30), child: Image.network(data.photoUrl))
+                                        borderRadius: BorderRadius.circular(30),
+                                        child: Image.network(data.photoUrl!))
                                     : const Icon(Icons.person, size: 32),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
-                                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  Text("Olá, ${data.name}",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                                  Text(
-                                    "${data.email}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w300),
-                                  ),
-                                ]),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Olá, ${data.name}",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)),
+                                      Text(
+                                        "${data.email}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ]),
                               )
                             ]),
                             const SizedBox(height: 12),
-                            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                              Text("${LevelControl.getLevelText(data.score)}",
-                                  style: const TextStyle(color: Colors.white, fontSize: 14)),
-                              const SizedBox(width: 4),
-                              Image.asset(LevelControl.getLevelImagePath(data.score), height: 25, width: 25),
-                            ]),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                      "${LevelControl.getLevelText(data.score!)}",
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 14)),
+                                  const SizedBox(width: 4),
+                                  Image.asset(
+                                      LevelControl.getLevelImagePath(
+                                          data.score!),
+                                      height: 25,
+                                      width: 25),
+                                ]),
                           ],
                         ),
                     (error) => const SizedBox());
@@ -170,19 +203,27 @@ class HomeDrawer extends StatelessWidget {
             ),
             ListTile(
               title: const Text('Competição', style: TextStyle(fontSize: 16)),
-              leading: Image.asset("assets/ic_award.png", width: 25, color: AppTheme.of(context).drawerIcon),
+              leading: Image.asset("assets/ic_award.png",
+                  width: 25, color: AppTheme.of(context).drawerIcon),
               trailing: controller.pendingCompetitionStatus
-                  ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
+                  ? Container(
+                      width: 10,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
               onTap: () => goCompetition(true),
             ),
             ListTile(
               title: const Text('Amigos', style: const TextStyle(fontSize: 16)),
-              leading: Icon(Icons.people, color: AppTheme.of(context).drawerIcon),
+              leading:
+                  Icon(Icons.people, color: AppTheme.of(context).drawerIcon),
               trailing: controller.pendingFriendStatus
-                  ? Container(width: 10, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange))
+                  ? Container(
+                      width: 10,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.orange))
                   : const SizedBox(),
-              onTap: goFriends,
+              onTap: goFriends as void Function()?,
             ),
             Divider(),
             ListTile(
@@ -191,9 +232,11 @@ class HomeDrawer extends StatelessWidget {
               onTap: () => goRateApp(context),
             ),
             ListTile(
-              title: const Text('Configurações', style: TextStyle(fontSize: 16)),
-              leading: Icon(Icons.settings, color: AppTheme.of(context).drawerIcon),
-              onTap: goSettings,
+              title:
+                  const Text('Configurações', style: TextStyle(fontSize: 16)),
+              leading:
+                  Icon(Icons.settings, color: AppTheme.of(context).drawerIcon),
+              onTap: goSettings as void Function()?,
             ),
           ],
         ),

@@ -3,13 +3,13 @@ abstract class IFireAuth {
 
   String getUid();
 
-  String getName();
+  String? getName();
 
   Future<bool> setName(String name);
 
-  String getEmail();
+  String? getEmail();
 
-  String getPhotoUrl();
+  String? getPhotoUrl();
 
   Future<void> logout();
 }

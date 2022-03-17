@@ -5,9 +5,9 @@ abstract class IFireAnalytics {
 
   void setUserId(String uid);
 
-  void sendNewHabit(String habit, String color, String freqType, int freqTime, String hasReminder);
+  void sendNewHabit(String? habit, String color, String freqType, int? freqTime, String hasReminder);
 
-  void sendRemoveHabit(String habit);
+  void sendRemoveHabit(String? habit);
 
   void sendDoneHabit(String page, int hour);
 
@@ -15,19 +15,19 @@ abstract class IFireAnalytics {
 
   void sendReadCue();
 
-  void sendSetCue(String habit, String cue);
+  void sendSetCue(String? habit, String cue);
 
-  void sendRemoveCue(String habit);
+  void sendRemoveCue(String? habit);
 
   void sendSetAlarm(String habit, int type, int hour, int minute, String days);
 
-  void sendRemoveAlarm(String habit);
+  void sendRemoveAlarm(String? habit);
 
   void sendFriendRequest(bool canceled);
 
   void sendFriendResponse(bool accepted);
 
-  void sendCreateCompetition(String title, String habitName, int friends);
+  void sendCreateCompetition(String title, String? habitName, int friends);
 
   void sendGoCompetition(String index);
 

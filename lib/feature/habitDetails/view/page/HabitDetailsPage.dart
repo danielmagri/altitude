@@ -21,12 +21,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
-import 'package:table_calendar/table_calendar.dart' show CalendarController;
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage(this.arguments);
 
-  final HabitDetailsPageArguments arguments;
+  final HabitDetailsPageArguments? arguments;
 
   @override
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
@@ -34,20 +33,19 @@ class HabitDetailsPage extends StatefulWidget {
 
 class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitDetailsLogic> {
   final ScrollController scrollController = ScrollController();
-  final CalendarController calendarController = CalendarController();
 
   final BannerAd banner = BannerAd(
       adUnitId: AdsHandler.habitDetailsBannerAdUnitId,
       size: AdSize.largeBanner,
       request: AdsHandler.adRequest,
-      listener: AdsHandler.adListener);
+      listener: AdsHandler.adBannerListener);
 
   @override
   void initState() {
     super.initState();
     banner.load();
 
-    controller.fetchData(widget.arguments.id, widget.arguments.color);
+    controller.fetchData(widget.arguments!.id, widget.arguments!.color);
 
     showInitialTutorial();
   }
@@ -96,13 +94,12 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
   @override
   void dispose() {
     scrollController.dispose();
-    calendarController.dispose();
     banner.dispose();
     super.dispose();
   }
 
   @override
-  void onPageBack(Object value) {
+  void onPageBack(Object? value) {
     if (value is bool && !value) {
       navigatePop();
     } else {
@@ -215,7 +212,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
                   (data, loading) => ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            data ? controller.habitColor : AppTheme.of(context).materialTheme.cardColor),
+                            data! ? controller.habitColor : AppTheme.of(context).materialTheme.cardColor),
                         shape: MaterialStateProperty.all(
                             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
                         padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
@@ -246,7 +243,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
               child: Observer(
                 builder: (_) => controller.frequency.handleState(
                   () => const Skeleton(width: 200, height: 20),
-                  (data) => Text(data.frequencyText(),
+                  (data) => Text(data!.frequencyText(),
                       textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300)),
                   (error) => const SizedBox(),
                 ),
@@ -261,7 +258,7 @@ class _HabitDetailsPageState extends BaseStateWithLogic<HabitDetailsPage, HabitD
               height: banner.size.height.toDouble(),
             ),
             const SizedBox(height: 16),
-            CalendarWidget(calendarController: calendarController, completeHabit: completeHabit),
+            CalendarWidget(completeHabit: completeHabit),
             const SizedBox(height: 16),
             CoolDataWidget(),
             const SizedBox(height: 48),

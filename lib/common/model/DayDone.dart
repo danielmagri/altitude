@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class DayDone {
-  final String habitId;
-  final DateTime date;
+  final String? habitId;
+  final DateTime? date;
 
   DayDone({this.habitId, this.date});
 
-  String get dateFormatted => date.dateFormatted;
+  String get dateFormatted => date!.dateFormatted;
 
   static const DATE = "date";
 

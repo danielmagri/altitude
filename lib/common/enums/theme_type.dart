@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum ThemeType { LIGHT, DARK, SYSTEM }
 
-extension ThemeTypeExtension on ThemeType {
+extension ThemeTypeExtension on ThemeType? {
   String get themeString {
     switch (this) {
       case ThemeType.LIGHT:

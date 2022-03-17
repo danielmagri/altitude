@@ -16,11 +16,11 @@ part 'HomeLogic.g.dart';
 class HomeLogic = _HomeLogicBase with _$HomeLogic;
 
 abstract class _HomeLogicBase with Store {
-  final HabitUseCase _habitUseCase;
-  final PersonUseCase _personUseCase;
-  final CompetitionUseCase _competitionUseCase;
-  final IFireAnalytics _fireAnalytics;
-  final AppLogic _appLogic;
+  final HabitUseCase? _habitUseCase;
+  final PersonUseCase? _personUseCase;
+  final CompetitionUseCase? _competitionUseCase;
+  final IFireAnalytics? _fireAnalytics;
+  final AppLogic? _appLogic;
 
   _HomeLogicBase(
       this._habitUseCase, this._personUseCase, this._competitionUseCase, this._fireAnalytics, this._appLogic);
@@ -38,7 +38,7 @@ abstract class _HomeLogicBase with Store {
   bool pendingFriendStatus = false;
 
   Future<void> getUser() async {
-    (await _personUseCase.getPerson()).result((data) {
+    (await _personUseCase!.getPerson()).result((data) {
       user.setData(data);
     }, (error) {
       user.setError(error);
@@ -46,7 +46,7 @@ abstract class _HomeLogicBase with Store {
   }
 
   void getHabits() async {
-    (await _habitUseCase.getHabits()).result((data) {
+    (await _habitUseCase!.getHabits()).result((data) {
       habits.setData(data.asObservable());
     }, (error) {
       habits.setError(error);
@@ -55,8 +55,8 @@ abstract class _HomeLogicBase with Store {
 
   @action
   void fetchPendingStatus() {
-    pendingCompetitionStatus = _competitionUseCase.pendingCompetitionsStatus;
-    pendingFriendStatus = _personUseCase.pendingFriendsStatus;
+    pendingCompetitionStatus = _competitionUseCase!.pendingCompetitionsStatus;
+    pendingFriendStatus = _personUseCase!.pendingFriendsStatus;
   }
 
   @action
@@ -65,29 +65,29 @@ abstract class _HomeLogicBase with Store {
   }
 
   @action
-  Future<int> completeHabit(String id) async {
-    return (await _habitUseCase.completeHabit(id, DateTime.now().today)).result((_) async {
+  Future<int?> completeHabit(String id) async {
+    return (await _habitUseCase!.completeHabit(id, DateTime.now().today)).result((_) async {
       await getUser();
       getHabits();
-      return user.data.score;
+      return user.data!.score;
     }, (error) => throw error);
   }
 
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelControl.getLevel(newScore);
-    int oldLevel = LevelControl.getLevel(await _personUseCase.getScore());
+    int oldLevel = LevelControl.getLevel(await (_personUseCase!.getScore() as Future<int>));
 
-    if (newLevel != oldLevel) _personUseCase.updateLevel(newLevel);
+    if (newLevel != oldLevel) _personUseCase!.updateLevel(newLevel);
 
     if (newLevel > oldLevel) {
-      _fireAnalytics.sendNextLevel(LevelControl.getLevelText(newScore));
+      _fireAnalytics!.sendNextLevel(LevelControl.getLevelText(newScore));
       return true;
     } else {
       return false;
     }
   }
 
-  Future<bool> canAddHabit() => _habitUseCase.maximumNumberReached();
+  Future<bool> canAddHabit() => _habitUseCase!.maximumNumberReached();
 
-  void updateSystemStyle() => _appLogic.updateSystemStyle();
+  void updateSystemStyle() => _appLogic!.updateSystemStyle();
 }

@@ -52,7 +52,7 @@ class _PendingCompetitionPageState extends BaseStateWithLogic<PendingCompetition
 
   Widget actionButton(IconData icon, Color color, Function action) {
     return FloatingActionButton(
-        child: Icon(icon), mini: true, heroTag: null, backgroundColor: color, elevation: 0, onPressed: action);
+        child: Icon(icon), mini: true, heroTag: null, backgroundColor: color, elevation: 0, onPressed: action as void Function()?);
   }
 
   Future<bool> onBackPressed() {
@@ -82,12 +82,12 @@ class _PendingCompetitionPageState extends BaseStateWithLogic<PendingCompetition
                   ],
                 );
               }, (data) {
-                if (data.isEmpty)
+                if (data!.isEmpty)
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma competição pendente",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1.color.withOpacity(0.2))),
+                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1!.color!.withOpacity(0.2))),
                   );
                 else
                   return ListView.separated(
@@ -107,7 +107,7 @@ class _PendingCompetitionPageState extends BaseStateWithLogic<PendingCompetition
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(competition.title,
+                                  Text(competition.title!,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),

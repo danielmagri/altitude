@@ -7,7 +7,13 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart'
-    show FlutterError, MaterialApp, StatelessWidget, Widget, WidgetsFlutterBinding, runApp;
+    show
+        FlutterError,
+        MaterialApp,
+        StatelessWidget,
+        Widget,
+        WidgetsFlutterBinding,
+        runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:get_it/get_it.dart';
@@ -22,10 +28,14 @@ import 'core/services/interfaces/i_fire_analytics.dart';
 import 'core/services/interfaces/i_local_notification.dart';
 
 void main() async {
-  configureDependencies();
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   await Firebase.initializeApp();
+  configureDependencies();
+  MobileAds.instance.initialize().then((status) {
+    MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+          testDeviceIds: <String>["E5BCE9B277498E2110B5F4F43C1A0E6C"]),
+    );
+  });
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   await GetIt.I.isReady<SharedPref>();
@@ -38,7 +48,8 @@ class MyApp extends StatelessWidget {
   MyApp();
 
   Widget initialPage() {
-    if (!SharedPref.instance.habitTutorial && !getIt.get<IFireAuth>().isLogged()) {
+    if (!SharedPref.instance.habitTutorial &&
+        !getIt.get<IFireAuth>().isLogged()) {
       return TutorialPage();
     } else if (!getIt.get<IFireAuth>().isLogged()) {
       return LoginPage();
@@ -49,12 +60,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return AppTheme(
         initialTheme: getThemeType(GetIt.I.get<SharedPref>().theme).toThemeMode,
         themeChanged: (theme) {
-          GetIt.I.get<AppLogic>().setDefaultStyle(theme.defaultSystemOverlayStyle);
+          GetIt.I
+              .get<AppLogic>()
+              .setDefaultStyle(theme.defaultSystemOverlayStyle);
         },
         builder: (mode) => MaterialApp(
               themeMode: mode,
@@ -62,7 +76,10 @@ class MyApp extends StatelessWidget {
               darkTheme: DarkTheme().materialTheme,
               debugShowCheckedModeBanner: false,
               home: initialPage(),
-              navigatorObservers: [FirebaseAnalyticsObserver(analytics: getIt.get<IFireAnalytics>().analytics)],
+              navigatorObservers: [
+                FirebaseAnalyticsObserver(
+                    analytics: getIt.get<IFireAnalytics>().analytics)
+              ],
               onGenerateRoute: Router.generateRoute,
             ));
   }

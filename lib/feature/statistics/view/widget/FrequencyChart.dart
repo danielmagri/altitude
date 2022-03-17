@@ -2,6 +2,7 @@ import 'dart:math' show min;
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/feature/statistics/model/FrequencyStatisticData.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -24,19 +25,27 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Text,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 const double FREQUENCY_CHART_HEIGHT = 250;
 
 class FrequencyChart extends StatelessWidget {
-  FrequencyChart({Key key, @required this.list, this.selectedHabitId}) : super(key: key);
+  FrequencyChart({Key? key, required this.list, this.selectedHabitId})
+      : super(key: key);
 
-  final List<FrequencyStatisticData> list;
-  final String selectedHabitId;
+  final List<FrequencyStatisticData>? list;
+  final String? selectedHabitId;
 
   static const int linesCount = 8;
-  static const List<String> weekday = const ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  static const List<String> weekday = const [
+    "dom",
+    "seg",
+    "ter",
+    "qua",
+    "qui",
+    "sex",
+    "sáb"
+  ];
 
   double get space => ((FREQUENCY_CHART_HEIGHT - 30) / (linesCount - 1) - 1);
 
@@ -67,14 +76,16 @@ class FrequencyChart extends StatelessWidget {
             children: lines(context),
           ),
           ListView.builder(
-              itemCount: list.length,
+              itemCount: list!.length,
               padding: const EdgeInsets.only(left: 8, right: 38),
               shrinkWrap: true,
               reverse: true,
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) =>
-                  FrequencyCircle(data: list[index], space: space, selectedHabitId: selectedHabitId)),
+              itemBuilder: (context, index) => FrequencyCircle(
+                  data: list![index],
+                  space: space,
+                  selectedHabitId: selectedHabitId)),
           Container(
             color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Column(
@@ -84,7 +95,9 @@ class FrequencyChart extends StatelessWidget {
                         width: 30,
                         margin: const EdgeInsets.only(bottom: 1),
                         alignment: Alignment.center,
-                        child: Text(e, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))))
+                        child: Text(e,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w300, fontSize: 11))))
                     .toList()),
           ),
         ],
@@ -94,11 +107,13 @@ class FrequencyChart extends StatelessWidget {
 }
 
 class FrequencyCircle extends StatelessWidget {
-  const FrequencyCircle({Key key, @required this.data, @required this.space, this.selectedHabitId}) : super(key: key);
+  const FrequencyCircle(
+      {Key? key, required this.data, required this.space, this.selectedHabitId})
+      : super(key: key);
 
   final FrequencyStatisticData data;
   final double space;
-  final String selectedHabitId;
+  final String? selectedHabitId;
 
   List<Widget> _content(BuildContext context) {
     List<Widget> content = [];
@@ -113,14 +128,16 @@ class FrequencyCircle extends StatelessWidget {
             child: Container(
               height: size,
               width: size,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: AppTheme.of(context).frequencyDot.withAlpha(alpha)),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppTheme.of(context).frequencyDot.withAlpha(alpha)),
             )));
       });
     } else {
-      Habit habit = data.habitsMap.keys.firstWhere((e) => e.id == selectedHabitId, orElse: () => null);
+      Habit? habit =
+          data.habitsMap.keys.firstWhereOrNull((e) => e.id == selectedHabitId);
       if (habit != null) {
-        data.habitsMap[habit].forEach((e) {
+        data.habitsMap[habit]!.forEach((e) {
           double size = (space - 8) * min(e / 4, 1.1);
           int alpha = (255 * min(e / 4, 1)).toInt();
           content.add(Container(
@@ -129,18 +146,24 @@ class FrequencyCircle extends StatelessWidget {
               child: Container(
                 height: size,
                 width: size,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: habit.color.withAlpha(alpha)),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: habit.color.withAlpha(alpha)),
               )));
         });
       }
     }
 
     content.add(SizedBox(
-        height: 15, child: Text(data.monthText, style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+        height: 15,
+        child: Text(data.monthText,
+            style:
+                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
     content.add(SizedBox(
         height: 15,
         child: Text(data.firstOfYear ? data.year.toString() : "",
-            style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+            style:
+                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
 
     return content;
   }

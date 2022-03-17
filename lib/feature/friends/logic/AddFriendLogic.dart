@@ -9,7 +9,7 @@ part 'AddFriendLogic.g.dart';
 class AddFriendLogic = _AddFriendLogicBase with _$AddFriendLogic;
 
 abstract class _AddFriendLogicBase with Store {
-  final PersonUseCase personUseCase;
+  final PersonUseCase? personUseCase;
 
   _AddFriendLogicBase(this.personUseCase);
 
@@ -17,19 +17,19 @@ abstract class _AddFriendLogicBase with Store {
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoading();
-    List<Person> list = (await personUseCase.searchEmail(email)).absoluteResult() ?? [];
+    List<Person> list = (await personUseCase!.searchEmail(email)).absoluteResult();
     searchResult.setData(list);
   }
 
-  Future sendFriendRequest(String uid) async {
-    return (await personUseCase.friendRequest(uid)).absoluteResult();
+  Future sendFriendRequest(String? uid) async {
+    return (await personUseCase!.friendRequest(uid)).absoluteResult();
   }
 
-  Future<void> cancelFriendRequest(String uid) async {
-    return (await personUseCase.cancelFriendRequest(uid)).absoluteResult();
+  Future<void> cancelFriendRequest(String? uid) async {
+    return (await personUseCase!.cancelFriendRequest(uid)).absoluteResult();
   }
 
-  Future<void> acceptFriendRequest(String uid) async {
-    return (await personUseCase.acceptRequest(uid)).absoluteResult();
+  Future<void> acceptFriendRequest(String? uid) async {
+    return (await personUseCase!.acceptRequest(uid)).absoluteResult();
   }
 }

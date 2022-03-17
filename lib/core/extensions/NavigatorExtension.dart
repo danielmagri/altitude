@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart'
     show CurvedAnimation, Curves, FadeTransition, NavigatorState, PageRouteBuilder, Widget;
 
 extension navigatorState on NavigatorState {
-  Future<T> smooth<T>(Widget child) {
+  Future<T?> smooth<T>(Widget child) {
     return this.push(PageRouteBuilder(
         opaque: false,
         transitionDuration: Duration(milliseconds: 300),

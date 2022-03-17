@@ -18,10 +18,10 @@ import 'package:flutter/material.dart'
 import 'package:altitude/common/constant/app_colors.dart';
 
 class SelectColor extends StatelessWidget {
-  SelectColor({Key key, this.currentColor, this.onSelectColor}) : super(key: key);
+  SelectColor({Key? key, this.currentColor, this.onSelectColor}) : super(key: key);
 
-  final int currentColor;
-  final Function(int index) onSelectColor;
+  final int? currentColor;
+  final Function(int index)? onSelectColor;
 
   @override
   Widget build(context) {
@@ -37,7 +37,7 @@ class SelectColor extends StatelessWidget {
             .keys
             .map(
               (index) => GestureDetector(
-                onTap: () => onSelectColor(index),
+                onTap: () => onSelectColor!(index),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   width: 32,

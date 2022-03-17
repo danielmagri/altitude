@@ -11,20 +11,19 @@ import 'package:flutter/material.dart'
         SizedBox,
         Stack,
         StatelessWidget,
-        Widget,
-        required;
+        Widget;
 
 class IconButtonStatus extends StatelessWidget {
   IconButtonStatus(
-      {@required this.status,
-      @required this.icon,
-      @required this.onPressed,
+      {required this.status,
+      required this.icon,
+      required this.onPressed,
       this.color = Colors.orange,
       this.backgroundColor});
 
   final Widget icon;
   final Function onPressed;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color color;
   final bool status;
 
@@ -33,7 +32,7 @@ class IconButtonStatus extends StatelessWidget {
     return Stack(
       alignment: const Alignment(0.55, -0.4),
       children: [
-        IconButton(icon: icon, onPressed: onPressed),
+        IconButton(icon: icon, onPressed: onPressed as void Function()?),
         status
             ? Container(
                 width: 12,

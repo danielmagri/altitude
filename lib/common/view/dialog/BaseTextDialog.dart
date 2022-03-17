@@ -31,32 +31,39 @@ import 'package:flutter/material.dart'
         Text,
         TextAlign,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class BaseTextDialog extends StatefulWidget {
-  BaseTextDialog({Key key, @required this.title, @required this.body, this.subBody, @required this.action})
+  BaseTextDialog(
+      {Key? key,
+      required this.title,
+      required this.body,
+      this.subBody,
+      required this.action})
       : super(key: key);
 
   final String title;
   final String body;
-  final String subBody;
+  final String? subBody;
   final List<Widget> action;
 
   @override
   _BaseTextDialogState createState() => _BaseTextDialogState();
 }
 
-class _BaseTextDialogState extends State<BaseTextDialog> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _scaleAnimation;
+class _BaseTextDialogState extends State<BaseTextDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 400));
-    _scaleAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+    _scaleAnimation =
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
 
     _controller.forward();
   }
@@ -73,12 +80,16 @@ class _BaseTextDialogState extends State<BaseTextDialog> with SingleTickerProvid
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
+            margin:
+                const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
             decoration: BoxDecoration(
               color: AppTheme.of(context).materialTheme.cardColor,
               borderRadius: BorderRadius.circular(16.0),
               boxShadow: [
-                const BoxShadow(color: Colors.black26, blurRadius: 10.0, offset: const Offset(0.0, 10.0)),
+                const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: const Offset(0.0, 10.0)),
               ],
             ),
             child: Material(
@@ -89,7 +100,8 @@ class _BaseTextDialogState extends State<BaseTextDialog> with SingleTickerProvid
                   Text(
                     widget.title,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -100,12 +112,17 @@ class _BaseTextDialogState extends State<BaseTextDialog> with SingleTickerProvid
                   const SizedBox(height: 4),
                   if (widget.subBody != null)
                     Text(
-                      widget.subBody,
+                      widget.subBody!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300, height: 1.1),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                          height: 1.1),
                     ),
                   const SizedBox(height: 18),
-                  Row(mainAxisAlignment: MainAxisAlignment.end, children: widget.action)
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: widget.action)
                 ],
               ),
             ),

@@ -31,7 +31,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
   }
 
   void switchReminderType(ReminderType type) {
-    if (type == ReminderType.CUE && controller.habitDetailsLogic.habit.data.oldCue == "") {
+    if (type == ReminderType.CUE && controller.habitDetailsLogic!.habit.data!.oldCue == "") {
       showToast("Adicione o gatilho primeiro");
       return;
     }
@@ -40,9 +40,9 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
 
   void reminderTimeClick() {
     showTimePicker(
-      initialTime: controller.reminderTime,
+      initialTime: controller.reminderTime!,
       context: context,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         return Theme(
             data: AppTheme.of(context).materialTheme.copyWith(
                   accentColor: controller.habitColor,
@@ -51,7 +51,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                       ? ColorScheme.dark(primary: controller.habitColor)
                       : ColorScheme.light(primary: controller.habitColor),
                 ),
-            child: child);
+            child: child!);
       },
     ).then(controller.updateReminderTime);
   }
@@ -101,7 +101,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                         }
                         return AppTheme.of(context).alarmUnselectedText;
                       }),
-                      onChanged: (state) => switchReminderType(item.type),
+                      onChanged: (dynamic state) => switchReminderType(item.type),
                     ),
                     Expanded(
                       child: Text(
@@ -192,7 +192,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    controller.reminder != null && controller.reminder.hasAnyDay()
+                    controller.reminder != null && controller.reminder!.hasAnyDay()
                         ? TextButton(
                             onPressed: remove,
                             child: const Text("Remover", style: TextStyle(fontSize: 16)),

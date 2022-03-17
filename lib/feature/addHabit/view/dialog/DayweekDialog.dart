@@ -23,14 +23,14 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         Wrap,
-        WrapAlignment,
-        required;
+        WrapAlignment;
 
 class DayweekDialog extends StatefulWidget {
-  DayweekDialog({Key key, @required this.color, this.frequency}) : super(key: key);
+  DayweekDialog({Key? key, required this.color, this.frequency})
+      : super(key: key);
 
   final Color color;
-  final DayWeek frequency;
+  final DayWeek? frequency;
 
   @override
   _DayweekDialogState createState() => _DayweekDialogState();
@@ -52,13 +52,13 @@ class _DayweekDialogState extends State<DayweekDialog> {
     super.initState();
 
     if (widget.frequency != null) {
-      days[0].state = widget.frequency.sunday ? true : false;
-      days[1].state = widget.frequency.monday ? true : false;
-      days[2].state = widget.frequency.tuesday ? true : false;
-      days[3].state = widget.frequency.wednesday ? true : false;
-      days[4].state = widget.frequency.thursday ? true : false;
-      days[5].state = widget.frequency.friday ? true : false;
-      days[6].state = widget.frequency.saturday ? true : false;
+      days[0].state = widget.frequency!.sunday! ? true : false;
+      days[1].state = widget.frequency!.monday! ? true : false;
+      days[2].state = widget.frequency!.tuesday! ? true : false;
+      days[3].state = widget.frequency!.wednesday! ? true : false;
+      days[4].state = widget.frequency!.thursday! ? true : false;
+      days[5].state = widget.frequency!.friday! ? true : false;
+      days[6].state = widget.frequency!.saturday! ? true : false;
     }
   }
 
@@ -85,7 +85,8 @@ class _DayweekDialogState extends State<DayweekDialog> {
       title: "Diariamente",
       body: Column(
         children: [
-          const Text("Escolha quais dias da semana você irá realizar o hábito:"),
+          const Text(
+              "Escolha quais dias da semana você irá realizar o hábito:"),
           const SizedBox(height: 16.0),
           Wrap(
             alignment: WrapAlignment.center,
@@ -99,14 +100,18 @@ class _DayweekDialogState extends State<DayweekDialog> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 10),
                         decoration: BoxDecoration(
-                          color: day.state ? widget.color : const Color.fromARGB(255, 220, 220, 220),
+                          color: day.state
+                              ? widget.color
+                              : const Color.fromARGB(255, 220, 220, 220),
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Text(
                           day.title,
-                          style: TextStyle(color: day.state ? Colors.white : Colors.black),
+                          style: TextStyle(
+                              color: day.state ? Colors.white : Colors.black),
                         ),
                       ),
                     ))
@@ -115,8 +120,13 @@ class _DayweekDialogState extends State<DayweekDialog> {
         ],
       ),
       action: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Cancelar")),
-        TextButton(onPressed: _validate, child: const Text("Ok", style: TextStyle(fontWeight: FontWeight.bold))),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Cancelar")),
+        TextButton(
+            onPressed: _validate,
+            child: const Text("Ok",
+                style: TextStyle(fontWeight: FontWeight.bold))),
       ],
     );
   }

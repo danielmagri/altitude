@@ -22,12 +22,12 @@ import 'package:injectable/injectable.dart';
 class CompetitionUseCase extends BaseUseCase {
   static CompetitionUseCase get getI => GetIt.I.get<CompetitionUseCase>();
 
-  final Memory _memory;
-  final PersonUseCase _personUseCase;
-  final IFireDatabase _fireDatabase;
-  final IFireMessaging _fireMessaging;
-  final IFireFunctions _fireFunctions;
-  final IFireAnalytics _fireAnalytics;
+  final Memory? _memory;
+  final PersonUseCase? _personUseCase;
+  final IFireDatabase? _fireDatabase;
+  final IFireMessaging? _fireMessaging;
+  final IFireFunctions? _fireFunctions;
+  final IFireAnalytics? _fireAnalytics;
 
   CompetitionUseCase(this._memory, this._personUseCase, this._fireDatabase, this._fireMessaging, this._fireFunctions,
       this._fireAnalytics);
@@ -36,114 +36,114 @@ class CompetitionUseCase extends BaseUseCase {
   set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
 
   Future<Result<List<Competition>>> getCompetitions({bool fromServer = false}) => safeCall(() async {
-        if (_memory.competitions.isEmpty || fromServer) {
-          List<Competition> list = await _fireDatabase.getCompetitions();
-          _memory.competitions = list;
+        if (_memory!.competitions.isEmpty || fromServer) {
+          List<Competition> list = await _fireDatabase!.getCompetitions();
+          _memory!.competitions = list;
           return list;
         } else {
-          return _memory.competitions;
+          return _memory!.competitions;
         }
       });
 
-  Future<Result<Competition>> getCompetition(String id) => safeCall(() async {
-        Competition competition = await _fireDatabase.getCompetition(id);
-        int index = _memory.competitions.indexWhere((element) => element.id == id);
+  Future<Result<Competition>> getCompetition(String? id) => safeCall(() async {
+        Competition competition = await _fireDatabase!.getCompetition(id);
+        int index = _memory!.competitions.indexWhere((element) => element.id == id);
         if (index != -1) {
-          _memory.competitions[index] = competition;
+          _memory!.competitions[index] = competition;
         }
         return competition;
       });
 
   Future<Result<List<Competition>>> getPendingCompetitions() => safeCall(() async {
-        List<Competition> list = await _fireDatabase.getPendingCompetitions();
+        List<Competition> list = await _fireDatabase!.getPendingCompetitions();
         pendingCompetitionsStatus = list.isNotEmpty;
         return list;
       });
 
   Future<Result<Competition>> createCompetition(
-          String title, Habit habit, List<String> invitations, List<String> invitationsToken) =>
+          String title, Habit? habit, List<String?> invitations, List<String?> invitationsToken) =>
       safeCall(() async {
         DateTime date = DateTime.now().today;
 
         Competitor competitor = Competitor(
-            uid: _personUseCase.uid,
-            name: _personUseCase.name,
-            fcmToken: await _fireMessaging.getToken,
-            habitId: habit.id,
+            uid: _personUseCase!.uid,
+            name: _personUseCase!.name,
+            fcmToken: await _fireMessaging!.getToken,
+            habitId: habit!.id,
             color: habit.colorCode,
-            score: await _fireDatabase.hasDoneAtDay(habit.id, date) ? ScoreControl.DAY_DONE_POINT : 0,
+            score: await _fireDatabase!.hasDoneAtDay(habit.id, date) ? ScoreControl.DAY_DONE_POINT : 0,
             you: true);
 
-        Competition competition = await _fireDatabase.createCompetition(
+        Competition competition = await _fireDatabase!.createCompetition(
             Competition(title: title, initialDate: date, competitors: [competitor], invitations: invitations));
 
-        for (String token in invitationsToken) {
-          await _fireFunctions.sendNotification(
-              "Convite de competição", "${_personUseCase.name} te convidou a participar do $title", token);
+        for (String? token in invitationsToken) {
+          await _fireFunctions!.sendNotification(
+              "Convite de competição", "${_personUseCase!.name} te convidou a participar do $title", token);
         }
 
-        _fireAnalytics.sendCreateCompetition(title, habit.habit, invitations.length);
+        _fireAnalytics!.sendCreateCompetition(title, habit.habit, invitations.length);
 
-        _memory.competitions.add(competition);
+        _memory!.competitions.add(competition);
 
         return competition;
       });
 
-  Future<Result> updateCompetition(String id, String title) => safeCall(() async {
-        await _fireDatabase.updateCompetition(id, title);
-        int index = _memory.competitions.indexWhere((element) => element.id == id);
+  Future<Result> updateCompetition(String? id, String title) => safeCall(() async {
+        await _fireDatabase!.updateCompetition(id, title);
+        int index = _memory!.competitions.indexWhere((element) => element.id == id);
         if (index != -1) {
-          _memory.competitions[index].title = title;
+          _memory!.competitions[index].title = title;
         }
       });
 
   Future<Result> updateCompetitor(String competitionId, String habitId) => safeCall(() async {
-        await _fireDatabase.updateCompetitor(competitionId, habitId);
+        await _fireDatabase!.updateCompetitor(competitionId, habitId);
       });
 
-  Future<Result> removeCompetitor(Competition competition) => safeCall(() async {
-        await _fireDatabase.removeCompetitor(competition.id, _personUseCase.uid, competition.competitors.length == 1);
-        _memory.competitions.removeWhere((element) => element.id == competition.id);
+  Future<Result> removeCompetitor(Competition? competition) => safeCall(() async {
+        await _fireDatabase!.removeCompetitor(competition!.id, _personUseCase!.uid, competition.competitors!.length == 1);
+        _memory!.competitions.removeWhere((element) => element.id == competition.id);
       });
 
-  Future<Result> inviteCompetitor(String competitionId, List<String> competitorId, List<String> fcmTokens) =>
+  Future<Result> inviteCompetitor(String? competitionId, List<String?> competitorId, List<String?> fcmTokens) =>
       safeCall(() async {
         Competition competition = (await getCompetition(competitionId)).absoluteResult();
-        if (competition.competitors.length < MAX_COMPETITORS) {
-          await _fireDatabase.inviteCompetitor(competitionId, competitorId);
+        if (competition.competitors!.length < MAX_COMPETITORS) {
+          await _fireDatabase!.inviteCompetitor(competitionId, competitorId);
 
-          for (String token in fcmTokens) {
-            await _fireFunctions.sendNotification("Convite de competição",
-                "${_personUseCase.name} te convidou a participar do ${competition.title}", token);
+          for (String? token in fcmTokens) {
+            await _fireFunctions!.sendNotification("Convite de competição",
+                "${_personUseCase!.name} te convidou a participar do ${competition.title}", token);
           }
         } else {
           throw "Máximo de competidores atingido.";
         }
       });
 
-  Future<Result> acceptCompetitionRequest(String competitionId, Competition competition, Competitor competitor) =>
+  Future<Result> acceptCompetitionRequest(String? competitionId, Competition competition, Competitor competitor) =>
       safeCall(() async {
         Competition competition = (await getCompetition(competitionId)).absoluteResult();
-        if (competition.competitors.length < MAX_COMPETITORS) {
-          await _fireDatabase.acceptCompetitionRequest(competitionId, competitor);
+        if (competition.competitors!.length < MAX_COMPETITORS) {
+          await _fireDatabase!.acceptCompetitionRequest(competitionId, competitor);
 
-          for (Competitor friend in competition.competitors) {
-            await _fireFunctions.sendNotification(
-                "Novo competidor", "${_personUseCase.name} entrou em  ${competition.title}", friend.fcmToken);
+          for (Competitor friend in competition.competitors!) {
+            await _fireFunctions!.sendNotification(
+                "Novo competidor", "${_personUseCase!.name} entrou em  ${competition.title}", friend.fcmToken);
           }
 
-          competition.competitors.add(competitor);
-          _memory.competitions.add(competition);
+          competition.competitors!.add(competitor);
+          _memory!.competitions.add(competition);
         } else {
           throw "Máximo de competidores atingido.";
         }
       });
 
-  Future<Result> declineCompetitionRequest(String id) => safeCall(() async {
-        return await _fireDatabase.declineCompetitionRequest(id);
+  Future<Result> declineCompetitionRequest(String? id) => safeCall(() async {
+        return await _fireDatabase!.declineCompetitionRequest(id);
       });
 
-  Future<bool> hasCompetitionByHabit(String habitId) async {
+  Future<bool> hasCompetitionByHabit(String? habitId) async {
     try {
       return (await getCompetitions()).absoluteResult().where((e) => e.getMyCompetitor().habitId == habitId).isNotEmpty;
     } catch (e) {
@@ -161,7 +161,7 @@ class CompetitionUseCase extends BaseUseCase {
     }
   }
 
-  Future<bool> maximumNumberReachedByHabit(String habitId) async {
+  Future<bool> maximumNumberReachedByHabit(String? habitId) async {
     try {
       int length =
           (await getCompetitions()).absoluteResult().where((e) => e.getMyCompetitor().habitId == habitId).length;

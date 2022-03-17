@@ -37,10 +37,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class HabitText extends StatefulWidget {
-  HabitText({Key key, this.color, this.controller}) : super(key: key);
+  HabitText({Key? key, this.color, this.controller}) : super(key: key);
 
-  final Color color;
-  final TextEditingController controller;
+  final Color? color;
+  final TextEditingController? controller;
 
   @override
   _HabitTextState createState() => _HabitTextState();
@@ -48,11 +48,11 @@ class HabitText extends StatefulWidget {
 
 class _HabitTextState extends State<HabitText> {
   FocusNode focusHabit = FocusNode();
-  StreamSubscription<bool> keyboardVisibility;
+  late StreamSubscription<bool> keyboardVisibility;
 
-  List<String> suggestions;
+  late List<String> suggestions;
 
-  String validated;
+  String? validated;
 
   @override
   initState() {
@@ -60,21 +60,21 @@ class _HabitTextState extends State<HabitText> {
 
     suggestions = getSuggestions();
 
-    keyboardVisibility = KeyboardVisibility.onChange.listen((visible) {
+    keyboardVisibility = KeyboardVisibilityController().onChange.listen((visible) {
       if (!visible) {
         focusHabit.unfocus();
         _validate();
       }
     });
 
-    widget.controller.addListener(_onTextChanged);
+    widget.controller!.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
     focusHabit.dispose();
     keyboardVisibility.cancel();
-    widget.controller.removeListener(_onTextChanged);
+    widget.controller!.removeListener(_onTextChanged);
     super.dispose();
   }
 
@@ -91,7 +91,7 @@ class _HabitTextState extends State<HabitText> {
 
   List<String> getSuggestions() {
     var data = Suggestions.getHabits();
-    String habit = widget.controller.text.trim().toLowerCase();
+    String habit = widget.controller!.text.trim().toLowerCase();
 
     var list = data.where((e) => e.trim().toLowerCase().contains(habit) && e.trim().toLowerCase() != habit).toList();
     if (list.length > 5) {
@@ -101,7 +101,7 @@ class _HabitTextState extends State<HabitText> {
   }
 
   void suggestionSelected(String text) {
-    widget.controller.value = TextEditingValue(text: text);
+    widget.controller!.value = TextEditingValue(text: text);
     focusHabit.unfocus();
     _validate();
   }
@@ -115,7 +115,7 @@ class _HabitTextState extends State<HabitText> {
 
   void _validate() {
     setState(() {
-      validated = ValidationHandler.habitTextValidate(widget.controller.text);
+      validated = ValidationHandler.habitTextValidate(widget.controller!.text);
     });
   }
 
@@ -141,8 +141,8 @@ class _HabitTextState extends State<HabitText> {
               hintText: "Escreva seu hábito",
               hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               errorText: validated,
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color, width: 2)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color, width: 2)),
+              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color!, width: 2)),
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color!, width: 2)),
             ),
           ),
           const SizedBox(height: 10),

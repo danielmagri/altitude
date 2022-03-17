@@ -30,8 +30,8 @@ class FireMessaging implements IFireMessaging {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
 
       if (notification != null && android != null) {
         FlutterLocalNotificationsPlugin().show(
@@ -49,7 +49,7 @@ class FireMessaging implements IFireMessaging {
     });
   }
 
-  Future<String> get getToken => FirebaseMessaging.instance.getToken();
+  Future<String?> get getToken => FirebaseMessaging.instance.getToken();
 
   void _pendingRequest(Map<dynamic, dynamic> data) {
     if (data.containsKey('new_friend')) {

@@ -26,20 +26,19 @@ import 'package:flutter/material.dart'
         TextOverflow,
         TextStyle,
         Transform,
-        Widget,
-        required;
+        Widget;
 
 class HabitCardItem extends StatelessWidget {
   HabitCardItem(
-      {Key key,
-      @required this.habit,
-      @required this.goHabitDetails,
-      @required this.showDragTarget,
-      @required this.done})
+      {Key? key,
+      required this.habit,
+      required this.goHabitDetails,
+      required this.showDragTarget,
+      required this.done})
       : super(key: key);
 
   final Habit habit;
-  final Function(String id, int color) goHabitDetails;
+  final Function(String? id, int? color) goHabitDetails;
   final Function(bool) showDragTarget;
   final bool done;
 
@@ -58,29 +57,38 @@ class HabitCardItem extends StatelessWidget {
                   Stack(
                     alignment: Alignment.bottomCenter,
                     children: <Widget>[
-                      Rocket(size: const Size(60, 60), color: habit.color, isExtend: true),
+                      Rocket(
+                          size: const Size(60, 60),
+                          color: habit.color,
+                          isExtend: true),
                       Transform.rotate(
                         angle: -0.2,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 1),
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
                               color: Colors.white,
-                              border: Border.all(color: Colors.black, width: 0.5),
+                              border:
+                                  Border.all(color: Colors.black, width: 0.5),
                               borderRadius: BorderRadius.circular(15)),
-                          child:
-                              const Text("Feito!", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.black)),
+                          child: const Text("Feito!",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                  color: Colors.black)),
                         ),
                       ),
                     ],
                   ),
                   Expanded(
                     child: Center(
-                      child: Text(habit.habit,
+                      child: Text(habit.habit!,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w300)),
                     ),
                   ),
                 ],
@@ -107,14 +115,18 @@ class HabitCardItem extends StatelessWidget {
                 color: Colors.transparent,
                 child: Column(
                   children: <Widget>[
-                    Rocket(size: const Size(60, 60), color: habit.color, isExtend: true),
+                    Rocket(
+                        size: const Size(60, 60),
+                        color: habit.color,
+                        isExtend: true),
                     Expanded(
                       child: Center(
-                        child: Text(habit.habit,
+                        child: Text(habit.habit!,
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300)),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w300)),
                       ),
                     ),
                   ],
@@ -131,11 +143,12 @@ class HabitCardItem extends StatelessWidget {
                   const SizedBox(width: 60, height: 60),
                   Expanded(
                     child: Center(
-                      child: Text(habit.habit,
+                      child: Text(habit.habit!,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.normal)),
                     ),
                   ),
                 ],

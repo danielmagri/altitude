@@ -28,12 +28,12 @@ import 'package:flutter/material.dart'
         StatefulWidget,
         Text,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 import 'package:get_it/get_it.dart';
 
 class ChooseHabit extends StatefulWidget {
-  ChooseHabit({Key key, @required this.competition, @required this.habits}) : super(key: key);
+  ChooseHabit({Key? key, required this.competition, required this.habits})
+      : super(key: key);
 
   final Competition competition;
   final List<Habit> habits;
@@ -45,30 +45,37 @@ class ChooseHabit extends StatefulWidget {
 class _ChooseHabitState extends BaseState<ChooseHabit> {
   final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
   final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
-  final CompetitionUseCase _competitionUseCase = GetIt.I.get<CompetitionUseCase>();
+  final CompetitionUseCase _competitionUseCase =
+      GetIt.I.get<CompetitionUseCase>();
 
-  Habit selectedHabit;
+  Habit? selectedHabit;
 
   void acceptRequest() async {
-    if (await _competitionUseCase.maximumNumberReachedByHabit(selectedHabit.id)) {
-      showToast("O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+    if (await _competitionUseCase
+        .maximumNumberReachedByHabit(selectedHabit!.id)) {
+      showToast(
+          "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
-      List<DateTime> days =
-          (await _habitUseCase.getDaysDone(selectedHabit.id, widget.competition.initialDate, DateTime.now().today))
-              .absoluteResult()
-              .map((e) => e.date)
-              .toList();
+      List<DateTime?> days = (await _habitUseCase.getDaysDone(selectedHabit!.id,
+              widget.competition.initialDate, DateTime.now().today))
+          .absoluteResult()
+          .map((e) => e.date)
+          .toList();
 
       Competitor competitor = Competitor(
           name: _personUseCase.name,
           fcmToken: await _personUseCase.fcmToken,
-          color: selectedHabit.colorCode,
-          habitId: selectedHabit.id,
+          color: selectedHabit!.colorCode,
+          habitId: selectedHabit!.id,
           uid: GetIt.I.get<IFireAuth>().getUid(),
-          score: ScoreControl().scoreEarnedTotal(selectedHabit.frequency, days),
+          score:
+              ScoreControl().scoreEarnedTotal(selectedHabit!.frequency, days),
           you: true);
-      _competitionUseCase.acceptCompetitionRequest(widget.competition.id, widget.competition, competitor).then((_) {
+      _competitionUseCase
+          .acceptCompetitionRequest(
+              widget.competition.id, widget.competition, competitor)
+          .then((_) {
         showLoading(false);
         navigatePop(result: widget.competition);
       }).catchError(handleError);
@@ -91,9 +98,12 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Rocket(size: const Size(30, 30), isExtend: true, color: AppColors.habitsColor[habit.colorCode]),
+                    Rocket(
+                        size: const Size(30, 30),
+                        isExtend: true,
+                        color: AppColors.habitsColor[habit.colorCode!]),
                     const SizedBox(width: 10),
-                    Text(habit.habit),
+                    Text(habit.habit!),
                   ],
                 ),
               );
@@ -105,9 +115,12 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
             }),
       ),
       action: <Widget>[
-        TextButton(child: const Text('Cancelar'), onPressed: () => navigatePop()),
         TextButton(
-            child: const Text('Competir', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: acceptRequest),
+            child: const Text('Cancelar'), onPressed: () => navigatePop()),
+        TextButton(
+            child: const Text('Competir',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            onPressed: acceptRequest),
       ],
     );
   }

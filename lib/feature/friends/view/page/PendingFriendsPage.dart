@@ -34,7 +34,7 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
 
   Widget actionButton(IconData icon, Color color, Function action) {
     return FloatingActionButton(
-        child: Icon(icon), mini: true, heroTag: null, backgroundColor: color, elevation: 0, onPressed: action);
+        child: Icon(icon), mini: true, heroTag: null, backgroundColor: color, elevation: 0, onPressed: action as void Function()?);
   }
 
   Future<bool> onBackPressed() {
@@ -63,12 +63,12 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
                   ],
                 );
               }, (data) {
-                if (data.isEmpty)
+                if (data!.isEmpty)
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma amizade pendente",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1.color.withOpacity(0.2))),
+                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1!.color!.withOpacity(0.2))),
                   );
                 else
                   return ListView.separated(
@@ -89,17 +89,17 @@ class _PendingFriendsPageState extends BaseStateWithLogic<PendingFriendsPage, Pe
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    person.name,
+                                    person.name!,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
-                                        decoration: person.you ? TextDecoration.underline : TextDecoration.none),
+                                        decoration: person.you! ? TextDecoration.underline : TextDecoration.none),
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    person.email,
+                                    person.email!,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: const TextStyle(fontSize: 15),

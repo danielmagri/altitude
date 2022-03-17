@@ -19,8 +19,8 @@ abstract class _DataStateBase<T> with Store {
   @observable
   bool _loading = false;
 
-  T _data;
-  T get data => _data;
+  T? _data;
+  T? get data => _data;
 
   dynamic _error;
   dynamic get error => _error;
@@ -50,25 +50,25 @@ abstract class _DataStateBase<T> with Store {
     _error = error;
   }
 
-  Widget handleState(Initial initial, Success<T> success, [Error error]) {
+  Widget handleState(Initial initial, Success<T?> success, [Error? error]) {
     switch (_state) {
       case StateType.INITIAL:
         return initial();
       case StateType.ERROR:
         if (error == null) const SizedBox();
-        return error(_error);
+        return error!(_error);
       default:
         return success(_data);
     }
   }
 
-  Widget handleStateLoadable(Initial initial, SuccessLoadable<T> successLoadable, [Error error]) {
+  Widget handleStateLoadable(Initial initial, SuccessLoadable<T?> successLoadable, [Error? error]) {
     switch (_state) {
       case StateType.INITIAL:
         return initial();
       case StateType.ERROR:
         if (error == null) const SizedBox();
-        return error(_error);
+        return error!(_error);
       default:
         return successLoadable(_data, _loading);
     }

@@ -29,10 +29,10 @@ class Router {
       case 'login':
         return _pageRoute(LoginPage(), 'login');
       case 'addHabit':
-        var arguments = settings.arguments as bool;
+        var arguments = settings.arguments as bool?;
         return _pageRoute(AddHabitPage(backTo: arguments ?? false), 'addHabit');
       case 'allLevels':
-        var arguments = settings.arguments as AllLevelsPageArguments;
+        var arguments = settings.arguments as AllLevelsPageArguments?;
         return _pageRoute(AllLevelsPage(arguments), 'allLevels');
       case 'statistics':
         return _pageRoute(Statisticspage(), 'statistics');
@@ -43,7 +43,7 @@ class Router {
       case 'competition':
         return _pageRoute(CompetitionPage(), 'competition');
       case 'createCompetition':
-        var arguments = settings.arguments as CreateCompetitionPageArguments;
+        var arguments = settings.arguments as CreateCompetitionPageArguments?;
         return _pageRoute(CreateCompetitionPage(arguments), 'createCompetition');
       case 'competitionDetails':
         var arguments = settings.arguments as CompetitionDetailsPageArguments;
@@ -51,10 +51,10 @@ class Router {
       case 'pendingCompetition':
         return _pageRoute(PendingCompetitionPage(), 'pendingCompetition');
       case 'habitDetails':
-        var arguments = settings.arguments as HabitDetailsPageArguments;
+        var arguments = settings.arguments as HabitDetailsPageArguments?;
         return _pageRoute(HabitDetailsPage(arguments), 'habitDetails');
       case 'editHabit':
-        var arguments = settings.arguments as EditHabitPageArguments;
+        var arguments = settings.arguments as EditHabitPageArguments?;
         return _pageRoute(EditHabitPage(arguments), 'editHabit');
       case 'settings':
         return _pageRoute(SettingsPage(), 'settings');

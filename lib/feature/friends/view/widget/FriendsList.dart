@@ -27,13 +27,12 @@ import 'package:flutter/material.dart'
         TextAlign,
         TextOverflow,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class FriendsList extends StatelessWidget {
-  FriendsList({Key key, @required this.removeFriend})
+  FriendsList({Key? key, required this.removeFriend})
       : controller = GetIt.I.get<FriendsLogic>(),
         super(key: key);
 
@@ -55,7 +54,9 @@ class FriendsList extends StatelessWidget {
                       child: Container(
                     width: double.maxFinite,
                     height: 25,
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15)),
                   )),
                   const SizedBox(width: 8),
                   Column(
@@ -64,13 +65,17 @@ class FriendsList extends StatelessWidget {
                       Container(
                         width: 90,
                         height: 15,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
                       ),
                       const SizedBox(height: 8),
                       Container(
                         width: 70,
                         height: 15,
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
                       ),
                     ],
                   )
@@ -80,10 +85,12 @@ class FriendsList extends StatelessWidget {
           ),
         );
       }, (data) {
-        if (data.isEmpty)
+        if (data!.isEmpty)
           return Center(
             child: Text("Adicione seus amigos clicando no botão \"+\" abaixo.",
-                textAlign: TextAlign.center, style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
           );
         else
           return ListView.separated(
@@ -96,23 +103,27 @@ class FriendsList extends StatelessWidget {
               return InkWell(
                 onLongPress: () => removeFriend(person),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          person.name,
+                          person.name!,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
-                          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Text(person.levelText, style: TextStyle(fontSize: 16)),
-                          Text("${person.score} Km", style: TextStyle(fontWeight: FontWeight.w300)),
+                          Text(person.levelText,
+                              style: TextStyle(fontSize: 16)),
+                          Text("${person.score} Km",
+                              style: TextStyle(fontWeight: FontWeight.w300)),
                         ],
                       )
                     ],

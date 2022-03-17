@@ -22,7 +22,7 @@ extension dateTime on DateTime {
     return DateTime(this.year, this.month, 1).subtract(Duration(days: 1));
   }
 
-  bool isAfterOrSameDay(DateTime day2) {
+  bool isAfterOrSameDay(DateTime? day2) {
     return day2 != null && (this.isAfter(day2) || this.isSameDay(day2));
   }
 
@@ -31,7 +31,7 @@ extension dateTime on DateTime {
   }
 
   /// Checa se é a mesma data, sem verificar as horas
-  bool isSameDay(DateTime day2) {
+  bool isSameDay(DateTime? day2) {
     return day2 != null && this.year == day2.year && this.month == day2.month && this.day == day2.day;
   }
 }

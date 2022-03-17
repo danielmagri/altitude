@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -35,7 +35,7 @@ class _LoginPageState extends BaseStateWithLogic<LoginPage, LoginLogic> {
         builder: (context) {
           return TransferDataDialog(uid: uid);
         }).then((value) {
-      if (value) navigateRemoveUntil('home');
+      if (value!) navigateRemoveUntil('home');
     }).catchError(handleError);
   }
 

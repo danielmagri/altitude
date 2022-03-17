@@ -13,11 +13,10 @@ import 'package:flutter/material.dart'
         MainAxisAlignment,
         StatelessWidget,
         Text,
-        Widget,
-        required;
+        Widget;
 
 class Metrics extends StatelessWidget {
-  Metrics({Key key, @required this.height}) : super(key: key);
+  Metrics({Key? key, required this.height}) : super(key: key);
 
   final double height;
 
@@ -53,7 +52,10 @@ class Metrics extends StatelessWidget {
     return Container(
       height: height,
       alignment: Alignment.topCenter,
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: AppTheme.of(context).drawerIcon.withOpacity(0.5)))),
+      decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(
+                  color: AppTheme.of(context).drawerIcon.withOpacity(0.5)))),
       child: Text(value),
     );
   }
@@ -64,7 +66,9 @@ class Metrics extends StatelessWidget {
       height: height,
       width: 50,
       margin: const EdgeInsets.only(right: 10),
-      child: Column(mainAxisAlignment: MainAxisAlignment.end, children: _metricList(context)),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: _metricList(context)),
     );
   }
 }

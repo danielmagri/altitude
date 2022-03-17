@@ -2,15 +2,15 @@ import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:get_it/get_it.dart';
 
 class Competitor {
-  final String uid;
-  final String name;
-  final String fcmToken;
+  final String? uid;
+  final String? name;
+  final String? fcmToken;
 
-  final String habitId;
-  int color;
-  int score;
+  final String? habitId;
+  int? color;
+  late int score;
 
-  bool you;
+  bool? you;
 
   static const NAME = "display_name";
   static const FCM_TOKEN = "fcm_token";
@@ -18,7 +18,7 @@ class Competitor {
   static const COLOR = "color";
   static const SCORE = "score";
 
-  Competitor({this.uid, this.name, this.fcmToken, this.habitId, this.color, this.score, this.you}) {
+  Competitor({this.uid, this.name, this.fcmToken, this.habitId, this.color, int? score, this.you}) {
     this.you = you ?? GetIt.I.get<IFireAuth>().getUid() == uid;
     this.score = score ?? 0;
   }
@@ -37,7 +37,7 @@ class Competitor {
     map.putIfAbsent(FCM_TOKEN, () => fcmToken);
     map.putIfAbsent(HABIT_ID, () => habitId);
     map.putIfAbsent(COLOR, () => color);
-    if (you) map.putIfAbsent(SCORE, () => score);
+    if (you!) map.putIfAbsent(SCORE, () => score);
     return map;
   }
 }

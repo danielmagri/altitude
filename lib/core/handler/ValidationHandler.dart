@@ -1,5 +1,5 @@
 abstract class ValidationHandler {
-  static String nameTextValidate(String text) {
+  static String? nameTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
       return "Por favor preencha o campo.";
@@ -12,7 +12,7 @@ abstract class ValidationHandler {
     return null;
   }
 
-  static String cueTextValidate(String text) {
+  static String? cueTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
       return "Por favor preencha o campo.";
@@ -25,7 +25,7 @@ abstract class ValidationHandler {
     return null;
   }
 
-  static String habitTextValidate(String text) {
+  static String? habitTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
       return "Por favor preencha o nome do hábito.";
@@ -38,7 +38,7 @@ abstract class ValidationHandler {
     return null;
   }
 
-  static String competitionNameValidate(String text) {
+  static String? competitionNameValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
       return "Por favor preencha o nome.";
@@ -51,7 +51,7 @@ abstract class ValidationHandler {
     return null;
   }
 
-  static String email(String value) {
+  static String? email(String value) {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = new RegExp(p);

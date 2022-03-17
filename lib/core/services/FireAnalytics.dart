@@ -6,20 +6,20 @@ import 'package:injectable/injectable.dart';
 @service
 @Singleton(as: IFireAnalytics)
 class FireAnalytics implements IFireAnalytics {
-  FirebaseAnalytics _analytics = FirebaseAnalytics();
+  FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   FirebaseAnalytics get analytics => _analytics;
 
   void setUserId(String uid) {
-    analytics.setUserId(uid);
+    analytics.setUserId(id: uid);
   }
 
-  void sendNewHabit(String habit, String color, String freqType, int freqTime, String hasReminder) {
+  void sendNewHabit(String? habit, String color, String freqType, int? freqTime, String hasReminder) {
     try {
       analytics.logEvent(
         name: 'new_habit',
         parameters: <String, dynamic>{
-          'habit': habit.trim().toLowerCase(),
+          'habit': habit!.trim().toLowerCase(),
           'color': color,
           'freq_type': freqType,
           'freq_time': freqTime,
@@ -31,12 +31,12 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
-  void sendRemoveHabit(String habit) {
+  void sendRemoveHabit(String? habit) {
     try {
       analytics.logEvent(
         name: 'remove_habit',
         parameters: <String, dynamic>{
-          'habit': habit.trim().toLowerCase(),
+          'habit': habit!.trim().toLowerCase(),
         },
       );
     } catch (e) {
@@ -78,12 +78,12 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
-  void sendSetCue(String habit, String cue) {
+  void sendSetCue(String? habit, String cue) {
     try {
       analytics.logEvent(
         name: 'set_cue',
         parameters: <String, dynamic>{
-          'habit': habit.trim().toLowerCase(),
+          'habit': habit!.trim().toLowerCase(),
           'cue': cue.trim().toLowerCase(),
         },
       );
@@ -92,12 +92,12 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
-  void sendRemoveCue(String habit) {
+  void sendRemoveCue(String? habit) {
     try {
       analytics.logEvent(
         name: 'remove_cue',
         parameters: <String, dynamic>{
-          'habit': habit.trim().toLowerCase(),
+          'habit': habit!.trim().toLowerCase(),
         },
       );
     } catch (e) {
@@ -121,12 +121,12 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
-  void sendRemoveAlarm(String habit) {
+  void sendRemoveAlarm(String? habit) {
     try {
       analytics.logEvent(
         name: 'remove_alarm',
         parameters: <String, dynamic>{
-          'habit': habit.trim().toLowerCase(),
+          'habit': habit!.trim().toLowerCase(),
         },
       );
     } catch (e) {
@@ -160,13 +160,13 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
-  void sendCreateCompetition(String title, String habitName, int friends) {
+  void sendCreateCompetition(String title, String? habitName, int friends) {
     try {
       analytics.logEvent(
         name: 'create_competition',
         parameters: <String, dynamic>{
           'title': title.trim().toLowerCase(),
-          'habit_name': habitName.trim().toLowerCase(),
+          'habit_name': habitName!.trim().toLowerCase(),
           'friends': friends,
         },
       );

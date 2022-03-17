@@ -10,7 +10,7 @@ class LoginLogic = _LoginLogicBase with _$LoginLogic;
 
 abstract class _LoginLogicBase with Store {
 
-  Future<String> loginFacebook() async {
+  Future<String?> loginFacebook() async {
     // var result = await FacebookLogin().logIn(['email', 'public_profile']);
 
     // switch (result.status) {
@@ -29,16 +29,16 @@ abstract class _LoginLogicBase with Store {
     return null;
   }
 
-  Future<String> loginGoogle() async {
+  Future<String?> loginGoogle() async {
     GoogleSignIn googleSignIn = GoogleSignIn();
 
-    GoogleSignInAccount result = await googleSignIn.signIn();
+    GoogleSignInAccount? result = await googleSignIn.signIn();
     if (result != null) {
       GoogleSignInAuthentication googleAuth = await result.authentication;
       AuthCredential credential =
           GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
       UserCredential fireResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      return fireResult.user.uid;
+      return fireResult.user!.uid;
     } else {
       return null;
     }

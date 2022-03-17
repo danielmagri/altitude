@@ -5,11 +5,10 @@ import 'package:flutter/material.dart'
         FocusScope,
         GestureDetector,
         StatelessWidget,
-        Widget,
-        required;
+        Widget;
 
 class FocusFixer extends StatelessWidget {
-  FocusFixer({@required this.child});
+  FocusFixer({required this.child});
   final Widget child;
 
   final FocusNode _focusNode = FocusNode();

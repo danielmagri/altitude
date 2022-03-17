@@ -14,9 +14,9 @@ part 'CompetitionLogic.g.dart';
 class CompetitionLogic = _CompetitionLogicBase with _$CompetitionLogic;
 
 abstract class _CompetitionLogicBase with Store {
-  final PersonUseCase _personUseCase;
-  final HabitUseCase _habitUseCase;
-  final CompetitionUseCase _competitionUseCase;
+  final PersonUseCase? _personUseCase;
+  final HabitUseCase? _habitUseCase;
+  final CompetitionUseCase? _competitionUseCase;
 
   _CompetitionLogicBase(this._personUseCase, this._habitUseCase, this._competitionUseCase);
 
@@ -31,11 +31,11 @@ abstract class _CompetitionLogicBase with Store {
 
     fetchCompetitions();
 
-    (await _personUseCase.rankingFriends()).result((value) async {
-      Person me = (await _personUseCase.getPerson()).absoluteResult();
+    (await _personUseCase!.rankingFriends()).result((value) async {
+      Person me = (await _personUseCase!.getPerson()).absoluteResult();
       me.you = true;
       value.add(me);
-      value.sort((a, b) => -a.score.compareTo(b.score));
+      value.sort((a, b) => -a.score!.compareTo(b.score!));
       if (value.length > 3) {
         value.removeAt(3);
       }
@@ -46,35 +46,35 @@ abstract class _CompetitionLogicBase with Store {
   }
 
   void fetchCompetitions() async {
-    (await _competitionUseCase.getCompetitions()).result((data) {
+    (await _competitionUseCase!.getCompetitions()).result((data) {
       competitions.setData(data.asObservable());
     }, (error) {
       competitions.setError(error);
     });
   }
 
-  Future<Competition> getCompetitionDetails(String id) async {
-    return (await _competitionUseCase.getCompetition(id)).absoluteResult();
+  Future<Competition> getCompetitionDetails(String? id) async {
+    return (await _competitionUseCase!.getCompetition(id)).absoluteResult();
   }
 
   @action
   void checkPendingFriendsStatus() {
-    pendingStatus = _competitionUseCase.pendingCompetitionsStatus;
+    pendingStatus = _competitionUseCase!.pendingCompetitionsStatus;
   }
 
-  Future<bool> checkCreateCompetition() => _competitionUseCase.maximumNumberReached();
+  Future<bool> checkCreateCompetition() => _competitionUseCase!.maximumNumberReached();
 
   Future<Pair<List<Habit>, List<Person>>> getCreationData() async {
-    List habits = (await _habitUseCase.getHabits()).absoluteResult();
-    List friends = (await _personUseCase.getFriends()).absoluteResult();
+    List habits = (await _habitUseCase!.getHabits()).absoluteResult();
+    List friends = (await _personUseCase!.getFriends()).absoluteResult();
 
-    return Pair(habits, friends);
+    return Pair(habits as List<Habit>, friends as List<Person>);
   }
 
   @action
   Future exitCompetition(Competition competition) async {
-    (await _competitionUseCase.removeCompetitor(competition)).result((data) {
-      competitions.data.removeWhere((element) => element.id == competition.id);
+    (await _competitionUseCase!.removeCompetitor(competition)).result((data) {
+      competitions.data!.removeWhere((element) => element.id == competition.id);
     }, (error) => throw error);
   }
 }

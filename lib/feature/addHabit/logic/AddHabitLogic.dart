@@ -15,13 +15,13 @@ part 'AddHabitLogic.g.dart';
 class AddHabitLogic = _AddHabitLogicBase with _$AddHabitLogic;
 
 abstract class _AddHabitLogicBase with Store {
-  final HabitUseCase habitUseCase;
+  final HabitUseCase? habitUseCase;
 
   @observable
-  int color;
+  int? color;
 
   @observable
-  Frequency frequency;
+  Frequency? frequency;
 
   List<ReminderWeekday> reminderWeekday = [
     ReminderWeekday(1, "D", false),
@@ -34,16 +34,16 @@ abstract class _AddHabitLogicBase with Store {
   ];
 
   @observable
-  TimeOfDay reminderTime;
+  TimeOfDay? reminderTime;
 
   @computed
   String get timeText =>
-      reminderTime.hour.toString().padLeft(2, '0') +
+      reminderTime!.hour.toString().padLeft(2, '0') +
       " : " +
-      reminderTime.minute.toString().padLeft(2, '0');
+      reminderTime!.minute.toString().padLeft(2, '0');
 
   @computed
-  Color get habitColor => AppColors.habitsColor[color];
+  Color get habitColor => AppColors.habitsColor[color!];
 
   _AddHabitLogicBase(this.habitUseCase) {
     color = Random().nextInt(AppColors.habitsColor.length);
@@ -62,19 +62,19 @@ abstract class _AddHabitLogicBase with Store {
 
   @action
   void selectReminderDay(int id, bool state) {
-    reminderWeekday.firstWhere((item) => item.id == id)?.state = state;
+    reminderWeekday.firstWhere((item) => item.id == id).state = state;
   }
 
   @action
-  void selectReminderTime(TimeOfDay time) {
+  void selectReminderTime(TimeOfDay? time) {
     if (time != null) reminderTime = time;
   }
 
   Future<Result<Habit>> createHabit(Habit habit) async {
     Reminder reminder = Reminder(
         type: 0,
-        hour: reminderTime.hour,
-        minute: reminderTime.minute,
+        hour: reminderTime!.hour,
+        minute: reminderTime!.minute,
         sunday: reminderWeekday[0].state,
         monday: reminderWeekday[1].state,
         tuesday: reminderWeekday[2].state,
@@ -85,6 +85,6 @@ abstract class _AddHabitLogicBase with Store {
         
     if (reminder.hasAnyDay()) habit.reminder = reminder;
 
-    return habitUseCase.addHabit(habit);
+    return habitUseCase!.addHabit(habit);
   }
 }

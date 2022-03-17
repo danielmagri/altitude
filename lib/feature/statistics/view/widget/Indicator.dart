@@ -13,19 +13,18 @@ import 'package:flutter/material.dart'
         StatelessWidget,
         Text,
         TextStyle,
-        Widget,
-        required;
+        Widget;
 
 class Indicator extends StatelessWidget {
-  Indicator({Key key, @required this.data, this.onClick}) : super(key: key);
+  Indicator({Key? key, required this.data, this.onClick}) : super(key: key);
 
   final HabitStatisticData data;
-  final Function(String) onClick;
+  final Function(String?)? onClick;
 
   @override
   Widget build(context) {
     return GestureDetector(
-      onTap: () => onClick(data.id),
+      onTap: () => onClick!(data.id),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -37,7 +36,10 @@ class Indicator extends StatelessWidget {
               color: data.habitColor,
             ),
             SizedBox(width: 4),
-            Text(data.habit, style: TextStyle(fontWeight: data.selected ? FontWeight.bold : FontWeight.normal)),
+            Text(data.habit!,
+                style: TextStyle(
+                    fontWeight:
+                        data.selected ? FontWeight.bold : FontWeight.normal)),
           ],
         ),
       ),

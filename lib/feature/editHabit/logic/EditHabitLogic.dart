@@ -14,20 +14,20 @@ part 'EditHabitLogic.g.dart';
 class EditHabitLogic = _EditHabitLogicBase with _$EditHabitLogic;
 
 abstract class _EditHabitLogicBase with Store {
-  final HabitUseCase _habitUseCase;
+  final HabitUseCase? _habitUseCase;
 
   _EditHabitLogicBase(this._habitUseCase);
 
-  Habit initialHabit;
+  Habit? initialHabit;
 
   @observable
-  int color;
+  int? color;
 
   @observable
-  Frequency frequency;
+  Frequency? frequency;
 
   @computed
-  Color get habitColor => AppColors.habitsColor[color];
+  Color get habitColor => AppColors.habitsColor[color!];
 
   void setData(Habit habit) {
     initialHabit = habit;
@@ -45,26 +45,26 @@ abstract class _EditHabitLogicBase with Store {
   }
 
   Future<Result<void>> removeHabit() {
-    return _habitUseCase.deleteHabit(initialHabit);
+    return _habitUseCase!.deleteHabit(initialHabit);
   }
 
   Future updateHabit(String habit) async {
     Habit editedHabit = Habit(
-        id: initialHabit.id,
+        id: initialHabit!.id,
         habit: habit,
         colorCode: color,
-        score: initialHabit.score,
-        oldCue: initialHabit.oldCue,
+        score: initialHabit!.score,
+        oldCue: initialHabit!.oldCue,
         frequency: frequency,
-        reminder: initialHabit.reminder,
-        lastDone: initialHabit.lastDone,
-        initialDate: initialHabit.initialDate,
-        daysDone: initialHabit.daysDone);
+        reminder: initialHabit!.reminder,
+        lastDone: initialHabit!.lastDone,
+        initialDate: initialHabit!.initialDate,
+        daysDone: initialHabit!.daysDone);
 
-    if (editedHabit.color != initialHabit.color ||
-        editedHabit.habit.compareTo(initialHabit.habit) != 0 ||
-        !compareFrequency(initialHabit.frequency, frequency)) {
-      (await _habitUseCase.updateHabit(editedHabit, initialHabit)).result((data) {
+    if (editedHabit.color != initialHabit!.color ||
+        editedHabit.habit!.compareTo(initialHabit!.habit!) != 0 ||
+        !compareFrequency(initialHabit!.frequency, frequency)) {
+      (await _habitUseCase!.updateHabit(editedHabit, initialHabit)).result((data) {
         GetIt.I.get<HabitDetailsLogic>().updateHabitDetailsPageData(editedHabit);
       }, (error) => throw error);
     }
