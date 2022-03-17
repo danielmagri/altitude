@@ -6,7 +6,7 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habitDetails/view/dialogs/EditAlarmDialog.dart';

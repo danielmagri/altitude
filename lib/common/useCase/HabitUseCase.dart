@@ -1,7 +1,7 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/core/di/get_it_config.dart';
-import 'package:altitude/core/model/Pair.dart';
+import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
@@ -11,7 +11,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
-import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/core/model/result.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
@@ -22,6 +22,7 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
+@deprecated
 @usecase
 @Injectable()
 class HabitUseCase extends BaseUseCase {

@@ -4,16 +4,16 @@ import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/TransferDataDialog.dart';
-import 'package:altitude/feature/home/logic/HomeLogic.dart';
-import 'package:altitude/feature/home/view/dialogs/NewLevelDialog.dart';
-import 'package:altitude/feature/home/view/widget/HabitsPanel.dart';
-import 'package:altitude/feature/home/view/widget/HomeBottomNavigation.dart';
-import 'package:altitude/feature/home/view/widget/HomeDrawer.dart';
-import 'package:altitude/feature/home/view/widget/SkyDragTarget.dart';
+import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
+import 'package:altitude/feature/home/presentation/dialogs/new_level_dialog.dart';
+import 'package:altitude/feature/home/presentation/widgets/habits_panel.dart';
+import 'package:altitude/feature/home/presentation/widgets/home_bottom_navigation.dart';
+import 'package:altitude/feature/home/presentation/widgets/home_drawer.dart';
+import 'package:altitude/feature/home/presentation/widgets/sky_drag_target.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseStateWithLogic<HomePage, HomeLogic> with WidgetsBindingObserver {
+class _HomePageState extends BaseStateWithLogic<HomePage, HomeController> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override

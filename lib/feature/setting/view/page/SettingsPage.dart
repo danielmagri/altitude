@@ -2,7 +2,7 @@ import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/setting/logic/SettingsLogic.dart';
 import 'package:altitude/feature/tutorialPage.dart';
 import 'package:flutter/material.dart';

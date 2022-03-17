@@ -9,7 +9,7 @@ import 'package:altitude/common/view/generic/focus_fixer.dart';
 import 'package:altitude/core/handler/AdsHandler.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/competition/logic/CreateCompetitionLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/app_colors.dart';

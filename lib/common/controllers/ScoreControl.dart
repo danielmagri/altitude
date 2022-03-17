@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 
 enum ScoreType { ADD, SUBTRACT }
 
+@deprecated
 class ScoreControl {
   final PersonUseCase personUseCase = GetIt.I.get<PersonUseCase>();
 

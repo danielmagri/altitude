@@ -4,7 +4,7 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/core/model/Pair.dart';
+import 'package:altitude/core/model/pair.dart';
 
 abstract class IFireDatabase {
   Future<String> transferHabit(Habit habit, int? reminderCounter, List<String?> competitionsId, List<DayDone> daysDone);

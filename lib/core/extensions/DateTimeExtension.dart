@@ -26,7 +26,7 @@ extension dateTime on DateTime {
     return day2 != null && (this.isAfter(day2) || this.isSameDay(day2));
   }
 
-  bool isBeforeOrSameDay(DateTime day2) {
+  bool isBeforeOrSameDay(DateTime? day2) {
     return day2 != null && (this.isBefore(day2) || this.isSameDay(day2));
   }
 

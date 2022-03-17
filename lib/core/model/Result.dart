@@ -1,40 +1,47 @@
-typedef R Success<R, T>(T data);
-typedef R Error<R>(dynamic error);
+import 'failure.dart';
+
+typedef Success<R, T> = R Function(T data);
+typedef Error<R> = R Function(dynamic error);
 
 class Result<T> {
   Result._();
 
-  factory Result.success(T data) = RSuccess<T>;
-  factory Result.error(dynamic error) = RError;
+  factory Result.success(T data) = SuccessResult<T>;
+  factory Result.error(Failure error) = FailureResult;
 
-  bool get isSuccess => this is RSuccess<T>;
-  bool get isError => this is RError<T>;
+  bool get isSuccess => this is SuccessResult<T>;
+  bool get isError => this is FailureResult<T>;
+
+  T? get data => this is SuccessResult ? (this as SuccessResult).value : null;
+  Failure? get error =>
+      this is FailureResult ? (this as FailureResult).e : null;
 
   R result<R>(Success<R, T> success, Error<R> error) {
     if (isSuccess) {
-      return success((this as RSuccess).data);
+      return success((this as SuccessResult).data);
     } else {
-      return error((this as RError).error);
+      return error((this as FailureResult).error);
     }
   }
 
+  @deprecated
   T absoluteResult() {
     if (isSuccess) {
-      return (this as RSuccess).data;
+      return (this as SuccessResult).data;
     } else {
-      throw (this as RError).error;
+      throw (this as FailureResult).e;
     }
   }
 }
 
-class RSuccess<T> extends Result<T> {
-  RSuccess(this.data) : super._();
+class SuccessResult<T> extends Result<T> {
+  SuccessResult(this.value) : super._();
 
-  final T data;
+  final T? value;
 }
 
-class RError<T> extends Result<T> {
-  RError(this.error) : super._();
+class FailureResult<T> extends Result<T> {
+  FailureResult(this.e) : super._();
 
-  final dynamic error;
+  final Failure e;
 }

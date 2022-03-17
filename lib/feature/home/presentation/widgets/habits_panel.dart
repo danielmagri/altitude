@@ -2,8 +2,8 @@ import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/feature/home/logic/HomeLogic.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
@@ -25,7 +25,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 class HabitsPanel extends StatelessWidget {
   HabitsPanel({Key? key, required this.controller, required this.goHabitDetails}) : super(key: key);
 
-  final HomeLogic controller;
+  final HomeController controller;
   final Function(String? id, int? color) goHabitDetails;
 
   @override

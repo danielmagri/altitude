@@ -1,7 +1,7 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
@@ -10,7 +10,7 @@ import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
-import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/core/model/result.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:get_it/get_it.dart';
 
@@ -59,7 +59,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             throw "Erro ao salvar os dados (2)";
           });
         } else {
-          Person person = (result as RSuccess).data;
+          Person person = (result as SuccessResult).data;
           score = (await _habitUseCase.getHabits(notSave: true))
               .result(((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a! + b!)!) as int Function(List<Habit>), (error) => 0);
 

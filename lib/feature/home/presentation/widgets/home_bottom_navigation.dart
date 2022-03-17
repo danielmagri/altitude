@@ -1,7 +1,7 @@
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Toast.dart';
-import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show
         BorderRadius,
@@ -35,7 +35,7 @@ class HomebottomNavigation extends StatelessWidget {
   final Function goAddHabit;
   final Function goStatistics;
   final Function(bool) goCompetition;
-  final HomeLogic controller;
+  final HomeController controller;
 
   void _addHabitTap() async {
     if (!await controller.canAddHabit()) {

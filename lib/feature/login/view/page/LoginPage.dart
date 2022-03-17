@@ -1,4 +1,4 @@
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/TransferDataDialog.dart';
 import 'package:altitude/feature/login/logic/LoginLogic.dart';
 import 'package:flutter/material.dart';

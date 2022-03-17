@@ -6,7 +6,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/core/di/get_it_config.dart';
-import 'package:altitude/core/model/Pair.dart';
+import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';

@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/friends/logic/FriendsLogic.dart';
 import 'package:altitude/feature/friends/view/dialog/AddFriendDialog.dart';
 import 'package:altitude/feature/friends/view/widget/FriendsList.dart';

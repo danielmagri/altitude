@@ -1,6 +1,7 @@
 import 'dart:ui' show Color;
 import 'package:altitude/common/constant/app_colors.dart';
 
+@deprecated
 abstract class LevelControl {
   static const List<String> _levelsText = [
     "Procrastinador",

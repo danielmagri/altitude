@@ -9,7 +9,7 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/handler/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/competition/logic/CompetitionDetailsLogic.dart';
 import 'package:altitude/feature/competition/view/dialog/AddCompetitorsDialog.dart';
 import 'package:altitude/feature/competition/view/dialog/CompetitorDetailsDialog.dart';

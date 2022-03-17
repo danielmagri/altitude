@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
-import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/core/model/result.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
@@ -16,7 +16,7 @@ void main() {
   });
 
   group('createPerson', () {
-    //TODO
+    
   //   test('returns a Result.success', () async {
   //     expect(await PersonUseCase.getInstance.createPerson(), isA<RSuccess>());
   //   });
@@ -31,7 +31,7 @@ void main() {
       when(fireAuth.getPhotoUrl()).thenReturn("url");
       when(fireDatabase.getPerson()).thenAnswer((_) async => data);
 
-      expect(await PersonUseCase.getI.getPerson(fromServer: true), isA<RSuccess<Person>>());
+      expect(await PersonUseCase.getI.getPerson(fromServer: true), isA<SuccessResult<Person>>());
       expect(data.photoUrl, "url");
       expect(Memory.getI.person, data);
     });
@@ -42,7 +42,7 @@ void main() {
 
       memory.person = data;
 
-      expect(await PersonUseCase.getI.getPerson(fromServer: false), isA<RSuccess<Person>>());
+      expect(await PersonUseCase.getI.getPerson(fromServer: false), isA<SuccessResult<Person>>());
     });
 
     test('returns a Person with Result.error from FireDatabase', () async {
@@ -50,63 +50,63 @@ void main() {
 
       when(fireDatabase.getPerson()).thenThrow(throwsException);
 
-      expect(await PersonUseCase.getI.getPerson(fromServer: true), isA<RError<Person>>());
+      expect(await PersonUseCase.getI.getPerson(fromServer: true), isA<FailureResult<Person>>());
     });
   });
 
   group('getScore', () {
-    //TODO
+    
   });
 
   group('updateLevel', () {
-    //TODO
+    
   });
 
   group('updateName', () {
-    //TODO
+    
   });
 
   group('updateFcmToken', () {
-    //TODO
+    
   });
 
   group('getFriends', () {
-    //TODO
+    
   });
 
   group('getPendingFriends', () {
-    //TODO
+    
   });
 
   group('searchEmail', () {
-    //TODO
+    
   });
 
   group('friendRequest', () {
-    //TODO
+    
   });
 
   group('acceptRequest', () {
-    //TODO
+    
   });
 
   group('declineRequest', () {
-    //TODO
+    
   });
 
   group('cancelFriendRequest', () {
-    //TODO
+
   });
 
   group('removeFriend', () {
-    //TODO
+
   });
 
   group('rankingFriends', () {
-    //TODO
+
   });
 
   group('logout', () {
-    //TODO
+
   });
 }

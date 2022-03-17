@@ -8,6 +8,7 @@ typedef Widget Success<T>(T data);
 typedef Widget SuccessLoadable<T>(T data, bool loading);
 typedef Widget Error(dynamic error);
 
+@deprecated
 class DataState<T> = _DataStateBase<T> with _$DataState;
 
 abstract class _DataStateBase<T> with Store {

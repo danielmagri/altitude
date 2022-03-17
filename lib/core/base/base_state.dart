@@ -27,7 +27,8 @@ import 'package:flutter/material.dart'
         protected,
         showDialog;
 
-abstract class BaseStateWithLogic<T extends StatefulWidget, L extends Object> extends BaseState<T> {
+abstract class BaseStateWithLogic<T extends StatefulWidget, L extends Object>
+    extends BaseState<T> {
   L controller = GetIt.I.get<L>();
 
   @override
@@ -55,12 +56,14 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void navigatePushReplacement(String route, {Object? arguments}) {
-    Navigator.pushReplacementNamed(context, route, arguments: arguments).then(onPageBack);
+    Navigator.pushReplacementNamed(context, route, arguments: arguments)
+        .then(onPageBack);
   }
 
   @protected
   void navigatePopAndPush(String route, {Object? arguments}) {
-    Navigator.popAndPushNamed(context, route, arguments: arguments).then(onPageBack);
+    Navigator.popAndPushNamed(context, route, arguments: arguments)
+        .then(onPageBack);
   }
 
   @protected
@@ -70,7 +73,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void navigateRemoveUntil(String route) {
-    Navigator.of(context).pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
   }
 
   @protected
@@ -105,9 +109,14 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           barrierDismissible: false,
           fullscreenDialog: true,
           transitionDuration: Duration(milliseconds: 100),
-          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation,
+          transitionsBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
                   Widget child) =>
-              new FadeTransition(opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+              new FadeTransition(
+                  opacity: new CurvedAnimation(
+                      parent: animation, curve: Curves.easeOut),
+                  child: child),
           pageBuilder: (BuildContext context, _, __) {
             return LoadingWidget();
           }));
@@ -130,7 +139,9 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
               subBody: subBody,
               action: [
                 TextButton(
-                  child: const Text("Não", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                  child: const Text("Não",
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                   onPressed: () {
                     navigatePop();
                     cancelCallback!();
@@ -157,12 +168,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  void handleError(dynamic error) {
+  Future<Null> handleError(dynamic error) async {
     showLoading(false);
     if (error is String) {
       showToast(error);
     } else {
       showToast("Ocorreu um erro");
     }
+    return null;
   }
 }

@@ -7,7 +7,7 @@ import 'package:altitude/common/sharedPref/SharedPref.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/BaseUseCase.dart';
 import 'package:altitude/core/di/get_it_config.dart';
-import 'package:altitude/core/model/Result.dart';
+import 'package:altitude/core/model/result.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';

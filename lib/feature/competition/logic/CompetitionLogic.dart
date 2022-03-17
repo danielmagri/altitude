@@ -4,7 +4,7 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/DataState.dart';
-import 'package:altitude/core/model/Pair.dart';
+import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';

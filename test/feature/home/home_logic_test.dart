@@ -4,8 +4,8 @@ import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/enums/StateType.dart';
-import 'package:altitude/core/model/Result.dart';
-import 'package:altitude/feature/home/logic/HomeLogic.dart';
+import 'package:altitude/core/model/result.dart';
+import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +13,7 @@ import 'package:mobx/mobx.dart' as mobx;
 import 'package:mockito/mockito.dart';
 import '../../config/init_config.dart';
 
-HomeLogic get logic => GetIt.I.get<HomeLogic>();
+HomeController get logic => GetIt.I.get<HomeController>();
 
 void main() {
   setUp(() {

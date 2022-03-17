@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/core/base/BaseState.dart';
+import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/friends/logic/PendingFriendsLogic.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
