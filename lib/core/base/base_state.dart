@@ -27,7 +27,7 @@ import 'package:flutter/material.dart'
         protected,
         showDialog;
 
-abstract class BaseStateWithLogic<T extends StatefulWidget, L extends Object>
+abstract class BaseStateWithController<T extends StatefulWidget, L extends Object>
     extends BaseState<T> {
   L controller = GetIt.I.get<L>();
 

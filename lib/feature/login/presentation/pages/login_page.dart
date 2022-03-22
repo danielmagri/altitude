@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends BaseStateWithLogic<LoginPage, LoginController> {
+class _LoginPageState extends BaseStateWithController<LoginPage, LoginController> {
   void loginWithFacebook() {
     showLoading(true);
     controller.loginFacebook().then((uid) {

@@ -8,10 +8,14 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
+@usecase
+@Injectable()
 class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final Memory _memory;
   final GetHabitUsecase _getHabitUsecase;

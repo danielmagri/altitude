@@ -3,21 +3,21 @@ import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/feature/addHabit/view/page/AddHabitPage.dart';
-import 'package:altitude/feature/competition/view/page/CreateCompetitionPage.dart';
-import 'package:altitude/feature/competition/view/page/competitionDetailsPage.dart';
-import 'package:altitude/feature/competition/view/page/pendingCompetitionPage.dart';
+import 'package:altitude/feature/competitions/presentation/pages/competition_details_page.dart';
+import 'package:altitude/feature/competitions/presentation/pages/competition_page.dart';
+import 'package:altitude/feature/competitions/presentation/pages/create_competition_page.dart';
+import 'package:altitude/feature/competitions/presentation/pages/pending_competition_page.dart';
+import 'package:altitude/feature/friends/presentation/pages/friends_page.dart';
+import 'package:altitude/feature/friends/presentation/pages/pending_friends_page.dart';
+import 'package:altitude/feature/habits/presentation/pages/add_habit_page.dart';
 import 'package:altitude/feature/home/presentation/pages/all_levels_page.dart';
-import 'package:altitude/feature/competition/view/page/competitionPage.dart';
-import 'package:altitude/feature/editHabit/view/page/EditHabitPage.dart';
-import 'package:altitude/feature/friends/view/page/FriendsPage.dart';
-import 'package:altitude/feature/friends/view/page/PendingFriendsPage.dart';
-import 'package:altitude/feature/habitDetails/view/page/HabitDetailsPage.dart';
+import 'package:altitude/feature/habits/presentation/pages/edit_habit_page.dart';
+import 'package:altitude/feature/habits/presentation/pages/habit_details_page.dart';
 import 'package:altitude/feature/home/presentation/pages/home_page.dart';
 import 'package:altitude/feature/login/presentation/pages/login_page.dart';
-import 'package:altitude/feature/statistics/view/page/StatisticsPage.dart';
-import 'package:altitude/feature/setting/view/page/HelpPage.dart';
-import 'package:altitude/feature/setting/view/page/SettingsPage.dart';
+import 'package:altitude/feature/setting/presentation/pages/help_page.dart';
+import 'package:altitude/feature/setting/presentation/pages/settings_page.dart';
+import 'package:altitude/feature/statistics/presentation/pages/statistics_page.dart';
 import 'package:flutter/material.dart'
     show Center, MaterialPageRoute, Route, RouteSettings, Scaffold, StatefulWidget, Text;
 

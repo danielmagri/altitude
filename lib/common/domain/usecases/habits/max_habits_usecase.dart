@@ -1,7 +1,11 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/core/di/get_it_config.dart';
+import 'package:injectable/injectable.dart';
 
+@usecase
+@Injectable()
 class MaxHabitsUsecase extends BaseUsecase<NoParams, bool> {
   final GetHabitsUsecase _getHabitsUsecase;
 

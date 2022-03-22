@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseStateWithLogic<HomePage, HomeController> with WidgetsBindingObserver {
+class _HomePageState extends BaseStateWithController<HomePage, HomeController> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
