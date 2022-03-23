@@ -1,4 +1,4 @@
-import 'package:altitude/common/domain/model/params/send_competition_notification_params.dart';
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/di/get_it_config.dart';
@@ -47,4 +47,12 @@ class SendCompetitionNotificationUsecase
 
     return null;
   }
+}
+
+class SendCompetitionNotificationParams {
+  final int earnedScore;
+  final List<Competition> competitions;
+
+  SendCompetitionNotificationParams(
+      {required this.earnedScore, required this.competitions});
 }

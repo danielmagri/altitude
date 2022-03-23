@@ -1,9 +1,9 @@
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/domain/model/params/complete_params.dart';
 import 'package:altitude/common/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/max_habits_usecase.dart';
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
@@ -22,6 +22,7 @@ abstract class _HomeControllerBase with Store {
   final GetHabitsUsecase _getHabitsUsecase;
   final CompleteHabitUsecase _completeHabitUsecase;
   final MaxHabitsUsecase _maxHabitsUsecase;
+  final GetUserDataUsecase _getUserDataUsecase;
 
   final PersonUseCase _personUseCase;
   final CompetitionUseCase _competitionUseCase;
@@ -36,6 +37,7 @@ abstract class _HomeControllerBase with Store {
     this._appLogic,
     this._personUseCase,
     this._competitionUseCase,
+    this._getUserDataUsecase,
   );
 
   DataState<Person> user = DataState();
@@ -51,7 +53,7 @@ abstract class _HomeControllerBase with Store {
   bool pendingFriendStatus = false;
 
   Future<void> getUser() async {
-    (await _personUseCase.getPerson()).result((data) {
+    (await _getUserDataUsecase.call(false)).result((data) {
       user.setSuccessState(data);
     }, (error) {
       user.setErrorState(error);
@@ -91,7 +93,7 @@ abstract class _HomeControllerBase with Store {
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelControl.getLevel(newScore);
     int oldLevel =
-        LevelControl.getLevel(await (_personUseCase.getScore() as Future<int>));
+        LevelControl.getLevel((await _personUseCase.getScore()) ?? 0);
 
     if (newLevel != oldLevel) _personUseCase.updateLevel(newLevel);
 
@@ -105,7 +107,7 @@ abstract class _HomeControllerBase with Store {
 
   Future<bool> canAddHabit() => _maxHabitsUsecase
       .call()
-      .resultComplete((data) => data ?? false, (error) => false);
+      .resultComplete((data) => data ?? true, (error) => true);
 
   void updateSystemStyle() => _appLogic.updateSystemStyle();
 }

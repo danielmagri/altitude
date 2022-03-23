@@ -1,5 +1,6 @@
 import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/router/Router.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/home/presentation/pages/home_page.dart';
 import 'package:altitude/feature/login/presentation/pages/login_page.dart';
@@ -19,7 +20,6 @@ import 'package:altitude/feature/tutorialPage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'common/app_logic.dart';
-import 'common/sharedPref/SharedPref.dart';
 import 'common/theme/app_theme.dart';
 import 'common/theme/dark_theme.dart';
 import 'common/theme/light_theme.dart';

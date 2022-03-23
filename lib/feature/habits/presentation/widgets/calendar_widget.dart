@@ -84,7 +84,7 @@ class CalendarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
-        return controller.calendarMonth.handleStateLoadable(
+        return controller.calendarMonth.handleStateReloadable(
           () => Skeleton(
             width: double.maxFinite,
             height: 240,

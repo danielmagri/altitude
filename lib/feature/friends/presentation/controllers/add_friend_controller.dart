@@ -9,7 +9,7 @@ part 'add_friend_controller.g.dart';
 class AddFriendController = _AddFriendControllerBase with _$AddFriendController;
 
 abstract class _AddFriendControllerBase with Store {
-  final PersonUseCase? personUseCase;
+  final PersonUseCase personUseCase;
 
   _AddFriendControllerBase(this.personUseCase);
 

@@ -1,4 +1,4 @@
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mockito/mockito.dart';
 import '../init_config.dart';

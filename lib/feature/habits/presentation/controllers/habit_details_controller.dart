@@ -1,13 +1,16 @@
 import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/domain/usecases/habits/complete_habit_usecase.dart';
+import 'package:altitude/common/domain/usecases/habits/get_habit_usecase.dart';
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
-import 'package:altitude/core/model/DataState.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/failure.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -15,13 +18,17 @@ import 'package:table_calendar/table_calendar.dart' show CalendarFormat;
 part 'habit_details_controller.g.dart';
 
 @LazySingleton()
-class HabitDetailsController = _HabitDetailsControllerBase with _$HabitDetailsController;
+class HabitDetailsController = _HabitDetailsControllerBase
+    with _$HabitDetailsController;
 
 abstract class _HabitDetailsControllerBase with Store {
-  final HabitUseCase? _habitUseCase;
-  final CompetitionUseCase? _competitionUseCase;
+  final CompleteHabitUsecase _completeHabitUsecase;
+  final GetHabitUsecase _getHabitUsecase;
+  final HabitUseCase _habitUseCase;
+  final CompetitionUseCase _competitionUseCase;
 
-  _HabitDetailsControllerBase(this._habitUseCase, this._competitionUseCase);
+  _HabitDetailsControllerBase(this._habitUseCase, this._competitionUseCase,
+      this._completeHabitUsecase, this._getHabitUsecase);
 
   String? _id;
   int? _color;
@@ -44,27 +51,31 @@ abstract class _HabitDetailsControllerBase with Store {
     await getHabitDetail();
 
     DateTime today = DateTime.now().today;
-    DateTime startDate = DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
-    DateTime endDate = DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
-    (await _habitUseCase!.getCalendarDaysDone(_id, startDate, endDate)).result((data) {
+    DateTime startDate =
+        DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
+    DateTime endDate =
+        DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
+    (await _habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result(
+        (data) {
       currentMonth = data;
-      calendarMonth.setData(data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
-      isHabitDone.setData(data.containsKey(DateTime.now().today));
+      calendarMonth.setSuccessState(
+          data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
+      isHabitDone.setSuccessState(data.containsKey(DateTime.now().today));
       calculateRocketForce();
     }, (error) {
-      calendarMonth.setError(error);
+      calendarMonth.setErrorState(error);
     });
   }
 
   Future<void> getHabitDetail() async {
-    (await _habitUseCase!.getHabit(_id)).result((data) {
-      habit.setData(data);
-      frequency.setData(data.frequency);
-      reminders.setData(data.reminder);
+    (await _getHabitUsecase.call(_id)).result((data) {
+      habit.setSuccessState(data);
+      frequency.setSuccessState(data.frequency);
+      reminders.setSuccessState(data.reminder);
     }, (error) {
-      habit.setError(error);
-      frequency.setError(error);
-      reminders.setError(error);
+      habit.setErrorState(error);
+      frequency.setErrorState(error);
+      reminders.setErrorState(error);
     });
   }
 
@@ -74,7 +85,8 @@ abstract class _HabitDetailsControllerBase with Store {
       int timesDays = habit.data!.frequency!.daysCount()!;
       List<DateTime?> dates = currentMonth.keys
           .toList()
-          .where((e) => e!.isAfterOrSameDay(DateTime.now().today.subtract(Duration(days: CYCLE_DAYS))))
+          .where((e) => e!.isAfterOrSameDay(
+              DateTime.now().today.subtract(Duration(days: CYCLE_DAYS))))
           .toList();
 
       int daysDoneLastCycle = dates.length;
@@ -82,78 +94,92 @@ abstract class _HabitDetailsControllerBase with Store {
       force = daysDoneLastCycle / timesDays;
 
       if (force > 1.3) force = 1.3;
-      rocketForce.setData(force);
+      rocketForce.setSuccessState(force);
     } catch (error) {
-      rocketForce.setError(error);
+      rocketForce.setErrorState(Failure.genericFailure(error));
     }
   }
 
-  void calendarMonthSwipe(DateTime start, DateTime end, CalendarFormat format) async {
-    calendarMonth.setLoading();
-    (await _habitUseCase!.getCalendarDaysDone(_id, start, end)).result((data) {
-      calendarMonth.setData(data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
+  void calendarMonthSwipe(
+      DateTime start, DateTime end, CalendarFormat format) async {
+    calendarMonth.setLoadingState();
+    (await _habitUseCase.getCalendarDaysDone(_id, start, end)).result((data) {
+      calendarMonth.setSuccessState(
+          data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
     }, (error) {
-      calendarMonth.setError(error);
+      calendarMonth.setErrorState(error);
     });
   }
 
-  Future<void> setDoneHabit(bool add, DateTime date, DonePageType donePageType) async {
-    calendarMonth.setLoading();
-    isHabitDone.setLoading();
+  Future<void> setDoneHabit(
+      bool add, DateTime date, DonePageType donePageType) async {
+    calendarMonth.setLoadingState();
+    isHabitDone.setLoadingState();
 
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
     DateTime startDate = date.subtract(Duration(days: weekDay));
     DateTime endDate = date.lastWeekDay();
 
-    var days =
-        calendarMonth.data!.keys.where((e) => e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate)).toList();
+    var days = calendarMonth.data!.keys
+        .where((e) =>
+            e.isAfterOrSameDay(startDate) && e.isBeforeOrSameDay(endDate))
+        .toList();
 
-    return (await _habitUseCase!.completeHabit(_id, date, add, days)).result((data) {
+    return (await _completeHabitUsecase
+        .call(CompleteParams(
+            habitId: _id ?? "", date: date, isAdd: add, daysDone: days))
+        .resultComplete((data) {
       Map<DateTime, List> visibleMonthDays = calendarMonth.data!;
 
-      bool yesterday = visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
+      bool yesterday =
+          visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
       bool tomorrow = visibleMonthDays.containsKey(date.add(Duration(days: 1)));
 
       if (!add) {
         // Remover dia
         visibleMonthDays.remove(date);
         if (yesterday) {
-          visibleMonthDays.update(date.subtract(Duration(days: 1)), (old) => [old[0], false]);
+          visibleMonthDays.update(
+              date.subtract(Duration(days: 1)), (old) => [old[0], false]);
         }
 
         if (tomorrow) {
-          visibleMonthDays.update(date.add(Duration(days: 1)), (old) => [false, old[1]]);
+          visibleMonthDays.update(
+              date.add(Duration(days: 1)), (old) => [false, old[1]]);
         }
       } else {
         // Adicionar dia
         visibleMonthDays.putIfAbsent(date, () => [yesterday, tomorrow]);
         if (yesterday) {
-          visibleMonthDays.update(date.subtract(Duration(days: 1)), (old) => [old[0], true]);
+          visibleMonthDays.update(
+              date.subtract(Duration(days: 1)), (old) => [old[0], true]);
         }
 
         if (tomorrow) {
-          visibleMonthDays.update(date.add(Duration(days: 1)), (old) => [true, old[1]]);
+          visibleMonthDays.update(
+              date.add(Duration(days: 1)), (old) => [true, old[1]]);
         }
       }
 
-      if (date.isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
+      if (date
+          .isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
         currentMonth = visibleMonthDays;
         calculateRocketForce();
       }
 
-      calendarMonth.setData(visibleMonthDays.asObservable());
+      calendarMonth.setSuccessState(visibleMonthDays.asObservable());
       getHabitDetail();
       if (date.isAtSameMomentAs(DateTime.now().today)) {
-        isHabitDone.setData(add);
+        isHabitDone.setSuccessState(add);
       } else {
-        isHabitDone.setLoading(false);
+        isHabitDone.setSuccessState(isHabitDone.data);
       }
-      return Future.value();
+      return;
     }, (error) {
-      calendarMonth.setLoading(false);
-      isHabitDone.setLoading(false);
+      calendarMonth.setSuccessState(calendarMonth.data);
+      isHabitDone.setSuccessState(isHabitDone.data);
       throw error;
-    });
+    }));
   }
 
   void editCueCallback(String? cue) {
@@ -164,11 +190,11 @@ abstract class _HabitDetailsControllerBase with Store {
       newHabit!.oldCue = cue;
     }
 
-    habit.setData(newHabit);
+    habit.setSuccessState(newHabit);
   }
 
   void editAlarmCallback(Reminder? newReminder) {
-    reminders.setData(newReminder);
+    reminders.setSuccessState(newReminder);
     habit.data!.reminder = newReminder;
   }
 
@@ -178,6 +204,6 @@ abstract class _HabitDetailsControllerBase with Store {
   }
 
   Future<bool> hasCompetition() {
-    return _competitionUseCase!.hasCompetitionByHabit(_id);
+    return _competitionUseCase.hasCompetitionByHabit(_id);
   }
 }

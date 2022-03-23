@@ -12,9 +12,9 @@ part 'edit_cue_controller.g.dart';
 class EditCueController = _EditCueControllerBase with _$EditCueController;
 
 abstract class _EditCueControllerBase with Store {
-  final HabitUseCase? _habitUseCase;
-  final HabitDetailsController? habitDetailsLogic;
-  final IFireAnalytics? _fireAnalytics;
+  final HabitUseCase _habitUseCase;
+  final HabitDetailsController habitDetailsLogic;
+  final IFireAnalytics _fireAnalytics;
 
   Color get habitColor => habitDetailsLogic!.habitColor;
   String? get cue => habitDetailsLogic!.habit.data!.oldCue;

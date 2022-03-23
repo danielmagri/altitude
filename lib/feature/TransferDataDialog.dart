@@ -1,4 +1,6 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/core/base/base_state.dart';
@@ -24,9 +26,13 @@ class TransferDataDialog extends StatefulWidget {
 }
 
 class _TransferDataDialogState extends BaseState<TransferDataDialog> {
+  final GetUserDataUsecase _getUserDataUsecase =
+      GetIt.I.get<GetUserDataUsecase>();
+  final GetHabitsUsecase _getHabitsUsecase = GetIt.I.get<GetHabitsUsecase>();
   final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
   final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
-  final ILocalNotification _localNotification = GetIt.I.get<ILocalNotification>();
+  final ILocalNotification _localNotification =
+      GetIt.I.get<ILocalNotification>();
   final IFireAnalytics _fireAnalytics = GetIt.I.get<IFireAnalytics>();
 
   double? progress;
@@ -50,18 +56,23 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           throw "Erro ao salvar os dados (1)";
         });
       } else {
-        Result<Person> result = await _personUseCase.getPerson(fromServer: true);
+        Result<Person> result = await _getUserDataUsecase.call(true);
 
         int score = 0;
         if (result.isError) {
-          (await _personUseCase.createPerson()).result((data) {}, (error) async {
+          (await _personUseCase.createPerson()).result((data) {},
+              (error) async {
             await _personUseCase.logout();
             throw "Erro ao salvar os dados (2)";
           });
         } else {
           Person person = (result as SuccessResult).data;
-          score = (await _habitUseCase.getHabits(notSave: true))
-              .result(((data) => data.isEmpty ? 0 : data.map((e) => e.score).reduce((a, b) => a! + b!)!) as int Function(List<Habit>), (error) => 0);
+          score = (await _getHabitsUsecase.call(true)).result(
+              ((data) => data.isEmpty
+                      ? 0
+                      : data.map((e) => e.score).reduce((a, b) => a! + b!)!)
+                  as int Function(List<Habit>),
+              (error) => 0);
 
           (await _personUseCase.createPerson(
                   level: LevelControl.getLevel(score),
@@ -84,14 +95,19 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
-          List<String?> competitionsId = await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
-          List<DayDone> daysDone = await DatabaseService().getDaysDone(habit.oldId);
+          List<String?> competitionsId =
+              await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
+          List<DayDone> daysDone =
+              await DatabaseService().getDaysDone(habit.oldId);
           habit.daysDone = daysDone.length;
-          habit.score = ScoreControl().scoreEarnedTotal(habit.frequency, daysDone.map((e) => e.date).toList());
+          habit.score = ScoreControl().scoreEarnedTotal(
+              habit.frequency, daysDone.map((e) => e.date).toList());
 
           score += habit.score!;
 
-          await (await _habitUseCase.transferHabit(habit, competitionsId, daysDone)).result((data) async {
+          await (await _habitUseCase.transferHabit(
+                  habit, competitionsId, daysDone))
+              .result((data) async {
             counter++;
 
             setState(() {
@@ -121,28 +137,34 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => false,
-        child: SimpleDialog(backgroundColor: AppTheme.of(context).materialTheme.cardColor, children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Center(
-              child: Column(children: [
-                const Text("Fazendo a transferência dos dados",
-                    style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                const SizedBox(height: 16),
-                LinearProgressIndicator(
-                    value: progress,
-                    backgroundColor: Color.fromARGB(255, 211, 211, 211),
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)),
-                const SizedBox(height: 16),
-                const Text("Carregando...."),
-                const SizedBox(height: 8),
-                const Text("Por favor não feche o app", style: TextStyle(fontSize: 11)),
-                const SizedBox(height: 4),
-                const Text("Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.",
-                    style: TextStyle(fontSize: 11)),
-              ]),
-            ),
-          )
-        ]));
+        child: SimpleDialog(
+            backgroundColor: AppTheme.of(context).materialTheme.cardColor,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Center(
+                  child: Column(children: [
+                    const Text("Fazendo a transferência dos dados",
+                        style: TextStyle(fontSize: 18),
+                        textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: Color.fromARGB(255, 211, 211, 211),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.orange)),
+                    const SizedBox(height: 16),
+                    const Text("Carregando...."),
+                    const SizedBox(height: 8),
+                    const Text("Por favor não feche o app",
+                        style: TextStyle(fontSize: 11)),
+                    const SizedBox(height: 4),
+                    const Text(
+                        "Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.",
+                        style: TextStyle(fontSize: 11)),
+                  ]),
+                ),
+              )
+            ]));
   }
 }

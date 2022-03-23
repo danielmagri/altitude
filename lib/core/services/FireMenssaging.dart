@@ -1,4 +1,4 @@
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/di/get_it_config.dart';

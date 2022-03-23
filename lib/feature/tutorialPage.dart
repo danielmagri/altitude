@@ -1,4 +1,4 @@
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/base_state.dart';

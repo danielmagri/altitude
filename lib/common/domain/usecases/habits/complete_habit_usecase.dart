@@ -1,11 +1,9 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
-import 'package:altitude/common/domain/model/params/complete_params.dart';
-import 'package:altitude/common/domain/model/params/send_competition_notification_params.dart';
+import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habit_usecase.dart';
 import 'package:altitude/common/domain/usecases/notifications/send_competition_notification_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/di/get_it_config.dart';
@@ -21,16 +19,15 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final GetHabitUsecase _getHabitUsecase;
   final SendCompetitionNotificationUsecase _sendCompetitionNotificationUsecase;
   final IFireDatabase _fireDatabase;
+  final GetCompetitionsUsecase _getCompetitionsUsecase;
   final PersonUseCase _personUseCase;
-  final CompetitionUseCase _competitionUseCase;
 
   CompleteHabitUsecase(
       this._memory,
       this._fireDatabase,
       this._personUseCase,
-      this._competitionUseCase,
       this._sendCompetitionNotificationUsecase,
-      this._getHabitUsecase);
+      this._getHabitUsecase, this._getCompetitionsUsecase);
 
   @override
   Future<void> getRawFuture(CompleteParams params) async {
@@ -55,7 +52,7 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
       DayDone dayDone = DayDone(date: params.date);
 
       List<Competition> competitions =
-          (await _competitionUseCase.getCompetitions())
+          (await _getCompetitionsUsecase.call(false))
               .absoluteResult()
               .where((e) =>
                   e.getMyCompetitor().habitId == params.habitId &&
@@ -94,4 +91,18 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
       return;
     }, (error) => throw error);
   }
+}
+
+class CompleteParams {
+  final String habitId;
+  final DateTime date;
+  final bool isAdd;
+  final List<DateTime>? daysDone;
+
+  CompleteParams({
+    required this.habitId,
+    required this.date,
+    this.isAdd = true,
+    this.daysDone,
+  });
 }

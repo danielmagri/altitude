@@ -2,7 +2,7 @@ import 'dart:async' show Timer;
 import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
@@ -207,7 +207,7 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
               width: double.maxFinite,
               height: 50,
               child: Observer(
-                builder: (_) => controller.isHabitDone.handleStateLoadable(
+                builder: (_) => controller.isHabitDone.handleStateReloadable(
                   () => const Skeleton(width: double.maxFinite, height: 50),
                   (data, loading) => ElevatedButton(
                     style: ButtonStyle(

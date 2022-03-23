@@ -9,7 +9,7 @@ part 'pending_friends_controller.g.dart';
 class PendingFriendsController = _PendingFriendsControllerBase with _$PendingFriendsController;
 
 abstract class _PendingFriendsControllerBase with Store {
-  final PersonUseCase? personUseCase;
+  final PersonUseCase personUseCase;
 
   _PendingFriendsControllerBase(this.personUseCase);
 

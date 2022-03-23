@@ -14,7 +14,7 @@ part 'edit_habit_controller.g.dart';
 class EditHabitController = _EditHabitControllerBase with _$EditHabitController;
 
 abstract class _EditHabitControllerBase with Store {
-  final HabitUseCase? _habitUseCase;
+  final HabitUseCase _habitUseCase;
 
   _EditHabitControllerBase(this._habitUseCase);
 

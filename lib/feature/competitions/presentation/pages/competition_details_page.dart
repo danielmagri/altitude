@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Competitor.dart';
 import 'dart:async' show Timer;
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
-import 'package:altitude/common/sharedPref/SharedPref.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
@@ -78,7 +78,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
       showToast(result);
     } else {
       showLoading(true);
-      controller.changeTitle(widget.arguments.competition.id, titleTextController.text).then((res) {
+      controller.changeTitle(widget.arguments.competition.id ?? "", titleTextController.text).then((res) {
         showLoading(false);
         navigatePop();
       }).catchError(handleError);

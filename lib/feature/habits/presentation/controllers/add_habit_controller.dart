@@ -15,7 +15,7 @@ part 'add_habit_controller.g.dart';
 class AddHabitController = _AddHabitControllerBase with _$AddHabitController;
 
 abstract class _AddHabitControllerBase with Store {
-  final HabitUseCase? habitUseCase;
+  final HabitUseCase habitUseCase;
 
   @observable
   int? color;

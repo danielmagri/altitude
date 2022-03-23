@@ -1,9 +1,11 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/useCase/PersonUseCase.dart';
-import 'package:altitude/core/model/DataState.dart';
+import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/failure.dart';
 import 'package:altitude/feature/statistics/domain/models/frequency_statistic_data.dart';
 import 'package:altitude/feature/statistics/domain/models/habit_statistic_data.dart';
 import 'package:altitude/feature/statistics/domain/models/historic_statistic_data.dart';
@@ -17,10 +19,12 @@ class StatisticsController = _StatisticsControllerBase
     with _$StatisticsController;
 
 abstract class _StatisticsControllerBase with Store {
-  final PersonUseCase? _personUseCase;
-  final HabitUseCase? _habitUseCase;
+  final GetHabitsUsecase _getHabitsUsecase;
+  final PersonUseCase _personUseCase;
+  final HabitUseCase _habitUseCase;
 
-  _StatisticsControllerBase(this._personUseCase, this._habitUseCase);
+  _StatisticsControllerBase(
+      this._personUseCase, this._habitUseCase, this._getHabitsUsecase);
 
   DataState<ObservableList<HabitStatisticData>?> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
@@ -33,25 +37,26 @@ abstract class _StatisticsControllerBase with Store {
   Future<void> fetchData() async {
     try {
       List<Habit> habits =
-          (await _habitUseCase!.getHabits()).absoluteResult().asObservable();
-      int? totalScore = await _personUseCase!.getScore();
+          (await _getHabitsUsecase.call(false)).absoluteResult().asObservable();
+      int? totalScore = await _personUseCase.getScore();
       List<DayDone> daysDone =
-          (await _habitUseCase!.getAllDaysDone(habits)).absoluteResult();
+          (await _habitUseCase.getAllDaysDone(habits)).absoluteResult();
 
       Map<DateTime, List<DayDone>> dateGrouped = groupBy<DayDone, DateTime>(
           daysDone, (e) => DateTime(e.date!.year, e.date!.month));
 
-      historicData.setData(await handleHistoricData(dateGrouped, habits));
-      frequencyData.setData(handleFrequencyData(dateGrouped, habits));
-      habitsData.setData(habits
+      historicData
+          .setSuccessState(await handleHistoricData(dateGrouped, habits));
+      frequencyData.setSuccessState(handleFrequencyData(dateGrouped, habits));
+      habitsData.setSuccessState(habits
           .map((e) => HabitStatisticData(
               e.id, e.score, e.habit, e.colorCode, totalScore))
           .toList()
           .asObservable());
     } catch (error) {
-      habitsData.setError(error);
-      historicData.setError(error);
-      frequencyData.setError(error);
+      habitsData.setErrorState(Failure.genericFailure(error));
+      historicData.setErrorState(Failure.genericFailure(error));
+      frequencyData.setErrorState(Failure.genericFailure(error));
     }
   }
 
@@ -180,6 +185,6 @@ abstract class _StatisticsControllerBase with Store {
     } else {
       selectedId = null;
     }
-    habitsData.setData(habitsData.data);
+    habitsData.setSuccessState(habitsData.data);
   }
 }

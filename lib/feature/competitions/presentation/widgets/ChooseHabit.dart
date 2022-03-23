@@ -11,7 +11,9 @@ import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/feature/competitions/domain/usecases/max_competitions_by_habit_usecase.dart';
 import 'package:flutter/material.dart'
     show
         Container,
@@ -43,6 +45,7 @@ class ChooseHabit extends StatefulWidget {
 }
 
 class _ChooseHabitState extends BaseState<ChooseHabit> {
+  final MaxCompetitionsByHabitUsecase _maxCompetitionsByHabitUsecase = GetIt.I.get<MaxCompetitionsByHabitUsecase>();
   final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
   final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
   final CompetitionUseCase _competitionUseCase =
@@ -51,8 +54,8 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
   Habit? selectedHabit;
 
   void acceptRequest() async {
-    if (await _competitionUseCase
-        .maximumNumberReachedByHabit(selectedHabit!.id)) {
+    if (await _maxCompetitionsByHabitUsecase
+        .call(selectedHabit!.id).resultComplete((data) => data ?? true, (error) => true)) {
       showToast(
           "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {

@@ -15,9 +15,9 @@ part 'edit_alarm_controller.g.dart';
 class EditAlarmController = _EditAlarmControllerBase with _$EditAlarmController;
 
 abstract class _EditAlarmControllerBase with Store {
-  final HabitDetailsController? habitDetailsLogic;
-  final HabitUseCase? _habitUseCase;
-  final IFireAnalytics? _fireAnalytics;
+  final HabitDetailsController habitDetailsLogic;
+  final HabitUseCase _habitUseCase;
+  final IFireAnalytics _fireAnalytics;
 
   Reminder? get reminder => habitDetailsLogic!.reminders.data;
   Color get habitColor => habitDetailsLogic!.habitColor;
