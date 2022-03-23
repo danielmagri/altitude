@@ -1,6 +1,5 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competition_usecase.dart';
-import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
@@ -24,48 +23,53 @@ class CompetitionUseCase extends BaseUseCase {
   final PersonUseCase _personUseCase;
   final IFireDatabase _fireDatabase;
   final IFireFunctions _fireFunctions;
-  final GetCompetitionsUsecase _getCompetitionsUsecase;
   final GetCompetitionUsecase _getCompetitionUsecase;
 
-  CompetitionUseCase(this._memory, this._personUseCase, this._fireDatabase, this._fireFunctions, this._getCompetitionsUsecase, this._getCompetitionUsecase);
+  CompetitionUseCase(this._memory, this._personUseCase, this._fireDatabase,
+      this._fireFunctions, this._getCompetitionUsecase);
 
   bool get pendingCompetitionsStatus => SharedPref.instance.pendingCompetition;
-  set pendingCompetitionsStatus(bool value) => SharedPref.instance.pendingCompetition = value;
+  set pendingCompetitionsStatus(bool value) =>
+      SharedPref.instance.pendingCompetition = value;
 
- 
-
-
-
-  
-
-  Future<Result> updateCompetitor(String competitionId, String habitId) => safeCall(() async {
+  Future<Result> updateCompetitor(String competitionId, String habitId) =>
+      safeCall(() async {
         await _fireDatabase.updateCompetitor(competitionId, habitId);
       });
 
-  Future<Result> inviteCompetitor(String? competitionId, List<String?> competitorId, List<String?> fcmTokens) =>
+  Future<Result> inviteCompetitor(String? competitionId,
+          List<String?> competitorId, List<String?> fcmTokens) =>
       safeCall(() async {
-        Competition competition = (await _getCompetitionUsecase(competitionId)).absoluteResult();
+        Competition competition =
+            (await _getCompetitionUsecase(competitionId)).absoluteResult();
         if (competition.competitors!.length < MAX_COMPETITORS) {
           await _fireDatabase.inviteCompetitor(competitionId, competitorId);
 
           for (String? token in fcmTokens) {
-            await _fireFunctions.sendNotification("Convite de competição",
-                "${_personUseCase.name} te convidou a participar do ${competition.title}", token);
+            await _fireFunctions.sendNotification(
+                "Convite de competição",
+                "${_personUseCase.name} te convidou a participar do ${competition.title}",
+                token);
           }
         } else {
           throw "Máximo de competidores atingido.";
         }
       });
 
-  Future<Result> acceptCompetitionRequest(String? competitionId, Competition competition, Competitor competitor) =>
+  Future<Result> acceptCompetitionRequest(String? competitionId,
+          Competition competition, Competitor competitor) =>
       safeCall(() async {
-        Competition competition = (await _getCompetitionUsecase(competitionId)).absoluteResult();
+        Competition competition =
+            (await _getCompetitionUsecase(competitionId)).absoluteResult();
         if (competition.competitors!.length < MAX_COMPETITORS) {
-          await _fireDatabase.acceptCompetitionRequest(competitionId, competitor);
+          await _fireDatabase.acceptCompetitionRequest(
+              competitionId, competitor);
 
           for (Competitor friend in competition.competitors!) {
             await _fireFunctions.sendNotification(
-                "Novo competidor", "${_personUseCase.name} entrou em  ${competition.title}", friend.fcmToken);
+                "Novo competidor",
+                "${_personUseCase.name} entrou em  ${competition.title}",
+                friend.fcmToken);
           }
 
           competition.competitors!.add(competitor);
@@ -74,16 +78,4 @@ class CompetitionUseCase extends BaseUseCase {
           throw "Máximo de competidores atingido.";
         }
       });
-
-
-
-  Future<bool> hasCompetitionByHabit(String? habitId) async {
-    try {
-      return (await _getCompetitionsUsecase(false)).absoluteResult().where((e) => e.getMyCompetitor().habitId == habitId).isNotEmpty;
-    } catch (e) {
-      return Future.value(false);
-    }
-  }
-
-
 }

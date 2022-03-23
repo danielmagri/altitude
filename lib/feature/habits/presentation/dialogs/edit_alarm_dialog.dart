@@ -31,7 +31,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
   }
 
   void switchReminderType(ReminderType type) {
-    if (type == ReminderType.CUE && controller.habitDetailsLogic!.habit.data!.oldCue == "") {
+    if (type == ReminderType.CUE && controller.habitDetailsLogic.habit.data!.oldCue == "") {
       showToast("Adicione o gatilho primeiro");
       return;
     }

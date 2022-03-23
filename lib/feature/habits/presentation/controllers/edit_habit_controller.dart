@@ -1,8 +1,9 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/result.dart';
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/feature/habits/domain/usecases/delete_habit_usecase.dart';
+import 'package:altitude/feature/habits/domain/usecases/update_habit_usecase.dart';
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:get_it/get_it.dart';
@@ -14,9 +15,10 @@ part 'edit_habit_controller.g.dart';
 class EditHabitController = _EditHabitControllerBase with _$EditHabitController;
 
 abstract class _EditHabitControllerBase with Store {
-  final HabitUseCase _habitUseCase;
+  final UpdateHabitUsecase _updateHabitUsecase;
+  final DeleteHabitUsecase _deleteHabitUsecase;
 
-  _EditHabitControllerBase(this._habitUseCase);
+  _EditHabitControllerBase(this._updateHabitUsecase, this._deleteHabitUsecase);
 
   Habit? initialHabit;
 
@@ -45,7 +47,7 @@ abstract class _EditHabitControllerBase with Store {
   }
 
   Future<Result<void>> removeHabit() {
-    return _habitUseCase!.deleteHabit(initialHabit);
+    return _deleteHabitUsecase.call(initialHabit);
   }
 
   Future updateHabit(String habit) async {
@@ -64,8 +66,12 @@ abstract class _EditHabitControllerBase with Store {
     if (editedHabit.color != initialHabit!.color ||
         editedHabit.habit!.compareTo(initialHabit!.habit!) != 0 ||
         !compareFrequency(initialHabit!.frequency, frequency)) {
-      (await _habitUseCase!.updateHabit(editedHabit, initialHabit)).result((data) {
-        GetIt.I.get<HabitDetailsController>().updateHabitDetailsPageData(editedHabit);
+      (await _updateHabitUsecase.call(UpdateHabitParams(
+              habit: editedHabit, inititalHabit: initialHabit)))
+          .result((data) {
+        GetIt.I
+            .get<HabitDetailsController>()
+            .updateHabitDetailsPageData(editedHabit);
       }, (error) => throw error);
     }
   }

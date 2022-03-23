@@ -5,12 +5,12 @@ import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/failure.dart';
+import 'package:altitude/feature/habits/domain/usecases/get_calendar_days_done_usecase.dart';
+import 'package:altitude/feature/habits/domain/usecases/has_competition_by_habit_usecase.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -24,11 +24,11 @@ class HabitDetailsController = _HabitDetailsControllerBase
 abstract class _HabitDetailsControllerBase with Store {
   final CompleteHabitUsecase _completeHabitUsecase;
   final GetHabitUsecase _getHabitUsecase;
-  final HabitUseCase _habitUseCase;
-  final CompetitionUseCase _competitionUseCase;
+  final HasCompetitionByHabitUsecase _hasCompetitionByHabitUsecase;
+  final GetCalendarDaysDoneUsecase _getCalendarDaysDoneUsecase;
 
-  _HabitDetailsControllerBase(this._habitUseCase, this._competitionUseCase,
-      this._completeHabitUsecase, this._getHabitUsecase);
+  _HabitDetailsControllerBase(this._completeHabitUsecase, this._getHabitUsecase,
+      this._hasCompetitionByHabitUsecase, this._getCalendarDaysDoneUsecase);
 
   String? _id;
   int? _color;
@@ -55,8 +55,9 @@ abstract class _HabitDetailsControllerBase with Store {
         DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
     DateTime endDate =
         DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
-    (await _habitUseCase.getCalendarDaysDone(_id, startDate, endDate)).result(
-        (data) {
+    (await _getCalendarDaysDoneUsecase.call(GetCalendarDaysDoneParams(
+            id: _id ?? "", start: startDate, end: endDate)))
+        .result((data) {
       currentMonth = data;
       calendarMonth.setSuccessState(
           data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
@@ -103,7 +104,9 @@ abstract class _HabitDetailsControllerBase with Store {
   void calendarMonthSwipe(
       DateTime start, DateTime end, CalendarFormat format) async {
     calendarMonth.setLoadingState();
-    (await _habitUseCase.getCalendarDaysDone(_id, start, end)).result((data) {
+    (await _getCalendarDaysDoneUsecase.call(
+            GetCalendarDaysDoneParams(id: _id ?? "", start: start, end: end)))
+        .result((data) {
       calendarMonth.setSuccessState(
           data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
     }, (error) {
@@ -204,6 +207,8 @@ abstract class _HabitDetailsControllerBase with Store {
   }
 
   Future<bool> hasCompetition() {
-    return _competitionUseCase.hasCompetitionByHabit(_id);
+    return _hasCompetitionByHabitUsecase
+        .call(_id)
+        .resultComplete((data) => data ?? false, (error) => false);
   }
 }

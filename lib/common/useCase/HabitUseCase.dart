@@ -1,11 +1,9 @@
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Competition.dart';
@@ -16,7 +14,6 @@ import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
-import 'package:altitude/common/constant/app_colors.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -31,7 +28,6 @@ class HabitUseCase extends BaseUseCase {
   final ILocalNotification _localNotification;
   final IFireAnalytics _fireAnalytics;
   final GetUserDataUsecase _getUserDataUsecase;
-  final GetCompetitionsUsecase _getCompetitionsUsecase;
 
   HabitUseCase(
     this._memory,
@@ -39,7 +35,6 @@ class HabitUseCase extends BaseUseCase {
     this._localNotification,
     this._fireAnalytics,
     this._getUserDataUsecase,
-    this._getCompetitionsUsecase,
   );
 
   // Transfer data
@@ -120,95 +115,9 @@ class HabitUseCase extends BaseUseCase {
     return person.reminderCounter;
   }
 
-  Future<Result<Habit>> addHabit(Habit habit) => safeCall(() async {
-        int? reminderCounter;
-        if (habit.reminder != null) {
-          reminderCounter = await _getReminderCounter();
-          habit.reminder!.id = reminderCounter;
-        }
-        var data = await _fireDatabase.addHabit(habit, reminderCounter);
-        _fireAnalytics.sendNewHabit(
-            habit.habit,
-            AppColors.habitsColorName[habit.colorCode!],
-            habit.frequency.runtimeType == DayWeek
-                ? "Diariamente"
-                : "Semanalmente",
-            habit.frequency!.daysCount(),
-            habit.reminder != null ? "Sim" : "Não");
+ 
 
-        _memory.habits.add(data);
-
-        if (habit.reminder != null) {
-          await _localNotification.addNotification(habit);
-        }
-
-        return data;
-      });
-
-  Future<Result<void>> updateHabit(Habit habit, [Habit? inititalHabit]) =>
-      safeCall(() async {
-        List<String?> competitions = (await _getCompetitionsUsecase.call(false))
-            .absoluteResult()
-            .where((e) => e.getMyCompetitor().habitId == habit.id)
-            .map((e) => e.id)
-            .toList();
-        await _fireDatabase.updateHabit(habit, inititalHabit, competitions);
-        int index = _memory.habits.indexWhere((e) => e.id == habit.id);
-        if (index != -1) {
-          _memory.habits[index] = habit;
-        }
-        if (inititalHabit != null && habit.color != inititalHabit.color) {
-          _memory.competitions.clear();
-        }
-        return;
-      });
-
-  Future<Result<void>> updateReminder(int? reminderId, Habit habit) =>
-      safeCall(() async {
-        if (reminderId != null) {
-          await _localNotification.removeNotification(reminderId);
-        }
-
-        if (habit.reminder != null) {
-          int? reminderCounter;
-          if (habit.reminder!.id == null) {
-            reminderCounter = await _getReminderCounter();
-            habit.reminder!.id = reminderCounter;
-          }
-
-          await _fireDatabase.updateReminder(
-              habit.id, reminderCounter, habit.reminder);
-          int index = _memory.habits.indexWhere((e) => e.id == habit.id);
-          if (index != -1) {
-            _memory.habits[index] = habit;
-          }
-          await _localNotification.addNotification(habit);
-        } else {
-          await _fireDatabase.updateReminder(habit.id, null, null);
-          int index = _memory.habits.indexWhere((e) => e.id == habit.id);
-          if (index != -1) {
-            _memory.habits[index] = habit;
-          }
-        }
-
-        return;
-      });
-
-  Future<Result<void>> deleteHabit(Habit? habit) => safeCall(() async {
-        if (habit!.reminder != null) {
-          _localNotification.removeNotification(habit.reminder!.id);
-        }
-        _fireAnalytics.sendRemoveHabit(habit.habit);
-
-        await _fireDatabase.deleteHabit(habit.id);
-
-        int index = _memory.habits.indexWhere((e) => e.id == habit.id);
-        if (index != -1) {
-          _memory.habits.removeAt(index);
-        }
-
-        return;
-      });
+ 
 
   /// Days Done
 
@@ -230,35 +139,5 @@ class HabitUseCase extends BaseUseCase {
         return _fireDatabase.getDaysDone(id, start, end);
       });
 
-  Future<Result<Map<DateTime?, List>>> getCalendarDaysDone(
-          String? id, DateTime start, DateTime end) =>
-      safeCall(() async {
-        DateTime startDate = start.subtract(const Duration(days: 1));
-        DateTime endDate = end.add(const Duration(days: 1));
-        var data = await _fireDatabase.getDaysDone(id, startDate, endDate);
-        Map<DateTime?, List> map = Map();
-        bool before = false;
-        bool after = false;
-
-        for (int i = 0; i < data.length; i++) {
-          if (i - 1 >= 0 &&
-              data[i].date!.difference(data[i - 1].date!) ==
-                  const Duration(days: 1)) {
-            before = true;
-          } else {
-            before = false;
-          }
-
-          if (i + 1 < data.length &&
-              data[i + 1].date!.difference(data[i].date!) ==
-                  const Duration(days: 1)) {
-            after = true;
-          } else {
-            after = false;
-          }
-
-          map.putIfAbsent(data[i].date, () => [before, after]);
-        }
-        return map;
-      });
+  
 }

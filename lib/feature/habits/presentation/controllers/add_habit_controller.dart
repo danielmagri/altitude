@@ -3,9 +3,9 @@ import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/ReminderWeekday.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/result.dart';
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/feature/habits/domain/usecases/add_habit_usecase.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -15,7 +15,12 @@ part 'add_habit_controller.g.dart';
 class AddHabitController = _AddHabitControllerBase with _$AddHabitController;
 
 abstract class _AddHabitControllerBase with Store {
-  final HabitUseCase habitUseCase;
+  final AddHabitUsecase _addHabitUsecase;
+
+  _AddHabitControllerBase(this._addHabitUsecase) {
+    color = Random().nextInt(AppColors.habitsColor.length);
+    reminderTime = TimeOfDay.now();
+  }
 
   @observable
   int? color;
@@ -44,11 +49,6 @@ abstract class _AddHabitControllerBase with Store {
 
   @computed
   Color get habitColor => AppColors.habitsColor[color!];
-
-  _AddHabitControllerBase(this.habitUseCase) {
-    color = Random().nextInt(AppColors.habitsColor.length);
-    reminderTime = TimeOfDay.now();
-  }
 
   @action
   void selectColor(int value) {
@@ -82,9 +82,9 @@ abstract class _AddHabitControllerBase with Store {
         thursday: reminderWeekday[4].state,
         friday: reminderWeekday[5].state,
         saturday: reminderWeekday[6].state);
-        
+
     if (reminder.hasAnyDay()) habit.reminder = reminder;
 
-    return habitUseCase!.addHabit(habit);
+    return _addHabitUsecase.call(habit);
   }
 }
