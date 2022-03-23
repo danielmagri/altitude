@@ -1,6 +1,6 @@
 import 'dart:async' show StreamSubscription;
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
-import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:flutter/material.dart'
     show
         BorderSide,

@@ -1,7 +1,7 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 
 class AllLevelsPage extends StatefulWidget {
   AllLevelsPage(this.arguments);
@@ -41,7 +41,7 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
     for (int i = 0; i < 10; i++) {
       widgets.add(
         Opacity(
-          opacity: LevelControl.getLevel(widget.arguments!.score) >= i ? 1 : 0.3,
+          opacity: LevelUtils.getLevel(widget.arguments!.score) >= i ? 1 : 0.3,
           child: Container(
             padding: const EdgeInsets.all(8),
             height: 90,
@@ -50,7 +50,7 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
                 Expanded(
                   flex: 1,
                   child: Image.asset(
-                    LevelControl.getLevelImagePathByCode(i),
+                    LevelUtils.getLevelImagePathByCode(i),
                     height: 60,
                   ),
                 ),
@@ -61,14 +61,14 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        LevelControl.getLevelTextByCode(i),
+                        LevelUtils.getLevelTextByCode(i),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        '${LevelControl.getMaxScore(i)} Km',
+                        '${LevelUtils.getMaxScore(i)} Km',
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
                       ),
                     ],

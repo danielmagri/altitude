@@ -1,5 +1,5 @@
 import 'package:altitude/common/app_logic.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/max_habits_usecase.dart';
@@ -90,8 +90,8 @@ abstract class _HomeControllerBase with Store {
   }
 
   Future<bool> checkLevelUp(int newScore) async {
-    int newLevel = LevelControl.getLevel(newScore);
-    int oldLevel = LevelControl.getLevel((await _getUserDataUsecase
+    int newLevel = LevelUtils.getLevel(newScore);
+    int oldLevel = LevelUtils.getLevel((await _getUserDataUsecase
                 .call()
                 .resultComplete((data) => data, (error) => null))
             ?.score ??
@@ -100,7 +100,7 @@ abstract class _HomeControllerBase with Store {
     if (newLevel != oldLevel) _updateLevelUsecase.call(newLevel);
 
     if (newLevel > oldLevel) {
-      _fireAnalytics.sendNextLevel(LevelControl.getLevelText(newScore));
+      _fireAnalytics.sendNextLevel(LevelUtils.getLevelText(newScore));
       return true;
     } else {
       return false;

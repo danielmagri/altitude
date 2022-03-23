@@ -1,4 +1,4 @@
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
@@ -52,7 +52,7 @@ class RecalculateScoreUsecase extends BaseUsecase<NoParams, void> {
     }
 
     await _fireDatabase.updateTotalScore(
-        totalScore, LevelControl.getLevel(totalScore));
+        totalScore, LevelUtils.getLevel(totalScore));
 
     _memory.clear();
   }

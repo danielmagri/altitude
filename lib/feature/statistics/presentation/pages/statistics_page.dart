@@ -3,7 +3,7 @@ import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/base/base_state.dart';
-import 'package:altitude/core/handler/AdsHandler.dart';
+import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/feature/statistics/domain/models/habit_statistic_data.dart';
 import 'package:altitude/feature/statistics/presentation/controllers/statistics_controller.dart';
 import 'package:altitude/feature/statistics/presentation/widgets/frequency_chart.dart';
@@ -22,10 +22,10 @@ class Statisticspage extends StatefulWidget {
 
 class _StatisticspageState extends BaseStateWithController<Statisticspage, StatisticsController> {
   final BannerAd banner = BannerAd(
-      adUnitId: AdsHandler.statisticsBannerAdUnitId,
+      adUnitId: AdsUtils.statisticsBannerAdUnitId,
       size: AdSize.largeBanner,
-      request: AdsHandler.adRequest,
-      listener: AdsHandler.adBannerListener);
+      request: AdsUtils.adRequest,
+      listener: AdsUtils.adBannerListener);
 
   @override
   void initState() {

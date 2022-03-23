@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/feature/habits/presentation/controllers/add_habit_controller.dart';

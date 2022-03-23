@@ -1,4 +1,4 @@
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 
 class Person {
   String? uid;
@@ -46,7 +46,7 @@ class Person {
     if (state == null) state = 0;
   }
 
-  String get levelText => score == null ? "" : LevelControl.getLevelText(score!);
+  String get levelText => score == null ? "" : LevelUtils.getLevelText(score!);
 
   factory Person.fromJson(Map<String, dynamic> json, [String? id]) => Person(
       uid: id ?? json[UID],

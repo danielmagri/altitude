@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/SharedPrefKeys.dart';
-import 'package:altitude/core/handler/SharedPrefHandler.dart';
+import 'package:altitude/common/shared_pref/core/shared_pref_handler.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 

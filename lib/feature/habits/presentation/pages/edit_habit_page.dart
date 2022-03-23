@@ -1,8 +1,8 @@
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
-import 'package:altitude/core/handler/AdsHandler.dart';
-import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/common/constant/ads_utils.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/habits/presentation/controllers/edit_habit_controller.dart';
 import 'package:altitude/feature/habits/presentation/widgets/habit_text.dart';
@@ -31,8 +31,8 @@ class _EditHabitPageState
   void initState() {
     super.initState();
     InterstitialAd.load(
-      adUnitId: AdsHandler.edithabitOnSaveIntersticialAdUnitId,
-      request: AdsHandler.adRequest,
+      adUnitId: AdsUtils.edithabitOnSaveIntersticialAdUnitId,
+      request: AdsUtils.adRequest,
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           // Keep a reference to the ad so you can show it later.

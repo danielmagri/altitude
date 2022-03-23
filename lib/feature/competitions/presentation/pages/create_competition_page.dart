@@ -6,8 +6,8 @@ import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
-import 'package:altitude/core/handler/AdsHandler.dart';
-import 'package:altitude/core/handler/ValidationHandler.dart';
+import 'package:altitude/common/constant/ads_utils.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/feature/competitions/presentation/controllers/create_competition_controller.dart';
@@ -34,8 +34,8 @@ class _CreateCompetitionPageState
   @override
   void initState() {
     InterstitialAd.load(
-      adUnitId: AdsHandler.edithabitOnSaveIntersticialAdUnitId,
-      request: AdsHandler.adRequest,
+      adUnitId: AdsUtils.edithabitOnSaveIntersticialAdUnitId,
+      request: AdsUtils.adRequest,
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           // Keep a reference to the ad so you can show it later.

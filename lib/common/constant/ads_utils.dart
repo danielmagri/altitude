@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-abstract class AdsHandler {
+abstract class AdsUtils {
   static String get habitDetailsBannerAdUnitId =>
       'ca-app-pub-4496000445589212/7843041207';
 

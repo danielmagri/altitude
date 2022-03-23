@@ -12,7 +12,7 @@ import 'package:altitude/feature/setting/domain/usecases/logout_usecase.dart';
 import 'package:altitude/feature/setting/domain/usecases/transfer_habit_usecase.dart';
 import 'package:altitude/feature/setting/domain/usecases/update_total_score_usecase.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/result.dart';
@@ -84,7 +84,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
               (error) => 0);
 
           (await _createPersonUsecase.call(CreatePersonParams(
-                  level: LevelControl.getLevel(score),
+                  level: LevelUtils.getLevel(score),
                   score: score,
                   reminderCounter: 0,
                   friends: person.friends,

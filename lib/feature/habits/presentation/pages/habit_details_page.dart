@@ -7,7 +7,7 @@ import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/core/base/base_state.dart';
-import 'package:altitude/core/handler/AdsHandler.dart';
+import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:altitude/feature/habits/presentation/dialogs/edit_alarm_dialog.dart';
@@ -35,10 +35,10 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
   final ScrollController scrollController = ScrollController();
 
   final BannerAd banner = BannerAd(
-      adUnitId: AdsHandler.habitDetailsBannerAdUnitId,
+      adUnitId: AdsUtils.habitDetailsBannerAdUnitId,
       size: AdSize.largeBanner,
-      request: AdsHandler.adRequest,
-      listener: AdsHandler.adBannerListener);
+      request: AdsUtils.adRequest,
+      listener: AdsUtils.adBannerListener);
 
   @override
   void initState() {

@@ -1,7 +1,7 @@
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -186,12 +186,12 @@ class HomeDrawer extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Text(
-                                      "${LevelControl.getLevelText(data.score!)}",
+                                      "${LevelUtils.getLevelText(data.score!)}",
                                       style: const TextStyle(
                                           color: Colors.white, fontSize: 14)),
                                   const SizedBox(width: 4),
                                   Image.asset(
-                                      LevelControl.getLevelImagePath(
+                                      LevelUtils.getLevelImagePath(
                                           data.score!),
                                       height: 25,
                                       width: 25),

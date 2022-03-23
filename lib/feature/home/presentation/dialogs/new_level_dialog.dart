@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:altitude/common/controllers/LevelControl.dart';
+import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 
 class NewLevelDialog extends StatelessWidget {
@@ -40,7 +40,7 @@ class NewLevelDialog extends StatelessWidget {
                   Text(
                     "Parabéns!",
                     style:
-                        TextStyle(color: LevelControl.getLevelColor(score), fontSize: 32, fontWeight: FontWeight.bold),
+                        TextStyle(color: LevelUtils.getLevelColor(score), fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 24.0),
                   Text(
@@ -50,14 +50,14 @@ class NewLevelDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 24.0),
                   Image.asset(
-                    LevelControl.getLevelImagePath(score),
+                    LevelUtils.getLevelImagePath(score),
                     height: 120,
                   ),
                   SizedBox(height: 20.0),
                   Text(
-                    LevelControl.getLevelText(score),
+                    LevelUtils.getLevelText(score),
                     style:
-                        TextStyle(color: LevelControl.getLevelColor(score), fontSize: 22, fontWeight: FontWeight.bold),
+                        TextStyle(color: LevelUtils.getLevelColor(score), fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20.0),
                   Align(
