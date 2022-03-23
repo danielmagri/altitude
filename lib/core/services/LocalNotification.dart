@@ -1,5 +1,4 @@
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/common/constant/app_colors.dart';
@@ -9,7 +8,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 import 'FireMenssaging.dart';
 
-@service
 @Singleton(as: ILocalNotification)
 class LocalNotification implements ILocalNotification {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -17,7 +15,8 @@ class LocalNotification implements ILocalNotification {
   @factoryMethod
   static Future<LocalNotification> initialize() async {
     LocalNotification instance = LocalNotification();
-    instance.flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    instance.flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('ic_notification');
@@ -25,12 +24,14 @@ class LocalNotification implements ILocalNotification {
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
-    await instance.flutterLocalNotificationsPlugin
-        .initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    await instance.flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onSelectNotification: onSelectNotification);
 
     // FirebaseMessaging configuration
     await instance.flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(FireMessaging.channel);
 
     return instance;
@@ -54,16 +55,22 @@ class LocalNotification implements ILocalNotification {
       priority: Priority.high,
       color: AppColors.habitsColor[habit.colorCode!],
     );
-    var platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     tz.initializeTimeZones();
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
     for (int day in habit.reminder!.getAllweekdaysDateTime()) {
       await flutterLocalNotificationsPlugin.zonedSchedule(
-          habit.reminder!.id!, title, null, _scheduleWeekly(now, day, time), platformChannelSpecifics,
+          habit.reminder!.id!,
+          title,
+          null,
+          _scheduleWeekly(now, day, time),
+          platformChannelSpecifics,
           androidAllowWhileIdle: true,
-          uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
           matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
           payload: habit.id.toString());
     }
@@ -72,7 +79,8 @@ class LocalNotification implements ILocalNotification {
   }
 
   tz.TZDateTime _scheduleWeekly(tz.TZDateTime now, int day, Time time) {
-    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, time.hour, time.minute);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day, time.hour, time.minute);
     while (scheduledDate.weekday != day) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }

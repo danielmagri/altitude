@@ -7,7 +7,7 @@ import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
-import 'package:altitude/feature/TransferDataDialog.dart';
+import 'package:altitude/feature/setting/presentation/dialogs/transfer_data_dialog.dart';
 import 'package:altitude/feature/home/presentation/controllers/home_controller.dart';
 import 'package:altitude/feature/home/presentation/dialogs/new_level_dialog.dart';
 import 'package:altitude/feature/home/presentation/widgets/habits_panel.dart';

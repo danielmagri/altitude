@@ -7,13 +7,15 @@ import 'package:altitude/core/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
+import 'package:altitude/feature/setting/domain/usecases/create_person_usecase.dart';
+import 'package:altitude/feature/setting/domain/usecases/logout_usecase.dart';
+import 'package:altitude/feature/setting/domain/usecases/transfer_habit_usecase.dart';
+import 'package:altitude/feature/setting/domain/usecases/update_total_score_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/controllers/LevelControl.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
 import 'package:altitude/core/model/result.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:get_it/get_it.dart';
 
 class TransferDataDialog extends StatefulWidget {
@@ -29,11 +31,16 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   final GetUserDataUsecase _getUserDataUsecase =
       GetIt.I.get<GetUserDataUsecase>();
   final GetHabitsUsecase _getHabitsUsecase = GetIt.I.get<GetHabitsUsecase>();
-  final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
-  final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
+  final LogoutUsecase _logoutUsecase = GetIt.I.get<LogoutUsecase>();
+  final CreatePersonUsecase _createPersonUsecase =
+      GetIt.I.get<CreatePersonUsecase>();
   final ILocalNotification _localNotification =
       GetIt.I.get<ILocalNotification>();
   final IFireAnalytics _fireAnalytics = GetIt.I.get<IFireAnalytics>();
+  final UpdateTotalScoreUsecase _updateTotalScoreUsecase =
+      GetIt.I.get<UpdateTotalScoreUsecase>();
+  final TransferHabitUsecase _transferHabitUsecase =
+      GetIt.I.get<TransferHabitUsecase>();
 
   double? progress;
 
@@ -51,8 +58,9 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   Future setPersonData(String uid) async {
     try {
       if (!await DatabaseService().existDB()) {
-        (await _personUseCase.createPerson()).result((data) {}, (error) async {
-          await _personUseCase.logout();
+        (await _createPersonUsecase.call(CreatePersonParams()))
+            .result((data) {}, (error) async {
+          await _logoutUsecase.call();
           throw "Erro ao salvar os dados (1)";
         });
       } else {
@@ -60,9 +68,9 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
 
         int score = 0;
         if (result.isError) {
-          (await _personUseCase.createPerson()).result((data) {},
-              (error) async {
-            await _personUseCase.logout();
+          (await _createPersonUsecase.call(CreatePersonParams()))
+              .result((data) {}, (error) async {
+            await _logoutUsecase.call();
             throw "Erro ao salvar os dados (2)";
           });
         } else {
@@ -74,14 +82,14 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                   as int Function(List<Habit>),
               (error) => 0);
 
-          (await _personUseCase.createPerson(
+          (await _createPersonUsecase.call(CreatePersonParams(
                   level: LevelControl.getLevel(score),
                   score: score,
                   reminderCounter: 0,
                   friends: person.friends,
-                  pendingFriends: person.pendingFriends))
+                  pendingFriends: person.pendingFriends)))
               .result((data) {}, (error) async {
-            await _personUseCase.logout();
+            await _logoutUsecase.call();
             throw "Erro ao salvar os dados (3)";
           });
         }
@@ -105,9 +113,11 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
 
           score += habit.score!;
 
-          await (await _habitUseCase.transferHabit(
-                  habit, competitionsId, daysDone))
-              .result((data) async {
+          await (await _transferHabitUsecase.call(TransferHabitParams(
+                  habit: habit,
+                  competitionsId: competitionsId,
+                  daysDone: daysDone)))
+              .result((_) async {
             counter++;
 
             setState(() {
@@ -116,19 +126,19 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
 
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {
-            await _personUseCase.logout();
+            await _logoutUsecase.call();
             throw "Erro ao salvar os dados (4)";
           });
         }
 
-        await _habitUseCase.updateTotalScore(score);
+        await _updateTotalScoreUsecase.call(score);
       }
 
       await DatabaseService().deleteDB();
       _fireAnalytics.setUserId(uid);
       return true;
     } catch (e) {
-      await _personUseCase.logout();
+      await _logoutUsecase.call();
       throw "Erro ao salvar os dados (0)";
     }
   }

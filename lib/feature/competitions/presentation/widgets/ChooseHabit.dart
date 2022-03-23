@@ -1,11 +1,10 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/core/base/base_state.dart';
@@ -13,6 +12,8 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/feature/competitions/domain/usecases/accept_competition_request_usecase.dart';
+import 'package:altitude/feature/competitions/domain/usecases/get_days_done_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/max_competitions_by_habit_usecase.dart';
 import 'package:flutter/material.dart'
     show
@@ -45,39 +46,51 @@ class ChooseHabit extends StatefulWidget {
 }
 
 class _ChooseHabitState extends BaseState<ChooseHabit> {
-  final MaxCompetitionsByHabitUsecase _maxCompetitionsByHabitUsecase = GetIt.I.get<MaxCompetitionsByHabitUsecase>();
-  final PersonUseCase _personUseCase = GetIt.I.get<PersonUseCase>();
-  final HabitUseCase _habitUseCase = GetIt.I.get<HabitUseCase>();
-  final CompetitionUseCase _competitionUseCase =
-      GetIt.I.get<CompetitionUseCase>();
+  final MaxCompetitionsByHabitUsecase _maxCompetitionsByHabitUsecase =
+      GetIt.I.get<MaxCompetitionsByHabitUsecase>();
+  final GetUserDataUsecase _getUserDataUsecase =
+      GetIt.I.get<GetUserDataUsecase>();
+  final AcceptCompetitionRequestUsecase _acceptCompetitionRequestUsecase =
+      GetIt.I.get<AcceptCompetitionRequestUsecase>();
+  final GetDaysDoneUsecase _getDaysDoneUsecase =
+      GetIt.I.get<GetDaysDoneUsecase>();
 
   Habit? selectedHabit;
 
   void acceptRequest() async {
     if (await _maxCompetitionsByHabitUsecase
-        .call(selectedHabit!.id).resultComplete((data) => data ?? true, (error) => true)) {
+        .call(selectedHabit!.id)
+        .resultComplete((data) => data ?? true, (error) => true)) {
       showToast(
           "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
-      List<DateTime?> days = (await _habitUseCase.getDaysDone(selectedHabit!.id,
-              widget.competition.initialDate, DateTime.now().today))
+      List<DateTime?> days = (await _getDaysDoneUsecase.call(GetDaysDoneParams(
+              id: selectedHabit!.id,
+              start: widget.competition.initialDate,
+              end: DateTime.now().today)))
           .absoluteResult()
           .map((e) => e.date)
           .toList();
 
+      Person? user = await _getUserDataUsecase
+          .call(false)
+          .resultComplete((data) => data, (error) => null);
+
       Competitor competitor = Competitor(
-          name: _personUseCase.name,
-          fcmToken: await _personUseCase.fcmToken,
+          name: user?.name,
+          fcmToken: user?.fcmToken,
           color: selectedHabit!.colorCode,
           habitId: selectedHabit!.id,
           uid: GetIt.I.get<IFireAuth>().getUid(),
           score:
               ScoreControl().scoreEarnedTotal(selectedHabit!.frequency, days),
           you: true);
-      _competitionUseCase
-          .acceptCompetitionRequest(
-              widget.competition.id, widget.competition, competitor)
+      _acceptCompetitionRequestUsecase
+          .call(AcceptCompetitionRequestParams(
+              competitionId: widget.competition.id ?? "",
+              competition: widget.competition,
+              competitor: competitor))
           .then((_) {
         showLoading(false);
         navigatePop(result: widget.competition);

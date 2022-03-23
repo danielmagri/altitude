@@ -2,17 +2,16 @@ import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habit_usecase.dart';
 import 'package:altitude/common/domain/usecases/notifications/send_competition_notification_usecase.dart';
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:injectable/injectable.dart';
 
-@usecase
 @Injectable()
 class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final Memory _memory;
@@ -20,14 +19,15 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final SendCompetitionNotificationUsecase _sendCompetitionNotificationUsecase;
   final IFireDatabase _fireDatabase;
   final GetCompetitionsUsecase _getCompetitionsUsecase;
-  final PersonUseCase _personUseCase;
+  final GetUserDataUsecase _getUserDataUsecase;
 
   CompleteHabitUsecase(
       this._memory,
       this._fireDatabase,
-      this._personUseCase,
+      this._getUserDataUsecase,
       this._sendCompetitionNotificationUsecase,
-      this._getHabitUsecase, this._getCompetitionsUsecase);
+      this._getHabitUsecase,
+      this._getCompetitionsUsecase);
 
   @override
   Future<void> getRawFuture(CompleteParams params) async {
@@ -66,7 +66,12 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
           SendCompetitionNotificationParams(
               earnedScore: score, competitions: competitions));
 
-      _personUseCase.setLocalScore((await _personUseCase.getScore())! + score);
+      _memory.person?.score = ((await _getUserDataUsecase
+                      .call(false)
+                      .resultComplete((data) => data, (error) => null))
+                  ?.score ??
+              0) +
+          score;
       int index = _memory.habits.indexWhere((e) => e.id == params.habitId);
       if (index != -1) {
         _memory.habits[index].score = habit.score! + score;

@@ -1,10 +1,8 @@
 import 'package:altitude/common/constant/SharedPrefKeys.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/handler/SharedPrefHandler.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
-@service
 @singleton
 class SharedPref extends SharedPrefHandler {
   static SharedPref get instance => GetIt.I.get<SharedPref>();

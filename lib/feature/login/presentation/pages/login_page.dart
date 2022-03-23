@@ -1,5 +1,5 @@
 import 'package:altitude/core/base/base_state.dart';
-import 'package:altitude/feature/TransferDataDialog.dart';
+import 'package:altitude/feature/setting/presentation/dialogs/transfer_data_dialog.dart';
 import 'package:altitude/feature/login/presentation/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';

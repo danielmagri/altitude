@@ -6,11 +6,11 @@ import 'package:altitude/common/domain/usecases/habits/max_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/feature/home/domain/usecases/update_level_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'home_controller.g.dart';
@@ -23,10 +23,9 @@ abstract class _HomeControllerBase with Store {
   final CompleteHabitUsecase _completeHabitUsecase;
   final MaxHabitsUsecase _maxHabitsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
-
-  final PersonUseCase _personUseCase;
-  final CompetitionUseCase _competitionUseCase;
+  final UpdateLevelUsecase _updateLevelUsecase;
   final IFireAnalytics _fireAnalytics;
+  final SharedPref _sharedPref;
   final AppLogic _appLogic;
 
   _HomeControllerBase(
@@ -35,9 +34,9 @@ abstract class _HomeControllerBase with Store {
     this._maxHabitsUsecase,
     this._fireAnalytics,
     this._appLogic,
-    this._personUseCase,
-    this._competitionUseCase,
     this._getUserDataUsecase,
+    this._updateLevelUsecase,
+    this._sharedPref,
   );
 
   DataState<Person> user = DataState();
@@ -70,8 +69,8 @@ abstract class _HomeControllerBase with Store {
 
   @action
   void fetchPendingStatus() {
-    pendingCompetitionStatus = _competitionUseCase.pendingCompetitionsStatus;
-    pendingFriendStatus = _personUseCase.pendingFriendsStatus;
+    pendingCompetitionStatus = _sharedPref.pendingCompetition;
+    pendingFriendStatus = _sharedPref.pendingFriends;
   }
 
   @action
@@ -92,10 +91,13 @@ abstract class _HomeControllerBase with Store {
 
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelControl.getLevel(newScore);
-    int oldLevel =
-        LevelControl.getLevel((await _personUseCase.getScore()) ?? 0);
+    int oldLevel = LevelControl.getLevel((await _getUserDataUsecase
+                .call()
+                .resultComplete((data) => data, (error) => null))
+            ?.score ??
+        0);
 
-    if (newLevel != oldLevel) _personUseCase.updateLevel(newLevel);
+    if (newLevel != oldLevel) _updateLevelUsecase.call(newLevel);
 
     if (newLevel > oldLevel) {
       _fireAnalytics.sendNextLevel(LevelControl.getLevelText(newScore));

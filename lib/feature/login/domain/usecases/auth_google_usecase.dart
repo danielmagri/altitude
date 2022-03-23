@@ -1,11 +1,8 @@
 import 'package:altitude/core/base/base_usecase.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 
-
-@usecase
 @Injectable()
 class AuthGoogleUsecase extends BaseUsecase<NoParams, String?> {
   @override

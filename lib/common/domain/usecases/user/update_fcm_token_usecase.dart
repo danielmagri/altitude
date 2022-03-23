@@ -1,12 +1,10 @@
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
 import 'package:injectable/injectable.dart';
 
-@usecase
 @Injectable()
 class UpdateFCMTokenUsecase extends BaseUsecase<NoParams, void> {
   final IFireMessaging _fireMessaging;

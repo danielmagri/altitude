@@ -1,14 +1,14 @@
 import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/useCase/HabitUseCase.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/failure.dart';
 import 'package:altitude/feature/statistics/domain/models/frequency_statistic_data.dart';
 import 'package:altitude/feature/statistics/domain/models/habit_statistic_data.dart';
 import 'package:altitude/feature/statistics/domain/models/historic_statistic_data.dart';
+import 'package:altitude/feature/statistics/domain/usecases/get_all_days_done_usecase.dart';
 import "package:collection/collection.dart";
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -20,11 +20,11 @@ class StatisticsController = _StatisticsControllerBase
 
 abstract class _StatisticsControllerBase with Store {
   final GetHabitsUsecase _getHabitsUsecase;
-  final PersonUseCase _personUseCase;
-  final HabitUseCase _habitUseCase;
+  final GetUserDataUsecase _getUserDataUsecase;
+  final GetAllDaysDoneUsecase _getAllDaysDoneUsecase;
 
-  _StatisticsControllerBase(
-      this._personUseCase, this._habitUseCase, this._getHabitsUsecase);
+  _StatisticsControllerBase(this._getHabitsUsecase, this._getUserDataUsecase,
+      this._getAllDaysDoneUsecase);
 
   DataState<ObservableList<HabitStatisticData>?> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
@@ -38,9 +38,12 @@ abstract class _StatisticsControllerBase with Store {
     try {
       List<Habit> habits =
           (await _getHabitsUsecase.call(false)).absoluteResult().asObservable();
-      int? totalScore = await _personUseCase.getScore();
+      int? totalScore = (await _getUserDataUsecase
+              .call(false)
+              .resultComplete((data) => data, (error) => null))
+          ?.score;
       List<DayDone> daysDone =
-          (await _habitUseCase.getAllDaysDone(habits)).absoluteResult();
+          (await _getAllDaysDoneUsecase.call(habits)).absoluteResult();
 
       Map<DateTime, List<DayDone>> dateGrouped = groupBy<DayDone, DateTime>(
           daysDone, (e) => DateTime(e.date!.year, e.date!.month));

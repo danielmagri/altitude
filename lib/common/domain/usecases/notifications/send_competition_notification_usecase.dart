@@ -1,22 +1,25 @@
+import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
-import 'package:altitude/core/di/get_it_config.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
-@usecase
 @Injectable()
 class SendCompetitionNotificationUsecase
     extends BaseUsecase<SendCompetitionNotificationParams, void> {
-  final PersonUseCase _personUseCase;
+  final GetUserDataUsecase _getUserDataUsecase;
   final IFireFunctions _fireFunctions;
 
-  SendCompetitionNotificationUsecase(this._personUseCase, this._fireFunctions);
+  SendCompetitionNotificationUsecase(
+      this._getUserDataUsecase, this._fireFunctions);
 
   @override
   Future<void> getRawFuture(SendCompetitionNotificationParams params) async {
-    final String? name = _personUseCase.name;
+    final String? name = (await _getUserDataUsecase
+            .call(false)
+            .resultComplete((data) => data, (error) => null))
+        ?.name;
 
     params.competitions.forEach((competition) {
       int? oldScore = competition.competitors!.firstWhere((e) => e.you!).score;

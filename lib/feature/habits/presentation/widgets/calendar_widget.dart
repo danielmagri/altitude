@@ -31,8 +31,6 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 
 class CalendarWidget extends StatelessWidget {

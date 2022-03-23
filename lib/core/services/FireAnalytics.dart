@@ -1,9 +1,7 @@
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
 
-@service
 @Singleton(as: IFireAnalytics)
 class FireAnalytics implements IFireAnalytics {
   FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
@@ -14,7 +12,8 @@ class FireAnalytics implements IFireAnalytics {
     analytics.setUserId(id: uid);
   }
 
-  void sendNewHabit(String? habit, String color, String freqType, int? freqTime, String hasReminder) {
+  void sendNewHabit(String? habit, String color, String freqType, int? freqTime,
+      String hasReminder) {
     try {
       analytics.logEvent(
         name: 'new_habit',

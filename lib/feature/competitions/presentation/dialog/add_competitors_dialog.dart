@@ -1,8 +1,8 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/useCase/CompetitionUseCase.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/feature/competitions/domain/usecases/invite_competitor_usecase.dart';
 import 'package:flutter/material.dart'
     show
         BouncingScrollPhysics,
@@ -38,8 +38,8 @@ class AddCompetitorsDialog extends StatefulWidget {
 }
 
 class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
-  final CompetitionUseCase _competitionUseCase =
-      GetIt.I.get<CompetitionUseCase>();
+  final InviteCompetitorUsecase _inviteCompetitorUsecase =
+      GetIt.I.get<InviteCompetitorUsecase>();
 
   List<Person> selectedFriends = [];
 
@@ -52,8 +52,11 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
 
       showLoading(true);
 
-      _competitionUseCase
-          .inviteCompetitor(widget.id, invitations, invitationsToken)
+      _inviteCompetitorUsecase
+          .call(InviteCompetitorParams(
+              competitionId: widget.id,
+              competitorId: invitations,
+              fcmTokens: invitationsToken))
           .then((res) {
         showLoading(false);
         navigatePop();
