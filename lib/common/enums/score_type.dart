@@ -1,0 +1,1 @@
+enum ScoreType { ADD, SUBTRACT }

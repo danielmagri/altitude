@@ -1,6 +1,6 @@
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/core/base/base_state.dart';
@@ -41,6 +41,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       GetIt.I.get<UpdateTotalScoreUsecase>();
   final TransferHabitUsecase _transferHabitUsecase =
       GetIt.I.get<TransferHabitUsecase>();
+  final IScoreService _scoreService = GetIt.I.get<IScoreService>();
 
   double? progress;
 
@@ -108,8 +109,8 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           List<DayDone> daysDone =
               await DatabaseService().getDaysDone(habit.oldId);
           habit.daysDone = daysDone.length;
-          habit.score = ScoreControl().scoreEarnedTotal(
-              habit.frequency, daysDone.map((e) => e.date).toList());
+          habit.score = _scoreService.scoreEarnedTotal(
+              habit.frequency!, daysDone.map((e) => e.date).toList());
 
           score += habit.score!;
 

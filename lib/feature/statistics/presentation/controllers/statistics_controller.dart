@@ -1,6 +1,6 @@
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/model/data_state.dart';
@@ -22,9 +22,10 @@ abstract class _StatisticsControllerBase with Store {
   final GetHabitsUsecase _getHabitsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
   final GetAllDaysDoneUsecase _getAllDaysDoneUsecase;
+  final IScoreService _scoreService;
 
   _StatisticsControllerBase(this._getHabitsUsecase, this._getUserDataUsecase,
-      this._getAllDaysDoneUsecase);
+      this._getAllDaysDoneUsecase, this._scoreService);
 
   DataState<ObservableList<HabitStatisticData>?> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();
@@ -81,8 +82,8 @@ abstract class _StatisticsControllerBase with Store {
         if (habit != null) {
           habitsMap.putIfAbsent(
               habit,
-              () => ScoreControl().scoreEarnedTotal(
-                  habit.frequency, value.map((e) => e.date).toList()));
+              () => _scoreService.scoreEarnedTotal(
+                  habit.frequency!, value.map((e) => e.date).toList()));
         }
       });
 

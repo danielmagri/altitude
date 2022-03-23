@@ -1,18 +1,13 @@
+import 'package:altitude/common/enums/score_type.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:injectable/injectable.dart';
 
-enum ScoreType { ADD, SUBTRACT }
-
-@deprecated
-class ScoreControl {
-  static const int DAY_DONE_POINT = 2;
-  static const int CYCLE_DONE_POINT = 1;
-
-  /// Calcula os pontos a ser adicionado ou retirado
-  /// frequency: frequência do hábito
-  /// week: os dias da semana feito
-  /// date: o dia a ser adicionado ou removido
-  int calculateScore(ScoreType type, Frequency? frequency, List<DateTime?> week,
+@Injectable(as: IScoreService)
+class ScoreService extends IScoreService {
+  @override
+  int calculateScore(ScoreType type, Frequency frequency, List<DateTime?> week,
       DateTime date) {
     if (type == ScoreType.ADD) week.add(date);
 
@@ -20,47 +15,31 @@ class ScoreControl {
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {
-        return signal * DAY_DONE_POINT;
+        return signal * IScoreService.DAY_DONE_POINT;
       } else if (frequency.isADoneDay(date)) {
-        return signal * (DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT));
+        return signal *
+            (IScoreService.DAY_DONE_POINT +
+                (week.length * IScoreService.CYCLE_DONE_POINT));
       } else {
-        return signal * (DAY_DONE_POINT + CYCLE_DONE_POINT);
+        return signal *
+            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
       }
     } else if (frequency is Weekly) {
       if (week.length > frequency.daysCount()!) {
-        return signal * (DAY_DONE_POINT + CYCLE_DONE_POINT);
+        return signal *
+            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
       } else if (week.length == frequency.daysCount()) {
-        return signal * (DAY_DONE_POINT + (week.length * CYCLE_DONE_POINT));
+        return signal *
+            (IScoreService.DAY_DONE_POINT +
+                (week.length * IScoreService.CYCLE_DONE_POINT));
       } else {
-        return signal * (DAY_DONE_POINT);
+        return signal * (IScoreService.DAY_DONE_POINT);
       }
     } else {
       return 0;
     }
   }
 
-  /// Calcula os pontos da semana toda
-  /// frequency: frequência do hábito
-  /// daysDone: os dias da semana feito
-  int _calculateWeekScore(Frequency? frequency, List<DateTime?> week) {
-    if (frequency is DayWeek) {
-      if (_hasDoneCorrectDayWeek(frequency, week)) {
-        return week.length * (DAY_DONE_POINT + CYCLE_DONE_POINT);
-      } else {
-        return week.length * DAY_DONE_POINT;
-      }
-    } else if (frequency is Weekly) {
-      if (week.length >= frequency.daysCount()!) {
-        return week.length * (DAY_DONE_POINT + CYCLE_DONE_POINT);
-      } else {
-        return week.length * DAY_DONE_POINT;
-      }
-    } else {
-      return 0;
-    }
-  }
-
-  /// Calcula toda a pontuação
   int scoreEarnedTotal(Frequency? frequency, List<DateTime?> daysDone) {
     int score = 0;
     int index = 0;
@@ -82,6 +61,29 @@ class ScoreControl {
     }
 
     return score;
+  }
+
+  /// Calcula os pontos da semana toda
+  /// frequency: frequência do hábito
+  /// daysDone: os dias da semana feito
+  int _calculateWeekScore(Frequency? frequency, List<DateTime?> week) {
+    if (frequency is DayWeek) {
+      if (_hasDoneCorrectDayWeek(frequency, week)) {
+        return week.length *
+            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+      } else {
+        return week.length * IScoreService.DAY_DONE_POINT;
+      }
+    } else if (frequency is Weekly) {
+      if (week.length >= frequency.daysCount()!) {
+        return week.length *
+            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+      } else {
+        return week.length * IScoreService.DAY_DONE_POINT;
+      }
+    } else {
+      return 0;
+    }
   }
 
   /// Checa se a frequêcia do DayWeek está completa

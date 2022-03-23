@@ -1,4 +1,4 @@
-import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
@@ -36,7 +36,7 @@ class CreateCompetitionUsecase
         habitId: params.habit.id,
         color: params.habit.colorCode,
         score: await _fireDatabase.hasDoneAtDay(params.habit.id, date)
-            ? ScoreControl.DAY_DONE_POINT
+            ? IScoreService.DAY_DONE_POINT
             : 0,
         you: true);
 

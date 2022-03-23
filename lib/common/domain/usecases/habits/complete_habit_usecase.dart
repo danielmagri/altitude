@@ -1,8 +1,9 @@
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habit_usecase.dart';
 import 'package:altitude/common/domain/usecases/notifications/send_competition_notification_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/common/enums/score_type.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/core/base/base_usecase.dart';
@@ -20,6 +21,7 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final IFireDatabase _fireDatabase;
   final GetCompetitionsUsecase _getCompetitionsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
+  final IScoreService _scoreService;
 
   CompleteHabitUsecase(
       this._memory,
@@ -27,7 +29,8 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
       this._getUserDataUsecase,
       this._sendCompetitionNotificationUsecase,
       this._getHabitUsecase,
-      this._getCompetitionsUsecase);
+      this._getCompetitionsUsecase,
+      this._scoreService);
 
   @override
   Future<void> getRawFuture(CompleteParams params) async {
@@ -41,9 +44,9 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
               .map((e) => e.date)
               .toList();
 
-      var score = ScoreControl().calculateScore(
+      var score = _scoreService.calculateScore(
           params.isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
-          habit.frequency,
+          habit.frequency!,
           days,
           params.date);
 

@@ -1,5 +1,5 @@
 import 'package:altitude/common/controllers/LevelControl.dart';
-import 'package:altitude/common/controllers/ScoreControl.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
@@ -14,8 +14,9 @@ import 'package:injectable/injectable.dart';
 class RecalculateScoreUsecase extends BaseUsecase<NoParams, void> {
   final Memory _memory;
   final IFireDatabase _fireDatabase;
+  final IScoreService _scoreService;
 
-  RecalculateScoreUsecase(this._memory, this._fireDatabase);
+  RecalculateScoreUsecase(this._memory, this._fireDatabase, this._scoreService);
 
   @override
   Future<void> getRawFuture(NoParams params) async {
@@ -28,8 +29,8 @@ class RecalculateScoreUsecase extends BaseUsecase<NoParams, void> {
     for (Habit habit in habits) {
       List<DayDone> daysDone = await _fireDatabase.getAllDaysDone(habit.id);
 
-      int score = ScoreControl().scoreEarnedTotal(
-          habit.frequency, daysDone.map((e) => e.date).toList());
+      int score = _scoreService.scoreEarnedTotal(
+          habit.frequency!, daysDone.map((e) => e.date).toList());
       totalScore += score;
 
       List<Pair<String?, int>> competitionsScore = [];
@@ -37,8 +38,8 @@ class RecalculateScoreUsecase extends BaseUsecase<NoParams, void> {
       for (Competition competition in competitions
           .where((e) => e.getMyCompetitor().habitId == habit.id)
           .toList()) {
-        int competitionScore = ScoreControl().scoreEarnedTotal(
-            habit.frequency,
+        int competitionScore = _scoreService.scoreEarnedTotal(
+            habit.frequency!,
             daysDone
                 .where((e) => e.date!.isAfterOrSameDay(competition.initialDate))
                 .map((e) => e.date)

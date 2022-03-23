@@ -1,6 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/common/controllers/ScoreControl.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
@@ -54,6 +54,8 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
       GetIt.I.get<AcceptCompetitionRequestUsecase>();
   final GetDaysDoneUsecase _getDaysDoneUsecase =
       GetIt.I.get<GetDaysDoneUsecase>();
+      final IScoreService _scoreService =
+      GetIt.I.get<IScoreService>();
 
   Habit? selectedHabit;
 
@@ -84,7 +86,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
           habitId: selectedHabit!.id,
           uid: GetIt.I.get<IFireAuth>().getUid(),
           score:
-              ScoreControl().scoreEarnedTotal(selectedHabit!.frequency, days),
+              _scoreService.scoreEarnedTotal(selectedHabit!.frequency!, days),
           you: true);
       _acceptCompetitionRequestUsecase
           .call(AcceptCompetitionRequestParams(
