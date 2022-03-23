@@ -7,87 +7,101 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
-import '../../common/app_logic.dart' as _i50;
+import '../../common/app_logic.dart' as _i58;
 import '../../common/domain/usecases/competitions/get_competition_usecase.dart'
-    as _i19;
-import '../../common/domain/usecases/competitions/get_competitions_usecase.dart'
-    as _i20;
-import '../../common/domain/usecases/friends/get_friends_usecase.dart' as _i21;
-import '../../common/domain/usecases/habits/complete_habit_usecase.dart'
-    as _i45;
-import '../../common/domain/usecases/habits/get_habit_usecase.dart' as _i22;
-import '../../common/domain/usecases/habits/get_habits_usecase.dart' as _i23;
-import '../../common/domain/usecases/habits/max_habits_usecase.dart' as _i29;
-import '../../common/domain/usecases/notifications/send_competition_notification_usecase.dart'
-    as _i38;
-import '../../common/domain/usecases/user/get_user_data_usecase.dart' as _i34;
-import '../../common/domain/usecases/user/update_fcm_token_usecase.dart'
-    as _i31;
-import '../../common/shared_pref/shared_pref.dart' as _i25;
-import '../../common/useCase/CompetitionUseCase.dart' as _i44;
-import '../../common/useCase/HabitUseCase.dart' as _i35;
-import '../../common/useCase/PersonUseCase.dart' as _i37;
-import '../../feature/competitions/domain/usecases/create_competition_usecase.dart'
-    as _i16;
-import '../../feature/competitions/domain/usecases/decline_competition_request_usecase.dart'
-    as _i18;
-import '../../feature/competitions/domain/usecases/get_pending_competitions_usecase.dart'
     as _i24;
+import '../../common/domain/usecases/competitions/get_competitions_usecase.dart'
+    as _i25;
+import '../../common/domain/usecases/friends/get_friends_usecase.dart' as _i26;
+import '../../common/domain/usecases/habits/complete_habit_usecase.dart'
+    as _i53;
+import '../../common/domain/usecases/habits/get_habit_usecase.dart' as _i27;
+import '../../common/domain/usecases/habits/get_habits_usecase.dart' as _i28;
+import '../../common/domain/usecases/habits/max_habits_usecase.dart' as _i35;
+import '../../common/domain/usecases/notifications/send_competition_notification_usecase.dart'
+    as _i46;
+import '../../common/domain/usecases/user/get_user_data_usecase.dart' as _i41;
+import '../../common/domain/usecases/user/update_fcm_token_usecase.dart'
+    as _i38;
+import '../../common/shared_pref/shared_pref.dart' as _i30;
+import '../../common/useCase/CompetitionUseCase.dart' as _i52;
+import '../../common/useCase/HabitUseCase.dart' as _i42;
+import '../../common/useCase/PersonUseCase.dart' as _i44;
+import '../../feature/competitions/domain/usecases/create_competition_usecase.dart'
+    as _i20;
+import '../../feature/competitions/domain/usecases/decline_competition_request_usecase.dart'
+    as _i21;
+import '../../feature/competitions/domain/usecases/get_pending_competitions_usecase.dart'
+    as _i29;
 import '../../feature/competitions/domain/usecases/get_ranking_friends_usecase.dart'
-    as _i26;
+    as _i32;
 import '../../feature/competitions/domain/usecases/max_competitions_by_habit_usecase.dart'
-    as _i27;
+    as _i33;
 import '../../feature/competitions/domain/usecases/max_competitions_usecase.dart'
-    as _i28;
+    as _i34;
 import '../../feature/competitions/domain/usecases/remove_competitor_usecase.dart'
     as _i13;
 import '../../feature/competitions/domain/usecases/update_competition_usecase.dart'
-    as _i15;
+    as _i16;
 import '../../feature/competitions/presentation/controllers/competition_controller.dart'
-    as _i43;
-import '../../feature/competitions/presentation/controllers/competition_details_controller.dart'
-    as _i32;
-import '../../feature/competitions/presentation/controllers/create_competition_controller.dart'
-    as _i33;
-import '../../feature/competitions/presentation/controllers/pending_competition_controller.dart'
-    as _i30;
-import '../../feature/friends/presentation/controllers/add_friend_controller.dart'
-    as _i41;
-import '../../feature/friends/presentation/controllers/friends_controller.dart'
-    as _i47;
-import '../../feature/friends/presentation/controllers/pending_friends_controller.dart'
     as _i51;
-import '../../feature/habits/presentation/controllers/add_habit_controller.dart'
-    as _i42;
-import '../../feature/habits/presentation/controllers/edit_alarm_controller.dart'
-    as _i52;
-import '../../feature/habits/presentation/controllers/edit_cue_controller.dart'
-    as _i53;
-import '../../feature/habits/presentation/controllers/edit_habit_controller.dart'
-    as _i46;
-import '../../feature/habits/presentation/controllers/habit_details_controller.dart'
-    as _i48;
-import '../../feature/home/presentation/controllers/home_controller.dart'
+import '../../feature/competitions/presentation/controllers/competition_details_controller.dart'
+    as _i39;
+import '../../feature/competitions/presentation/controllers/create_competition_controller.dart'
+    as _i40;
+import '../../feature/competitions/presentation/controllers/pending_competition_controller.dart'
+    as _i36;
+import '../../feature/friends/domain/usecases/accept_request_usecase.dart'
+    as _i17;
+import '../../feature/friends/domain/usecases/cancel_friend_request_usecase.dart'
+    as _i19;
+import '../../feature/friends/domain/usecases/decline_request_usecase.dart'
+    as _i22;
+import '../../feature/friends/domain/usecases/friend_request_usecase.dart'
+    as _i23;
+import '../../feature/friends/domain/usecases/get_pending_friends_usecase.dart'
+    as _i31;
+import '../../feature/friends/domain/usecases/remove_friend_usecase.dart'
+    as _i15;
+import '../../feature/friends/domain/usecases/search_email_usecase.dart'
+    as _i45;
+import '../../feature/friends/presentation/controllers/add_friend_controller.dart'
     as _i49;
+import '../../feature/friends/presentation/controllers/friends_controller.dart'
+    as _i55;
+import '../../feature/friends/presentation/controllers/pending_friends_controller.dart'
+    as _i37;
+import '../../feature/habits/presentation/controllers/add_habit_controller.dart'
+    as _i50;
+import '../../feature/habits/presentation/controllers/edit_alarm_controller.dart'
+    as _i59;
+import '../../feature/habits/presentation/controllers/edit_cue_controller.dart'
+    as _i60;
+import '../../feature/habits/presentation/controllers/edit_habit_controller.dart'
+    as _i54;
+import '../../feature/habits/presentation/controllers/habit_details_controller.dart'
+    as _i56;
+import '../../feature/home/presentation/controllers/home_controller.dart'
+    as _i57;
 import '../../feature/login/domain/usecases/auth_google_usecase.dart' as _i3;
 import '../../feature/login/presentation/controllers/login_controller.dart'
     as _i12;
 import '../../feature/setting/presentation/controllers/settings_controller.dart'
-    as _i39;
+    as _i47;
 import '../../feature/statistics/presentation/controllers/statistics_controller.dart'
-    as _i40;
-import '../services/FireAnalytics.dart' as _i54;
+    as _i48;
+import '../services/FireAnalytics.dart' as _i61;
 import '../services/FireAuth.dart' as _i5;
 import '../services/FireDatabase.dart' as _i7;
 import '../services/FireFunctions.dart' as _i9;
 import '../services/FireMenssaging.dart' as _i11;
-import '../services/interfaces/i_fire_analytics.dart' as _i17;
+import '../services/interfaces/i_fire_analytics.dart' as _i18;
 import '../services/interfaces/i_fire_auth.dart' as _i4;
 import '../services/interfaces/i_fire_database.dart' as _i6;
 import '../services/interfaces/i_fire_functions.dart' as _i8;
 import '../services/interfaces/i_fire_messaging.dart' as _i10;
-import '../services/interfaces/i_local_notification.dart' as _i36;
-import '../services/LocalNotification.dart' as _i55;
+import '../services/interfaces/i_local_notification.dart' as _i43;
+import '../services/LocalNotification.dart' as _i62;
 import '../services/Memory.dart' as _i14;
 
 const String _usecase = 'usecase';
@@ -113,190 +127,231 @@ _i1.GetIt $initGetIt(_i1.GetIt get,
       () => _i13.RemoveCompetitorUsecase(
           get<_i6.IFireDatabase>(), get<_i14.Memory>(), get<_i4.IFireAuth>()),
       registerFor: {_usecase});
-  gh.factory<_i15.UpdateCompetitionUsecase>(
-      () => _i15.UpdateCompetitionUsecase(
+  gh.factory<_i15.RemoveFriendUsecase>(
+      () => _i15.RemoveFriendUsecase(
+          get<_i6.IFireDatabase>(), get<_i4.IFireAuth>()),
+      registerFor: {_usecase});
+  gh.factory<_i16.UpdateCompetitionUsecase>(
+      () => _i16.UpdateCompetitionUsecase(
           get<_i6.IFireDatabase>(), get<_i14.Memory>()),
       registerFor: {_usecase});
-  gh.factory<_i16.CreateCompetitionUsecase>(
-      () => _i16.CreateCompetitionUsecase(
+  gh.factory<_i17.AcceptRequestUsecase>(
+      () => _i17.AcceptRequestUsecase(
+          get<_i6.IFireDatabase>(),
+          get<_i4.IFireAuth>(),
+          get<_i18.IFireAnalytics>(),
+          get<_i14.Memory>(),
+          get<_i8.IFireFunctions>()),
+      registerFor: {_usecase});
+  gh.factory<_i19.CancelFriendRequestUsecase>(
+      () => _i19.CancelFriendRequestUsecase(get<_i6.IFireDatabase>(),
+          get<_i4.IFireAuth>(), get<_i18.IFireAnalytics>(), get<_i14.Memory>()),
+      registerFor: {_usecase});
+  gh.factory<_i20.CreateCompetitionUsecase>(
+      () => _i20.CreateCompetitionUsecase(
           get<_i6.IFireDatabase>(),
           get<_i10.IFireMessaging>(),
           get<_i8.IFireFunctions>(),
-          get<_i17.IFireAnalytics>(),
+          get<_i18.IFireAnalytics>(),
           get<_i4.IFireAuth>(),
           get<_i14.Memory>()),
       registerFor: {_usecase});
-  gh.factory<_i18.DeclineCompetitionRequestUsecase>(
-      () => _i18.DeclineCompetitionRequestUsecase(get<_i6.IFireDatabase>()),
+  gh.factory<_i21.DeclineCompetitionRequestUsecase>(
+      () => _i21.DeclineCompetitionRequestUsecase(get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i19.GetCompetitionUsecase>(
-      () => _i19.GetCompetitionUsecase(
+  gh.factory<_i22.DeclineRequestUsecase>(
+      () => _i22.DeclineRequestUsecase(get<_i6.IFireDatabase>(),
+          get<_i4.IFireAuth>(), get<_i18.IFireAnalytics>()),
+      registerFor: {_usecase});
+  gh.factory<_i23.FriendRequestUsecase>(
+      () => _i23.FriendRequestUsecase(
+          get<_i6.IFireDatabase>(),
+          get<_i4.IFireAuth>(),
+          get<_i18.IFireAnalytics>(),
+          get<_i14.Memory>(),
+          get<_i8.IFireFunctions>()),
+      registerFor: {_usecase});
+  gh.factory<_i24.GetCompetitionUsecase>(
+      () => _i24.GetCompetitionUsecase(
           get<_i14.Memory>(), get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i20.GetCompetitionsUsecase>(
-      () => _i20.GetCompetitionsUsecase(
+  gh.factory<_i25.GetCompetitionsUsecase>(
+      () => _i25.GetCompetitionsUsecase(
           get<_i14.Memory>(), get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i21.GetFriendsUsecase>(
-      () => _i21.GetFriendsUsecase(get<_i6.IFireDatabase>()),
+  gh.factory<_i26.GetFriendsUsecase>(
+      () => _i26.GetFriendsUsecase(get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i22.GetHabitUsecase>(
-      () => _i22.GetHabitUsecase(get<_i14.Memory>(), get<_i6.IFireDatabase>()),
+  gh.factory<_i27.GetHabitUsecase>(
+      () => _i27.GetHabitUsecase(get<_i14.Memory>(), get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i23.GetHabitsUsecase>(
-      () => _i23.GetHabitsUsecase(get<_i14.Memory>(), get<_i6.IFireDatabase>()),
+  gh.factory<_i28.GetHabitsUsecase>(
+      () => _i28.GetHabitsUsecase(get<_i14.Memory>(), get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i24.GetPendingCompetitionsUsecase>(
-      () => _i24.GetPendingCompetitionsUsecase(
-          get<_i6.IFireDatabase>(), get<_i25.SharedPref>()),
+  gh.factory<_i29.GetPendingCompetitionsUsecase>(
+      () => _i29.GetPendingCompetitionsUsecase(
+          get<_i6.IFireDatabase>(), get<_i30.SharedPref>()),
       registerFor: {_usecase});
-  gh.factory<_i26.GetRankingFriendsUsecase>(
-      () => _i26.GetRankingFriendsUsecase(get<_i6.IFireDatabase>()),
+  gh.factory<_i31.GetPendingFriendsUsecase>(
+      () => _i31.GetPendingFriendsUsecase(get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i27.MaxCompetitionsByHabitUsecase>(
-      () => _i27.MaxCompetitionsByHabitUsecase(
-          get<_i20.GetCompetitionsUsecase>()),
+  gh.factory<_i32.GetRankingFriendsUsecase>(
+      () => _i32.GetRankingFriendsUsecase(get<_i6.IFireDatabase>()),
       registerFor: {_usecase});
-  gh.factory<_i28.MaxCompetitionsUsecase>(
-      () => _i28.MaxCompetitionsUsecase(get<_i20.GetCompetitionsUsecase>()),
+  gh.factory<_i33.MaxCompetitionsByHabitUsecase>(
+      () => _i33.MaxCompetitionsByHabitUsecase(
+          get<_i25.GetCompetitionsUsecase>()),
       registerFor: {_usecase});
-  gh.factory<_i29.MaxHabitsUsecase>(
-      () => _i29.MaxHabitsUsecase(get<_i23.GetHabitsUsecase>()),
+  gh.factory<_i34.MaxCompetitionsUsecase>(
+      () => _i34.MaxCompetitionsUsecase(get<_i25.GetCompetitionsUsecase>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i30.PendingCompetitionController>(() =>
-      _i30.PendingCompetitionController(
-          get<_i28.MaxCompetitionsUsecase>(),
-          get<_i23.GetHabitsUsecase>(),
-          get<_i25.SharedPref>(),
-          get<_i24.GetPendingCompetitionsUsecase>(),
-          get<_i18.DeclineCompetitionRequestUsecase>()));
-  gh.factory<_i31.UpdateFCMTokenUsecase>(
-      () => _i31.UpdateFCMTokenUsecase(
+  gh.factory<_i35.MaxHabitsUsecase>(
+      () => _i35.MaxHabitsUsecase(get<_i28.GetHabitsUsecase>()),
+      registerFor: {_usecase});
+  gh.lazySingleton<_i36.PendingCompetitionController>(() =>
+      _i36.PendingCompetitionController(
+          get<_i34.MaxCompetitionsUsecase>(),
+          get<_i28.GetHabitsUsecase>(),
+          get<_i30.SharedPref>(),
+          get<_i29.GetPendingCompetitionsUsecase>(),
+          get<_i21.DeclineCompetitionRequestUsecase>()));
+  gh.lazySingleton<_i37.PendingFriendsController>(() =>
+      _i37.PendingFriendsController(
+          get<_i31.GetPendingFriendsUsecase>(),
+          get<_i17.AcceptRequestUsecase>(),
+          get<_i22.DeclineRequestUsecase>(),
+          get<_i30.SharedPref>()));
+  gh.factory<_i38.UpdateFCMTokenUsecase>(
+      () => _i38.UpdateFCMTokenUsecase(
           get<_i10.IFireMessaging>(),
           get<_i6.IFireDatabase>(),
           get<_i14.Memory>(),
-          get<_i20.GetCompetitionsUsecase>()),
+          get<_i25.GetCompetitionsUsecase>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i32.CompetitionDetailsController>(() =>
-      _i32.CompetitionDetailsController(
-          get<_i21.GetFriendsUsecase>(),
+  gh.lazySingleton<_i39.CompetitionDetailsController>(() =>
+      _i39.CompetitionDetailsController(
+          get<_i26.GetFriendsUsecase>(),
           get<_i13.RemoveCompetitorUsecase>(),
-          get<_i15.UpdateCompetitionUsecase>()));
-  gh.lazySingleton<_i33.CreateCompetitionController>(() =>
-      _i33.CreateCompetitionController(get<_i16.CreateCompetitionUsecase>(),
-          get<_i27.MaxCompetitionsByHabitUsecase>()));
-  gh.factory<_i34.GetUserDataUsecase>(
-      () => _i34.GetUserDataUsecase(
+          get<_i16.UpdateCompetitionUsecase>()));
+  gh.lazySingleton<_i40.CreateCompetitionController>(() =>
+      _i40.CreateCompetitionController(get<_i20.CreateCompetitionUsecase>(),
+          get<_i33.MaxCompetitionsByHabitUsecase>()));
+  gh.factory<_i41.GetUserDataUsecase>(
+      () => _i41.GetUserDataUsecase(
           get<_i14.Memory>(),
           get<_i6.IFireDatabase>(),
           get<_i4.IFireAuth>(),
           get<_i10.IFireMessaging>(),
-          get<_i31.UpdateFCMTokenUsecase>()),
+          get<_i38.UpdateFCMTokenUsecase>()),
       registerFor: {_usecase});
-  gh.factory<_i35.HabitUseCase>(
-      () => _i35.HabitUseCase(
+  gh.factory<_i42.HabitUseCase>(
+      () => _i42.HabitUseCase(
           get<_i14.Memory>(),
           get<_i6.IFireDatabase>(),
-          get<_i36.ILocalNotification>(),
-          get<_i17.IFireAnalytics>(),
-          get<_i34.GetUserDataUsecase>(),
-          get<_i20.GetCompetitionsUsecase>()),
+          get<_i43.ILocalNotification>(),
+          get<_i18.IFireAnalytics>(),
+          get<_i41.GetUserDataUsecase>(),
+          get<_i25.GetCompetitionsUsecase>()),
       registerFor: {_usecase});
-  gh.factory<_i37.PersonUseCase>(
-      () => _i37.PersonUseCase(
+  gh.factory<_i44.PersonUseCase>(
+      () => _i44.PersonUseCase(
           get<_i14.Memory>(),
           get<_i4.IFireAuth>(),
           get<_i10.IFireMessaging>(),
           get<_i6.IFireDatabase>(),
-          get<_i17.IFireAnalytics>(),
-          get<_i8.IFireFunctions>(),
-          get<_i34.GetUserDataUsecase>(),
-          get<_i31.UpdateFCMTokenUsecase>()),
+          get<_i41.GetUserDataUsecase>(),
+          get<_i38.UpdateFCMTokenUsecase>()),
       registerFor: {_usecase});
-  gh.factory<_i38.SendCompetitionNotificationUsecase>(
-      () => _i38.SendCompetitionNotificationUsecase(
-          get<_i37.PersonUseCase>(), get<_i8.IFireFunctions>()),
+  gh.factory<_i45.SearchEmailUsecase>(
+      () => _i45.SearchEmailUsecase(get<_i6.IFireDatabase>(),
+          get<_i41.GetUserDataUsecase>(), get<_i4.IFireAuth>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i39.SettingsController>(() => _i39.SettingsController(
-      get<_i37.PersonUseCase>(),
-      get<_i35.HabitUseCase>(),
-      get<_i25.SharedPref>(),
-      get<_i20.GetCompetitionsUsecase>()));
-  gh.lazySingleton<_i40.StatisticsController>(() => _i40.StatisticsController(
-      get<_i37.PersonUseCase>(),
-      get<_i35.HabitUseCase>(),
-      get<_i23.GetHabitsUsecase>()));
-  gh.lazySingleton<_i41.AddFriendController>(
-      () => _i41.AddFriendController(get<_i37.PersonUseCase>()));
-  gh.lazySingleton<_i42.AddHabitController>(
-      () => _i42.AddHabitController(get<_i35.HabitUseCase>()));
-  gh.lazySingleton<_i43.CompetitionController>(() => _i43.CompetitionController(
-      get<_i23.GetHabitsUsecase>(),
-      get<_i26.GetRankingFriendsUsecase>(),
-      get<_i34.GetUserDataUsecase>(),
-      get<_i20.GetCompetitionsUsecase>(),
-      get<_i19.GetCompetitionUsecase>(),
-      get<_i28.MaxCompetitionsUsecase>(),
-      get<_i25.SharedPref>(),
+  gh.factory<_i46.SendCompetitionNotificationUsecase>(
+      () => _i46.SendCompetitionNotificationUsecase(
+          get<_i44.PersonUseCase>(), get<_i8.IFireFunctions>()),
+      registerFor: {_usecase});
+  gh.lazySingleton<_i47.SettingsController>(() => _i47.SettingsController(
+      get<_i44.PersonUseCase>(),
+      get<_i42.HabitUseCase>(),
+      get<_i30.SharedPref>(),
+      get<_i25.GetCompetitionsUsecase>()));
+  gh.lazySingleton<_i48.StatisticsController>(() => _i48.StatisticsController(
+      get<_i44.PersonUseCase>(),
+      get<_i42.HabitUseCase>(),
+      get<_i28.GetHabitsUsecase>()));
+  gh.lazySingleton<_i49.AddFriendController>(() => _i49.AddFriendController(
+      get<_i45.SearchEmailUsecase>(),
+      get<_i23.FriendRequestUsecase>(),
+      get<_i19.CancelFriendRequestUsecase>(),
+      get<_i17.AcceptRequestUsecase>()));
+  gh.lazySingleton<_i50.AddHabitController>(
+      () => _i50.AddHabitController(get<_i42.HabitUseCase>()));
+  gh.lazySingleton<_i51.CompetitionController>(() => _i51.CompetitionController(
+      get<_i28.GetHabitsUsecase>(),
+      get<_i32.GetRankingFriendsUsecase>(),
+      get<_i41.GetUserDataUsecase>(),
+      get<_i25.GetCompetitionsUsecase>(),
+      get<_i24.GetCompetitionUsecase>(),
+      get<_i34.MaxCompetitionsUsecase>(),
+      get<_i30.SharedPref>(),
       get<_i13.RemoveCompetitorUsecase>(),
-      get<_i21.GetFriendsUsecase>()));
-  gh.factory<_i44.CompetitionUseCase>(
-      () => _i44.CompetitionUseCase(
+      get<_i26.GetFriendsUsecase>()));
+  gh.factory<_i52.CompetitionUseCase>(
+      () => _i52.CompetitionUseCase(
           get<_i14.Memory>(),
-          get<_i37.PersonUseCase>(),
+          get<_i44.PersonUseCase>(),
           get<_i6.IFireDatabase>(),
           get<_i8.IFireFunctions>(),
-          get<_i20.GetCompetitionsUsecase>(),
-          get<_i19.GetCompetitionUsecase>()),
+          get<_i25.GetCompetitionsUsecase>(),
+          get<_i24.GetCompetitionUsecase>()),
       registerFor: {_usecase});
-  gh.factory<_i45.CompleteHabitUsecase>(
-      () => _i45.CompleteHabitUsecase(
+  gh.factory<_i53.CompleteHabitUsecase>(
+      () => _i53.CompleteHabitUsecase(
           get<_i14.Memory>(),
           get<_i6.IFireDatabase>(),
-          get<_i37.PersonUseCase>(),
-          get<_i38.SendCompetitionNotificationUsecase>(),
-          get<_i22.GetHabitUsecase>(),
-          get<_i20.GetCompetitionsUsecase>()),
+          get<_i44.PersonUseCase>(),
+          get<_i46.SendCompetitionNotificationUsecase>(),
+          get<_i27.GetHabitUsecase>(),
+          get<_i25.GetCompetitionsUsecase>()),
       registerFor: {_usecase});
-  gh.lazySingleton<_i46.EditHabitController>(
-      () => _i46.EditHabitController(get<_i35.HabitUseCase>()));
-  gh.lazySingleton<_i47.FriendsController>(() => _i47.FriendsController(
-      get<_i37.PersonUseCase>(),
-      get<_i21.GetFriendsUsecase>(),
-      get<_i34.GetUserDataUsecase>()));
-  gh.lazySingleton<_i48.HabitDetailsController>(() =>
-      _i48.HabitDetailsController(
-          get<_i35.HabitUseCase>(),
-          get<_i44.CompetitionUseCase>(),
-          get<_i45.CompleteHabitUsecase>(),
-          get<_i22.GetHabitUsecase>()));
-  gh.lazySingleton<_i49.HomeController>(() => _i49.HomeController(
-      get<_i23.GetHabitsUsecase>(),
-      get<_i45.CompleteHabitUsecase>(),
-      get<_i29.MaxHabitsUsecase>(),
-      get<_i17.IFireAnalytics>(),
-      get<_i50.AppLogic>(),
-      get<_i37.PersonUseCase>(),
-      get<_i44.CompetitionUseCase>(),
-      get<_i34.GetUserDataUsecase>()));
-  gh.lazySingleton<_i51.PendingFriendsController>(
-      () => _i51.PendingFriendsController(get<_i37.PersonUseCase>()));
-  gh.lazySingleton<_i52.EditAlarmController>(() => _i52.EditAlarmController(
-      get<_i48.HabitDetailsController>(),
-      get<_i35.HabitUseCase>(),
-      get<_i17.IFireAnalytics>()));
-  gh.lazySingleton<_i53.EditCueController>(() => _i53.EditCueController(
-      get<_i35.HabitUseCase>(),
-      get<_i17.IFireAnalytics>(),
-      get<_i48.HabitDetailsController>()));
-  gh.singleton<_i50.AppLogic>(_i50.AppLogic());
-  gh.singleton<_i17.IFireAnalytics>(_i54.FireAnalytics(),
+  gh.lazySingleton<_i54.EditHabitController>(
+      () => _i54.EditHabitController(get<_i42.HabitUseCase>()));
+  gh.lazySingleton<_i55.FriendsController>(() => _i55.FriendsController(
+      get<_i26.GetFriendsUsecase>(),
+      get<_i41.GetUserDataUsecase>(),
+      get<_i15.RemoveFriendUsecase>(),
+      get<_i30.SharedPref>()));
+  gh.lazySingleton<_i56.HabitDetailsController>(() =>
+      _i56.HabitDetailsController(
+          get<_i42.HabitUseCase>(),
+          get<_i52.CompetitionUseCase>(),
+          get<_i53.CompleteHabitUsecase>(),
+          get<_i27.GetHabitUsecase>()));
+  gh.lazySingleton<_i57.HomeController>(() => _i57.HomeController(
+      get<_i28.GetHabitsUsecase>(),
+      get<_i53.CompleteHabitUsecase>(),
+      get<_i35.MaxHabitsUsecase>(),
+      get<_i18.IFireAnalytics>(),
+      get<_i58.AppLogic>(),
+      get<_i44.PersonUseCase>(),
+      get<_i52.CompetitionUseCase>(),
+      get<_i41.GetUserDataUsecase>()));
+  gh.lazySingleton<_i59.EditAlarmController>(() => _i59.EditAlarmController(
+      get<_i56.HabitDetailsController>(),
+      get<_i42.HabitUseCase>(),
+      get<_i18.IFireAnalytics>()));
+  gh.lazySingleton<_i60.EditCueController>(() => _i60.EditCueController(
+      get<_i42.HabitUseCase>(),
+      get<_i18.IFireAnalytics>(),
+      get<_i56.HabitDetailsController>()));
+  gh.singleton<_i58.AppLogic>(_i58.AppLogic());
+  gh.singleton<_i18.IFireAnalytics>(_i61.FireAnalytics(),
       registerFor: {_service});
-  gh.singletonAsync<_i36.ILocalNotification>(
-      () => _i55.LocalNotification.initialize(),
+  gh.singletonAsync<_i43.ILocalNotification>(
+      () => _i62.LocalNotification.initialize(),
       registerFor: {_service});
   gh.singleton<_i14.Memory>(_i14.Memory());
-  gh.singletonAsync<_i25.SharedPref>(() => _i25.SharedPref.initialize(),
+  gh.singletonAsync<_i30.SharedPref>(() => _i30.SharedPref.initialize(),
       registerFor: {_service});
   return get;
 }

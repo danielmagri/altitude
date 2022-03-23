@@ -151,7 +151,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     width: double.maxFinite,
                     height: 200,
                     child: Observer(builder: (_) {
-                      return controller.searchResult.handleStateLoadable(() {
+                      return controller.searchResult.handleStateReloadable(() {
                         return const SizedBox();
                       }, (data, loading) {
                         if (loading)

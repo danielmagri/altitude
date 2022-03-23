@@ -1,8 +1,9 @@
 import 'package:altitude/common/domain/usecases/friends/get_friends_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/useCase/PersonUseCase.dart';
+import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/feature/friends/domain/usecases/remove_friend_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'friends_controller.g.dart';
@@ -13,10 +14,11 @@ class FriendsController = _FriendsControllerBase with _$FriendsController;
 abstract class _FriendsControllerBase with Store {
   final GetFriendsUsecase _getFriendsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
-  final PersonUseCase personUseCase;
+  final RemoveFriendUsecase _removeFriendUsecase;
+  final SharedPref _sharedPref;
 
-  _FriendsControllerBase(
-      this.personUseCase, this._getFriendsUsecase, this._getUserDataUsecase);
+  _FriendsControllerBase(this._getFriendsUsecase, this._getUserDataUsecase,
+      this._removeFriendUsecase, this._sharedPref);
 
   @observable
   bool pendingStatus = false;
@@ -49,7 +51,7 @@ abstract class _FriendsControllerBase with Store {
 
   @action
   void checkPendingFriendsStatus() {
-    pendingStatus = personUseCase!.pendingFriendsStatus;
+    pendingStatus = _sharedPref.pendingFriends;
   }
 
   void setEmptyData() {
@@ -73,7 +75,7 @@ abstract class _FriendsControllerBase with Store {
 
   @action
   Future<void> removeFriend(String? uid) async {
-    (await personUseCase!.removeFriend(uid)).absoluteResult();
+    (await _removeFriendUsecase.call(uid)).absoluteResult();
     ranking.data!.removeWhere((person) => person.uid == uid);
     friends.data!.removeWhere((person) => person.uid == uid);
   }
