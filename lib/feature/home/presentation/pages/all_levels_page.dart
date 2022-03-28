@@ -1,5 +1,5 @@
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/level_utils.dart';
 

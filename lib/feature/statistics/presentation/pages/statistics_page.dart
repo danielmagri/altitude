@@ -2,7 +2,7 @@ import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/feature/statistics/domain/models/habit_statistic_data.dart';
 import 'package:altitude/feature/statistics/presentation/controllers/statistics_controller.dart';

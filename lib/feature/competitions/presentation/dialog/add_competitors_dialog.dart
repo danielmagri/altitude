@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/feature/competitions/domain/usecases/invite_competitor_usecase.dart';
 import 'package:flutter/material.dart'
     show

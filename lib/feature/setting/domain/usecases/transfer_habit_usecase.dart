@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/common/domain/usecases/habits/get_reminder_counter_usecase.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';

@@ -7,7 +7,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/core/model/data_state.dart';

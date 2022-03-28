@@ -3,7 +3,7 @@ import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/core/services/Memory.dart';

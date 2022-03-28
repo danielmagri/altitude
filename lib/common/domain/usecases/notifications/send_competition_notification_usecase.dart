@@ -1,6 +1,6 @@
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 

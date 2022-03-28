@@ -1,4 +1,4 @@
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 

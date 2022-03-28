@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/level_utils.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 
@@ -12,7 +12,6 @@ class UpdateTotalScoreUsecase extends BaseUsecase<int, void> {
   @override
   Future<void> getRawFuture(int params) async {
     _memory.clear();
-    return _fireDatabase.updateTotalScore(
-        params, LevelUtils.getLevel(params));
+    return _fireDatabase.updateTotalScore(params, LevelUtils.getLevel(params));
   }
 }

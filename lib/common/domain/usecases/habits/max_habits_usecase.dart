@@ -1,6 +1,6 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 
 class MaxHabitsUsecase extends BaseUsecase<NoParams, bool> {
   final GetHabitsUsecase _getHabitsUsecase;
@@ -10,7 +10,8 @@ class MaxHabitsUsecase extends BaseUsecase<NoParams, bool> {
   @override
   Future<bool> getRawFuture(NoParams params) async {
     try {
-      int length = (await _getHabitsUsecase.call(false)).absoluteResult().length;
+      int length =
+          (await _getHabitsUsecase.call(false)).absoluteResult().length;
 
       return length >= MAX_HABITS;
     } catch (e) {

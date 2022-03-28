@@ -3,7 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/core/model/BackDataItem.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/feature/competitions/presentation/controllers/pending_competition_controller.dart';
 import 'package:altitude/feature/competitions/presentation/widgets/ChooseHabit.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 
 class HasCompetitionByHabitUsecase extends BaseUsecase<String, bool> {
   final GetCompetitionsUsecase _getCompetitionsUsecase;

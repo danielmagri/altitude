@@ -3,7 +3,7 @@ import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart'
 import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';

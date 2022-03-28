@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 

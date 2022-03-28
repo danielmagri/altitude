@@ -1,7 +1,7 @@
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/app_colors.dart';

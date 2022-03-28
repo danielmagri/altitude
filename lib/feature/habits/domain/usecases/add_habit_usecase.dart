@@ -1,7 +1,7 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/core/base/base_usecase.dart';
+import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';

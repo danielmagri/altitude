@@ -3,7 +3,7 @@ import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/feature/habits/presentation/controllers/edit_habit_controller.dart';
 import 'package:altitude/feature/habits/presentation/widgets/habit_text.dart';
 import 'package:altitude/feature/habits/presentation/widgets/select_color.dart';

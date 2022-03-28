@@ -4,7 +4,7 @@ import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/base/base_state.dart';
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/feature/setting/presentation/dialogs/transfer_data_dialog.dart';
