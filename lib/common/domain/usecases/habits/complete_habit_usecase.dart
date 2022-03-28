@@ -52,13 +52,13 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
           habit.lastDone!.isBeforeOrSameDay(params.date);
       DayDone dayDone = DayDone(date: params.date);
 
-      List<Competition> competitions =
-          (await _getCompetitionsUsecase.call(false))
-              .absoluteResult()
-              .where((e) =>
-                  e.getMyCompetitor().habitId == params.habitId &&
-                  e.initialDate!.isBeforeOrSameDay(params.date))
-              .toList();
+      List<Competition> competitions = (await _getCompetitionsUsecase
+              .call(false)
+              .resultComplete((data) => data, (error) => throw error))
+          .where((e) =>
+              e.getMyCompetitor().habitId == params.habitId &&
+              e.initialDate!.isBeforeOrSameDay(params.date))
+          .toList();
 
       await _fireDatabase.completeHabit(params.habitId, params.isAdd, score,
           isLastDone, dayDone, competitions.map((e) => e.id).toList());

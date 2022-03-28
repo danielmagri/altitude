@@ -1,5 +1,6 @@
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
@@ -15,8 +16,9 @@ class UpdateFCMTokenUsecase extends BaseUsecase<NoParams, void> {
 
   @override
   Future<void> getRawFuture(NoParams params) async {
-    List<String?> competitionsId = (await _getCompetitionsUsecase.call(true))
-        .absoluteResult()
+    List<String?> competitionsId = (await _getCompetitionsUsecase
+            .call(true)
+            .resultComplete((data) => data, (error) => throw error))
         .map((e) => e.id)
         .toList();
     final token = await _fireMessaging.getToken;

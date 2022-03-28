@@ -31,7 +31,9 @@ abstract class _FriendsControllerBase with Store {
       var _friends = data.toList().asObservable();
       var _ranking = data.toList().asObservable();
 
-      Person me = (await _getUserDataUsecase.call(false)).absoluteResult();
+      Person me = await _getUserDataUsecase
+          .call(false)
+          .resultComplete((data) => data, (error) => throw error);
       me.you = true;
 
       _ranking.add(me);
@@ -73,7 +75,9 @@ abstract class _FriendsControllerBase with Store {
 
   @action
   Future<void> removeFriend(String? uid) async {
-    (await _removeFriendUsecase.call(uid)).absoluteResult();
+    await _removeFriendUsecase
+        .call(uid)
+        .resultComplete((data) => data, (error) => throw error);
     ranking.data!.removeWhere((person) => person.uid == uid);
     friends.data!.removeWhere((person) => person.uid == uid);
   }

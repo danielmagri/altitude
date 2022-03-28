@@ -23,15 +23,6 @@ class Result<T> {
       return error((this as FailureResult).error);
     }
   }
-
-  @deprecated
-  T absoluteResult() {
-    if (isSuccess) {
-      return (this as SuccessResult).data;
-    } else {
-      throw (this as FailureResult).e;
-    }
-  }
 }
 
 class SuccessResult<T> extends Result<T> {

@@ -1,6 +1,7 @@
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 
 class GetReminderCounterUsecase extends BaseUsecase<NoParams, int> {
@@ -11,7 +12,9 @@ class GetReminderCounterUsecase extends BaseUsecase<NoParams, int> {
 
   @override
   Future<int> getRawFuture(NoParams params) async {
-    Person person = (await _getUserDataUsecase.call(false)).absoluteResult();
+    Person person = await _getUserDataUsecase
+        .call(false)
+        .resultComplete((data) => data, (error) => throw error);
     _memory.person?.reminderCounter += 1;
     return person.reminderCounter;
   }

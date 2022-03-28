@@ -23,20 +23,27 @@ abstract class _AddFriendControllerBase with Store {
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoadingState();
-    List<Person> list =
-        (await _searchEmailUsecase.call(email)).absoluteResult();
+    List<Person> list = await _searchEmailUsecase
+        .call(email)
+        .resultComplete((data) => data, (error) => throw error);
     searchResult.setSuccessState(list);
   }
 
   Future sendFriendRequest(String? uid) async {
-    return (await _friendRequestUsecase.call(uid)).absoluteResult();
+    return await _friendRequestUsecase
+        .call(uid)
+        .resultComplete((data) => data, (error) => throw error);
   }
 
   Future<void> cancelFriendRequest(String? uid) async {
-    return (await _cancelFriendRequestUsecase.call(uid)).absoluteResult();
+    return await _cancelFriendRequestUsecase
+        .call(uid)
+        .resultComplete((data) => data, (error) => throw error);
   }
 
   Future<void> acceptFriendRequest(String? uid) async {
-    return (await _acceptRequestUsecase.call(uid)).absoluteResult();
+    return await _acceptRequestUsecase
+        .call(uid)
+        .resultComplete((data) => data, (error) => throw error);
   }
 }

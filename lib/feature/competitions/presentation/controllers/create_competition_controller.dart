@@ -47,17 +47,18 @@ abstract class _CreateCompetitionControllerBase with Store {
     List<String> invitationsToken =
         selectedFriends.map((person) => person.fcmToken ?? "").toList();
 
-    return (await _createCompetitionUsecase.call(
-      CreateCompetitionParams(
-          title: title,
-          habit: selectedHabit!,
-          invitations: invitations,
-          invitationsToken: invitationsToken),
-    ))
-        .absoluteResult();
+    return await _createCompetitionUsecase
+        .call(
+          CreateCompetitionParams(
+              title: title,
+              habit: selectedHabit!,
+              invitations: invitations,
+              invitationsToken: invitationsToken),
+        )
+        .resultComplete((data) => data, (error) => throw error);
   }
 
   Future<bool> checkHabitCompetitionLimit() => _maxCompetitionsByHabitUsecase
       .call(selectedHabit!.id)
-      .resultComplete((data) => data ?? true, (error) => true);
+      .resultComplete((data) => data, (error) => true);
 }

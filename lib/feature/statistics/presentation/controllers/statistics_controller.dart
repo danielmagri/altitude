@@ -35,14 +35,17 @@ abstract class _StatisticsControllerBase with Store {
   @action
   Future<void> fetchData() async {
     try {
-      List<Habit> habits =
-          (await _getHabitsUsecase.call(false)).absoluteResult().asObservable();
+      List<Habit> habits = (await _getHabitsUsecase
+              .call(false)
+              .resultComplete((data) => data, (error) => throw error))
+          .asObservable();
       int? totalScore = (await _getUserDataUsecase
               .call(false)
               .resultComplete((data) => data, (error) => null))
           ?.score;
-      List<DayDone> daysDone =
-          (await _getAllDaysDoneUsecase.call(habits)).absoluteResult();
+      List<DayDone> daysDone = await _getAllDaysDoneUsecase
+          .call(habits)
+          .resultComplete((data) => data, (error) => throw error);
 
       Map<DateTime, List<DayDone>> dateGrouped = groupBy<DayDone, DateTime>(
           daysDone, (e) => DateTime(e.date!.year, e.date!.month));

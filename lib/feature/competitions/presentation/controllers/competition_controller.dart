@@ -52,7 +52,9 @@ abstract class _CompetitionControllerBase with Store {
     fetchCompetitions();
 
     (await _getRankingFriendsUsecase.call(3)).result((value) async {
-      Person me = (await _getUserDataUsecase.call(false)).absoluteResult();
+      Person me = await _getUserDataUsecase
+          .call(false)
+          .resultComplete((data) => data, (error) => throw error);
       me.you = true;
       value.add(me);
       value.sort((a, b) => -a.score!.compareTo(b.score!));
@@ -74,7 +76,9 @@ abstract class _CompetitionControllerBase with Store {
   }
 
   Future<Competition> getCompetitionDetails(String? id) async {
-    return (await _getCompetitionUsecase.call(id)).absoluteResult();
+    return await _getCompetitionUsecase
+        .call(id)
+        .resultComplete((data) => data, (error) => throw error);
   }
 
   @action
@@ -84,11 +88,15 @@ abstract class _CompetitionControllerBase with Store {
 
   Future<bool> checkCreateCompetition() => _maxCompetitionsUsecase
       .call()
-      .resultComplete((data) => data ?? true, (error) => true);
+      .resultComplete((data) => data, (error) => true);
 
   Future<Pair<List<Habit>, List<Person>>> getCreationData() async {
-    List habits = (await _getHabitsUsecase.call()).absoluteResult();
-    List friends = (await _getFriendsUsecase.call()).absoluteResult();
+    List habits = await _getHabitsUsecase
+        .call()
+        .resultComplete((data) => data, (error) => throw error);
+    List friends = await _getFriendsUsecase
+        .call()
+        .resultComplete((data) => data, (error) => throw error);
 
     return Pair(habits as List<Habit>, friends as List<Person>);
   }

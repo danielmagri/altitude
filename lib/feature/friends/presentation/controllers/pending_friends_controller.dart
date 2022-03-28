@@ -37,7 +37,9 @@ abstract class _PendingFriendsControllerBase with Store {
 
   @action
   Future<void> acceptRequest(Person person) async {
-    (await _acceptRequestUsecase.call(person.uid)).absoluteResult();
+    await _acceptRequestUsecase
+        .call(person.uid)
+        .resultComplete((data) => data, (error) => throw error);
     addedFriends.add(person);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 
@@ -46,7 +48,9 @@ abstract class _PendingFriendsControllerBase with Store {
 
   @action
   Future<void> declineRequest(Person person) async {
-    (await _declineRequestUsecase.call(person.uid)).absoluteResult();
+    await _declineRequestUsecase
+        .call(person.uid)
+        .resultComplete((data) => data, (error) => throw error);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 
     if (pendingFriends.data!.isEmpty) _sharedPref.pendingFriends = false;

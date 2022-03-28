@@ -107,7 +107,7 @@ abstract class _HomeControllerBase with Store {
 
   Future<bool> canAddHabit() => _maxHabitsUsecase
       .call()
-      .resultComplete((data) => data ?? true, (error) => true);
+      .resultComplete((data) => data, (error) => true);
 
   void updateSystemStyle() => _appLogic.updateSystemStyle();
 }

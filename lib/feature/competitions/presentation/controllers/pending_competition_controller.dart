@@ -33,8 +33,9 @@ abstract class _PendingCompetitionControllerBase with Store {
 
   Future<void> fetchData() async {
     try {
-      var _pendingCompetition = (await _getPendingCompetitionsUsecase.call())
-          .absoluteResult()
+      var _pendingCompetition = (await _getPendingCompetitionsUsecase
+              .call()
+              .resultComplete((data) => data, (error) => throw error))
           .asObservable();
 
       _sharedPref.pendingCompetition = _pendingCompetition.isNotEmpty;
@@ -48,10 +49,12 @@ abstract class _PendingCompetitionControllerBase with Store {
 
   Future<bool> checkCreateCompetition() => _maxCompetitionsUsecase
       .call()
-      .resultComplete((data) => data ?? true, (error) => true);
+      .resultComplete((data) => data, (error) => true);
 
   Future<List<Habit>> getAllHabits() async {
-    return (await _getHabitsUsecase.call(false)).absoluteResult();
+    return await _getHabitsUsecase
+        .call(false)
+        .resultComplete((data) => data, (error) => throw error);
   }
 
   void acceptedCompetitionRequest(Competition competition) {

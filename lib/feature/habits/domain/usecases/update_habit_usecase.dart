@@ -1,6 +1,7 @@
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 
@@ -14,8 +15,9 @@ class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
 
   @override
   Future<void> getRawFuture(UpdateHabitParams params) async {
-    List<String?> competitions = (await _getCompetitionsUsecase.call(false))
-        .absoluteResult()
+    List<String?> competitions = (await _getCompetitionsUsecase
+            .call(false)
+            .resultComplete((data) => data, (error) => throw error))
         .where((e) => e.getMyCompetitor().habitId == params.habit.id)
         .map((e) => e.id)
         .toList();

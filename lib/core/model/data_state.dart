@@ -117,7 +117,7 @@ abstract class _DataStateBase<T> with Store {
 
 extension FutureExtension<T> on Future<Result<T>> {
   Future<R> resultComplete<R>(
-      R Function(T? data) success, R Function(Failure error) error) async {
+      R Function(T data) success, R Function(Failure error) error) async {
     var res = await this;
     if (res.isSuccess) {
       return success((res as SuccessResult<T>).value);

@@ -54,24 +54,24 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
       GetIt.I.get<AcceptCompetitionRequestUsecase>();
   final GetDaysDoneUsecase _getDaysDoneUsecase =
       GetIt.I.get<GetDaysDoneUsecase>();
-      final IScoreService _scoreService =
-      GetIt.I.get<IScoreService>();
+  final IScoreService _scoreService = GetIt.I.get<IScoreService>();
 
   Habit? selectedHabit;
 
   void acceptRequest() async {
     if (await _maxCompetitionsByHabitUsecase
         .call(selectedHabit!.id)
-        .resultComplete((data) => data ?? true, (error) => true)) {
+        .resultComplete((data) => data, (error) => true)) {
       showToast(
           "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
     } else {
       showLoading(true);
-      List<DateTime?> days = (await _getDaysDoneUsecase.call(GetDaysDoneParams(
-              id: selectedHabit!.id,
-              start: widget.competition.initialDate,
-              end: DateTime.now().today)))
-          .absoluteResult()
+      List<DateTime?> days = (await _getDaysDoneUsecase
+              .call(GetDaysDoneParams(
+                  id: selectedHabit!.id,
+                  start: widget.competition.initialDate,
+                  end: DateTime.now().today))
+              .resultComplete((data) => data, (error) => throw error))
           .map((e) => e.date)
           .toList();
 

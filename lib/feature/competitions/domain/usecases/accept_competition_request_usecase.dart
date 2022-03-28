@@ -26,9 +26,9 @@ class AcceptCompetitionRequestUsecase
 
   @override
   Future<void> getRawFuture(AcceptCompetitionRequestParams params) async {
-    Competition competition =
-        (await _getCompetitionUsecase.call(params.competitionId))
-            .absoluteResult();
+    Competition competition = await _getCompetitionUsecase
+        .call(params.competitionId)
+        .resultComplete((data) => data, (error) => throw error);
     if (competition.competitors!.length < MAX_COMPETITORS) {
       await _fireDatabase.acceptCompetitionRequest(
           params.competitionId, params.competitor);

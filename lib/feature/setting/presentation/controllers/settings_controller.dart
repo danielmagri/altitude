@@ -49,19 +49,20 @@ abstract class _SettingsControllerBase with Store {
         ?.name;
     isLogged = await _isLoggedUsecase
         .call()
-        .resultComplete((data) => data ?? false, (error) => false);
+        .resultComplete((data) => data, (error) => false);
     theme = getThemeType(_sharedPref.theme);
   }
 
   @action
   Future<void> changeName(String newName) async {
-    List<String?> competitionsId = (await _getCompetitionsUsecase.call(true))
-        .absoluteResult()
+    List<String?> competitionsId = (await _getCompetitionsUsecase
+            .call(true)
+            .resultComplete((data) => data, (error) => throw error))
         .map((e) => e.id)
         .toList();
-    (await _updateNameUsecase.call(
-            UpdateNameParams(name: newName, competitionsId: competitionsId)))
-        .absoluteResult();
+    await _updateNameUsecase
+        .call(UpdateNameParams(name: newName, competitionsId: competitionsId))
+        .resultComplete((data) => data, (error) => throw error);
     name = newName;
   }
 
@@ -79,6 +80,8 @@ abstract class _SettingsControllerBase with Store {
   }
 
   Future recalculateScore() async {
-    return (await _recalculateScoreUsecase.call()).absoluteResult();
+    return await _recalculateScoreUsecase
+        .call()
+        .resultComplete((data) => data, (error) => throw error);
   }
 }

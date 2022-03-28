@@ -207,6 +207,6 @@ abstract class _HabitDetailsControllerBase with Store {
   Future<bool> hasCompetition() {
     return _hasCompetitionByHabitUsecase
         .call(_id)
-        .resultComplete((data) => data ?? false, (error) => false);
+        .resultComplete((data) => data, (error) => false);
   }
 }
