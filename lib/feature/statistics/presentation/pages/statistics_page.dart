@@ -20,7 +20,8 @@ class Statisticspage extends StatefulWidget {
   _StatisticspageState createState() => _StatisticspageState();
 }
 
-class _StatisticspageState extends BaseStateWithController<Statisticspage, StatisticsController> {
+class _StatisticspageState
+    extends BaseStateWithController<Statisticspage, StatisticsController> {
   final BannerAd banner = BannerAd(
       adUnitId: AdsUtils.statisticsBannerAdUnitId,
       size: AdSize.largeBanner,
@@ -43,14 +44,22 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
   void showPercentageTutorial() {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpPercentage",
-      texts: const [TextSpan(text: "A porcentagem mostra a representação de cada hábito na sua quilometragem total.")],
+      texts: const [
+        TextSpan(
+            text:
+                "A porcentagem mostra a representação de cada hábito na sua quilometragem total.")
+      ],
     ));
   }
 
   void showHistoricTutorial() {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpHistoric",
-      texts: const [TextSpan(text: "O histórico mostra quantos quilômetros você ganhou em cada mês.")],
+      texts: const [
+        TextSpan(
+            text:
+                "O histórico mostra quantos quilômetros você ganhou em cada mês.")
+      ],
     ));
   }
 
@@ -58,7 +67,9 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpFrequency",
       texts: const [
-        TextSpan(text: "A frequência mostra quais dias da semana você mais realizou seus hábitos em cada mês.")
+        TextSpan(
+            text:
+                "A frequência mostra quais dias da semana você mais realizou seus hábitos em cada mês.")
       ],
     ));
   }
@@ -74,7 +85,7 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
             const SizedBox(height: 20),
             Observer(
                 builder: (_) => controller.habitsData.handleState(
-                    () => Skeleton.custom(
+                    loading: () => Skeleton.custom(
                           child: Wrap(
                             alignment: WrapAlignment.center,
                             runSpacing: 15,
@@ -84,17 +95,22 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
                               (index) => Container(
                                 width: 90,
                                 height: 20,
-                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15)),
                               ),
                             ),
                           ),
                         ),
-                    (data) => Wrap(
+                    success: (data) => Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,
-                          children: data!.map<Widget>((data) => Indicator(data: data, onClick: controller.selectHabit)).toList(),
+                          children: data!
+                              .map<Widget>((data) => Indicator(
+                                  data: data, onClick: controller.selectHabit))
+                              .toList(),
                         ),
-                    (error) => DataError())),
+                    error: (error) => DataError())),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(bottom: 16, left: 24),
@@ -103,7 +119,9 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
                   const HeaderSection(title: "Porcetagem"),
                   IconButton(
                       iconSize: 22,
-                      icon: const Hero(tag: "helpPercentage", child: Icon(Icons.help_outline)),
+                      icon: const Hero(
+                          tag: "helpPercentage",
+                          child: Icon(Icons.help_outline)),
                       onPressed: showPercentageTutorial)
                 ],
               ),
@@ -114,15 +132,17 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 child: Observer(
                   builder: (_) => controller.habitsData.handleState(
-                      () => Skeleton.custom(
+                      loading: () => Skeleton.custom(
                               child: PieChartScore(data: [
                             HabitStatisticData("", 25, "", 1, 100),
                             HabitStatisticData("", 25, "", 1, 100),
                             HabitStatisticData("", 25, "", 1, 100),
                             HabitStatisticData("", 25, "", 1, 100),
                           ])),
-                      (data) => PieChartScore(data: data!.toList(), onClick: controller.selectHabit),
-                      (error) => DataError()),
+                      success: (data) => PieChartScore(
+                          data: data!.toList(),
+                          onClick: controller.selectHabit),
+                      error: (error) => DataError()),
                 )),
             const SizedBox(height: 50),
             Padding(
@@ -132,19 +152,23 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
                   const HeaderSection(title: "Histórico"),
                   IconButton(
                       iconSize: 22,
-                      icon: const Hero(tag: "helpHistoric", child: Icon(Icons.help_outline)),
+                      icon: const Hero(
+                          tag: "helpHistoric", child: Icon(Icons.help_outline)),
                       onPressed: showHistoricTutorial)
                 ],
               ),
             ),
             Observer(
               builder: (_) => controller.historicData.handleState(
-                  () => Padding(
+                  loading: () => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Skeleton(width: double.maxFinite, height: HISTORIC_CHART_HEIGHT),
+                        child: Skeleton(
+                            width: double.maxFinite,
+                            height: HISTORIC_CHART_HEIGHT),
                       ),
-                  (data) => HistoricChart(list: data!, selectedHabitId: controller.selectedId),
-                  (error) => DataError()),
+                  success: (data) => HistoricChart(
+                      list: data, selectedHabitId: controller.selectedId),
+                  error: (error) => DataError()),
             ),
             const SizedBox(height: 25),
             Container(
@@ -161,19 +185,24 @@ class _StatisticspageState extends BaseStateWithController<Statisticspage, Stati
                   const HeaderSection(title: "Frequência"),
                   IconButton(
                       iconSize: 22,
-                      icon: const Hero(tag: "helpFrequency", child: Icon(Icons.help_outline)),
+                      icon: const Hero(
+                          tag: "helpFrequency",
+                          child: Icon(Icons.help_outline)),
                       onPressed: showFrequencyTutorial)
                 ],
               ),
             ),
             Observer(
               builder: (_) => controller.frequencyData.handleState(
-                  () => Padding(
+                  loading: () => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Skeleton(width: double.maxFinite, height: FREQUENCY_CHART_HEIGHT),
+                        child: Skeleton(
+                            width: double.maxFinite,
+                            height: FREQUENCY_CHART_HEIGHT),
                       ),
-                  (data) => FrequencyChart(list: data, selectedHabitId: controller.selectedId),
-                  (error) => DataError()),
+                  success: (data) => FrequencyChart(
+                      list: data, selectedHabitId: controller.selectedId),
+                  error: (error) => DataError()),
             ),
             const SizedBox(height: 50),
           ],
@@ -189,6 +218,7 @@ class HeaderSection extends StatelessWidget {
   final String? title;
   @override
   Widget build(BuildContext context) {
-    return Text(title!, style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20));
+    return Text(title!,
+        style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 20));
   }
 }

@@ -14,7 +14,8 @@ class PendingCompetitionPage extends StatefulWidget {
   _PendingCompetitionPageState createState() => _PendingCompetitionPageState();
 }
 
-class _PendingCompetitionPageState extends BaseStateWithController<PendingCompetitionPage, PendingCompetitionController> {
+class _PendingCompetitionPageState extends BaseStateWithController<
+    PendingCompetitionPage, PendingCompetitionController> {
   @override
   void initState() {
     super.initState();
@@ -31,7 +32,10 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
       if (habits == null) {
         showToast("Ocorreu um erro");
       } else {
-        showDialog(context: context, builder: (context) => ChooseHabit(competition: competition, habits: habits))
+        showDialog(
+            context: context,
+            builder: (context) =>
+                ChooseHabit(competition: competition, habits: habits))
           ..then((res) {
             if (res is Competition) {
               controller.acceptedCompetitionRequest(res);
@@ -52,7 +56,12 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
 
   Widget actionButton(IconData icon, Color color, Function action) {
     return FloatingActionButton(
-        child: Icon(icon), mini: true, heroTag: null, backgroundColor: color, elevation: 0, onPressed: action as void Function()?);
+        child: Icon(icon),
+        mini: true,
+        heroTag: null,
+        backgroundColor: color,
+        elevation: 0,
+        onPressed: action as void Function()?);
   }
 
   Future<bool> onBackPressed() {
@@ -72,7 +81,7 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
             const Header(title: "Solicitações de competição"),
             const SizedBox(height: 16),
             Observer(builder: (_) {
-              return controller.pendingCompetition.handleState(() {
+              return controller.pendingCompetition.handleState(loading: () {
                 return Column(
                   children: <Widget>[
                     const SizedBox(height: 48),
@@ -81,17 +90,25 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
                     const Text("Buscando competições pendentes...")
                   ],
                 );
-              }, (data) {
-                if (data!.isEmpty)
+              }, success: (data) {
+                if (data.isEmpty)
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma competição pendente",
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 22.0, color: AppTheme.of(context).materialTheme.textTheme.headline1!.color!.withOpacity(0.2))),
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            color: AppTheme.of(context)
+                                .materialTheme
+                                .textTheme
+                                .headline1!
+                                .color!
+                                .withOpacity(0.2))),
                   );
                 else
                   return ListView.separated(
-                    separatorBuilder: (_, __) => Divider(endIndent: 16, indent: 16),
+                    separatorBuilder: (_, __) =>
+                        Divider(endIndent: 16, indent: 16),
                     padding: const EdgeInsets.only(bottom: 20),
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -99,7 +116,8 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
                     itemBuilder: (_, index) {
                       Competition competition = data[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 16),
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -110,7 +128,9 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
                                   Text(competition.title!,
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
-                                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                                      style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(height: 5),
                                   Text(competition.listCompetitors(),
                                       overflow: TextOverflow.ellipsis,
@@ -119,16 +139,16 @@ class _PendingCompetitionPageState extends BaseStateWithController<PendingCompet
                                 ],
                               ),
                             ),
-                            actionButton(Icons.close, Colors.red, () => declineRequest(competition)),
+                            actionButton(Icons.close, Colors.red,
+                                () => declineRequest(competition)),
                             const SizedBox(width: 8),
-                            actionButton(Icons.check, Colors.green, () => acceptRequest(competition)),
+                            actionButton(Icons.check, Colors.green,
+                                () => acceptRequest(competition)),
                           ],
                         ),
                       );
                     },
                   );
-              }, (error) {
-                return const SizedBox();
               });
             }),
           ],

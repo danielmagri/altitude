@@ -11,11 +11,9 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/home/domain/usecases/update_level_usecase.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'home_controller.g.dart';
 
-@LazySingleton()
 class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {

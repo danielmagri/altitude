@@ -19,7 +19,8 @@ class CompetitionPage extends StatefulWidget {
   _CompetitionPageState createState() => _CompetitionPageState();
 }
 
-class _CompetitionPageState extends BaseStateWithController<CompetitionPage, CompetitionController> {
+class _CompetitionPageState
+    extends BaseStateWithController<CompetitionPage, CompetitionController> {
   @override
   void initState() {
     super.initState();
@@ -62,7 +63,9 @@ class _CompetitionPageState extends BaseStateWithController<CompetitionPage, Com
   }
 
   void competitionLongTap(Competition item) {
-    showSimpleDialog("Largar competição", "Tem certeza que deseja sair da competição?", confirmCallback: () {
+    showSimpleDialog(
+        "Largar competição", "Tem certeza que deseja sair da competição?",
+        confirmCallback: () {
       showLoading(true);
       controller.exitCompetition(item).then((res) {
         showLoading(false);
@@ -102,141 +105,179 @@ class _CompetitionPageState extends BaseStateWithController<CompetitionPage, Com
                 })),
             const SizedBox(height: 20),
             Observer(
-              builder: (_) => controller.ranking.handleState(() {
-                return Skeleton(
-                    margin: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 24),
-                    width: double.maxFinite,
-                    height: 130);
-              }, (data) {
-                return Card(
-                  margin: const EdgeInsets.only(left: 16, right: 16, top: 0, bottom: 24),
-                  elevation: 4,
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                    child: Column(
-                        children: data!.asMap().entries.map((entry) {
-                      var index = entry.key;
-                      var person = entry.value;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          children: <Widget>[
-                            _positionWidget(index + 1),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                person.name!,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: person.you! ? FontWeight.bold : FontWeight.normal),
+              builder: (_) => controller.ranking.handleState(
+                loading: () {
+                  return Skeleton(
+                      margin: const EdgeInsets.only(
+                          left: 16, right: 16, top: 0, bottom: 24),
+                      width: double.maxFinite,
+                      height: 130);
+                },
+                success: (data) {
+                  return Card(
+                    margin: const EdgeInsets.only(
+                        left: 16, right: 16, top: 0, bottom: 24),
+                    elevation: 4,
+                    child: Container(
+                      width: double.maxFinite,
+                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                      child: Column(
+                          children: data.asMap().entries.map((entry) {
+                        var index = entry.key;
+                        var person = entry.value;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: <Widget>[
+                              _positionWidget(index + 1),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  person.name!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: person.you!
+                                          ? FontWeight.bold
+                                          : FontWeight.normal),
+                                ),
                               ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Text(person.levelText, style: const TextStyle(fontSize: 15)),
-                                Text("${person.score} Km", style: const TextStyle(fontWeight: FontWeight.w300)),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    }).toList()),
-                  ),
-                );
-              }, (error) {
-                return const SizedBox();
-              }),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(person.levelText,
+                                      style: const TextStyle(fontSize: 15)),
+                                  Text("${person.score} Km",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w300)),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }).toList()),
+                    ),
+                  );
+                },
+                error: (error) {
+                  return const SizedBox();
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: <Widget>[
-                  const Expanded(child: Text("Minhas competições", style: TextStyle(fontSize: 18))),
+                  const Expanded(
+                      child: Text("Minhas competições",
+                          style: TextStyle(fontSize: 18))),
                   ElevatedButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(AppTheme.of(context).materialTheme.accentColor),
-                        shape:
-                            MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 0)),
+                        backgroundColor: MaterialStateProperty.all(
+                            AppTheme.of(context).materialTheme.accentColor),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30))),
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 0)),
                         overlayColor: MaterialStateProperty.all(Colors.white24),
                         elevation: MaterialStateProperty.all(0)),
-                    child: const Text("Criar", style: TextStyle(color: Colors.white)),
+                    child: const Text("Criar",
+                        style: TextStyle(color: Colors.white)),
                     onPressed: createCompetition,
                   ),
                 ],
               ),
             ),
             Observer(
-              builder: (_) => controller.competitions.handleState(() {
-                return Skeleton.custom(
-                  child: GridView.builder(
-                      itemCount: 4,
+              builder: (_) => controller.competitions.handleState(
+                loading: () {
+                  return Skeleton.custom(
+                    child: GridView.builder(
+                        itemCount: 4,
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(0),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
+                        itemBuilder: (_, index) {
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15)),
+                          );
+                        }),
+                  );
+                },
+                success: (data) {
+                  if (data.isEmpty)
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 48),
+                      child: Center(
+                        child: Text(
+                            "Comece a competir com seus amigos agora mesmo",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 22.0,
+                                color: Colors.black.withOpacity(0.2))),
+                      ),
+                    );
+                  else
+                    return GridView.builder(
+                      itemCount: data.length,
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(0),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2),
                       itemBuilder: (_, index) {
-                        return Container(
+                        Competition competition = data[index];
+                        return Card(
+                          elevation: 4,
                           margin: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
-                        );
-                      }),
-                );
-              }, (data) {
-                if (data!.isEmpty)
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 48),
-                    child: Center(
-                      child: Text("Comece a competir com seus amigos agora mesmo",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
-                    ),
-                  );
-                else
-                  return GridView.builder(
-                    itemCount: data.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                    itemBuilder: (_, index) {
-                      Competition competition = data[index];
-                      return Card(
-                        elevation: 4,
-                        margin: const EdgeInsets.all(10),
-                        child: InkWell(
-                          onLongPress: () => competitionLongTap(competition),
-                          onTap: () => competitionTap(competition),
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: -50,
-                                child: LayoutBuilder(builder: (_, constraints) {
-                                  return Transform.rotate(
-                                      angle: 0.523,
-                                      child: Rocket(
-                                          size: Size(constraints.maxWidth, constraints.maxWidth),
-                                          color: AppColors.habitsColor[competition.getMyCompetitor().color!],
-                                          isExtend: true));
-                                }),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Text(competition.title!, maxLines: 2, style: const TextStyle(fontSize: 16)),
-                              ),
-                            ],
+                          child: InkWell(
+                            onLongPress: () => competitionLongTap(competition),
+                            onTap: () => competitionTap(competition),
+                            child: Stack(
+                              children: <Widget>[
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: -50,
+                                  child:
+                                      LayoutBuilder(builder: (_, constraints) {
+                                    return Transform.rotate(
+                                        angle: 0.523,
+                                        child: Rocket(
+                                            size: Size(constraints.maxWidth,
+                                                constraints.maxWidth),
+                                            color: AppColors.habitsColor[
+                                                competition
+                                                    .getMyCompetitor()
+                                                    .color!],
+                                            isExtend: true));
+                                  }),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(competition.title!,
+                                      maxLines: 2,
+                                      style: const TextStyle(fontSize: 16)),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-              }, (error) {
-                return const DataError();
-              }),
+                        );
+                      },
+                    );
+                },
+                error: (error) {
+                  return const DataError();
+                },
+              ),
             ),
             const SizedBox(height: 40),
           ],

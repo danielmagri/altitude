@@ -37,7 +37,7 @@ class Result<T> {
 class SuccessResult<T> extends Result<T> {
   SuccessResult(this.value) : super._();
 
-  final T? value;
+  final T value;
 }
 
 class FailureResult<T> extends Result<T> {

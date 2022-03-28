@@ -10,11 +10,9 @@ import 'package:altitude/feature/statistics/domain/models/habit_statistic_data.d
 import 'package:altitude/feature/statistics/domain/models/historic_statistic_data.dart';
 import 'package:altitude/feature/statistics/domain/usecases/get_all_days_done_usecase.dart';
 import "package:collection/collection.dart";
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'statistics_controller.g.dart';
 
-@LazySingleton()
 class StatisticsController = _StatisticsControllerBase
     with _$StatisticsController;
 

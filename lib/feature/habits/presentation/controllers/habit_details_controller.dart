@@ -12,12 +12,10 @@ import 'package:altitude/core/model/failure.dart';
 import 'package:altitude/feature/habits/domain/usecases/get_calendar_days_done_usecase.dart';
 import 'package:altitude/feature/habits/domain/usecases/has_competition_by_habit_usecase.dart';
 import 'package:flutter/material.dart' show Color;
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 import 'package:table_calendar/table_calendar.dart' show CalendarFormat;
 part 'habit_details_controller.g.dart';
 
-@LazySingleton()
 class HabitDetailsController = _HabitDetailsControllerBase
     with _$HabitDetailsController;
 
@@ -175,12 +173,12 @@ abstract class _HabitDetailsControllerBase with Store {
       if (date.isAtSameMomentAs(DateTime.now().today)) {
         isHabitDone.setSuccessState(add);
       } else {
-        isHabitDone.setSuccessState(isHabitDone.data);
+        isHabitDone.setSuccessState(isHabitDone.data!);
       }
       return;
     }, (error) {
-      calendarMonth.setSuccessState(calendarMonth.data);
-      isHabitDone.setSuccessState(isHabitDone.data);
+      calendarMonth.setSuccessState(calendarMonth.data!);
+      isHabitDone.setSuccessState(isHabitDone.data!);
       throw error;
     }));
   }

@@ -53,7 +53,7 @@ class _PendingFriendsPageState extends BaseStateWithController<PendingFriendsPag
             const Header(title: "Solicitações de amizade"),
             const SizedBox(height: 16),
             Observer(builder: (_) {
-              return controller.pendingFriends.handleState(() {
+              return controller.pendingFriends.handleState(loading: () {
                 return Column(
                   children: <Widget>[
                     const SizedBox(height: 48),
@@ -62,8 +62,8 @@ class _PendingFriendsPageState extends BaseStateWithController<PendingFriendsPag
                     const Text("Buscando pedidos de amizade...")
                   ],
                 );
-              }, (data) {
-                if (data!.isEmpty)
+              },success:  (data) {
+                if (data.isEmpty)
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma amizade pendente",

@@ -23,7 +23,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseStateWithController<HomePage, HomeController> with WidgetsBindingObserver {
+class _HomePageState extends BaseStateWithController<HomePage, HomeController>
+    with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -157,7 +158,8 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController> w
                   padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
                   child: Row(
                     children: [
-                      IconButton(icon: const Icon(Icons.menu), onPressed: showDrawer),
+                      IconButton(
+                          icon: const Icon(Icons.menu), onPressed: showDrawer),
                       const Spacer(),
                     ],
                   ),
@@ -169,7 +171,7 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController> w
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Observer(builder: (_) {
                       return controller.user.handleState(
-                        () {
+                        loading: () {
                           return Skeleton.custom(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,39 +179,52 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController> w
                                 Container(
                                     width: 100,
                                     height: 20,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15))),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
                                 const SizedBox(height: 4),
                                 Container(
                                     width: 120,
                                     height: 70,
-                                    decoration:
-                                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)))
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(15)))
                               ],
                             ),
                           );
                         },
-                        (data) {
+                        success: (data) {
                           return Column(children: [
-                            Text(data!.levelText),
+                            Text(data.levelText),
                             const SizedBox(height: 4),
                             Score(score: data.score),
                           ]);
                         },
-                        (error) {
+                        error: (error) {
                           return const DataError();
                         },
                       );
                     }),
                   ),
                 ),
-                Expanded(child: HabitsPanel(controller: controller, goHabitDetails: goHabitDetails)),
+                Expanded(
+                    child: HabitsPanel(
+                        controller: controller,
+                        goHabitDetails: goHabitDetails)),
               ],
             ),
-            Observer(builder: (_) => SkyDragTarget(visibilty: controller.visibilty, setHabitDone: setHabitDone)),
+            Observer(
+                builder: (_) => SkyDragTarget(
+                    visibilty: controller.visibilty,
+                    setHabitDone: setHabitDone)),
           ],
         ),
         bottomNavigationBar: HomebottomNavigation(
-            controller: controller, goAddHabit: goAddHabit, goStatistics: goStatistics, goCompetition: goCompetition));
+            controller: controller,
+            goAddHabit: goAddHabit,
+            goStatistics: goStatistics,
+            goCompetition: goCompetition));
   }
 }

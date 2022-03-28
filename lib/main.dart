@@ -1,3 +1,4 @@
+import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/router/Router.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
@@ -23,24 +24,23 @@ import 'common/app_logic.dart';
 import 'common/theme/app_theme.dart';
 import 'common/theme/dark_theme.dart';
 import 'common/theme/light_theme.dart';
-import 'core/di/get_it_config.dart';
 import 'core/services/interfaces/i_fire_analytics.dart';
-import 'core/services/interfaces/i_local_notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  configureDependencies();
+  setupAll();
   MobileAds.instance.initialize().then((status) {
-    MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+    MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(
           testDeviceIds: <String>["E5BCE9B277498E2110B5F4F43C1A0E6C"]),
     );
   });
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  await GetIt.I.isReady<SharedPref>();
-  await GetIt.I.isReady<ILocalNotification>();
+  await GetIt.I.allReady();
 
+  print(GetIt.I.isReadySync<SharedPref>());
   runApp(MyApp());
 }
 
@@ -49,9 +49,9 @@ class MyApp extends StatelessWidget {
 
   Widget initialPage() {
     if (!SharedPref.instance.habitTutorial &&
-        !getIt.get<IFireAuth>().isLogged()) {
+        !serviceLocator.get<IFireAuth>().isLogged()) {
       return TutorialPage();
-    } else if (!getIt.get<IFireAuth>().isLogged()) {
+    } else if (!serviceLocator.get<IFireAuth>().isLogged()) {
       return LoginPage();
     } else {
       return HomePage();
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
               home: initialPage(),
               navigatorObservers: [
                 FirebaseAnalyticsObserver(
-                    analytics: getIt.get<IFireAnalytics>().analytics)
+                    analytics: serviceLocator.get<IFireAnalytics>().analytics)
               ],
               onGenerateRoute: Router.generateRoute,
             ));

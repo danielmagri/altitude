@@ -6,13 +6,11 @@ import 'package:altitude/core/model/failure.dart';
 import 'package:altitude/feature/competitions/domain/usecases/decline_competition_request_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/get_pending_competitions_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/max_competitions_usecase.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../core/model/data_state.dart';
 part 'pending_competition_controller.g.dart';
 
-@LazySingleton()
 class PendingCompetitionController = _PendingCompetitionControllerBase
     with _$PendingCompetitionController;
 

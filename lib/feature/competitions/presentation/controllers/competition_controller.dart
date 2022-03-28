@@ -12,11 +12,9 @@ import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/pair.dart';
 import 'package:altitude/feature/competitions/domain/usecases/get_ranking_friends_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/remove_competitor_usecase.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'competition_controller.g.dart';
 
-@LazySingleton()
 class CompetitionController = _CompetitionControllerBase
     with _$CompetitionController;
 

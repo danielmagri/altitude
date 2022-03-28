@@ -1,4 +1,5 @@
 import 'package:altitude/common/app_logic.dart';
+import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,9 +33,9 @@ abstract class BaseStateWithController<T extends StatefulWidget, L extends Objec
   L controller = GetIt.I.get<L>();
 
   @override
-  dispose() {
+  dispose() async {
     super.dispose();
-    GetIt.I.resetLazySingleton(instance: controller);
+    await serviceLocator.resetLazySingleton<L>(instance: controller);
     print("Disposed $L");
   }
 }

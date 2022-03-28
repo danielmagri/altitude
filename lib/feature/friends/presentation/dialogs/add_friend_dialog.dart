@@ -109,7 +109,8 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
       showToast(result);
     } else {
       controller.searchFriend(_textEditingController.text).then((_) {
-        if (controller.searchResult.data!.isEmpty) showToast("Esse email não foi encontrado.");
+        if (controller.searchResult.data!.isEmpty)
+          showToast("Esse email não foi encontrado.");
       }).catchError(handleError);
     }
   }
@@ -124,12 +125,18 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
           child: Center(
             child: Container(
               width: double.maxFinite,
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 10),
+              padding: const EdgeInsets.only(
+                  top: 16, left: 16, right: 16, bottom: 10),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: AppTheme.of(context).materialTheme.cardColor,
                 borderRadius: BorderRadius.circular(16.0),
-                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10.0, offset: Offset(0.0, 10.0))],
+                boxShadow: const [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10.0,
+                      offset: Offset(0.0, 10.0))
+                ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -142,8 +149,12 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     style: const TextStyle(fontSize: 16),
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: AppTheme.of(context).materialTheme.textTheme.headline1!.color!)),
+                            borderSide: BorderSide(
+                                color: AppTheme.of(context)
+                                    .materialTheme
+                                    .textTheme
+                                    .headline1!
+                                    .color!)),
                         hintText: "Escreva o email do seu amigo",
                         hintStyle: TextStyle(fontWeight: FontWeight.w300)),
                   ),
@@ -151,23 +162,25 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     width: double.maxFinite,
                     height: 200,
                     child: Observer(builder: (_) {
-                      return controller.searchResult.handleStateReloadable(() {
-                        return const SizedBox();
-                      }, (data, loading) {
-                        if (loading)
-                          return Column(
-                            children: <Widget>[
-                              const SizedBox(height: 32),
-                              CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(AppTheme.of(context).loading)),
-                              const SizedBox(height: 12),
-                              const Text("Buscando...")
-                            ],
-                          );
+                      return controller.searchResult
+                          .handleStateLoadableWithData(loading: (data) {
+                        return Column(
+                          children: <Widget>[
+                            const SizedBox(height: 32),
+                            CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                    AppTheme.of(context).loading)),
+                            const SizedBox(height: 12),
+                            const Text("Buscando...")
+                          ],
+                        );
+                      }, success: (data) {
+                        if (data == null)
+                          return SizedBox();
                         else
                           return ListView.builder(
                             physics: const BouncingScrollPhysics(),
-                            itemCount: data!.length,
+                            itemCount: data.length,
                             itemBuilder: (_, index) {
                               Person person = data[index];
                               return Container(
@@ -178,8 +191,10 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                   children: <Widget>[
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
                                             person.name!,
@@ -188,7 +203,9 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                             style: TextStyle(
                                               fontSize: 17,
                                               fontWeight: FontWeight.bold,
-                                              decoration: person.you! ? TextDecoration.underline : TextDecoration.none,
+                                              decoration: person.you!
+                                                  ? TextDecoration.underline
+                                                  : TextDecoration.none,
                                             ),
                                           ),
                                           const SizedBox(height: 5),
@@ -196,7 +213,8 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                             person.email!,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
-                                            style: const TextStyle(fontSize: 15),
+                                            style:
+                                                const TextStyle(fontSize: 15),
                                           ),
                                         ],
                                       ),
@@ -206,18 +224,31 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                         ? Container()
                                         : ElevatedButton(
                                             style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(Colors.black),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.black),
                                                 shape: MaterialStateProperty.all(
-                                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                                padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
-                                                overlayColor: MaterialStateProperty.all(Colors.white24),
-                                                elevation: MaterialStateProperty.all(0)),
-                                            onPressed: () => onClickButton(person),
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20))),
+                                                padding: MaterialStateProperty.all(
+                                                    const EdgeInsets.all(10)),
+                                                overlayColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.white24),
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        0)),
+                                            onPressed: () =>
+                                                onClickButton(person),
                                             child: Text(
                                               buttonText(person.state),
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                   ],
@@ -225,8 +256,6 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                               );
                             },
                           );
-                      }, (error) {
-                        return const SizedBox();
                       });
                     }),
                   ),
@@ -234,21 +263,29 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                        child: const Text("Cancelar", style: const TextStyle(fontSize: 15)),
+                        child: const Text("Cancelar",
+                            style: const TextStyle(fontSize: 15)),
                         onPressed: () => navigatePop(),
                       ),
                       const SizedBox(width: 5),
                       ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.black),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black),
                             shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                            padding:
-                                MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
-                            overlayColor: MaterialStateProperty.all(Colors.white24),
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 10)),
+                            overlayColor:
+                                MaterialStateProperty.all(Colors.white24),
                             elevation: MaterialStateProperty.all(2)),
                         onPressed: search,
-                        child: Text("Buscar", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        child: Text("Buscar",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

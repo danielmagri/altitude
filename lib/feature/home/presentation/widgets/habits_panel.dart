@@ -23,7 +23,9 @@ import 'package:flutter/material.dart'
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class HabitsPanel extends StatelessWidget {
-  HabitsPanel({Key? key, required this.controller, required this.goHabitDetails}) : super(key: key);
+  HabitsPanel(
+      {Key? key, required this.controller, required this.goHabitDetails})
+      : super(key: key);
 
   final HomeController controller;
   final Function(String? id, int? color) goHabitDetails;
@@ -33,7 +35,7 @@ class HabitsPanel extends StatelessWidget {
     return Center(
       child: Observer(builder: (_) {
         return controller.habits.handleState(
-          () => Skeleton.custom(
+          loading: () => Skeleton.custom(
             child: SizedBox(
               width: 100,
               height: 100,
@@ -43,10 +45,12 @@ class HabitsPanel extends StatelessWidget {
               ),
             ),
           ),
-          (data) {
-            if (data!.isEmpty) {
-              return Text("Crie um novo hábito pelo botão \"+\" na tela principal.",
-                  textAlign: TextAlign.center, style: const TextStyle(fontSize: 22));
+          success: (data) {
+            if (data.isEmpty) {
+              return Text(
+                  "Crie um novo hábito pelo botão \"+\" na tela principal.",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 22));
             } else {
               return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -63,7 +67,7 @@ class HabitsPanel extends StatelessWidget {
               );
             }
           },
-          (error) => const DataError(),
+          error: (error) => const DataError(),
         );
       }),
     );

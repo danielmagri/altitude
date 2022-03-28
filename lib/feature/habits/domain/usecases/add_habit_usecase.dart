@@ -8,9 +8,7 @@ import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:altitude/common/domain/usecases/habits/get_reminder_counter_usecase.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class AddHabitUsecase extends BaseUsecase<Habit, Habit> {
   final IFireDatabase _fireDatabase;
   final ILocalNotification _localNotification;

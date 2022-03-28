@@ -1,11 +1,9 @@
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/feature/login/domain/usecases/auth_google_usecase.dart';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'login_controller.g.dart';
 
-@LazySingleton()
 class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store {

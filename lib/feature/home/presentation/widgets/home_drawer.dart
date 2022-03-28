@@ -82,123 +82,119 @@ class HomeDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppTheme.of(context).materialTheme.accentColor),
               child: Observer(builder: (_) {
-                return controller.user.handleState(() {
-                  return Skeleton.custom(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-                        Row(children: [
-                          Container(
-                              width: 40,
-                              height: 40,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.white)),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      width: double.maxFinite,
-                                      height: 20,
-                                      margin: const EdgeInsets.only(right: 64),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15))),
-                                  const SizedBox(height: 2),
-                                  Container(
-                                      width: double.maxFinite,
-                                      height: 14,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15)))
-                                ]),
-                          )
-                        ]),
-                        const SizedBox(height: 12),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Container(
-                                  width: 120,
-                                  height: 16,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15))),
-                              const SizedBox(width: 4),
-                              Rocket(
-                                  size: const Size(25, 25),
-                                  color: Colors.white,
-                                  isExtend: true),
-                            ]),
-                      ],
-                    ),
-                  );
-                },
-                    (data) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 12),
-                            Row(children: [
-                              Container(
+                return controller.user.handleState(
+                  loading: () {
+                    return Skeleton.custom(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 12),
+                          Row(children: [
+                            Container(
                                 width: 40,
                                 height: 40,
                                 decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.white),
-                                alignment: Alignment.center,
-                                child: data!.photoUrl!.isNotEmpty
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: Image.network(data.photoUrl!))
-                                    : const Icon(Icons.person, size: 32),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("Olá, ${data.name}",
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      Text(
-                                        "${data.email}",
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                    color: Colors.white)),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        width: double.maxFinite,
+                                        height: 20,
+                                        margin:
+                                            const EdgeInsets.only(right: 64),
+                                        decoration: BoxDecoration(
                                             color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                    ]),
-                              )
-                            ]),
-                            const SizedBox(height: 12),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                      "${LevelUtils.getLevelText(data.score!)}",
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 14)),
-                                  const SizedBox(width: 4),
-                                  Image.asset(
-                                      LevelUtils.getLevelImagePath(
-                                          data.score!),
-                                      height: 25,
-                                      width: 25),
-                                ]),
-                          ],
+                                            borderRadius:
+                                                BorderRadius.circular(15))),
+                                    const SizedBox(height: 2),
+                                    Container(
+                                        width: double.maxFinite,
+                                        height: 14,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)))
+                                  ]),
+                            )
+                          ]),
+                          const SizedBox(height: 12),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                    width: 120,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(15))),
+                                const SizedBox(width: 4),
+                                Rocket(
+                                    size: const Size(25, 25),
+                                    color: Colors.white,
+                                    isExtend: true),
+                              ]),
+                        ],
+                      ),
+                    );
+                  },
+                  success: (data) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 12),
+                      Row(children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          alignment: Alignment.center,
+                          child: data.photoUrl!.isNotEmpty
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(30),
+                                  child: Image.network(data.photoUrl!))
+                              : const Icon(Icons.person, size: 32),
                         ),
-                    (error) => const SizedBox());
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Olá, ${data.name}",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  "${data.email}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ]),
+                        )
+                      ]),
+                      const SizedBox(height: 12),
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                        Text("${LevelUtils.getLevelText(data.score!)}",
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14)),
+                        const SizedBox(width: 4),
+                        Image.asset(LevelUtils.getLevelImagePath(data.score!),
+                            height: 25, width: 25),
+                      ]),
+                    ],
+                  ),
+                );
               }),
             ),
             ListTile(

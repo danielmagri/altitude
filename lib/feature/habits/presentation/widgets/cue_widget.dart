@@ -47,46 +47,47 @@ class CueWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) {
-        return controller.habit.handleState(() {
-          return const Skeleton(
-              width: double.maxFinite,
+        return controller.habit.handleState(
+          loading: () {
+            return const Skeleton(
+                width: double.maxFinite,
+                height: 130,
+                margin: const EdgeInsets.symmetric(horizontal: 8));
+          },
+          success: (data) {
+            return SizedBox(
               height: 130,
-              margin: const EdgeInsets.symmetric(horizontal: 8));
-        }, (data) {
-          return SizedBox(
-            height: 130,
-            child: Card(
-              margin: const EdgeInsets.all(12),
-              elevation: 4,
-              child: InkWell(
-                onTap: openBottomSheet as void Function()?,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      Text(
-                        "Gatilho",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                          color: controller.habitColor,
+              child: Card(
+                margin: const EdgeInsets.all(12),
+                elevation: 4,
+                child: InkWell(
+                  onTap: openBottomSheet as void Function()?,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Gatilho",
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            color: controller.habitColor,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: _setCueWidget(data!.oldCue!),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: _setCueWidget(data!.oldCue!),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        }, (error) {
-          return const SizedBox();
-        });
+            );
+          },
+        );
       },
     );
   }

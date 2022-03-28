@@ -2,9 +2,7 @@ import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable(as: IScoreService)
 class ScoreService extends IScoreService {
   @override
   int calculateScore(ScoreType type, Frequency frequency, List<DateTime?> week,

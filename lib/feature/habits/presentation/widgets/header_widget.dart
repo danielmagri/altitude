@@ -46,59 +46,70 @@ class HeaderWidget extends StatelessWidget {
           Expanded(
             child: Observer(
               builder: (_) {
-                return controller.rocketForce.handleState(() {
-                  return Skeleton.custom(child: Rocket(size: const Size(140, 140), color: Colors.white));
-                }, (data) {
-                  return SkyScene(size: const Size(140, 140), color: controller.habitColor, force: data!);
-                }, (error) {
-                  return const SizedBox();
-                });
+                return controller.rocketForce.handleState(
+                  loading: () {
+                    return Skeleton.custom(
+                        child: Rocket(
+                            size: const Size(140, 140), color: Colors.white));
+                  },
+                  success: (data) {
+                    return SkyScene(
+                        size: const Size(140, 140),
+                        color: controller.habitColor,
+                        force: data);
+                  },
+                );
               },
             ),
           ),
           Expanded(
             child: Observer(
               builder: (_) {
-                return controller.habit.handleState(() {
-                  return Skeleton.custom(
-                    child: Column(
+                return controller.habit.handleState(
+                  loading: () {
+                    return Skeleton.custom(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: double.maxFinite,
+                            height: 30,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15)),
+                          ),
+                          Container(
+                            width: 120,
+                            height: 80,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15)),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  success: (data) {
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: double.maxFinite,
-                          height: 30,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                      children: <Widget>[
+                        Text(
+                          data!.habit!,
+                          textAlign: TextAlign.center,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          style: const TextStyle(fontSize: 19),
                         ),
-                        Container(
-                          width: 120,
-                          height: 80,
-                          margin: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
-                        )
+                        Score(color: controller.habitColor, score: data.score),
                       ],
-                    ),
-                  );
-                }, (data) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        data!.habit!,
-                        textAlign: TextAlign.center,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: const TextStyle(fontSize: 19),
-                      ),
-                      Score(color: controller.habitColor, score: data.score),
-                    ],
-                  );
-                }, (error) {
-                  return SizedBox();
-                });
+                    );
+                  },
+                );
               },
             ),
           ),

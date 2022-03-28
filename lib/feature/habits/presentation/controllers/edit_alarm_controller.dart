@@ -7,11 +7,9 @@ import 'package:altitude/feature/habits/domain/models/reminder_card.dart';
 import 'package:altitude/feature/habits/domain/usecases/update_reminder_usecase.dart';
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'edit_alarm_controller.g.dart';
 
-@LazySingleton()
 class EditAlarmController = _EditAlarmControllerBase with _$EditAlarmController;
 
 abstract class _EditAlarmControllerBase with Store {

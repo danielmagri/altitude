@@ -30,7 +30,7 @@ class RankingList extends StatelessWidget {
   Widget build(context) {
     return Observer(
       builder: (_) {
-        return controller.ranking.handleState(() {
+        return controller.ranking.handleState(loading: () {
           return Skeleton.custom(
             child: ListView.builder(
               itemCount: 4,
@@ -71,12 +71,12 @@ class RankingList extends StatelessWidget {
               ),
             ),
           );
-        }, (data) {
+        }, success: (data) {
           return ListView.separated(
               separatorBuilder: (_, index) => Divider(),
               padding: const EdgeInsets.only(bottom: 80),
               physics: const BouncingScrollPhysics(),
-              itemCount: data!.length,
+              itemCount: data.length,
               itemBuilder: (_, int index) {
                 Person person = data[index];
                 return Padding(
@@ -109,7 +109,7 @@ class RankingList extends StatelessWidget {
                   ),
                 );
               });
-        }, (error) {
+        }, error:  (error) {
           return const DataError();
         });
       },

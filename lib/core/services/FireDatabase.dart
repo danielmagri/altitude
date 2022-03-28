@@ -10,11 +10,9 @@ import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
 
 import 'interfaces/i_fire_auth.dart';
 
-@Injectable(as: IFireDatabase)
 class FireDatabase implements IFireDatabase {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 

@@ -4,11 +4,9 @@ import 'package:altitude/feature/friends/domain/usecases/accept_request_usecase.
 import 'package:altitude/feature/friends/domain/usecases/cancel_friend_request_usecase.dart';
 import 'package:altitude/feature/friends/domain/usecases/friend_request_usecase.dart';
 import 'package:altitude/feature/friends/domain/usecases/search_email_usecase.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'add_friend_controller.g.dart';
 
-@LazySingleton()
 class AddFriendController = _AddFriendControllerBase with _$AddFriendController;
 
 abstract class _AddFriendControllerBase with Store {
@@ -20,7 +18,8 @@ abstract class _AddFriendControllerBase with Store {
   _AddFriendControllerBase(this._searchEmailUsecase, this._friendRequestUsecase,
       this._cancelFriendRequestUsecase, this._acceptRequestUsecase);
 
-  DataState<List<Person>> searchResult = DataState();
+  DataState<List<Person>?> searchResult =
+      DataState(initialState: StateType.SUCCESS);
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoadingState();

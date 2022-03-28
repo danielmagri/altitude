@@ -1,9 +1,7 @@
 import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/core/base/base_usecase.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class MaxCompetitionsByHabitUsecase extends BaseUsecase<String, bool> {
   final GetCompetitionsUsecase _getCompetitionsUsecase;
 

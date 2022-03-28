@@ -6,9 +6,7 @@ import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class InviteCompetitorUsecase
     extends BaseUsecase<InviteCompetitorParams, void> {
   final GetCompetitionUsecase _getCompetitionUsecase;

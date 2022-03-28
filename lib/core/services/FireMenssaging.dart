@@ -1,12 +1,10 @@
+import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
-import 'package:altitude/core/di/get_it_config.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable(as: IFireMessaging)
 class FireMessaging implements IFireMessaging {
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -17,7 +15,7 @@ class FireMessaging implements IFireMessaging {
 
   FireMessaging() {
     FirebaseMessaging.onBackgroundMessage((message) async {
-      configureDependencies();
+      setupAll();
 
       await GetIt.I.isReady<SharedPref>();
 

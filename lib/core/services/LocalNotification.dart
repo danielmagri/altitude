@@ -2,17 +2,14 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:injectable/injectable.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'FireMenssaging.dart';
 
-@Singleton(as: ILocalNotification)
 class LocalNotification implements ILocalNotification {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  @factoryMethod
   static Future<LocalNotification> initialize() async {
     LocalNotification instance = LocalNotification();
     instance.flutterLocalNotificationsPlugin =

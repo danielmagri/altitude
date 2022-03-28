@@ -4,11 +4,9 @@ import 'package:altitude/feature/habits/domain/usecases/update_habit_usecase.dar
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:altitude/utils/Suggestions.dart';
 import 'package:flutter/material.dart' show Color;
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'edit_cue_controller.g.dart';
 
-@LazySingleton()
 class EditCueController = _EditCueControllerBase with _$EditCueController;
 
 abstract class _EditCueControllerBase with Store {

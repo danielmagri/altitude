@@ -3,9 +3,7 @@ import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class UpdateFCMTokenUsecase extends BaseUsecase<NoParams, void> {
   final IFireMessaging _fireMessaging;
   final IFireDatabase _fireDatabase;

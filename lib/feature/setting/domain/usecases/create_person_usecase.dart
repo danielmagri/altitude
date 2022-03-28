@@ -6,9 +6,7 @@ import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class CreatePersonUsecase extends BaseUsecase<CreatePersonParams, void> {
   final Memory _memory;
   final IFireDatabase _fireDatabase;

@@ -7,11 +7,9 @@ import 'package:altitude/feature/habits/domain/usecases/update_habit_usecase.dar
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:get_it/get_it.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'edit_habit_controller.g.dart';
 
-@LazySingleton()
 class EditHabitController = _EditHabitControllerBase with _$EditHabitController;
 
 abstract class _EditHabitControllerBase with Store {

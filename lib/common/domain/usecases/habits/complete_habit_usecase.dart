@@ -11,9 +11,7 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final Memory _memory;
   final GetHabitUsecase _getHabitUsecase;

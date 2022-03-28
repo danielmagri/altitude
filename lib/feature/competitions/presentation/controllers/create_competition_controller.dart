@@ -4,11 +4,9 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/feature/competitions/domain/usecases/create_competition_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/max_competitions_by_habit_usecase.dart';
-import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'create_competition_controller.g.dart';
 
-@LazySingleton()
 class CreateCompetitionController = _CreateCompetitionControllerBase
     with _$CreateCompetitionController;
 

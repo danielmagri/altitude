@@ -42,7 +42,7 @@ class FriendsList extends StatelessWidget {
   @override
   Widget build(context) {
     return Observer(builder: (_) {
-      return controller.friends.handleState(() {
+      return controller.friends.handleState(loading: () {
         return Skeleton.custom(
           child: ListView.builder(
             itemCount: 4,
@@ -84,8 +84,8 @@ class FriendsList extends StatelessWidget {
             ),
           ),
         );
-      }, (data) {
-        if (data!.isEmpty)
+      }, success: (data) {
+        if (data.isEmpty)
           return Center(
             child: Text("Adicione seus amigos clicando no botão \"+\" abaixo.",
                 textAlign: TextAlign.center,
@@ -132,7 +132,7 @@ class FriendsList extends StatelessWidget {
               );
             },
           );
-      }, (error) {
+      }, error: (error) {
         return const DataError();
       });
     });

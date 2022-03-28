@@ -31,7 +31,8 @@ class HabitDetailsPage extends StatefulWidget {
   _HabitDetailsPageState createState() => _HabitDetailsPageState();
 }
 
-class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, HabitDetailsController> {
+class _HabitDetailsPageState
+    extends BaseStateWithController<HabitDetailsPage, HabitDetailsController> {
   final ScrollController scrollController = ScrollController();
 
   final BannerAd banner = BannerAd(
@@ -54,7 +55,8 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
     if (!SharedPref.instance.rocketTutorial) {
       Timer.run(() async {
         await Future.delayed(Duration(milliseconds: 600));
-        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        scrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         await navigateSmooth(
           TutorialPresentation(
               focusAlignment: Alignment(-0.55, -0.6),
@@ -63,16 +65,22 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
               text: const [
                 TextSpan(
                     text: "Esse é seu hábito em forma de foguete..",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                TextSpan(text: "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 TextSpan(
-                    text: "\n\nSiga a frequência certinho para ir ainda mais longe!",
+                    text:
+                        "\nQuanto mais você completar seu hábito mais potente ele fica e mais longe vai!"),
+                TextSpan(
+                    text:
+                        "\n\nSiga a frequência certinho para ir ainda mais longe!",
                     style: TextStyle(fontWeight: FontWeight.w300)),
               ],
               hasNext: true),
         );
-        await scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut);
         await navigateSmooth(
           TutorialPresentation(
             focusAlignment: Alignment(0.0, -0.35),
@@ -80,9 +88,12 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
             textAlignment: Alignment(0, 0.51),
             text: const [
               TextSpan(
-                  text: "No calendário você tem o controle de todos os dias feitos!",
+                  text:
+                      "No calendário você tem o controle de todos os dias feitos!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              TextSpan(text: "\n\nAo manter pressionado um dia você consegue marcar como feito ou desmarcar."),
+              TextSpan(
+                  text:
+                      "\n\nAo manter pressionado um dia você consegue marcar como feito ou desmarcar."),
             ],
           ),
         );
@@ -116,7 +127,8 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
           SharedPref.instance.alarmTutorial < 2 &&
           controller.reminders.data?.hasAnyDay() == true) {
         await Future.delayed(Duration(milliseconds: 600));
-        scrollController.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        scrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
         navigateSmooth(
           TutorialPresentation(
             focusAlignment: Alignment(0.65, -0.85),
@@ -126,7 +138,9 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
               TextSpan(
                   text: "Esqueceu de marcar como feito o hábito?",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              TextSpan(text: "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
+              TextSpan(
+                  text:
+                      "\n\nQue tal colocar um alarme, assim você será sempre lembrado a hora que desejar!"),
             ],
           ),
         );
@@ -139,7 +153,8 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
         isScrollControlled: true,
         builder: (_) => EditAlarmDialog());
   }
@@ -148,13 +163,15 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
     showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20), topLeft: Radius.circular(20))),
         isScrollControlled: true,
         builder: (_) => EditCueDialog());
   }
 
   void goEditHabitPage() async {
-    var arguments = EditHabitPageArguments(controller.habit.data, await controller.hasCompetition());
+    var arguments = EditHabitPageArguments(
+        controller.habit.data, await controller.hasCompetition());
     navigatePush('editHabit', arguments: arguments);
   }
 
@@ -180,22 +197,31 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
                   const Spacer(),
                   Observer(
                     builder: (_) => controller.reminders.handleState(
-                      () => const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
-                      (data) => IconButton(
-                          icon: Icon(data != null && data.hasAnyDay() ? Icons.alarm_on : Icons.add_alarm,
-                              size: 25, color: controller.habitColor),
+                      loading: () => const Skeleton(
+                          width: 40,
+                          height: 40,
+                          margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                      success: (data) => IconButton(
+                          icon: Icon(
+                              data != null && data.hasAnyDay()
+                                  ? Icons.alarm_on
+                                  : Icons.add_alarm,
+                              size: 25,
+                              color: controller.habitColor),
                           onPressed: openReminderBottomSheet),
-                      (error) => const SizedBox(),
                     ),
                   ),
                   Observer(
                     builder: (_) => controller.habit.handleState(
-                      () => const Skeleton(width: 40, height: 40, margin: const EdgeInsets.only(bottom: 4, right: 8)),
-                      (data) => IconButton(
-                        icon: Icon(Icons.edit, size: 25, color: controller.habitColor),
+                      loading: () => const Skeleton(
+                          width: 40,
+                          height: 40,
+                          margin: const EdgeInsets.only(bottom: 4, right: 8)),
+                      success: (data) => IconButton(
+                        icon: Icon(Icons.edit,
+                            size: 25, color: controller.habitColor),
                         onPressed: goEditHabitPage,
                       ),
-                      (error) => const SizedBox(),
                     ),
                   ),
                 ],
@@ -203,49 +229,28 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
             ),
             HeaderWidget(),
             Container(
-              margin: const EdgeInsets.only(top: 36, bottom: 4, left: 32, right: 32),
+              margin: const EdgeInsets.only(
+                  top: 36, bottom: 4, left: 32, right: 32),
               width: double.maxFinite,
               height: 50,
               child: Observer(
-                builder: (_) => controller.isHabitDone.handleStateReloadable(
-                  () => const Skeleton(width: double.maxFinite, height: 50),
-                  (data, loading) => ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            data! ? controller.habitColor : AppTheme.of(context).materialTheme.cardColor),
-                        shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-                        padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
-                        overlayColor: MaterialStateProperty.all(controller.habitColor.withOpacity(0.2)),
-                        elevation: MaterialStateProperty.all(2)),
-                    onPressed: () {
-                      if (!data) completeHabit(true, DateTime.now().today, DonePageType.Detail);
-                    },
-                    child: loading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(data ? Colors.white : controller.habitColor)))
-                        : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: data ? Colors.white : controller.habitColor,
-                                fontWeight: FontWeight.bold)),
-                  ),
-                  (error) => const SizedBox(),
-                ),
+                builder: (_) => controller.isHabitDone
+                    .handleStateLoadableWithData(
+                        loading: (data) => data == null
+                            ? const Skeleton(
+                                width: double.maxFinite, height: 50)
+                            : _completeButton(data, true),
+                        success: (data) => _completeButton(data, false)),
               ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 20),
               child: Observer(
                 builder: (_) => controller.frequency.handleState(
-                  () => const Skeleton(width: 200, height: 20),
-                  (data) => Text(data!.frequencyText(),
-                      textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w300)),
-                  (error) => const SizedBox(),
+                  loading: () => const Skeleton(width: 200, height: 20),
+                  success: (data) => Text(data!.frequencyText(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w300)),
                 ),
               ),
             ),
@@ -265,6 +270,39 @@ class _HabitDetailsPageState extends BaseStateWithController<HabitDetailsPage, H
           ],
         ),
       ),
+    );
+  }
+
+  Widget _completeButton(bool data, bool loading) {
+    return ElevatedButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(data
+              ? controller.habitColor
+              : AppTheme.of(context).materialTheme.cardColor),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0))),
+          padding: MaterialStateProperty.all(
+              const EdgeInsets.symmetric(vertical: 15)),
+          overlayColor:
+              MaterialStateProperty.all(controller.habitColor.withOpacity(0.2)),
+          elevation: MaterialStateProperty.all(2)),
+      onPressed: () {
+        if (!data)
+          completeHabit(true, DateTime.now().today, DonePageType.Detail);
+      },
+      child: loading
+          ? SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      data ? Colors.white : controller.habitColor)))
+          : Text(data ? "HÁBITO COMPLETO!" : "COMPLETAR HÁBITO HOJE",
+              style: TextStyle(
+                  fontSize: 16,
+                  color: data ? Colors.white : controller.habitColor,
+                  fontWeight: FontWeight.bold)),
     );
   }
 }

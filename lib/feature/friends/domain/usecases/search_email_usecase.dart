@@ -3,9 +3,7 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class SearchEmailUsecase extends BaseUsecase<String, List<Person>> {
   final IFireDatabase _fireDatabase;
   final IFireAuth _fireAuth;

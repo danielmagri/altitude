@@ -2,9 +2,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/base/base_usecase.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:injectable/injectable.dart';
 
-@Injectable()
 class GetPendingCompetitionsUsecase
     extends BaseUsecase<NoParams, List<Competition>> {
   final IFireDatabase _fireDatabase;
