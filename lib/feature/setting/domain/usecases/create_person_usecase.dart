@@ -2,6 +2,7 @@ import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart'
 import 'package:altitude/common/domain/usecases/user/update_fcm_token_usecase.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
@@ -26,7 +27,7 @@ class CreatePersonUsecase extends BaseUsecase<CreatePersonParams, void> {
   @override
   Future<void> getRawFuture(CreatePersonParams params) async {
     return (await _getUserDataUsecase(true)).result((data) async {
-      _updateFCMTokenUsecase();
+      _updateFCMTokenUsecase.call(NoParams());
       return;
     }, (error) async {
       Person person = Person(

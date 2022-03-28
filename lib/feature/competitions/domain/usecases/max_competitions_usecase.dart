@@ -2,6 +2,7 @@ import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 
 class MaxCompetitionsUsecase extends BaseUsecase<NoParams, bool> {
   final GetCompetitionsUsecase _getCompetitionsUsecase;

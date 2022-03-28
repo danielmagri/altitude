@@ -9,6 +9,7 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/feature/home/domain/usecases/update_level_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -90,7 +91,7 @@ abstract class _HomeControllerBase with Store {
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelUtils.getLevel(newScore);
     int oldLevel = LevelUtils.getLevel((await _getUserDataUsecase
-                .call()
+                .call(false)
                 .resultComplete((data) => data, (error) => null))
             ?.score ??
         0);
@@ -106,7 +107,7 @@ abstract class _HomeControllerBase with Store {
   }
 
   Future<bool> canAddHabit() => _maxHabitsUsecase
-      .call()
+      .call(NoParams())
       .resultComplete((data) => data, (error) => true);
 
   void updateSystemStyle() => _appLogic.updateSystemStyle();

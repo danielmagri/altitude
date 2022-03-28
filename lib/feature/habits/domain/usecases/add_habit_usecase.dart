@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
@@ -23,7 +24,7 @@ class AddHabitUsecase extends BaseUsecase<Habit, Habit> {
   Future<Habit> getRawFuture(Habit params) async {
     int? reminderCounter;
     if (params.reminder != null) {
-      reminderCounter = await _getReminderCounterUsecase()
+      reminderCounter = await _getReminderCounterUsecase.call(NoParams())
           .resultComplete((data) => data, (error) => null);
       params.reminder!.id = reminderCounter;
     }

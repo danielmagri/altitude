@@ -29,19 +29,19 @@ abstract class _AddFriendControllerBase with Store {
     searchResult.setSuccessState(list);
   }
 
-  Future sendFriendRequest(String? uid) async {
+  Future sendFriendRequest(String uid) async {
     return await _friendRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);
   }
 
-  Future<void> cancelFriendRequest(String? uid) async {
+  Future<void> cancelFriendRequest(String uid) async {
     return await _cancelFriendRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);
   }
 
-  Future<void> acceptFriendRequest(String? uid) async {
+  Future<void> acceptFriendRequest(String uid) async {
     return await _acceptRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);

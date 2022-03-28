@@ -19,4 +19,5 @@ class GetCompetitionUsecase extends BaseUsecase<String, Competition> {
     }
     return competition;
   }
+
 }

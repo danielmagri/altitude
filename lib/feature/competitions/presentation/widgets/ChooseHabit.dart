@@ -60,7 +60,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
 
   void acceptRequest() async {
     if (await _maxCompetitionsByHabitUsecase
-        .call(selectedHabit!.id)
+        .call(selectedHabit!.id!)
         .resultComplete((data) => data, (error) => true)) {
       showToast(
           "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");

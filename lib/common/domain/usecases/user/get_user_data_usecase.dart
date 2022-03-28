@@ -1,6 +1,7 @@
 import 'package:altitude/common/domain/usecases/user/update_fcm_token_usecase.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
@@ -24,7 +25,7 @@ class GetUserDataUsecase extends BaseUsecase<bool, Person> {
       _memory.person = data;
 
       if (data.fcmToken != await _fireMessaging.getToken) {
-        _updateFCMTokenUsecase.call();
+        _updateFCMTokenUsecase.call(NoParams());
       }
 
       return data;

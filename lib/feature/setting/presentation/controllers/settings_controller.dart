@@ -5,6 +5,7 @@ import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/setting/domain/usecases/logout_usecase.dart';
 import 'package:altitude/feature/setting/domain/usecases/recalculate_score_usecasse.dart';
 import 'package:altitude/feature/setting/domain/usecases/update_name_usecase.dart';
@@ -48,7 +49,7 @@ abstract class _SettingsControllerBase with Store {
             .resultComplete((data) => data, (error) => null))
         ?.name;
     isLogged = await _isLoggedUsecase
-        .call()
+        .call(NoParams())
         .resultComplete((data) => data, (error) => false);
     theme = getThemeType(_sharedPref.theme);
   }
@@ -75,13 +76,13 @@ abstract class _SettingsControllerBase with Store {
 
   @action
   Future<void> logout() async {
-    await _logoutUsecase.call();
+    await _logoutUsecase.call(NoParams());
     isLogged = false;
   }
 
   Future recalculateScore() async {
     return await _recalculateScoreUsecase
-        .call()
+        .call(NoParams())
         .resultComplete((data) => data, (error) => throw error);
   }
 }

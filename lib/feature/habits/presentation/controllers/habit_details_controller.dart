@@ -67,7 +67,7 @@ abstract class _HabitDetailsControllerBase with Store {
   }
 
   Future<void> getHabitDetail() async {
-    (await _getHabitUsecase.call(_id)).result((data) {
+    (await _getHabitUsecase.call(_id!)).result((data) {
       habit.setSuccessState(data);
       frequency.setSuccessState(data.frequency);
       reminders.setSuccessState(data.reminder);
@@ -206,7 +206,7 @@ abstract class _HabitDetailsControllerBase with Store {
 
   Future<bool> hasCompetition() {
     return _hasCompetitionByHabitUsecase
-        .call(_id)
+        .call(_id!)
         .resultComplete((data) => data, (error) => false);
   }
 }

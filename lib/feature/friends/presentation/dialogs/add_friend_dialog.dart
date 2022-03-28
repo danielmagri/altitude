@@ -83,20 +83,20 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
   void onClickButton(Person person) {
     if (person.state == 0) {
       showLoading(true);
-      controller.sendFriendRequest(person.uid).then((_) {
+      controller.sendFriendRequest(person.uid!).then((_) {
         showLoading(false);
         showToast("Pedido de amizade enviado.");
         Navigator.of(context).pop();
       }).catchError(handleError);
     } else if (person.state == 2) {
       showLoading(true);
-      controller.cancelFriendRequest(person.uid).then((_) {
+      controller.cancelFriendRequest(person.uid!).then((_) {
         showLoading(false);
         Navigator.of(context).pop();
       }).catchError(handleError);
     } else if (person.state == 3) {
       showLoading(true);
-      controller.acceptFriendRequest(person.uid).then((_) {
+      controller.acceptFriendRequest(person.uid!).then((_) {
         showLoading(false);
         Navigator.of(context).pop(person);
       }).catchError(handleError);

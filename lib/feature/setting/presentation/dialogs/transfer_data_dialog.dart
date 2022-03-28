@@ -4,6 +4,7 @@ import 'package:altitude/common/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
@@ -61,7 +62,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       if (!await DatabaseService().existDB()) {
         (await _createPersonUsecase.call(CreatePersonParams()))
             .result((data) {}, (error) async {
-          await _logoutUsecase.call();
+          await _logoutUsecase.call(NoParams());
           throw "Erro ao salvar os dados (1)";
         });
       } else {
@@ -71,7 +72,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         if (result.isError) {
           (await _createPersonUsecase.call(CreatePersonParams()))
               .result((data) {}, (error) async {
-            await _logoutUsecase.call();
+            await _logoutUsecase.call(NoParams());
             throw "Erro ao salvar os dados (2)";
           });
         } else {
@@ -90,7 +91,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
                   friends: person.friends,
                   pendingFriends: person.pendingFriends)))
               .result((data) {}, (error) async {
-            await _logoutUsecase.call();
+            await _logoutUsecase.call(NoParams());
             throw "Erro ao salvar os dados (3)";
           });
         }
@@ -127,7 +128,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
 
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {
-            await _logoutUsecase.call();
+            await _logoutUsecase.call(NoParams());
             throw "Erro ao salvar os dados (4)";
           });
         }
@@ -139,7 +140,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       _fireAnalytics.setUserId(uid);
       return true;
     } catch (e) {
-      await _logoutUsecase.call();
+      await _logoutUsecase.call(NoParams());
       throw "Erro ao salvar os dados (0)";
     }
   }

@@ -3,6 +3,7 @@ import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart'
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/friends/domain/usecases/remove_friend_usecase.dart';
 import 'package:mobx/mobx.dart';
 part 'friends_controller.g.dart';
@@ -27,7 +28,7 @@ abstract class _FriendsControllerBase with Store {
   Future fetchData() async {
     checkPendingFriendsStatus();
 
-    return (await _getFriendsUsecase.call()).result((data) async {
+    return (await _getFriendsUsecase.call(NoParams())).result((data) async {
       var _friends = data.toList().asObservable();
       var _ranking = data.toList().asObservable();
 
@@ -74,7 +75,7 @@ abstract class _FriendsControllerBase with Store {
   }
 
   @action
-  Future<void> removeFriend(String? uid) async {
+  Future<void> removeFriend(String uid) async {
     await _removeFriendUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);

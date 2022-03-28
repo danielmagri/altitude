@@ -55,7 +55,7 @@ class _CompetitionPageState
 
   void competitionTap(Competition competition) {
     showLoading(true);
-    controller.getCompetitionDetails(competition.id).then((value) {
+    controller.getCompetitionDetails(competition.id!).then((value) {
       showLoading(false);
       var arguments = CompetitionDetailsPageArguments(value);
       navigatePush('competitionDetails', arguments: arguments);

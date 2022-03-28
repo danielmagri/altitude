@@ -49,7 +49,7 @@ class _FriendsPageState extends BaseStateWithController<FriendsPage, FriendsCont
         confirmCallback: () {
       showLoading(true);
 
-      controller.removeFriend(person.uid).then((_) {
+      controller.removeFriend(person.uid!).then((_) {
         showLoading(false);
       }).catchError(handleError);
     });

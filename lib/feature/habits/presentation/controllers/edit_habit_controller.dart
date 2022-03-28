@@ -45,7 +45,7 @@ abstract class _EditHabitControllerBase with Store {
   }
 
   Future<Result<void>> removeHabit() {
-    return _deleteHabitUsecase.call(initialHabit);
+    return _deleteHabitUsecase.call(initialHabit!);
   }
 
   Future updateHabit(String habit) async {

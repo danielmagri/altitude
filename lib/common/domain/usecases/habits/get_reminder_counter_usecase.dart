@@ -2,6 +2,7 @@ import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart'
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Memory.dart';
 
 class GetReminderCounterUsecase extends BaseUsecase<NoParams, int> {

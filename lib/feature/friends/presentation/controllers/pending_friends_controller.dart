@@ -1,6 +1,7 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/friends/domain/usecases/accept_request_usecase.dart';
 import 'package:altitude/feature/friends/domain/usecases/decline_request_usecase.dart';
 import 'package:altitude/feature/friends/domain/usecases/get_pending_friends_usecase.dart';
@@ -26,7 +27,7 @@ abstract class _PendingFriendsControllerBase with Store {
   List<Person> addedFriends = [];
 
   Future<void> fetchData() async {
-    (await _getPendingFriendsUsecase.call()).result((data) {
+    (await _getPendingFriendsUsecase.call(NoParams())).result((data) {
       _sharedPref.pendingFriends = data.isNotEmpty;
       pendingFriends.setSuccessState(data.asObservable());
     }, (error) {
@@ -38,7 +39,7 @@ abstract class _PendingFriendsControllerBase with Store {
   @action
   Future<void> acceptRequest(Person person) async {
     await _acceptRequestUsecase
-        .call(person.uid)
+        .call(person.uid!)
         .resultComplete((data) => data, (error) => throw error);
     addedFriends.add(person);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
@@ -49,7 +50,7 @@ abstract class _PendingFriendsControllerBase with Store {
   @action
   Future<void> declineRequest(Person person) async {
     await _declineRequestUsecase
-        .call(person.uid)
+        .call(person.uid!)
         .resultComplete((data) => data, (error) => throw error);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 

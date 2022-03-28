@@ -1,6 +1,7 @@
 import 'package:altitude/common/domain/usecases/competitions/get_competition_usecase.dart';
 import 'package:altitude/common/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/friends/get_friends_usecase.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/competitions/domain/usecases/max_competitions_usecase.dart';
 import 'package:altitude/common/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/domain/usecases/user/get_user_data_usecase.dart';
@@ -75,7 +76,7 @@ abstract class _CompetitionControllerBase with Store {
     });
   }
 
-  Future<Competition> getCompetitionDetails(String? id) async {
+  Future<Competition> getCompetitionDetails(String id) async {
     return await _getCompetitionUsecase
         .call(id)
         .resultComplete((data) => data, (error) => throw error);
@@ -87,15 +88,15 @@ abstract class _CompetitionControllerBase with Store {
   }
 
   Future<bool> checkCreateCompetition() => _maxCompetitionsUsecase
-      .call()
+      .call(NoParams())
       .resultComplete((data) => data, (error) => true);
 
   Future<Pair<List<Habit>, List<Person>>> getCreationData() async {
     List habits = await _getHabitsUsecase
-        .call()
+        .call(false)
         .resultComplete((data) => data, (error) => throw error);
     List friends = await _getFriendsUsecase
-        .call()
+        .call(NoParams())
         .resultComplete((data) => data, (error) => throw error);
 
     return Pair(habits as List<Habit>, friends as List<Person>);

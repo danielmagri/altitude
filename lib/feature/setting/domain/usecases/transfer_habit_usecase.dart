@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/common/domain/usecases/habits/get_reminder_counter_usecase.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 
@@ -19,7 +20,7 @@ class TransferHabitUsecase extends BaseUsecase<TransferHabitParams, void> {
     int? reminderCounter;
     if (params.habit.reminder != null) {
       reminderCounter = await _getReminderCounterUsecase
-          .call()
+          .call(NoParams())
           .resultComplete((data) => data, (error) => null);
       params.habit.reminder!.id = reminderCounter;
     }

@@ -49,7 +49,7 @@ class _PendingCompetitionPageState extends BaseStateWithController<
 
   void declineRequest(Competition competition) async {
     showLoading(true);
-    controller.declineCompetitionRequest(competition.id).then((_) {
+    controller.declineCompetitionRequest(competition.id!).then((_) {
       showLoading(false);
     }).catchError(handleError);
   }

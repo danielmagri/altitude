@@ -3,6 +3,7 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/failure.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/competitions/domain/usecases/decline_competition_request_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/get_pending_competitions_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/max_competitions_usecase.dart';
@@ -34,7 +35,7 @@ abstract class _PendingCompetitionControllerBase with Store {
   Future<void> fetchData() async {
     try {
       var _pendingCompetition = (await _getPendingCompetitionsUsecase
-              .call()
+              .call(NoParams())
               .resultComplete((data) => data, (error) => throw error))
           .asObservable();
 
@@ -48,7 +49,7 @@ abstract class _PendingCompetitionControllerBase with Store {
   }
 
   Future<bool> checkCreateCompetition() => _maxCompetitionsUsecase
-      .call()
+      .call(NoParams())
       .resultComplete((data) => data, (error) => true);
 
   Future<List<Habit>> getAllHabits() async {
@@ -64,7 +65,7 @@ abstract class _PendingCompetitionControllerBase with Store {
       _sharedPref.pendingCompetition = false;
   }
 
-  Future declineCompetitionRequest(String? id) async {
+  Future declineCompetitionRequest(String id) async {
     return (await _declineCompetitionRequestUsecase.call(id)).result((data) {
       pendingCompetition.data!.removeWhere((item) => item.id == id);
 

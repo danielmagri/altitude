@@ -1,4 +1,5 @@
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/login/domain/usecases/auth_google_usecase.dart';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:mobx/mobx.dart';
@@ -32,7 +33,7 @@ abstract class _LoginControllerBase with Store {
 
   Future<String?> loginGoogle() async {
     return _authGoogleUsecase
-        .call()
+        .call(NoParams())
         .resultComplete((data) => data, ((error) => null));
   }
 }

@@ -2,6 +2,7 @@ import 'package:altitude/common/domain/usecases/friends/get_friends_usecase.dart
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/feature/competitions/domain/usecases/remove_competitor_usecase.dart';
 import 'package:altitude/feature/competitions/domain/usecases/update_competition_usecase.dart';
 import 'package:mobx/mobx.dart';
@@ -24,11 +25,11 @@ abstract class _CompetitionDetailsControllerBase with Store {
   Competition? competition;
 
   Future<List<Person>> getFriends() async {
-    return await _getFriendsUsecase.call().resultComplete((data) => data, (error) => throw error);
+    return await _getFriendsUsecase.call(NoParams()).resultComplete((data) => data, (error) => throw error);
   }
 
   Future leaveCompetition(String? id) {
-    return _removeCompetitorUsecase.call(competition);
+    return _removeCompetitorUsecase.call(competition!);
   }
 
   @action

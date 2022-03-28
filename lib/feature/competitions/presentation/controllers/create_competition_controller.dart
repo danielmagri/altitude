@@ -59,6 +59,6 @@ abstract class _CreateCompetitionControllerBase with Store {
   }
 
   Future<bool> checkHabitCompetitionLimit() => _maxCompetitionsByHabitUsecase
-      .call(selectedHabit!.id)
+      .call(selectedHabit!.id!)
       .resultComplete((data) => data, (error) => true);
 }
