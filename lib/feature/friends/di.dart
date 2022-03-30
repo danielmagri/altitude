@@ -53,9 +53,15 @@ void setupFriends() {
       serviceLocator.get(),
       serviceLocator.get()));
 
-  serviceLocator.registerFactory(() => FriendsController(serviceLocator.get(),
-      serviceLocator.get(), serviceLocator.get(), serviceLocator.get()));
+  serviceLocator.registerLazySingleton(() => FriendsController(
+      serviceLocator.get(),
+      serviceLocator.get(),
+      serviceLocator.get(),
+      serviceLocator.get()));
 
-  serviceLocator.registerFactory(() => AddFriendController(serviceLocator.get(),
-      serviceLocator.get(), serviceLocator.get(), serviceLocator.get()));
+  serviceLocator.registerLazySingleton(() => AddFriendController(
+      serviceLocator.get(),
+      serviceLocator.get(),
+      serviceLocator.get(),
+      serviceLocator.get()));
 }

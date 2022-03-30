@@ -53,7 +53,7 @@ class _EditHabitPageState
   @override
   void dispose() {
     habitTextController.dispose();
-    myInterstitial!.dispose();
+    myInterstitial?.dispose();
     super.dispose();
   }
 

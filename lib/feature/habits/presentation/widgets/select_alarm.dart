@@ -38,12 +38,6 @@ class SelectAlarm extends StatefulWidget {
 class _SelectAlarmState extends State<SelectAlarm> {
   final AddHabitController controller = GetIt.I.get<AddHabitController>();
 
-  @override
-  void dispose() {
-    GetIt.I.resetLazySingleton<AddHabitController>();
-    super.dispose();
-  }
-
   void showTutorial() {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpAlarm",
