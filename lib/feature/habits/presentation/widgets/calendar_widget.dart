@@ -2,16 +2,19 @@ import 'package:altitude/common/enums/DonePageType.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
+import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/feature/habits/presentation/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
         Border,
+        BorderRadius,
         BoxDecoration,
         BoxShape,
         BuildContext,
         Center,
         CircularProgressIndicator,
+        Colors,
         Container,
         EdgeInsets,
         FontWeight,
@@ -22,6 +25,7 @@ import 'package:flutter/material.dart'
         Key,
         Navigator,
         Positioned,
+        Radius,
         SizedBox,
         Stack,
         StatelessWidget,
@@ -33,21 +37,25 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:mobx/mobx.dart' show ObservableMap;
+import 'package:table_calendar/table_calendar.dart';
 
 class CalendarWidget extends StatelessWidget {
   CalendarWidget({Key? key, required this.completeHabit})
       : controller = GetIt.I.get<HabitDetailsController>(),
-        super(key: key);
+        super(key: key) {
+    _focusedDay = DateTime.now();
+  }
 
   final HabitDetailsController controller;
   final Function(bool add, DateTime date, DonePageType donePageType)
       completeHabit;
 
-  void dayCalendarClick(DateTime date, List events, List holidays) {
-    DateTime day = DateTime(date.year, date.month, date.day);
-    bool add = events.length == 0;
+  static DateTime _focusedDay = DateTime.now();
 
-    completeHabit(add, day, DonePageType.Calendar);
+  void dayCalendarClick(DateTime selectedDay, DateTime focusedDay) {
+    bool add = controller.calendarMonth.data?[selectedDay]?.isEmpty ?? true;
+
+    completeHabit(add, selectedDay, DonePageType.Calendar);
   }
 
   void calendarHelp(BuildContext context) {
@@ -96,87 +104,101 @@ class CalendarWidget extends StatelessWidget {
     );
   }
 
-  Widget _calendar(ObservableMap<DateTime, List<dynamic>> data, bool loading,
+  Widget _calendar(ObservableMap<DateTime, List<bool>> data, bool loading,
       BuildContext context) {
     return Container(
       width: double.maxFinite,
       child: Stack(
         children: <Widget>[
-          // TableCalendar(
-          //   events: data,
-          //   formatAnimation: FormatAnimation.slide,
-          //   startingDayOfWeek: StartingDayOfWeek.sunday,
-          //   availableGestures: AvailableGestures.horizontalSwipe,
-          //   initialCalendarFormat: CalendarFormat.month,
-          //   availableCalendarFormats: const {
-          //     CalendarFormat.month: '',
-          //   },
-          //   onDaySelected: dayCalendarClick,
-          //   onDayLongPressed: dayCalendarClick,
-          //   onVisibleDaysChanged: controller.calendarMonthSwipe,
-          //   daysOfWeekStyle: DaysOfWeekStyle(dowTextBuilder: (date, locale) {
-          //     switch (date.weekday) {
-          //       case 1:
-          //         return "Seg";
-          //       case 2:
-          //         return "Ter";
-          //       case 3:
-          //         return "Qua";
-          //       case 4:
-          //         return "Qui";
-          //       case 5:
-          //         return "Sex";
-          //       case 6:
-          //         return "Sáb";
-          //       case 7:
-          //         return "Dom";
-          //       default:
-          //         return "";
-          //     }
-          //   }),
-          //   endDay: DateTime.now().today,
-          //   rowHeight: 40,
-          //   headerStyle: HeaderStyle(
-          //     formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
-          //     formatButtonDecoration: BoxDecoration(
-          //       color: controller.habitColor,
-          //       borderRadius: BorderRadius.circular(16.0),
-          //     ),
-          //   ),
-          //   builders: CalendarBuilders(
-          //       markersBuilder: (context, date, event, list) {
-          //         return [
-          //           Container(
-          //               child: Text(
-          //                 date.day.toString(),
-          //                 style: TextStyle(color: Colors.white),
-          //               ),
-          //               alignment: Alignment.center,
-          //               margin:
-          //                   EdgeInsets.only(top: 5, bottom: 5, left: event[0] ? 0 : 5, right: event[1] ? 0 : 5),
-          //               decoration: BoxDecoration(
-          //                 borderRadius: BorderRadius.horizontal(
-          //                     left: event[0] ? Radius.circular(0) : Radius.circular(20),
-          //                     right: event[1] ? Radius.circular(0) : Radius.circular(20)),
-          //                 color: controller.habitColor,
-          //               ))
-          //         ];
-          //       },
-          //       selectedDayBuilder: (context, date, list) {
-          //         if (DateTime.now().difference(date) < Duration(days: 1)) {
-          //           return _todayDayBuilder(context, date, list);
-          //         } else {
-          //           return Container(
-          //             child: Text(
-          //               date.day.toString(),
-          //               style: TextStyle(color: date.weekday >= 6 ? Colors.red : Colors.black),
-          //             ),
-          //             alignment: Alignment(0.0, 0.0),
-          //           );
-          //         }
-          //       },
-          //       todayDayBuilder: _todayDayBuilder),
-          // ),
+          TableCalendar<bool>(
+            focusedDay: _focusedDay,
+            firstDay: DateTime(2000),
+            lastDay: DateTime.now().onlyDate,
+            eventLoader: (day) {
+              return data[day] ?? <bool>[];
+            },
+            startingDayOfWeek: StartingDayOfWeek.sunday,
+            availableGestures: AvailableGestures.horizontalSwipe,
+            availableCalendarFormats: const {
+              CalendarFormat.month: '',
+            },
+            onDaySelected: dayCalendarClick,
+            onDayLongPressed: dayCalendarClick,
+            onPageChanged: (focusedDate) {
+              _focusedDay = focusedDate;
+              controller.calendarMonthSwipe(focusedDate);
+            },
+            daysOfWeekStyle: DaysOfWeekStyle(dowTextFormatter: (date, locale) {
+              switch (date.weekday) {
+                case 1:
+                  return "Seg";
+                case 2:
+                  return "Ter";
+                case 3:
+                  return "Qua";
+                case 4:
+                  return "Qui";
+                case 5:
+                  return "Sex";
+                case 6:
+                  return "Sáb";
+                case 7:
+                  return "Dom";
+                default:
+                  return "";
+              }
+            }),
+            rowHeight: 40,
+            headerStyle: HeaderStyle(
+              formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
+              formatButtonDecoration: BoxDecoration(
+                color: controller.habitColor,
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
+            calendarBuilders: CalendarBuilders<bool>(
+                markerBuilder: (context, date, event) {
+                  return event.isNotEmpty
+                      ? Container(
+                          child: Text(
+                            date.day.toString(),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(
+                              top: 5,
+                              bottom: 5,
+                              left: event[0] ? 0 : 5,
+                              right: event[1] ? 0 : 5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.horizontal(
+                                left: event[0]
+                                    ? Radius.circular(0)
+                                    : Radius.circular(20),
+                                right: event[1]
+                                    ? Radius.circular(0)
+                                    : Radius.circular(20)),
+                            color: controller.habitColor,
+                          ))
+                      : null;
+                },
+                selectedBuilder: (context, date, list) {
+                  if (DateTime.now().difference(date) < Duration(days: 1)) {
+                    return _todayDayBuilder(context, date, list);
+                  } else {
+                    return Container(
+                      child: Text(
+                        date.day.toString(),
+                        style: TextStyle(
+                            color:
+                                date.weekday >= 6 ? Colors.red : Colors.black),
+                      ),
+                      alignment: Alignment(0.0, 0.0),
+                    );
+                  }
+                },
+                todayBuilder: _todayDayBuilder),
+          ),
           Positioned(
               right: 40,
               top: 8,

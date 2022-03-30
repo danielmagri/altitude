@@ -2,9 +2,9 @@ import 'package:altitude/common/constant/Constants.dart';
 
 extension dateTime on DateTime {
 
-  /// Retorna a data de hoje, sem as horas
-  DateTime get today {
-    return DateTime(this.year, this.month, this.day);
+  /// Retorna somente o date do `DateTime`
+  DateTime get onlyDate {
+    return DateTime.utc(this.year, this.month, this.day);
   }
 
   String get dateFormatted {

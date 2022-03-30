@@ -21,7 +21,8 @@ class AddHabitPage extends StatefulWidget {
   _AddHabitPageState createState() => _AddHabitPageState();
 }
 
-class _AddHabitPageState extends BaseStateWithController<AddHabitPage, AddHabitController> {
+class _AddHabitPageState
+    extends BaseStateWithController<AddHabitPage, AddHabitController> {
   final habitTextController = TextEditingController();
 
   @override
@@ -40,7 +41,7 @@ class _AddHabitPageState extends BaseStateWithController<AddHabitPage, AddHabitC
           habit: habitTextController.text,
           colorCode: controller.color,
           frequency: controller.frequency,
-          initialDate: DateTime.now().today);
+          initialDate: DateTime.now().onlyDate);
 
       showLoading(true);
 
@@ -51,7 +52,8 @@ class _AddHabitPageState extends BaseStateWithController<AddHabitPage, AddHabitC
             navigatePop(result: data);
           } else {
             showToast("O hábito foi criado com sucesso!");
-            HabitDetailsPageArguments arguments = HabitDetailsPageArguments(data.id, data.colorCode);
+            HabitDetailsPageArguments arguments =
+                HabitDetailsPageArguments(data.id, data.colorCode);
             navigatePushReplacement("habitDetails", arguments: arguments);
           }
         }, handleError);
@@ -69,9 +71,14 @@ class _AddHabitPageState extends BaseStateWithController<AddHabitPage, AddHabitC
             const Header(title: "NOVO HÁBITO"),
             const SizedBox(height: 20),
             Observer(
-                builder: (_) => SelectColor(currentColor: controller.color, onSelectColor: controller.selectColor)),
+                builder: (_) => SelectColor(
+                    currentColor: controller.color,
+                    onSelectColor: controller.selectColor)),
             const SizedBox(height: 20),
-            Observer(builder: (_) => HabitText(color: controller.habitColor, controller: habitTextController)),
+            Observer(
+                builder: (_) => HabitText(
+                    color: controller.habitColor,
+                    controller: habitTextController)),
             const SizedBox(height: 32),
             Observer(
                 builder: (_) => SelectFrequency(
@@ -86,12 +93,17 @@ class _AddHabitPageState extends BaseStateWithController<AddHabitPage, AddHabitC
               child: Observer(
                 builder: (_) => ElevatedButton(
                   onPressed: _createHabitTap,
-                  child: const Text("CRIAR", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text("CRIAR",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(controller.habitColor),
-                      shape:
-                          MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-                      padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 50.0, vertical: 16.0)),
+                      backgroundColor:
+                          MaterialStateProperty.all(controller.habitColor),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0))),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 50.0, vertical: 16.0)),
                       overlayColor: MaterialStateProperty.all(Colors.white24),
                       elevation: MaterialStateProperty.all(2)),
                 ),

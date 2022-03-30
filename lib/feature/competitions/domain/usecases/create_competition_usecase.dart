@@ -25,7 +25,7 @@ class CreateCompetitionUsecase
 
   @override
   Future<Competition> getRawFuture(CreateCompetitionParams params) async {
-    DateTime date = DateTime.now().today;
+    DateTime date = DateTime.now().onlyDate;
 
     Competitor competitor = Competitor(
         uid: _fireAuth.getUid(),

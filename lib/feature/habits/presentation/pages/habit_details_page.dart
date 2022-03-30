@@ -288,7 +288,7 @@ class _HabitDetailsPageState
           elevation: MaterialStateProperty.all(2)),
       onPressed: () {
         if (!data)
-          completeHabit(true, DateTime.now().today, DonePageType.Detail);
+          completeHabit(true, DateTime.now().onlyDate, DonePageType.Detail);
       },
       child: loading
           ? SizedBox(

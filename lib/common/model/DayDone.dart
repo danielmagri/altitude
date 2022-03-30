@@ -12,7 +12,7 @@ class DayDone {
   static const DATE = "date";
 
   factory DayDone.fromJson(Map<String, dynamic> json) =>
-      DayDone(date: DateTime.fromMillisecondsSinceEpoch((json[DATE] as Timestamp).millisecondsSinceEpoch));
+      DayDone(date: DateTime.fromMillisecondsSinceEpoch((json[DATE] as Timestamp).millisecondsSinceEpoch).onlyDate);
 
   factory DayDone.fromDB(Map<String, dynamic> json) => DayDone(
       date: json.containsKey("date_done") && json["date_done"] != null ? DateTime.parse(json["date_done"]) : null);

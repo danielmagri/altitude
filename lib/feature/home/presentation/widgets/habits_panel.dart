@@ -61,7 +61,8 @@ class HabitsPanel extends StatelessWidget {
                         habit: habit,
                         goHabitDetails: goHabitDetails,
                         showDragTarget: controller.swipeSkyWidget,
-                        done: DateTime.now().today.isSameDay(habit.lastDone));
+                        done:
+                            DateTime.now().onlyDate.isSameDay(habit.lastDone));
                   }).toList(),
                 ),
               );

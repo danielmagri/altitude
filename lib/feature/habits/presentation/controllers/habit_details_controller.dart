@@ -13,7 +13,6 @@ import 'package:altitude/feature/habits/domain/usecases/get_calendar_days_done_u
 import 'package:altitude/feature/habits/domain/usecases/has_competition_by_habit_usecase.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:mobx/mobx.dart';
-import 'package:table_calendar/table_calendar.dart' show CalendarFormat;
 part 'habit_details_controller.g.dart';
 
 class HabitDetailsController = _HabitDetailsControllerBase
@@ -36,7 +35,7 @@ abstract class _HabitDetailsControllerBase with Store {
   DataState<Habit?> habit = DataState();
   DataState<Frequency?> frequency = DataState();
   DataState<Reminder?> reminders = DataState();
-  DataState<ObservableMap<DateTime, List>> calendarMonth = DataState();
+  DataState<ObservableMap<DateTime, List<bool>>> calendarMonth = DataState();
   DataState<bool> isHabitDone = DataState();
   DataState<double> rocketForce = DataState();
 
@@ -48,18 +47,13 @@ abstract class _HabitDetailsControllerBase with Store {
 
     await getHabitDetail();
 
-    DateTime today = DateTime.now().today;
-    DateTime startDate =
-        DateTime(today.year, today.month, 1).subtract(const Duration(days: 7));
-    DateTime endDate =
-        DateTime(today.year, today.month + 1, 1).add(const Duration(days: 6));
+    DateTime today = DateTime.now().onlyDate;
     (await _getCalendarDaysDoneUsecase.call(GetCalendarDaysDoneParams(
-            id: _id ?? "", start: startDate, end: endDate)))
+            id: _id ?? "", month: today.month, year: today.year)))
         .result((data) {
       currentMonth = data;
-      calendarMonth.setSuccessState(
-          data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
-      isHabitDone.setSuccessState(data.containsKey(DateTime.now().today));
+      calendarMonth.setSuccessState(data.asObservable());
+      isHabitDone.setSuccessState(data.containsKey(DateTime.now().onlyDate));
       calculateRocketForce();
     }, (error) {
       calendarMonth.setErrorState(error);
@@ -85,7 +79,7 @@ abstract class _HabitDetailsControllerBase with Store {
       List<DateTime?> dates = currentMonth.keys
           .toList()
           .where((e) => e!.isAfterOrSameDay(
-              DateTime.now().today.subtract(Duration(days: CYCLE_DAYS))))
+              DateTime.now().onlyDate.subtract(Duration(days: CYCLE_DAYS))))
           .toList();
 
       int daysDoneLastCycle = dates.length;
@@ -99,14 +93,12 @@ abstract class _HabitDetailsControllerBase with Store {
     }
   }
 
-  void calendarMonthSwipe(
-      DateTime start, DateTime end, CalendarFormat format) async {
+  void calendarMonthSwipe(DateTime focusedDay) async {
     calendarMonth.setLoadingState();
-    (await _getCalendarDaysDoneUsecase.call(
-            GetCalendarDaysDoneParams(id: _id ?? "", start: start, end: end)))
+    (await _getCalendarDaysDoneUsecase.call(GetCalendarDaysDoneParams(
+            id: _id ?? "", month: focusedDay.month, year: focusedDay.year)))
         .result((data) {
-      calendarMonth.setSuccessState(
-          data.asObservable() as ObservableMap<DateTime, List<dynamic>>);
+      calendarMonth.setSuccessState(data.asObservable());
     }, (error) {
       calendarMonth.setErrorState(error);
     });
@@ -128,9 +120,12 @@ abstract class _HabitDetailsControllerBase with Store {
 
     return (await _completeHabitUsecase
         .call(CompleteParams(
-            habitId: _id ?? "", date: date, isAdd: add, daysDone: days))
+            habitId: _id ?? "",
+            date: DateTime(date.year, date.month, date.day),
+            isAdd: add,
+            daysDone: days))
         .resultComplete((data) {
-      Map<DateTime, List> visibleMonthDays = calendarMonth.data!;
+      Map<DateTime, List<bool>> visibleMonthDays = calendarMonth.data!;
 
       bool yesterday =
           visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
@@ -170,7 +165,7 @@ abstract class _HabitDetailsControllerBase with Store {
 
       calendarMonth.setSuccessState(visibleMonthDays.asObservable());
       getHabitDetail();
-      if (date.isAtSameMomentAs(DateTime.now().today)) {
+      if (date.isAtSameMomentAs(DateTime.now().onlyDate)) {
         isHabitDone.setSuccessState(add);
       } else {
         isHabitDone.setSuccessState(isHabitDone.data!);

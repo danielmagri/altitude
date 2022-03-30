@@ -70,7 +70,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
               .call(GetDaysDoneParams(
                   id: selectedHabit!.id,
                   start: widget.competition.initialDate,
-                  end: DateTime.now().today))
+                  end: DateTime.now().onlyDate))
               .resultComplete((data) => data, (error) => throw error))
           .map((e) => e.date)
           .toList();

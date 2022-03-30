@@ -80,7 +80,7 @@ abstract class _HomeControllerBase with Store {
   @action
   Future<int?> completeHabit(String id) async {
     return (await _completeHabitUsecase
-            .call(CompleteParams(habitId: id, date: DateTime.now().today)))
+            .call(CompleteParams(habitId: id, date: DateTime.now().onlyDate)))
         .result((_) async {
       await getUser();
       getHabits();
