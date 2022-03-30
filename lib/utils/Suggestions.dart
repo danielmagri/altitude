@@ -18,7 +18,7 @@ abstract class Suggestions {
     return _habits;
   }
 
-  static const List _cues = [
+  static const List<String> _cues = [
     "Colocar livro ao lado da cama",
     "Deixar roupa do exercício do lado da cama",
     "Arrumar tapete do alongamento",
@@ -29,7 +29,7 @@ abstract class Suggestions {
     "Colocar uma música",
   ];
 
-  static List getCues() {
+  static List<String> getCues() {
     return _cues;
   }
 }

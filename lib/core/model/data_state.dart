@@ -49,14 +49,14 @@ abstract class _DataStateBase<T> with Store {
 
   @action
   void setSuccessState(T data) {
-    _state = StateType.SUCCESS;
     _data = data;
+    _state = StateType.SUCCESS;
   }
 
   @action
   void setErrorState(Failure error) {
-    _state = StateType.ERROR;
     _error = error;
+    _state = StateType.ERROR;
   }
 
   Widget handleState(
@@ -70,10 +70,10 @@ abstract class _DataStateBase<T> with Store {
         if (error == null) {
           return const SizedBox();
         } else {
-          return error(_error!);
+          return error(_error as Failure);
         }
       default:
-        return success(_data!);
+        return success(_data as T);
     }
   }
 
@@ -88,10 +88,10 @@ abstract class _DataStateBase<T> with Store {
         if (error == null) {
           return const SizedBox();
         } else {
-          return error(_error!);
+          return error(_error as Failure);
         }
       default:
-        return success(_data!);
+        return success(_data as T);
     }
   }
 
@@ -106,11 +106,11 @@ abstract class _DataStateBase<T> with Store {
           break;
         case StateType.ERROR:
           if (loading != null) loading(false);
-          if (error != null) error(_error!);
+          if (error != null) error(_error as Failure);
           break;
         case StateType.SUCCESS:
           if (loading != null) loading(false);
-          if (success != null) success(_data!);
+          if (success != null) success(_data as T);
           break;
       }
     });

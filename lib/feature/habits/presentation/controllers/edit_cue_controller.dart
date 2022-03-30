@@ -38,7 +38,7 @@ abstract class _EditCueControllerBase with Store {
     ObservableList<String> result = ObservableList();
     String cue = text.toLowerCase().trim();
 
-    for (String text in Suggestions.getCues() as Iterable<String>) {
+    for (String text in Suggestions.getCues()) {
       if (text.toLowerCase().contains(cue) && text.toLowerCase() != cue) {
         result.add(text);
       }
