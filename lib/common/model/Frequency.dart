@@ -1,4 +1,4 @@
-import 'package:altitude/feature/habits/domain/enums/frquency_type.dart';
+import 'package:altitude/domain/enums/frquency_type.dart';
 
 abstract class Frequency {
   int? daysCount();

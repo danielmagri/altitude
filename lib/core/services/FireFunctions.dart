@@ -2,7 +2,7 @@ import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
 class FireFunctions implements IFireFunctions {
-  Future sendNotification(String title, String body, String? token) async {
+  Future<void> sendNotification(String title, String body, String token) async {
     try {
       await FirebaseFunctions.instance
           .httpsCallable('sendNotification')
