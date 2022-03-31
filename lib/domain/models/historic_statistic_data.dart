@@ -1,9 +1,11 @@
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/utils/Util.dart';
+import 'package:altitude/common/constant/Util.dart';
 
 class HistoricStatisticData {
   HistoricStatisticData(this.habitsMap, this.month, this.year, this.firstOfYear)
-      : totalScore = habitsMap.length == 0 ? 0 : habitsMap.values.reduce((e1, e2) => e1 + e2);
+      : totalScore = habitsMap.length == 0
+            ? 0
+            : habitsMap.values.reduce((e1, e2) => e1 + e2);
 
   final Map<Habit, int> habitsMap;
   final int totalScore;

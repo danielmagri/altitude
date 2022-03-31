@@ -7,19 +7,6 @@
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 
-import '../../core/services/FireAnalytics.dart' as _i6;
-import '../../core/services/FireAuth.dart' as _i8;
-import '../../core/services/FireDatabase.dart' as _i10;
-import '../../core/services/FireFunctions.dart' as _i12;
-import '../../core/services/FireMenssaging.dart' as _i14;
-import '../../core/services/interfaces/i_fire_analytics.dart' as _i5;
-import '../../core/services/interfaces/i_fire_auth.dart' as _i7;
-import '../../core/services/interfaces/i_fire_database.dart' as _i9;
-import '../../core/services/interfaces/i_fire_functions.dart' as _i11;
-import '../../core/services/interfaces/i_fire_messaging.dart' as _i13;
-import '../../core/services/interfaces/i_local_notification.dart' as _i16;
-import '../../core/services/LocalNotification.dart' as _i17;
-import '../../core/services/Memory.dart' as _i22;
 import '../../data/repository/competitions_repository.dart' as _i45;
 import '../../data/repository/friends_repository.dart' as _i15;
 import '../../data/repository/habits_repository.dart' as _i46;
@@ -83,8 +70,22 @@ import '../../domain/usecases/user/update_fcm_token_usecase.dart' as _i52;
 import '../../domain/usecases/user/update_level_usecase.dart' as _i28;
 import '../../domain/usecases/user/update_name_usecase.dart' as _i29;
 import '../../domain/usecases/user/update_total_score_usecase.dart' as _i30;
+import '../../infra/interface/i_fire_analytics.dart' as _i5;
+import '../../infra/interface/i_fire_auth.dart' as _i7;
+import '../../infra/interface/i_fire_database.dart' as _i9;
+import '../../infra/interface/i_fire_functions.dart' as _i11;
+import '../../infra/interface/i_fire_messaging.dart' as _i13;
+import '../../infra/interface/i_local_notification.dart' as _i16;
 import '../../infra/interface/i_score_service.dart' as _i19;
+import '../../infra/services/FireAnalytics.dart' as _i6;
+import '../../infra/services/FireAuth.dart' as _i8;
+import '../../infra/services/FireDatabase.dart' as _i10;
+import '../../infra/services/FireFunctions.dart' as _i12;
+import '../../infra/services/FireMenssaging.dart' as _i14;
+import '../../infra/services/LocalNotification.dart' as _i17;
+import '../../infra/services/Memory.dart' as _i22;
 import '../../infra/services/score_service.dart' as _i20;
+import '../../infra/services/shared_pref/shared_pref.dart' as _i26;
 import '../../presentation/competitions/controllers/competition_controller.dart'
     as _i76;
 import '../../presentation/competitions/controllers/competition_details_controller.dart'
@@ -113,9 +114,7 @@ import '../../presentation/setting/controllers/settings_controller.dart'
     as _i68;
 import '../../presentation/statistics/controllers/statistics_controller.dart'
     as _i69;
-import '../app_logic.dart' as _i3;
-import '../shared_pref/shared_pref.dart'
-    as _i26; // ignore_for_file: unnecessary_lambdas
+import '../app_logic.dart' as _i3; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]

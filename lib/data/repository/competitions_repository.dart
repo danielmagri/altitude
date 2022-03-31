@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/core/services/Memory.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class ICompetitionsRepository {

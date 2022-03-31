@@ -2,12 +2,12 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/model/no_params.dart';
-import 'package:altitude/core/services/Memory.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:altitude/core/services/interfaces/i_local_notification.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/infra/interface/i_local_notification.dart';
 import 'package:altitude/domain/usecases/habits/get_reminder_counter_usecase.dart';
 import 'package:injectable/injectable.dart';
 
@@ -26,7 +26,8 @@ class AddHabitUsecase extends BaseUsecase<Habit, Habit> {
   Future<Habit> getRawFuture(Habit params) async {
     int? reminderCounter;
     if (params.reminder != null) {
-      reminderCounter = await _getReminderCounterUsecase.call(NoParams())
+      reminderCounter = await _getReminderCounterUsecase
+          .call(NoParams())
           .resultComplete((data) => data, (error) => null);
       params.reminder!.id = reminderCounter;
     }

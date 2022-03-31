@@ -3,13 +3,13 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
-import 'package:altitude/core/services/Memory.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
-import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/infra/interface/i_fire_functions.dart';
+import 'package:altitude/infra/interface/i_fire_messaging.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

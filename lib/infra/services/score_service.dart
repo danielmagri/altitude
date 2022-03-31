@@ -1,9 +1,8 @@
 import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:injectable/injectable.dart';
-
 
 @Injectable(as: IScoreService)
 class ScoreService extends IScoreService {

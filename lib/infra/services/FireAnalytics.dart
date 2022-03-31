@@ -1,4 +1,4 @@
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
 

@@ -1,14 +1,14 @@
 import 'package:altitude/common/model/Competitor.dart';
 import 'dart:async' show Timer;
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/core/model/BackDataItem.dart';
+import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/presentation/competitions/controllers/competition_details_controller.dart';
 import 'package:altitude/presentation/competitions/dialog/add_competitors_dialog.dart';
@@ -16,7 +16,8 @@ import 'package:altitude/presentation/competitions/dialog/competitor_details_dia
 import 'package:altitude/presentation/competitions/widgets/metrics.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:flutter/services.dart' show Brightness, SystemUiOverlayStyle, TextCapitalization, TextInputAction;
+import 'package:flutter/services.dart'
+    show Brightness, SystemUiOverlayStyle, TextCapitalization, TextInputAction;
 
 class CompetitionDetailsPage extends StatefulWidget {
   CompetitionDetailsPage(this.arguments);
@@ -27,7 +28,8 @@ class CompetitionDetailsPage extends StatefulWidget {
   _CompetitionDetailsPageState createState() => _CompetitionDetailsPageState();
 }
 
-class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDetailsPage, CompetitionDetailsController> {
+class _CompetitionDetailsPageState extends BaseStateWithController<
+    CompetitionDetailsPage, CompetitionDetailsController> {
   TextEditingController titleTextController = TextEditingController();
 
   @override
@@ -58,7 +60,8 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
               textAlignment: Alignment(0, 0),
               text: const [
                 TextSpan(
-                    text: "  E que comece a competição! Qual de vocês consegue ir mais longe?",
+                    text:
+                        "  E que comece a competição! Qual de vocês consegue ir mais longe?",
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
                     text:
@@ -72,13 +75,17 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
   }
 
   void saveTitle() async {
-    String? result = ValidationHandler.competitionNameValidate(titleTextController.text);
+    String? result =
+        ValidationHandler.competitionNameValidate(titleTextController.text);
 
     if (result != null) {
       showToast(result);
     } else {
       showLoading(true);
-      controller.changeTitle(widget.arguments.competition.id ?? "", titleTextController.text).then((res) {
+      controller
+          .changeTitle(
+              widget.arguments.competition.id ?? "", titleTextController.text)
+          .then((res) {
         showLoading(false);
         navigatePop();
       }).catchError(handleError);
@@ -100,9 +107,13 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
               onEditingComplete: saveTitle,
             ),
             action: <Widget>[
-              TextButton(child: const Text('Cancelar'), onPressed: () => Navigator.of(context).pop()),
               TextButton(
-                  child: const Text('Salvar', style: TextStyle(fontWeight: FontWeight.bold)), onPressed: saveTitle)
+                  child: const Text('Cancelar'),
+                  onPressed: () => Navigator.of(context).pop()),
+              TextButton(
+                  child: const Text('Salvar',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: saveTitle)
             ],
           );
         });
@@ -115,22 +126,28 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
       if (friends == null) {
         showToast("Ocorreu um erro");
       } else {
-        List<String?> competitors =
-            widget.arguments.competition.competitors!.map((competitor) => competitor.uid).toList();
+        List<String?> competitors = widget.arguments.competition.competitors!
+            .map((competitor) => competitor.uid)
+            .toList();
         showDialog(
             context: context,
-            builder: (context) =>
-                AddCompetitorsDialog(id: widget.arguments.competition.id, friends: friends, competitors: competitors));
+            builder: (context) => AddCompetitorsDialog(
+                id: widget.arguments.competition.id,
+                friends: friends,
+                competitors: competitors));
       }
     }).catchError(handleError);
   }
 
   void _leaveCompetition() async {
-    showSimpleDialog("Sair da competição", "Tem certeza que deseja sair da competição?", confirmCallback: () {
+    showSimpleDialog(
+        "Sair da competição", "Tem certeza que deseja sair da competição?",
+        confirmCallback: () {
       showLoading(true);
       controller.leaveCompetition(widget.arguments.competition.id).then((res) {
         showLoading(false);
-        Navigator.of(context).pop(BackDataItem.removed(widget.arguments.competition));
+        Navigator.of(context)
+            .pop(BackDataItem.removed(widget.arguments.competition));
       }).catchError(handleError);
     });
   }
@@ -161,8 +178,10 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    if (widget.arguments.competition.competitors != null && widget.arguments.competition.competitors!.isNotEmpty) {
-      height = (widget.arguments.competition.competitors![0].score* 10.0) + 200;
+    if (widget.arguments.competition.competitors != null &&
+        widget.arguments.competition.competitors!.isNotEmpty) {
+      height =
+          (widget.arguments.competition.competitors![0].score * 10.0) + 200;
     }
 
     if (height < MediaQuery.of(context).size.height) {
@@ -189,7 +208,8 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
                 top: 70,
                 bottom: 0,
                 width: 25,
-                child: Image.asset("assets/smoke.png", repeat: ImageRepeat.repeatY),
+                child: Image.asset("assets/smoke.png",
+                    repeat: ImageRepeat.repeatY),
               ),
               InkWell(
                 onTap: () => showCompetitorDetails(competitor),
@@ -212,7 +232,9 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: competitor.you! ? const TextStyle(fontWeight: FontWeight.bold) : null),
+                        style: competitor.you!
+                            ? const TextStyle(fontWeight: FontWeight.bold)
+                            : null),
                   ),
                 ),
               ),
@@ -241,7 +263,9 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
                 children: [
                   const SizedBox(width: 50, child: BackButton()),
                   Expanded(
-                      child: Text(controller.title!, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20))),
+                      child: Text(controller.title!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 20))),
                   SizedBox(
                     width: 50,
                     child: PopupMenuButton<int>(
@@ -262,10 +286,14 @@ class _CompetitionDetailsPageState extends BaseStateWithController<CompetitionDe
                         }
                       },
                       itemBuilder: (_) => <PopupMenuEntry<int>>[
-                        const PopupMenuItem<int>(value: 1, child: Text('Alterar título')),
-                        const PopupMenuItem<int>(value: 2, child: Text('Adicionar amigos')),
-                        const PopupMenuItem<int>(value: 3, child: Text('Sair da competição')),
-                        const PopupMenuItem<int>(value: 4, child: Text('Sobre')),
+                        const PopupMenuItem<int>(
+                            value: 1, child: Text('Alterar título')),
+                        const PopupMenuItem<int>(
+                            value: 2, child: Text('Adicionar amigos')),
+                        const PopupMenuItem<int>(
+                            value: 3, child: Text('Sair da competição')),
+                        const PopupMenuItem<int>(
+                            value: 4, child: Text('Sobre')),
                       ],
                     ),
                   ),

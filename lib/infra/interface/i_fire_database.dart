@@ -4,16 +4,18 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/core/model/pair.dart';
+import 'package:altitude/common/model/pair.dart';
 
 abstract class IFireDatabase {
-  Future<String> transferHabit(Habit habit, int? reminderCounter, List<String?> competitionsId, List<DayDone> daysDone);
+  Future<String> transferHabit(Habit habit, int? reminderCounter,
+      List<String?> competitionsId, List<DayDone> daysDone);
 
   Future transferDayDonePlus(String habitId, List<DayDone> daysDone);
 
   Future updateTotalScore(int? score, int level);
 
-  Future updateHabitScore(String? habitId, int score, List<Pair<String?, int>> competitionsScore);
+  Future updateHabitScore(
+      String? habitId, int score, List<Pair<String?, int>> competitionsScore);
 
   Future createPerson(Person person);
 
@@ -31,18 +33,21 @@ abstract class IFireDatabase {
 
   Future<Habit> getHabit(String? id);
 
-  Future updateHabit(Habit habit, [Habit? inititalHabit, List<String?>? competitionsId]);
+  Future updateHabit(Habit habit,
+      [Habit? inititalHabit, List<String?>? competitionsId]);
 
-  Future updateReminder(String? habitId, int? reminderCounter, Reminder? reminder);
+  Future updateReminder(
+      String? habitId, int? reminderCounter, Reminder? reminder);
 
-  Future completeHabit(
-      String? habitId, bool isAdd, int score, bool isLastDone, DayDone dayDone, List<String?> competitions);
+  Future completeHabit(String? habitId, bool isAdd, int score, bool isLastDone,
+      DayDone dayDone, List<String?> competitions);
 
   Future deleteHabit(String? id);
 
   Future<List<DayDone>> getAllDaysDone(String? id);
 
-  Future<List<DayDone>> getDaysDone(String? id, DateTime? startDate, DateTime endDate);
+  Future<List<DayDone>> getDaysDone(
+      String? id, DateTime? startDate, DateTime endDate);
 
   Future<bool> hasDoneAtDay(String? id, DateTime date);
 
@@ -52,7 +57,8 @@ abstract class IFireDatabase {
 
   Future<List<Person>> getRankingFriends(int limit);
 
-  Future<List<Person>> searchEmail(String email, List<String?> myPendingFriends);
+  Future<List<Person>> searchEmail(
+      String email, List<String?> myPendingFriends);
 
   Future<String> friendRequest(String? uid);
 

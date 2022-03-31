@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/core/model/result.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/domain/usecases/habits/delete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/update_habit_usecase.dart';

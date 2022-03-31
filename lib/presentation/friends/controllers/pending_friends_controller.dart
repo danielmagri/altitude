@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/model/no_params.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/friends/accept_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/decline_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/get_pending_friends_usecase.dart';

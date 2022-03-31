@@ -3,10 +3,10 @@ import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.d
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/domain/usecases/user/is_logged_usecase.dart';
 import 'package:altitude/common/enums/theme_type.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/model/no_params.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/user/recalculate_score_usecasse.dart';
 import 'package:altitude/domain/usecases/user/update_name_usecase.dart';
 import 'package:flutter/material.dart' show BuildContext;

@@ -1,5 +1,5 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/model/no_params.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';

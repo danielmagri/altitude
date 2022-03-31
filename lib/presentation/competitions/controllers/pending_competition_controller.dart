@@ -4,13 +4,13 @@ import 'package:altitude/domain/usecases/competitions/max_competitions_usecase.d
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
-import 'package:altitude/core/model/failure.dart';
-import 'package:altitude/core/model/no_params.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:altitude/common/model/failure.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../../core/model/data_state.dart';
+import '../../../common/model/data_state.dart';
 part 'pending_competition_controller.g.dart';
 
 @lazySingleton

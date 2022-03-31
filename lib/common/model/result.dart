@@ -1,4 +1,4 @@
-import 'failure.dart';
+import '../../common/model/failure.dart';
 
 typedef Success<R, T> = R Function(T data);
 typedef Error<R> = R Function(dynamic error);

@@ -4,11 +4,11 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
-import 'package:altitude/core/model/no_params.dart';
-import 'package:altitude/core/model/pair.dart';
-import 'package:altitude/core/services/Memory.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

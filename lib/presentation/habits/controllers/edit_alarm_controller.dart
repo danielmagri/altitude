@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/model/ReminderWeekday.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/common/model/reminder_weekday.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/domain/enums/reminder_type.dart';
 import 'package:altitude/domain/models/reminder_card.dart';
 import 'package:altitude/domain/usecases/habits/update_reminder_usecase.dart';

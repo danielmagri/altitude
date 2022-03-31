@@ -1,14 +1,14 @@
 import 'dart:async' show Timer;
-import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/enums/done_page_tyype.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:altitude/presentation/habits/dialogs/edit_alarm_dialog.dart';
 import 'package:altitude/presentation/habits/dialogs/edit_cue_dialog.dart';
@@ -20,7 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 
 class HabitDetailsPage extends StatefulWidget {
   HabitDetailsPage(this.arguments);

@@ -8,15 +8,15 @@ import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/core/model/no_params.dart';
-import 'package:altitude/core/services/Database.dart';
-import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
-import 'package:altitude/core/services/interfaces/i_local_notification.dart';
+import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/infra/services/Database.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
+import 'package:altitude/infra/interface/i_local_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/core/model/result.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:get_it/get_it.dart';
 
 class TransferDataDialog extends StatefulWidget {

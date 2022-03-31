@@ -3,9 +3,9 @@ import 'package:altitude/domain/usecases/competitions/get_competition_usecase.da
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -21,8 +21,9 @@ class InviteCompetitorUsecase
 
   @override
   Future<void> getRawFuture(InviteCompetitorParams params) async {
-    Competition competition = await _getCompetitionUsecase(params.competitionId ?? "")
-        .resultComplete((data) => data, (error) => throw error);
+    Competition competition =
+        await _getCompetitionUsecase(params.competitionId ?? "")
+            .resultComplete((data) => data, (error) => throw error);
     if (competition.competitors!.length < MAX_COMPETITORS) {
       await _fireDatabase.inviteCompetitor(
           params.competitionId, params.competitorId);

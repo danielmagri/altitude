@@ -1,8 +1,8 @@
-import 'package:altitude/common/enums/DonePageType.dart';
+import 'package:altitude/common/enums/done_page_tyype.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/TutorialDialog.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -35,7 +35,7 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:mobx/mobx.dart' show ObservableMap;
 import 'package:table_calendar/table_calendar.dart';
 

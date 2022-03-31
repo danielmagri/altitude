@@ -37,7 +37,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         showDialog;
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class SelectFrequency extends StatelessWidget {
   SelectFrequency(

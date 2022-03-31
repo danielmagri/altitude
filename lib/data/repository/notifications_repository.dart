@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class INotificationsRepository {

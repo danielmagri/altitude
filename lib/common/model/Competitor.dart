@@ -1,4 +1,4 @@
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:get_it/get_it.dart';
 
 class Competitor {
@@ -18,18 +18,26 @@ class Competitor {
   static const COLOR = "color";
   static const SCORE = "score";
 
-  Competitor({this.uid, this.name, this.fcmToken, this.habitId, this.color, int? score, this.you}) {
+  Competitor(
+      {this.uid,
+      this.name,
+      this.fcmToken,
+      this.habitId,
+      this.color,
+      int? score,
+      this.you}) {
     this.you = you ?? GetIt.I.get<IFireAuth>().getUid() == uid;
     this.score = score ?? 0;
   }
 
-  factory Competitor.fromJson(Map<dynamic, dynamic> json, String uid) => Competitor(
-      uid: uid,
-      name: json[NAME],
-      fcmToken: json[FCM_TOKEN],
-      habitId: json[HABIT_ID],
-      color: json[COLOR],
-      score: json[SCORE]);
+  factory Competitor.fromJson(Map<dynamic, dynamic> json, String uid) =>
+      Competitor(
+          uid: uid,
+          name: json[NAME],
+          fcmToken: json[FCM_TOKEN],
+          habitId: json[HABIT_ID],
+          color: json[COLOR],
+          score: json[SCORE]);
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = Map();

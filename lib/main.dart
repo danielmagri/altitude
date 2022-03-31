@@ -1,8 +1,8 @@
 import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/enums/theme_type.dart';
 import 'package:altitude/common/router/Router.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/presentation/home/pages/home_page.dart';
 import 'package:altitude/presentation/login/pages/login_page.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -24,7 +24,7 @@ import 'common/app_logic.dart';
 import 'common/theme/app_theme.dart';
 import 'common/theme/dark_theme.dart';
 import 'common/theme/light_theme.dart';
-import 'core/services/interfaces/i_fire_analytics.dart';
+import 'infra/interface/i_fire_analytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

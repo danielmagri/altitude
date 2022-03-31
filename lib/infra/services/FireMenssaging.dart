@@ -1,6 +1,6 @@
 import 'package:altitude/common/di/dependency_injection.dart';
-import 'package:altitude/common/shared_pref/shared_pref.dart';
-import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/interface/i_fire_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';

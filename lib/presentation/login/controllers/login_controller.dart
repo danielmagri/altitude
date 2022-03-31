@@ -1,5 +1,5 @@
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/model/no_params.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/auth/auth_google_usecase.dart';
 import 'package:injectable/injectable.dart';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';

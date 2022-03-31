@@ -1,4 +1,4 @@
-import 'package:altitude/core/enums/BackDataItemType.dart';
+import 'package:altitude/common/enums/back_data_item_type.dart';
 
 class BackDataItem<T> {
   final BackDataItemType state;

@@ -1,5 +1,5 @@
-import 'package:altitude/core/model/failure.dart';
-import 'package:altitude/core/model/result.dart';
+import 'package:altitude/common/model/failure.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:meta/meta.dart' show protected;
 
 abstract class BaseUsecase<Params, Response> {

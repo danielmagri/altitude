@@ -1,5 +1,5 @@
 import 'package:mobx/mobx.dart';
-part 'ReminderWeekday.g.dart';
+part 'reminder_weekday.g.dart';
 
 class ReminderWeekday = _ReminderWeekdayBase with _$ReminderWeekday;
 

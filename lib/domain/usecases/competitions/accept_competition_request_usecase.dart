@@ -4,10 +4,10 @@ import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/services/Memory.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
-import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

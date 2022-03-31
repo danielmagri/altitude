@@ -5,13 +5,13 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/core/model/pair.dart';
-import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
-import 'interfaces/i_fire_auth.dart';
 
 @Injectable(as: IFireDatabase)
 class FireDatabase implements IFireDatabase {

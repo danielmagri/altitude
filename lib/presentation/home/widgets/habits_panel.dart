@@ -2,7 +2,7 @@ import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/DataError.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show

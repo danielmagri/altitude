@@ -1,5 +1,6 @@
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/di/dependency_injection.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:vibration/vibration.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
 import 'package:flutter/material.dart'
     show
         Animation,

@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/core/model/data_state.dart';
+import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/domain/usecases/competitions/create_competition_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
 import 'package:injectable/injectable.dart';

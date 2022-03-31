@@ -32,9 +32,9 @@ import 'package:flutter/material.dart'
         TextStyle,
         UnderlineInputBorder,
         Widget;
-import 'package:altitude/utils/Suggestions.dart';
+import 'package:altitude/common/constant/Suggestions.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class HabitText extends StatefulWidget {
   HabitText({Key? key, this.color, this.controller}) : super(key: key);
@@ -60,7 +60,8 @@ class _HabitTextState extends State<HabitText> {
 
     suggestions = getSuggestions();
 
-    keyboardVisibility = KeyboardVisibilityController().onChange.listen((visible) {
+    keyboardVisibility =
+        KeyboardVisibilityController().onChange.listen((visible) {
       if (!visible) {
         focusHabit.unfocus();
         _validate();
@@ -82,9 +83,13 @@ class _HabitTextState extends State<HabitText> {
     Navigator.of(context).smooth(TutorialDialog(
       hero: "helpHabit",
       texts: const [
-        TextSpan(text: "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano."),
+        TextSpan(
+            text:
+                "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano."),
         TextSpan(text: "\n\n  O segredo para conseguir construir um hábito é "),
-        TextSpan(text: "criar um ritual e sempre fazer a mesma coisa.", style: TextStyle(fontWeight: FontWeight.bold)),
+        TextSpan(
+            text: "criar um ritual e sempre fazer a mesma coisa.",
+            style: TextStyle(fontWeight: FontWeight.bold)),
       ],
     ));
   }
@@ -93,7 +98,11 @@ class _HabitTextState extends State<HabitText> {
     var data = Suggestions.getHabits();
     String habit = widget.controller!.text.trim().toLowerCase();
 
-    var list = data.where((e) => e.trim().toLowerCase().contains(habit) && e.trim().toLowerCase() != habit).toList();
+    var list = data
+        .where((e) =>
+            e.trim().toLowerCase().contains(habit) &&
+            e.trim().toLowerCase() != habit)
+        .toList();
     if (list.length > 5) {
       list.removeRange(5, list.length);
     }
@@ -127,8 +136,13 @@ class _HabitTextState extends State<HabitText> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            const Text("Qual será seu hábito?", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
-            IconButton(icon: const Hero(tag: "helpHabit", child: Icon(Icons.help_outline)), onPressed: showTutorial),
+            const Text("Qual será seu hábito?",
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
+            IconButton(
+                icon: const Hero(
+                    tag: "helpHabit", child: Icon(Icons.help_outline)),
+                onPressed: showTutorial),
           ]),
           TextField(
             controller: widget.controller,
@@ -139,10 +153,13 @@ class _HabitTextState extends State<HabitText> {
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(horizontal: 8),
               hintText: "Escreva seu hábito",
-              hintStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+              hintStyle:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               errorText: validated,
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color!, width: 2)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: widget.color!, width: 2)),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: widget.color!, width: 2)),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: widget.color!, width: 2)),
             ),
           ),
           const SizedBox(height: 10),
@@ -154,7 +171,9 @@ class _HabitTextState extends State<HabitText> {
                           onTap: () => suggestionSelected(suggestion),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(suggestion, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
+                            child: Text(suggestion,
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w300)),
                           )))
                       .toList())
               : const SizedBox(),

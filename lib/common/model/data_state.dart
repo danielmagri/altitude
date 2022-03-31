@@ -1,6 +1,6 @@
+import 'package:altitude/common/model/result.dart';
 import 'package:flutter/material.dart' show SizedBox, Widget;
 import 'package:mobx/mobx.dart';
-import 'result.dart';
 import 'failure.dart';
 
 part 'data_state.g.dart';

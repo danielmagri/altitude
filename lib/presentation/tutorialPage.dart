@@ -1,8 +1,8 @@
-import 'package:altitude/common/shared_pref/shared_pref.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/common/view/generic/DotsIndicator.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter/services.dart';
@@ -21,14 +21,20 @@ class _TutorialPageState extends BaseState<TutorialPage> {
 
   int pageIndex = 0;
 
-  List<Widget> pagesWidget = [Initial(), CreateHabit(), CompleteHabit(), Score()];
+  List<Widget> pagesWidget = [
+    Initial(),
+    CreateHabit(),
+    CompleteHabit(),
+    Score()
+  ];
 
   @override
   initState() {
     super.initState();
 
     SharedPref.instance.habitTutorial = true;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+        .copyWith(statusBarColor: Colors.transparent));
   }
 
   @override
@@ -49,7 +55,8 @@ class _TutorialPageState extends BaseState<TutorialPage> {
       }
     } else {
       pageIndex++;
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _controller.nextPage(
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
     }
   }
 
@@ -81,7 +88,9 @@ class _TutorialPageState extends BaseState<TutorialPage> {
                     right: 0,
                     height: 60,
                     child: TextButton(
-                      child: const Text("Avançar", style: TextStyle(fontSize: 20.0, color: Colors.white)),
+                      child: const Text("Avançar",
+                          style:
+                              TextStyle(fontSize: 20.0, color: Colors.white)),
                       onPressed: _nextTap,
                     ),
                   ),
@@ -108,7 +117,10 @@ class Initial extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               "Bem-vindo",
-              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
@@ -121,7 +133,11 @@ class Initial extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Color.fromARGB(255, 250, 250, 250),
                       borderRadius: BorderRadius.circular(50),
-                      boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            blurRadius: 10,
+                            color: Colors.black.withOpacity(0.3))
+                      ]),
                   child: SizedBox(
                     width: 200,
                     height: 190,
@@ -165,13 +181,17 @@ class CreateHabit extends StatefulWidget {
   _CreateHabitState createState() => _CreateHabitState();
 }
 
-class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStateMixin {
+class _CreateHabitState extends State<CreateHabit>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 1000), vsync: this, lowerBound: 0, upperBound: 0.03);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 1000),
+        vsync: this,
+        lowerBound: 0,
+        upperBound: 0.03);
     _controller.addListener(() {
       setState(() {});
     });
@@ -198,7 +218,10 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
             alignment: Alignment.center,
             child: Text(
               "CRIAR UM HÁBITO",
-              style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
@@ -212,10 +235,14 @@ class _CreateHabitState extends State<CreateHabit> with SingleTickerProviderStat
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                    boxShadow: [
+                      BoxShadow(
+                          blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                    ]),
                 child: LayoutBuilder(builder: (context, constraint) {
                   return Align(
-                    alignment: Alignment(1.15 + _controller.value, 1.55 + _controller.value),
+                    alignment: Alignment(
+                        1.15 + _controller.value, 1.55 + _controller.value),
                     child: Image.asset(
                       "assets/finger.png",
                       fit: BoxFit.contain,
@@ -253,7 +280,8 @@ class CompleteHabit extends StatefulWidget {
   _CompleteHabitState createState() => _CompleteHabitState();
 }
 
-class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProviderStateMixin {
+class _CompleteHabitState extends State<CompleteHabit>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> positionYRocketAnimation;
   late Animation<double> positionXRocketAnimation;
@@ -262,7 +290,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
 
   @override
   void initState() {
-    _controller = AnimationController(duration: const Duration(milliseconds: 3500), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 3500), vsync: this);
 
     _controller.addListener(() {
       setState(() {});
@@ -343,7 +372,10 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
             alignment: Alignment.center,
             child: Text(
               "COMPLETAR O HÁBITO",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
           Expanded(
@@ -357,19 +389,24 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                    ]),
                 child: LayoutBuilder(builder: (context, constraint) {
                   final sizeRocket = 0.29;
                   return Stack(
                     children: <Widget>[
                       Align(
-                        alignment: Alignment(positionXRocketAnimation.value, positionYRocketAnimation.value),
+                        alignment: Alignment(positionXRocketAnimation.value,
+                            positionYRocketAnimation.value),
                         child: SizedBox(
                           height: constraint.biggest.width * sizeRocket,
                           width: (constraint.biggest.width * sizeRocket) + 10,
                           child: Rocket(
                             size: Size(
-                                (constraint.biggest.width * sizeRocket) + 10, constraint.biggest.width * sizeRocket),
+                                (constraint.biggest.width * sizeRocket) + 10,
+                                constraint.biggest.width * sizeRocket),
                             color: AppColors.habitsColor[3],
                             state: RocketState.ON_FIRE,
                             fireForce: 1,
@@ -377,7 +414,8 @@ class _CompleteHabitState extends State<CompleteHabit> with SingleTickerProvider
                         ),
                       ),
                       Align(
-                        alignment: Alignment(positionXFingerAnimation.value, positionYFingerAnimation.value),
+                        alignment: Alignment(positionXFingerAnimation.value,
+                            positionYFingerAnimation.value),
                         child: Image.asset(
                           "assets/finger.png",
                           fit: BoxFit.contain,
@@ -423,7 +461,8 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller = AnimationController(duration: const Duration(milliseconds: 4000), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 4000), vsync: this);
 
     _controller.addListener(() {
       setState(() {});
@@ -465,7 +504,10 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
             alignment: Alignment.center,
             child: Text(
               "EVOLUÇÃO DO HÁBITO",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
           Expanded(
@@ -479,13 +521,20 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(50),
-                    boxShadow: <BoxShadow>[BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.3))]),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          blurRadius: 10, color: Colors.black.withOpacity(0.3))
+                    ]),
                 child: Align(
                   alignment: Alignment(0, -0.41),
                   child: Text(
                     scoreAnimation.value.toInt().toString(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 47, fontWeight: FontWeight.bold, height: 0.2, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 47,
+                        fontWeight: FontWeight.bold,
+                        height: 0.2,
+                        color: Colors.black),
                   ),
                 ),
               ),

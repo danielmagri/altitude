@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Competitor.dart';
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 
@@ -17,13 +17,19 @@ class Competition {
   static const COMPETITORS = "competitors";
   static const INVITATIONS = "invitations";
 
-  Competition({this.id, this.title, this.initialDate, this.competitors, this.invitations}) {
+  Competition(
+      {this.id,
+      this.title,
+      this.initialDate,
+      this.competitors,
+      this.invitations}) {
     if (competitors!.isNotEmpty) {
       competitors!.sort((a, b) => b.score.compareTo(a.score));
     }
   }
 
-  Competitor getMyCompetitor() => competitors!.firstWhere((element) => element.uid == GetIt.I.get<IFireAuth>().getUid());
+  Competitor getMyCompetitor() => competitors!.firstWhere(
+      (element) => element.uid == GetIt.I.get<IFireAuth>().getUid());
 
   String listCompetitors() {
     String list = "";
@@ -44,13 +50,15 @@ class Competition {
     List<Competitor> competitorsList = [];
     if (json[COMPETITORS] is Map) {
       Map map = json[COMPETITORS] as Map;
-      competitorsList = map.keys.map((e) => Competitor.fromJson(map[e], e)).toList();
+      competitorsList =
+          map.keys.map((e) => Competitor.fromJson(map[e], e)).toList();
     }
     return Competition(
         id: id,
         title: json[TITLE],
         initialDate: json[INITIAL_DATE] is Timestamp
-            ? DateTime.fromMillisecondsSinceEpoch((json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
+            ? DateTime.fromMillisecondsSinceEpoch(
+                (json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
             : DateTime.fromMillisecondsSinceEpoch(json[INITIAL_DATE]),
         competitors: competitorsList);
   }
@@ -59,7 +67,8 @@ class Competition {
         TITLE: title,
         INITIAL_DATE: initialDate,
         COMPETITORS_ID: competitors!.map((e) => e.uid).toList(),
-        COMPETITORS: Map.fromIterable(competitors!, key: (e) => e.uid, value: (e) => e.toJson()),
+        COMPETITORS: Map.fromIterable(competitors!,
+            key: (e) => e.uid, value: (e) => e.toJson()),
         INVITATIONS: invitations
       };
 }

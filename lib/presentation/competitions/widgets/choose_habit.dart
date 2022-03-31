@@ -11,10 +11,10 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/dialog/BaseDialog.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/core/model/data_state.dart';
-import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:flutter/material.dart'
     show
         Container,

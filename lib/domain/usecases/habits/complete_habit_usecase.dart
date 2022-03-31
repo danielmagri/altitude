@@ -5,7 +5,7 @@ import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

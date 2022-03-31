@@ -28,7 +28,7 @@ import 'package:flutter/material.dart'
         showTimePicker;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class SelectAlarm extends StatefulWidget {
   @override

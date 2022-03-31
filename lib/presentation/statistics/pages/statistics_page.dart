@@ -12,7 +12,7 @@ import 'package:altitude/presentation/statistics/widgets/indicator.dart';
 import 'package:altitude/presentation/statistics/widgets/pie_chart_score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:altitude/core/extensions/NavigatorExtension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Statisticspage extends StatefulWidget {

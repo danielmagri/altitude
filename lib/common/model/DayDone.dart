@@ -1,5 +1,5 @@
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show Timestamp;
-import 'package:altitude/core/extensions/DateTimeExtension.dart';
 
 class DayDone {
   final String? habitId;
