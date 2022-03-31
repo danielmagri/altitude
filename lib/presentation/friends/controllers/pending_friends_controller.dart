@@ -5,9 +5,11 @@ import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/domain/usecases/friends/accept_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/decline_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/get_pending_friends_usecase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'pending_friends_controller.g.dart';
 
+@lazySingleton
 class PendingFriendsController = _PendingFriendsControllerBase
     with _$PendingFriendsController;
 

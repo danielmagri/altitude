@@ -6,7 +6,9 @@ import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_local_notification.dart';
 import 'package:altitude/domain/usecases/habits/get_reminder_counter_usecase.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class UpdateReminderUsecase extends BaseUsecase<UpdateReminderParams, void> {
   final Memory _memory;
   final ILocalNotification _localNotification;

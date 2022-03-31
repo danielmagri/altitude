@@ -5,9 +5,11 @@ import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/no_params.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'competition_details_controller.g.dart';
 
+@lazySingleton
 class CompetitionDetailsController = _CompetitionDetailsControllerBase
     with _$CompetitionDetailsController;
 

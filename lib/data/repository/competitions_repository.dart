@@ -1,12 +1,14 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class ICompetitionsRepository {
   Future<List<Competition>> getCompetitions(bool fromServer);
   Future<Competition> getCompetition(String id);
 }
 
+@Injectable(as: ICompetitionsRepository)
 class CompetitionsRepository extends ICompetitionsRepository {
   final Memory _memory;
   final IFireDatabase _fireDatabase;

@@ -2,7 +2,9 @@ import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class DeclineRequestUsecase extends BaseUsecase<String, void> {
   final IFireDatabase _fireDatabase;
   final IFireAuth _fireAuth;

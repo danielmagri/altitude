@@ -7,9 +7,11 @@ import 'package:altitude/core/model/result.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/domain/usecases/habits/add_habit_usecase.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'add_habit_controller.g.dart';
 
+@lazySingleton
 class AddHabitController = _AddHabitControllerBase with _$AddHabitController;
 
 abstract class _AddHabitControllerBase with Store {

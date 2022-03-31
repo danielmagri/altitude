@@ -3,6 +3,7 @@ import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class IUserRepository {
   Future<Person> getUserData(bool fromServer);
@@ -11,6 +12,7 @@ abstract class IUserRepository {
   bool isLogged();
 }
 
+@Injectable(as: IUserRepository)
 class UserRepository extends IUserRepository {
   final IFireMessaging _fireMessaging;
   final IFireDatabase _fireDatabase;

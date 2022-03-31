@@ -10,9 +10,11 @@ import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/domain/usecases/user/recalculate_score_usecasse.dart';
 import 'package:altitude/domain/usecases/user/update_name_usecase.dart';
 import 'package:flutter/material.dart' show BuildContext;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'settings_controller.g.dart';
 
+@lazySingleton
 class SettingsController = _SettingsControllerBase with _$SettingsController;
 
 abstract class _SettingsControllerBase with Store {

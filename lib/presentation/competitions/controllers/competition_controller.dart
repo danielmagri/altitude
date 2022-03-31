@@ -13,9 +13,11 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/pair.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'competition_controller.g.dart';
 
+@lazySingleton
 class CompetitionController = _CompetitionControllerBase
     with _$CompetitionController;
 

@@ -1,6 +1,8 @@
 import 'package:altitude/core/services/interfaces/i_fire_analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:injectable/injectable.dart';
 
+@Injectable(as: IFireAnalytics)
 class FireAnalytics implements IFireAnalytics {
   FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 

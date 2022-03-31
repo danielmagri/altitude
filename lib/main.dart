@@ -29,7 +29,7 @@ import 'core/services/interfaces/i_fire_analytics.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  setupAll();
+  configureDependencies();
   MobileAds.instance.initialize().then((status) {
     MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(
@@ -40,7 +40,6 @@ void main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   await GetIt.I.allReady();
 
-  print(GetIt.I.isReadySync<SharedPref>());
   runApp(MyApp());
 }
 

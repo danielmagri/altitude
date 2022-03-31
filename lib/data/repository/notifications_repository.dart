@@ -1,11 +1,13 @@
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class INotificationsRepository {
   void sendCompetitionNotification(
       String name, int earnedScore, List<Competition> competitions);
 }
 
+@Injectable(as: INotificationsRepository)
 class NotificationsRepository extends INotificationsRepository {
   final IFireFunctions _fireFunctions;
 

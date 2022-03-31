@@ -8,7 +8,9 @@ import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class AcceptCompetitionRequestUsecase
     extends BaseUsecase<AcceptCompetitionRequestParams, void> {
   final Memory _memory;

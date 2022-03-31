@@ -2,7 +2,9 @@ import 'package:altitude/common/constant/Constants.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/no_params.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class MaxHabitsUsecase extends BaseUsecase<NoParams, bool> {
   final IHabitsRepository _habitsRepository;
 

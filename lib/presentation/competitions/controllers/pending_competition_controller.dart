@@ -7,11 +7,13 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/failure.dart';
 import 'package:altitude/core/model/no_params.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../core/model/data_state.dart';
 part 'pending_competition_controller.g.dart';
 
+@lazySingleton
 class PendingCompetitionController = _PendingCompetitionControllerBase
     with _$PendingCompetitionController;
 

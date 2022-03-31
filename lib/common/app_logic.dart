@@ -1,8 +1,10 @@
 import 'package:flutter/services.dart' show SystemChrome, SystemUiOverlayStyle;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 
 part 'app_logic.g.dart';
 
+@singleton
 class AppLogic = _AppLogicBase with _$AppLogic;
 
 abstract class _AppLogicBase with Store {

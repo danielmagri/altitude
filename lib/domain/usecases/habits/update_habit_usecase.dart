@@ -4,7 +4,9 @@ import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
   final Memory _memory;
   final IFireDatabase _fireDatabase;

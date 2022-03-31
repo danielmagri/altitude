@@ -5,9 +5,11 @@ import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/shared_pref/shared_pref.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/no_params.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'friends_controller.g.dart';
 
+@lazySingleton
 class FriendsController = _FriendsControllerBase with _$FriendsController;
 
 abstract class _FriendsControllerBase with Store {

@@ -10,9 +10,11 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/failure.dart';
 import "package:collection/collection.dart";
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'statistics_controller.g.dart';
 
+@lazySingleton
 class StatisticsController = _StatisticsControllerBase
     with _$StatisticsController;
 

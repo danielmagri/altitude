@@ -2,7 +2,9 @@ import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
+@Injectable(as: IFireAuth)
 class FireAuth implements IFireAuth {
   bool isLogged() {
     return FirebaseAuth.instance.currentUser != null ? true : false;

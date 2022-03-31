@@ -1,10 +1,12 @@
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class IFriendsRepository {
   Future<List<Person>> getFriends();
 }
 
+@Injectable(as: IFriendsRepository)
 class FriendsRepository extends IFriendsRepository {
   final IFireDatabase _fireDatabase;
 

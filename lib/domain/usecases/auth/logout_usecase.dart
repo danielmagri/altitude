@@ -2,7 +2,9 @@ import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/no_params.dart';
 import 'package:altitude/core/services/Memory.dart';
 import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class LogoutUsecase extends BaseUsecase<NoParams, void> {
   final Memory _memory;
   final IFireAuth _fireAuth;

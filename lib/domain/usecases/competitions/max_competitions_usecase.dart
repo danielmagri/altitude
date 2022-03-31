@@ -3,7 +3,9 @@ import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.d
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/no_params.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class MaxCompetitionsUsecase extends BaseUsecase<NoParams, bool> {
   final GetCompetitionsUsecase _getCompetitionsUsecase;
 

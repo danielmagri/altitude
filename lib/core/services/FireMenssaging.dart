@@ -4,7 +4,9 @@ import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 
+@Injectable(as: IFireMessaging)
 class FireMessaging implements IFireMessaging {
   static const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -15,7 +17,7 @@ class FireMessaging implements IFireMessaging {
 
   FireMessaging() {
     FirebaseMessaging.onBackgroundMessage((message) async {
-      setupAll();
+      configureDependencies();
 
       await GetIt.I.isReady<SharedPref>();
 

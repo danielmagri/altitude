@@ -6,7 +6,9 @@ import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/core/extensions/DateTimeExtension.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
   final IHabitsRepository _habitsRepository;
   final ICompetitionsRepository _competitionsRepository;

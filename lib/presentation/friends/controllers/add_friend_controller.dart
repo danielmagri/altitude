@@ -4,9 +4,11 @@ import 'package:altitude/domain/usecases/friends/accept_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/cancel_friend_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/friend_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/search_email_usecase.dart';
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'add_friend_controller.g.dart';
 
+@lazySingleton
 class AddFriendController = _AddFriendControllerBase with _$AddFriendController;
 
 abstract class _AddFriendControllerBase with Store {

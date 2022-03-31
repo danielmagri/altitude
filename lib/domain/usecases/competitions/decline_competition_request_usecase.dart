@@ -1,6 +1,8 @@
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class DeclineCompetitionRequestUsecase extends BaseUsecase<String, void> {
   final IFireDatabase _fireDatabase;
 

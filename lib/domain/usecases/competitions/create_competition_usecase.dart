@@ -10,7 +10,9 @@ import 'package:altitude/core/services/interfaces/i_fire_auth.dart';
 import 'package:altitude/core/services/interfaces/i_fire_database.dart';
 import 'package:altitude/core/services/interfaces/i_fire_functions.dart';
 import 'package:altitude/core/services/interfaces/i_fire_messaging.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class CreateCompetitionUsecase
     extends BaseUsecase<CreateCompetitionParams, Competition> {
   final IFireDatabase _fireDatabase;

@@ -12,9 +12,11 @@ import 'package:altitude/core/extensions/DateTimeExtension.dart';
 import 'package:altitude/core/model/data_state.dart';
 import 'package:altitude/core/model/failure.dart';
 import 'package:flutter/material.dart' show Color;
+import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 part 'habit_details_controller.g.dart';
 
+@lazySingleton
 class HabitDetailsController = _HabitDetailsControllerBase
     with _$HabitDetailsController;
 
