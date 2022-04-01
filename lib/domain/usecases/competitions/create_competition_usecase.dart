@@ -1,62 +1,58 @@
+import 'package:altitude/data/repository/competitions_repository.dart';
+import 'package:altitude/data/repository/habits_repository.dart';
+import 'package:altitude/data/repository/notifications_repository.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/infra/services/Memory.dart';
-import 'package:altitude/infra/interface/i_fire_analytics.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/interface/i_fire_functions.dart';
-import 'package:altitude/infra/interface/i_fire_messaging.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class CreateCompetitionUsecase
     extends BaseUsecase<CreateCompetitionParams, Competition> {
-  final IFireDatabase _fireDatabase;
-  final IFireMessaging _fireMessaging;
-  final IFireFunctions _fireFunctions;
-  final IFireAnalytics _fireAnalytics;
-  final IFireAuth _fireAuth;
-  final Memory _memory;
+  final ICompetitionsRepository _competitionsRepository;
+  final INotificationsRepository _notificationsRepository;
+  final IUserRepository _userRepository;
+  final IHabitsRepository _habitsRepository;
 
-  CreateCompetitionUsecase(this._fireDatabase, this._fireMessaging,
-      this._fireFunctions, this._fireAnalytics, this._fireAuth, this._memory);
+  CreateCompetitionUsecase(
+      this._competitionsRepository,
+      this._notificationsRepository,
+      this._userRepository,
+      this._habitsRepository);
 
   @override
   Future<Competition> getRawFuture(CreateCompetitionParams params) async {
     DateTime date = DateTime.now().onlyDate;
 
+    final person = await _userRepository.getUserData(false);
+
     Competitor competitor = Competitor(
-        uid: _fireAuth.getUid(),
-        name: _fireAuth.getName(),
-        fcmToken: await _fireMessaging.getToken,
+        uid: person.uid,
+        name: person.name,
+        fcmToken: person.fcmToken,
         habitId: params.habit.id,
         color: params.habit.colorCode,
-        score: await _fireDatabase.hasDoneAtDay(params.habit.id, date)
+        score: await _habitsRepository.hasDoneAtDay(params.habit.id ?? '', date)
             ? IScoreService.DAY_DONE_POINT
             : 0,
         you: true);
 
-    Competition competition = await _fireDatabase.createCompetition(Competition(
-        title: params.title,
-        initialDate: date,
-        competitors: [competitor],
-        invitations: params.invitations));
+    final competition = _competitionsRepository.createCompetition(
+        Competition(
+            title: params.title,
+            initialDate: date,
+            competitors: [competitor],
+            invitations: params.invitations),
+        params.habit.habit ?? '');
 
     for (String token in params.invitationsToken) {
-      await _fireFunctions.sendNotification(
-          "Convite de competição",
-          "${_fireAuth.getName()} te convidou a participar do ${params.title}",
-          token);
+      await _notificationsRepository.sendInviteCompetitionNotification(
+          person.name ?? '', params.title, token);
     }
-
-    _fireAnalytics.sendCreateCompetition(
-        params.title, params.habit.habit, params.invitations.length);
-
-    _memory.competitions.add(competition);
 
     return competition;
   }

@@ -17,19 +17,40 @@ typedef _ErrorReactionCallback = void Function(Failure error);
 enum StateType { SUCCESS, LOADING, ERROR }
 
 /// O DataState consiste na mudança de 3 estados (`LOADING`, `SUCCESS`, `ERROR`).
-/// 
+///
 /// O estado inicial padrão começa pelo `LOADING`, pensando nas situações que precisamos carregar os dados para exibir ao usuário. E com ela podemos usar um widget de loading/shimmer/skeleton.
 /// Mas caso seja necessário, é possível alterar o estado inicial para o `SUCCESS` ou até mesmo `ERROR`.
-/// 
+///
 /// Existem 2 metódos para lidar com os estados na renderização dos widgets, [handleState] e [handleStateLoadableWithData].
 /// - O [handleState] é indicado para situações simples, onde cada estado terá sua widget.
 /// - E o [handleStateLoadableWithData] é indicado para situações onde em um dado momento precise utilizar a data no estado de loading. Por exemplo ao exibir uma lista infinita, onde precisamos exibir os dados da lista juntamente com alguma indicação de loading.
-/// 
+///
 /// O [handleReactionState] é utilizado para lidar com os estados por meio da `Reaction` do MobX.
-class DataState<T> = _DataStateBase<T> with _$DataState;
+class DataState<T> extends _DataStateBase<T> with _$DataState {
+  /// Starts on `LOADING` state.
+  /// 
+  /// To start with `SUCCESS` or `ERROR` state use the constructors:
+  /// - [DataState.startWithSuccess]
+  /// - [DataState.startWithError]
+  DataState() : super(initialState: StateType.LOADING);
+
+  /// Starts on `SUCCESS` state.
+  DataState.startWithSuccess({required T data})
+      : super(initialState: StateType.SUCCESS, initialData: data);
+
+  /// Starts on `ERROR` state.
+  DataState.startWithError({required Failure error})
+      : super(initialState: StateType.SUCCESS, initialFailure: error);
+}
 
 abstract class _DataStateBase<T> with Store {
-  _DataStateBase({StateType initialState = StateType.LOADING}) : _state = initialState;
+  _DataStateBase({
+    required StateType initialState,
+    T? initialData,
+    Failure? initialFailure,
+  })  : _state = initialState,
+        _data = initialData,
+        _error = initialFailure;
 
   @observable
   StateType _state;

@@ -3,8 +3,12 @@ import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class INotificationsRepository {
-  void sendCompetitionNotification(
+  Future<void> sendCompetitionNotification(
       String name, int earnedScore, List<Competition> competitions);
+  Future<void> sendInviteCompetitionNotification(
+      String userName, String competitionTitle, String friendToken);
+  Future<void> sendNewCompetitorNotification(
+      String userName, String competitionTitle, String friendToken);
 }
 
 @Injectable(as: INotificationsRepository)
@@ -14,8 +18,8 @@ class NotificationsRepository extends INotificationsRepository {
   NotificationsRepository(this._fireFunctions);
 
   @override
-  void sendCompetitionNotification(
-      String name, int earnedScore, List<Competition> competitions) {
+  Future<void> sendCompetitionNotification(
+      String name, int earnedScore, List<Competition> competitions) async {
     competitions.forEach((competition) {
       int? oldScore = competition.competitors!.firstWhere((e) => e.you!).score;
 
@@ -42,5 +46,19 @@ class NotificationsRepository extends INotificationsRepository {
         }
       });
     });
+  }
+
+  @override
+  Future<void> sendInviteCompetitionNotification(
+      String userName, String competitionTitle, String friendToken) async {
+    await _fireFunctions.sendNotification("Convite de competição",
+        "$userName te convidou a participar do $competitionTitle", friendToken);
+  }
+
+  @override
+  Future<void> sendNewCompetitorNotification(
+      String userName, String competitionTitle, String friendToken) async {
+    await _fireFunctions.sendNotification("Novo competidor",
+        "$userName entrou em  $competitionTitle", friendToken);
   }
 }

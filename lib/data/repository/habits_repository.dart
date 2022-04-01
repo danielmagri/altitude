@@ -13,6 +13,7 @@ abstract class IHabitsRepository {
   Future<Habit> getHabit(String id);
   Future<int> completeHabit(String habitId, int currentScore, DateTime date,
       bool isAdd, List<DateTime>? daysDone, List<Competition> competitions);
+  Future<bool> hasDoneAtDay(String id, DateTime date);
 }
 
 @Injectable(as: IHabitsRepository)
@@ -101,5 +102,10 @@ class HabitsRepository extends IHabitsRepository {
     print("$date $isAdd - Score: $score  Id: $habitId");
 
     return score;
+  }
+
+  @override
+  Future<bool> hasDoneAtDay(String id, DateTime date) async {
+    return await _fireDatabase.hasDoneAtDay(id, date);
   }
 }

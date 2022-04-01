@@ -21,7 +21,7 @@ abstract class _AddFriendControllerBase with Store {
       this._cancelFriendRequestUsecase, this._acceptRequestUsecase);
 
   DataState<List<Person>?> searchResult =
-      DataState(initialState: StateType.SUCCESS);
+      DataState.startWithSuccess(data: null);
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoadingState();

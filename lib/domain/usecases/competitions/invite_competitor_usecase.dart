@@ -1,43 +1,35 @@
 import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/domain/usecases/competitions/get_competition_usecase.dart';
-import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/data/repository/competitions_repository.dart';
+import 'package:altitude/data/repository/notifications_repository.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class InviteCompetitorUsecase
     extends BaseUsecase<InviteCompetitorParams, void> {
-  final GetCompetitionUsecase _getCompetitionUsecase;
-  final GetUserDataUsecase _getUserDataUsecase;
-  final IFireDatabase _fireDatabase;
-  final IFireFunctions _fireFunctions;
+  final ICompetitionsRepository _competitionsRepository;
+  final IUserRepository _userRepository;
+  final INotificationsRepository _notificationsRepository;
 
-  InviteCompetitorUsecase(this._getCompetitionUsecase, this._getUserDataUsecase,
-      this._fireDatabase, this._fireFunctions);
+  InviteCompetitorUsecase(this._competitionsRepository, this._userRepository,
+      this._notificationsRepository);
 
   @override
   Future<void> getRawFuture(InviteCompetitorParams params) async {
-    Competition competition =
-        await _getCompetitionUsecase(params.competitionId ?? "")
-            .resultComplete((data) => data, (error) => throw error);
-    if (competition.competitors!.length < MAX_COMPETITORS) {
-      await _fireDatabase.inviteCompetitor(
-          params.competitionId, params.competitorId);
+    Competition competition = await _competitionsRepository
+        .getCompetition(params.competitionId ?? "");
 
-      final userName = (await _getUserDataUsecase
-                  .call(false)
-                  .resultComplete((data) => data, (error) => null))
-              ?.name ??
-          "";
+    if (competition.competitors!.length < MAX_COMPETITORS) {
+      await _competitionsRepository.inviteCompetitor(
+          params.competitionId ?? '', params.competitorId);
+
+      final userName = (await _userRepository.getUserData(false)).name ?? "";
+
       for (String? token in params.fcmTokens) {
-        await _fireFunctions.sendNotification(
-            "Convite de competição",
-            "$userName te convidou a participar do ${competition.title}",
-            token ?? '');
+        await _notificationsRepository.sendInviteCompetitionNotification(
+            userName, competition.title ?? '', token ?? '');
       }
     } else {
       throw "Máximo de competidores atingido.";

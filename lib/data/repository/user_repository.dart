@@ -10,6 +10,7 @@ abstract class IUserRepository {
   Future<void> updateFCMToken();
   Future<int> getReminderCounter();
   bool isLogged();
+  Future<void> logout();
 }
 
 @Injectable(as: IUserRepository)
@@ -63,5 +64,11 @@ class UserRepository extends IUserRepository {
   @override
   bool isLogged() {
     return _fireAuth.isLogged();
+  }
+
+  @override
+  Future<void> logout() async {
+    _memory.clear();
+    await _fireAuth.logout();
   }
 }
