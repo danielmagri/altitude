@@ -1,50 +1,17 @@
-import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
-import 'package:altitude/domain/usecases/user/update_fcm_token_usecase.dart';
-import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/no_params.dart';
-import 'package:altitude/infra/services/Memory.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/interface/i_fire_messaging.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class CreatePersonUsecase extends BaseUsecase<CreatePersonParams, void> {
-  final Memory _memory;
-  final IFireDatabase _fireDatabase;
-  final IFireAuth _fireAuth;
-  final IFireMessaging _fireMessaging;
-  final GetUserDataUsecase _getUserDataUsecase;
-  final UpdateFCMTokenUsecase _updateFCMTokenUsecase;
+  final IUserRepository _userRepository;
 
-  CreatePersonUsecase(
-      this._memory,
-      this._fireDatabase,
-      this._fireAuth,
-      this._fireMessaging,
-      this._getUserDataUsecase,
-      this._updateFCMTokenUsecase);
+  CreatePersonUsecase(this._userRepository);
 
   @override
   Future<void> getRawFuture(CreatePersonParams params) async {
-    return (await _getUserDataUsecase(true)).result((data) async {
-      _updateFCMTokenUsecase.call(NoParams());
-      return;
-    }, (error) async {
-      Person person = Person(
-          name: _fireAuth.getName(),
-          email: _fireAuth.getEmail(),
-          fcmToken: await _fireMessaging.getToken,
-          level: params.level ?? 0,
-          reminderCounter: params.reminderCounter ?? 0,
-          score: params.score ?? 0,
-          friends: params.friends ?? [],
-          pendingFriends: params.pendingFriends ?? []);
-      await _fireDatabase.createPerson(person);
-      person.photoUrl = _fireAuth.getPhotoUrl();
-      _memory.person = person;
-    });
+    return _userRepository.createPerson(params.level, params.reminderCounter,
+        params.score, params.friends, params.pendingFriends);
   }
 }
 

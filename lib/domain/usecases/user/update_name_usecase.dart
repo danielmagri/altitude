@@ -1,22 +1,16 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/infra/services/Memory.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class UpdateNameUsecase extends BaseUsecase<UpdateNameParams, void> {
-  final Memory _memory;
-  final IFireAuth _fireAuth;
-  final IFireDatabase _fireDatabase;
+  final IUserRepository _userRepository;
 
-  UpdateNameUsecase(this._memory, this._fireAuth, this._fireDatabase);
+  UpdateNameUsecase(this._userRepository);
 
   @override
   Future<void> getRawFuture(UpdateNameParams params) async {
-    await _fireAuth.setName(params.name);
-    await _fireDatabase.updateName(params.name, params.competitionsId);
-    _memory.person?.name = params.name;
+    return _userRepository.updateName(params.name, params.competitionsId);
   }
 }
 

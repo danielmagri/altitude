@@ -9,6 +9,9 @@ abstract class INotificationsRepository {
       String userName, String competitionTitle, String friendToken);
   Future<void> sendNewCompetitorNotification(
       String userName, String competitionTitle, String friendToken);
+  Future<void> sendInviteFriendNotification(
+      String userName, String friendToken);
+  Future<void> acceptFriendNotification(String userName, String friendToken);
 }
 
 @Injectable(as: INotificationsRepository)
@@ -60,5 +63,19 @@ class NotificationsRepository extends INotificationsRepository {
       String userName, String competitionTitle, String friendToken) async {
     await _fireFunctions.sendNotification("Novo competidor",
         "$userName entrou em  $competitionTitle", friendToken);
+  }
+
+  @override
+  Future<void> sendInviteFriendNotification(
+      String userName, String friendToken) async {
+    await _fireFunctions.sendNotification(
+        "Pedido de amizade", "$userName quer ser seu amigo.", friendToken);
+  }
+
+  @override
+  Future<void> acceptFriendNotification(
+      String userName, String friendToken) async {
+    await _fireFunctions.sendNotification(
+        "Pedido de amizade", "$userName aceitou seu pedido.", friendToken);
   }
 }

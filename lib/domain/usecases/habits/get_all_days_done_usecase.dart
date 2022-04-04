@@ -1,24 +1,17 @@
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class GetAllDaysDoneUsecase extends BaseUsecase<List<Habit>, List<DayDone>> {
-  final IFireDatabase _fireDatabase;
+  final IHabitsRepository _habitsRepository;
 
-  GetAllDaysDoneUsecase(this._fireDatabase);
+  GetAllDaysDoneUsecase(this._habitsRepository);
 
   @override
   Future<List<DayDone>> getRawFuture(List<Habit> params) async {
-    List<DayDone> list = [];
-
-    for (Habit habit in params) {
-      list.addAll((await _fireDatabase.getAllDaysDone(habit.id))
-          .map((e) => DayDone(date: e.date, habitId: habit.id)));
-    }
-
-    return list;
+    return _habitsRepository.getAllDaysDone(params);
   }
 }

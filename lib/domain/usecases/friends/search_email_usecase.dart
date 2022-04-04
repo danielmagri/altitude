@@ -1,28 +1,22 @@
-import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
+import 'package:altitude/data/repository/friends_repository.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class SearchEmailUsecase extends BaseUsecase<String, List<Person>> {
-  final IFireDatabase _fireDatabase;
-  final IFireAuth _fireAuth;
-  final GetUserDataUsecase _getUserDataUsecase;
+  final IFriendsRepository _friendsRepository;
+  final IUserRepository _userRepository;
 
-  SearchEmailUsecase(
-      this._fireDatabase, this._getUserDataUsecase, this._fireAuth);
+  SearchEmailUsecase(this._friendsRepository, this._userRepository);
 
   @override
   Future<List<Person>> getRawFuture(String params) async {
-    if (params != _fireAuth.getEmail()) {
-      List<String?> myPendingFriends = (await _getUserDataUsecase(false)
-                  .resultComplete((data) => data, (error) => throw error))
-              .pendingFriends ??
-          [];
-      return await _fireDatabase.searchEmail(params, myPendingFriends);
+    final person = await _userRepository.getUserData(false);
+    if (params != person.email) {
+      List<String?> myPendingFriends = person.pendingFriends ?? [];
+      return await _friendsRepository.searchEmail(params, myPendingFriends);
     } else {
       return [];
     }

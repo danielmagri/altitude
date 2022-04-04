@@ -1,52 +1,23 @@
-import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/common/model/no_params.dart';
-import 'package:altitude/infra/services/Memory.dart';
-import 'package:altitude/infra/interface/i_fire_analytics.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/interface/i_local_notification.dart';
-import 'package:altitude/domain/usecases/habits/get_reminder_counter_usecase.dart';
+import 'package:altitude/data/repository/habits_repository.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class AddHabitUsecase extends BaseUsecase<Habit, Habit> {
-  final IFireDatabase _fireDatabase;
-  final ILocalNotification _localNotification;
-  final IFireAnalytics _fireAnalytics;
-  final Memory _memory;
-  final GetReminderCounterUsecase _getReminderCounterUsecase;
+  final IHabitsRepository _habitsRepository;
+  final IUserRepository _userRepository;
 
-  AddHabitUsecase(this._fireDatabase, this._fireAnalytics, this._memory,
-      this._localNotification, this._getReminderCounterUsecase);
+  AddHabitUsecase(this._habitsRepository, this._userRepository);
 
   @override
   Future<Habit> getRawFuture(Habit params) async {
     int? reminderCounter;
     if (params.reminder != null) {
-      reminderCounter = await _getReminderCounterUsecase
-          .call(NoParams())
-          .resultComplete((data) => data, (error) => null);
+      reminderCounter = await _userRepository.getReminderCounter();
       params.reminder!.id = reminderCounter;
     }
-    var data = await _fireDatabase.addHabit(params, reminderCounter);
-    _fireAnalytics.sendNewHabit(
-        params.habit,
-        AppColors.habitsColorName[params.colorCode!],
-        params.frequency.runtimeType == DayWeek
-            ? "Diariamente"
-            : "Semanalmente",
-        params.frequency!.daysCount(),
-        params.reminder != null ? "Sim" : "Não");
-
-    _memory.habits.add(data);
-
-    if (params.reminder != null) {
-      await _localNotification.addNotification(params);
-    }
-
-    return data;
+    return await _habitsRepository.addHabit(params, reminderCounter);
   }
 }

@@ -1,50 +1,19 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class GetCalendarDaysDoneUsecase
     extends BaseUsecase<GetCalendarDaysDoneParams, Map<DateTime, List<bool>>> {
-  final IFireDatabase _fireDatabase;
+  final IHabitsRepository _habitsRepository;
 
-  GetCalendarDaysDoneUsecase(this._fireDatabase);
+  GetCalendarDaysDoneUsecase(this._habitsRepository);
 
   @override
   Future<Map<DateTime, List<bool>>> getRawFuture(
       GetCalendarDaysDoneParams params) async {
-    final firstDayMonth = DateTime.utc(params.year, params.month, 1);
-    final lastDayMonth = DateTime.utc(params.year, params.month + 1, 1)
-        .subtract(Duration(days: 1));
-
-    DateTime startDate = firstDayMonth.subtract(Duration(
-        days: firstDayMonth.weekday == 7 ? 1 : firstDayMonth.weekday + 1));
-    DateTime endDate = lastDayMonth.add(Duration(
-        days: firstDayMonth.weekday == 7 ? 7 : 7 - firstDayMonth.weekday));
-    var data = await _fireDatabase.getDaysDone(params.id, startDate, endDate);
-    Map<DateTime, List<bool>> map = Map();
-    bool before = false;
-    bool after = false;
-
-    for (int i = 0; i < data.length; i++) {
-      if (i - 1 >= 0 &&
-          data[i].date!.difference(data[i - 1].date!) ==
-              const Duration(days: 1)) {
-        before = true;
-      } else {
-        before = false;
-      }
-
-      if (i + 1 < data.length &&
-          data[i + 1].date!.difference(data[i].date!) ==
-              const Duration(days: 1)) {
-        after = true;
-      } else {
-        after = false;
-      }
-
-      map.putIfAbsent(data[i].date!, () => [before, after]);
-    }
-    return map;
+    return _habitsRepository.getCalendarDaysDone(
+        params.id, params.month, params.year);
   }
 }
 

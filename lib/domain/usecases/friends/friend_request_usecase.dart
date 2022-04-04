@@ -1,31 +1,25 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/infra/services/Memory.dart';
-import 'package:altitude/infra/interface/i_fire_analytics.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/interface/i_fire_functions.dart';
+import 'package:altitude/data/repository/friends_repository.dart';
+import 'package:altitude/data/repository/notifications_repository.dart';
+import 'package:altitude/data/repository/user_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class FriendRequestUsecase extends BaseUsecase<String, void> {
-  final IFireDatabase _fireDatabase;
-  final IFireAuth _fireAuth;
-  final IFireAnalytics _fireAnalytics;
-  final Memory _memory;
-  final IFireFunctions _fireFunctions;
+  final IFriendsRepository _friendsRepository;
+  final INotificationsRepository _notificationsRepository;
+  final IUserRepository _userRepository;
 
-  FriendRequestUsecase(this._fireDatabase, this._fireAuth, this._fireAnalytics,
-      this._memory, this._fireFunctions);
+  FriendRequestUsecase(this._friendsRepository, this._notificationsRepository,
+      this._userRepository);
 
   @override
   Future<void> getRawFuture(String params) async {
-    _fireAnalytics.sendFriendRequest(false);
-    return _fireDatabase.friendRequest(_fireAuth.getUid()).then((token) async {
-      if (_memory.person != null) {
-        _memory.person!.pendingFriends!.add(_fireAuth.getUid());
-      }
-      await _fireFunctions.sendNotification("Pedido de amizade",
-          "${_fireAuth.getName()} quer ser seu amigo.", token);
-    });
+    final token = await _friendsRepository.sendFriendRequest(params);
+    final userName =
+        await _userRepository.getUserData(false).then((value) => value.name);
+
+    await _notificationsRepository.sendInviteFriendNotification(
+        userName ?? '', token);
   }
 }
