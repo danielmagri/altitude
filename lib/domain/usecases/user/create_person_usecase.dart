@@ -10,8 +10,13 @@ class CreatePersonUsecase extends BaseUsecase<CreatePersonParams, void> {
 
   @override
   Future<void> getRawFuture(CreatePersonParams params) async {
-    return _userRepository.createPerson(params.level, params.reminderCounter,
-        params.score, params.friends, params.pendingFriends);
+    return _userRepository.createPerson(
+      params.level,
+      params.reminderCounter,
+      params.score,
+      params.friends,
+      params.pendingFriends,
+    );
   }
 }
 

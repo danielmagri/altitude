@@ -20,7 +20,7 @@ import 'package:flutter/material.dart'
         ThemeData,
         UnderlineInputBorder;
 import 'package:flutter/services.dart' show Brightness, SystemUiOverlayStyle;
-import 'interface/app_theme_interface.dart';
+import 'package:altitude/common/theme/interface/app_theme_interface.dart';
 
 class DarkTheme implements IAppTheme {
   @override
@@ -37,10 +37,10 @@ class DarkTheme implements IAppTheme {
       elevation: 0,
       centerTitle: true,
       color: Colors.transparent,
-      actionsIconTheme: const IconThemeData(color: Colors.white),
+      actionsIconTheme: IconThemeData(color: Colors.white),
       textTheme:
-          const TextTheme(headline6: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
-      iconTheme: const IconThemeData(color: Colors.white),
+          TextTheme(headline6: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
+      iconTheme: IconThemeData(color: Colors.white),
     ),
     radioTheme: RadioThemeData(
       fillColor: MaterialStateProperty.all(Colors.white),
@@ -55,11 +55,11 @@ class DarkTheme implements IAppTheme {
     ),
     tabBarTheme: const TabBarTheme(
       indicator:
-          const ShapeDecoration(shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 2))),
+          ShapeDecoration(shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white, width: 2))),
       unselectedLabelColor: Colors.white,
       labelColor: Colors.white,
-      unselectedLabelStyle: const TextStyle(fontSize: 16, fontFamily: 'Montserrat'),
-      labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+      unselectedLabelStyle: TextStyle(fontSize: 16, fontFamily: 'Montserrat'),
+      labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
     ),
     textTheme: const TextTheme(
       caption: TextStyle(fontFamily: 'Montserrat'),
@@ -79,7 +79,7 @@ class DarkTheme implements IAppTheme {
   );
 
   @override
-  SystemUiOverlayStyle get defaultSystemOverlayStyle => SystemUiOverlayStyle(
+  SystemUiOverlayStyle get defaultSystemOverlayStyle => const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.light,

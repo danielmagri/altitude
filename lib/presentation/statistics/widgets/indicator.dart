@@ -1,4 +1,3 @@
-
 import 'package:altitude/domain/models/habit_statistic_data.dart';
 import 'package:flutter/material.dart'
     show
@@ -17,7 +16,8 @@ import 'package:flutter/material.dart'
         Widget;
 
 class Indicator extends StatelessWidget {
-  Indicator({Key? key, required this.data, this.onClick}) : super(key: key);
+  const Indicator({required this.data, Key? key, this.onClick})
+      : super(key: key);
 
   final HabitStatisticData data;
   final Function(String?)? onClick;
@@ -36,11 +36,13 @@ class Indicator extends StatelessWidget {
               height: 15,
               color: data.habitColor,
             ),
-            SizedBox(width: 4),
-            Text(data.habit!,
-                style: TextStyle(
-                    fontWeight:
-                        data.selected ? FontWeight.bold : FontWeight.normal)),
+            const SizedBox(width: 4),
+            Text(
+              data.habit!,
+              style: TextStyle(
+                fontWeight: data.selected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
           ],
         ),
       ),

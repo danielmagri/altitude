@@ -13,15 +13,19 @@ class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
 
   @override
   Future<void> getRawFuture(UpdateHabitParams params) async {
-    List<String?> competitions = await _competitionsRepository
-        .getCompetitions(false)
-        .then((list) => list
-            .where((e) => e.getMyCompetitor().habitId == params.habit.id)
-            .map((e) => e.id)
-            .toList());
+    List<String?> competitions =
+        await _competitionsRepository.getCompetitions(false).then(
+              (list) => list
+                  .where((e) => e.getMyCompetitor().habitId == params.habit.id)
+                  .map((e) => e.id)
+                  .toList(),
+            );
 
     await _habitsRepository.updateHabit(
-        params.habit, params.inititalHabit, competitions);
+      params.habit,
+      params.inititalHabit,
+      competitions,
+    );
   }
 }
 

@@ -26,6 +26,7 @@ import 'package:flutter/material.dart'
         Expanded,
         FontWeight,
         InputDecoration,
+        Key,
         ListView,
         MainAxisAlignment,
         MainAxisSize,
@@ -53,6 +54,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class AddFriendDialog extends StatefulWidget {
+  const AddFriendDialog({Key? key}) : super(key: key);
+
   @override
   _AddFriendDialogState createState() => _AddFriendDialogState();
 }
@@ -60,7 +63,7 @@ class AddFriendDialog extends StatefulWidget {
 class _AddFriendDialogState extends BaseState<AddFriendDialog> {
   AddFriendController controller = GetIt.I.get<AddFriendController>();
 
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void dispose() {
@@ -109,8 +112,9 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
       showToast(result);
     } else {
       controller.searchFriend(_textEditingController.text).then((_) {
-        if (controller.searchResult.data!.isEmpty)
+        if (controller.searchResult.data!.isEmpty) {
           showToast("Esse email não foi encontrado.");
+        }
       }).catchError(handleError);
     }
   }
@@ -156,7 +160,8 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                     .headline1!
                                     .color!)),
                         hintText: "Escreva o email do seu amigo",
-                        hintStyle: TextStyle(fontWeight: FontWeight.w300)),
+                        hintStyle:
+                            const TextStyle(fontWeight: FontWeight.w300)),
                   ),
                   SizedBox(
                     width: double.maxFinite,
@@ -175,15 +180,15 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                           ],
                         );
                       }, success: (data) {
-                        if (data == null)
-                          return SizedBox();
-                        else
+                        if (data == null) {
+                          return const SizedBox();
+                        } else {
                           return ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             itemCount: data.length,
                             itemBuilder: (_, index) {
                               Person person = data[index];
-                              return Container(
+                              return SizedBox(
                                 width: double.maxFinite,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +251,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                               buttonText(person.state),
                                               maxLines: 2,
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -256,6 +261,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                               );
                             },
                           );
+                        }
                       });
                     }),
                   ),
@@ -264,7 +270,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     children: <Widget>[
                       TextButton(
                         child: const Text("Cancelar",
-                            style: const TextStyle(fontSize: 15)),
+                            style: TextStyle(fontSize: 15)),
                         onPressed: () => navigatePop(),
                       ),
                       const SizedBox(width: 5),
@@ -282,7 +288,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                 MaterialStateProperty.all(Colors.white24),
                             elevation: MaterialStateProperty.all(2)),
                         onPressed: search,
-                        child: Text("Buscar",
+                        child: const Text("Buscar",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),

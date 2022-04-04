@@ -1,5 +1,5 @@
 import 'dart:async' show StreamSubscription;
-import 'package:altitude/common/view/generic/BottomSheetLine.dart';
+import 'package:altitude/common/view/generic/bottom_sheet_line.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/presentation/habits/controllers/edit_cue_controller.dart';
@@ -32,9 +32,10 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
 
     keyboardVisibility =
         KeyboardVisibilityController().onChange.listen((visible) {
-      if (visible)
+      if (visible) {
         scrollController.animateTo(scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      }
     });
 
     // Ao clicar em "Saiba mais"
@@ -81,22 +82,22 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
   List<TextSpan> _texts(bool showAll) {
     if (showAll) {
       return [
-        TextSpan(
+        const TextSpan(
           text:
               "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho?",
           style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
-        TextSpan(
+        const TextSpan(
           text:
               "\n  O gatilho é uma ação que estímula seu cérebro a realizar o hábito.",
           style: TextStyle(fontSize: 17.0, height: 1.2),
         ),
-        TextSpan(
+        const TextSpan(
           text:
               " Por exemplo ao deixar sua roupa de corrida do lado da cama pode ser uma boa forma de iniciar seu hábito de correr de manhã.",
           style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
         ),
-        TextSpan(
+        const TextSpan(
           text:
               "\n\n  Qual seria um gatilho (ação) a ser tomado para que você realize seu hábito? Escreva ela para nós e te lembraremos de faze-la todas as vezes!",
           style: TextStyle(fontSize: 17.0),
@@ -104,7 +105,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
       ];
     } else {
       return [
-        TextSpan(
+        const TextSpan(
           text:
               "Todo hábito precisa de um \"gatilho\" para que ele se inicie. Mas o que seria esse gatilho? ",
           style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
@@ -113,7 +114,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
           text: "Continuar lendo...",
           recognizer: tapGestureRecognizer,
           style:
-              TextStyle(fontSize: 18.0, decoration: TextDecoration.underline),
+              const TextStyle(fontSize: 18.0, decoration: TextDecoration.underline),
         ),
       ];
     }
@@ -127,7 +128,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
           maxHeight: MediaQuery.of(context).size.height * 0.9),
       child: SingleChildScrollView(
         controller: scrollController,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(top: 16, right: 16, left: 16),
         child: Column(
           children: <Widget>[
@@ -150,7 +151,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                 textAlign: TextAlign.justify,
               );
             }),
-            Container(
+            SizedBox(
               height: (MediaQuery.of(context).size.height * 0.8) - 140,
               width: double.maxFinite,
               child: Column(
@@ -164,20 +165,20 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                     onChanged: onTextChanged,
                     minLines: 1,
                     maxLines: 2,
-                    style: TextStyle(fontSize: 19),
+                    style: const TextStyle(fontSize: 19),
                     cursorColor: controller.habitColor,
                     decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                             borderSide:
                                 BorderSide(color: controller.habitColor)),
                         hintText: "Escreva aqui seu gatilho",
-                        hintStyle: TextStyle(fontWeight: FontWeight.w300)),
+                        hintStyle: const TextStyle(fontWeight: FontWeight.w300)),
                   ),
                   Observer(builder: (_) {
                     var suggestions = controller.suggestions;
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       padding: suggestions.isNotEmpty
                           ? const EdgeInsets.only(top: 12, bottom: 8)
                           : const EdgeInsets.all(0),
@@ -188,7 +189,7 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                           onTap: () {
                             String text = suggestions[position];
                             textEditingController.value =
-                                new TextEditingValue(text: text);
+                                TextEditingValue(text: text);
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
@@ -210,12 +211,12 @@ class _EditCueDialogState extends BaseState<EditCueDialog> {
                       controller.cue!.isNotEmpty
                           ? TextButton(
                               onPressed: remove,
-                              child: Text("Remover",
+                              child: const Text("Remover",
                                   style: TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.w300)),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       TextButton(
                         onPressed: save,
                         child: Text(

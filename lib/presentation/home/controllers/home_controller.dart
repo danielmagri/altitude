@@ -87,7 +87,7 @@ abstract class _HomeControllerBase with Store {
       await getUser();
       getHabits();
       return user.data!.score;
-    }, (error) => throw error);
+    }, (error) => throw error,);
   }
 
   Future<bool> checkLevelUp(int newScore) async {
@@ -96,7 +96,7 @@ abstract class _HomeControllerBase with Store {
                 .call(false)
                 .resultComplete((data) => data, (error) => null))
             ?.score ??
-        0);
+        0,);
 
     if (newLevel != oldLevel) _updateLevelUsecase.call(newLevel);
 

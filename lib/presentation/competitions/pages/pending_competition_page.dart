@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class PendingCompetitionPage extends StatefulWidget {
+  const PendingCompetitionPage({Key? key}) : super(key: key);
+
   @override
   _PendingCompetitionPageState createState() => _PendingCompetitionPageState();
 }
@@ -29,19 +31,15 @@ class _PendingCompetitionPageState extends BaseStateWithController<
       List<Habit> habits = await controller.getAllHabits();
       showLoading(false);
 
-      if (habits == null) {
-        showToast("Ocorreu um erro");
-      } else {
-        showDialog(
-            context: context,
-            builder: (context) =>
-                ChooseHabit(competition: competition, habits: habits))
-          ..then((res) {
-            if (res is Competition) {
-              controller.acceptedCompetitionRequest(res);
-            }
-          });
-      }
+      showDialog(
+              context: context,
+              builder: (context) =>
+                  ChooseHabit(competition: competition, habits: habits))
+          .then((res) {
+        if (res is Competition) {
+          controller.acceptedCompetitionRequest(res);
+        }
+      });
     } else {
       showToast("Você atingiu o número máximo de competições.");
     }
@@ -83,15 +81,15 @@ class _PendingCompetitionPageState extends BaseStateWithController<
             Observer(builder: (_) {
               return controller.pendingCompetition.handleState(loading: () {
                 return Column(
-                  children: <Widget>[
-                    const SizedBox(height: 48),
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 12),
-                    const Text("Buscando competições pendentes...")
+                  children: const <Widget>[
+                    SizedBox(height: 48),
+                    CircularProgressIndicator(),
+                    SizedBox(height: 12),
+                    Text("Buscando competições pendentes...")
                   ],
                 );
               }, success: (data) {
-                if (data.isEmpty)
+                if (data.isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma competição pendente",
@@ -105,10 +103,10 @@ class _PendingCompetitionPageState extends BaseStateWithController<
                                 .color!
                                 .withOpacity(0.2))),
                   );
-                else
+                } else {
                   return ListView.separated(
                     separatorBuilder: (_, __) =>
-                        Divider(endIndent: 16, indent: 16),
+                        const Divider(endIndent: 16, indent: 16),
                     padding: const EdgeInsets.only(bottom: 20),
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -149,6 +147,7 @@ class _PendingCompetitionPageState extends BaseStateWithController<
                       );
                     },
                   );
+                }
               });
             }),
           ],

@@ -32,12 +32,12 @@ import 'package:flutter/material.dart'
         TextStyle,
         UnderlineInputBorder,
         Widget;
-import 'package:altitude/common/constant/Suggestions.dart';
+import 'package:altitude/common/constant/suggestions.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class HabitText extends StatefulWidget {
-  HabitText({Key? key, this.color, this.controller}) : super(key: key);
+  const HabitText({Key? key, this.color, this.controller}) : super(key: key);
 
   final Color? color;
   final TextEditingController? controller;
@@ -80,18 +80,23 @@ class _HabitTextState extends State<HabitText> {
   }
 
   void showTutorial() {
-    Navigator.of(context).smooth(TutorialDialog(
-      hero: "helpHabit",
-      texts: const [
-        TextSpan(
+    Navigator.of(context).smooth(
+      TutorialDialog(
+        hero: 'helpHabit',
+        texts: const [
+          TextSpan(
             text:
-                "  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano."),
-        TextSpan(text: "\n\n  O segredo para conseguir construir um hábito é "),
-        TextSpan(
-            text: "criar um ritual e sempre fazer a mesma coisa.",
-            style: TextStyle(fontWeight: FontWeight.bold)),
-      ],
-    ));
+                '  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.',
+          ),
+          TextSpan(
+              text: '\n\n  O segredo para conseguir construir um hábito é '),
+          TextSpan(
+            text: 'criar um ritual e sempre fazer a mesma coisa.',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   }
 
   List<String> getSuggestions() {
@@ -99,9 +104,11 @@ class _HabitTextState extends State<HabitText> {
     String habit = widget.controller!.text.trim().toLowerCase();
 
     var list = data
-        .where((e) =>
-            e.trim().toLowerCase().contains(habit) &&
-            e.trim().toLowerCase() != habit)
+        .where(
+          (e) =>
+              e.trim().toLowerCase().contains(habit) &&
+              e.trim().toLowerCase() != habit,
+        )
         .toList();
     if (list.length > 5) {
       list.removeRange(5, list.length);
@@ -135,15 +142,21 @@ class _HabitTextState extends State<HabitText> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            const Text("Qual será seu hábito?",
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
-            IconButton(
+          Row(
+            children: [
+              const Text(
+                'Qual será seu hábito?',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+              ),
+              IconButton(
                 icon: const Hero(
-                    tag: "helpHabit", child: Icon(Icons.help_outline)),
-                onPressed: showTutorial),
-          ]),
+                  tag: 'helpHabit',
+                  child: Icon(Icons.help_outline),
+                ),
+                onPressed: showTutorial,
+              ),
+            ],
+          ),
           TextField(
             controller: widget.controller,
             focusNode: focusHabit,
@@ -152,14 +165,16 @@ class _HabitTextState extends State<HabitText> {
             cursorColor: widget.color,
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-              hintText: "Escreva seu hábito",
+              hintText: 'Escreva seu hábito',
               hintStyle:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
               errorText: validated,
               enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: widget.color!, width: 2)),
+                borderSide: BorderSide(color: widget.color!, width: 2),
+              ),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: widget.color!, width: 2)),
+                borderSide: BorderSide(color: widget.color!, width: 2),
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -167,15 +182,23 @@ class _HabitTextState extends State<HabitText> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: suggestions
-                      .map((suggestion) => GestureDetector(
+                      .map(
+                        (suggestion) => GestureDetector(
                           onTap: () => suggestionSelected(suggestion),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(suggestion,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w300)),
-                          )))
-                      .toList())
+                            child: Text(
+                              suggestion,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                )
               : const SizedBox(),
         ],
       ),

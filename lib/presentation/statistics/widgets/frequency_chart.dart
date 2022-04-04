@@ -30,21 +30,21 @@ import 'package:flutter/material.dart'
 const double FREQUENCY_CHART_HEIGHT = 250;
 
 class FrequencyChart extends StatelessWidget {
-  FrequencyChart({Key? key, required this.list, this.selectedHabitId})
+  const FrequencyChart({Key? key, required this.list, this.selectedHabitId})
       : super(key: key);
 
   final List<FrequencyStatisticData>? list;
   final String? selectedHabitId;
 
   static const int linesCount = 8;
-  static const List<String> weekday = const [
-    "dom",
-    "seg",
-    "ter",
-    "qua",
-    "qui",
-    "sex",
-    "sáb"
+  static const List<String> weekday = [
+    'dom',
+    'seg',
+    'ter',
+    'qua',
+    'qui',
+    'sex',
+    'sáb'
   ];
 
   double get space => ((FREQUENCY_CHART_HEIGHT - 30) / (linesCount - 1) - 1);
@@ -53,11 +53,13 @@ class FrequencyChart extends StatelessWidget {
     List<Widget> lines;
 
     lines = List.generate(
-        linesCount,
-        (i) => Container(
-            height: 1,
-            color: AppTheme.of(context).statisticLine,
-            margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space)));
+      linesCount,
+      (i) => Container(
+        height: 1,
+        color: AppTheme.of(context).statisticLine,
+        margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space),
+      ),
+    );
 
     lines.add(const SizedBox(height: 29));
 
@@ -66,7 +68,7 @@ class FrequencyChart extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Container(
+    return SizedBox(
       height: FREQUENCY_CHART_HEIGHT,
       child: Stack(
         alignment: AlignmentDirectional.centerEnd,
@@ -76,29 +78,39 @@ class FrequencyChart extends StatelessWidget {
             children: lines(context),
           ),
           ListView.builder(
-              itemCount: list!.length,
-              padding: const EdgeInsets.only(left: 8, right: 38),
-              shrinkWrap: true,
-              reverse: true,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => FrequencyCircle(
-                  data: list![index],
-                  space: space,
-                  selectedHabitId: selectedHabitId)),
+            itemCount: list!.length,
+            padding: const EdgeInsets.only(left: 8, right: 38),
+            shrinkWrap: true,
+            reverse: true,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => FrequencyCircle(
+              data: list![index],
+              space: space,
+              selectedHabitId: selectedHabitId,
+            ),
+          ),
           Container(
             color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Column(
-                children: weekday
-                    .map((e) => Container(
-                        height: space,
-                        width: 30,
-                        margin: const EdgeInsets.only(bottom: 1),
-                        alignment: Alignment.center,
-                        child: Text(e,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w300, fontSize: 11))))
-                    .toList()),
+              children: weekday
+                  .map(
+                    (e) => Container(
+                      height: space,
+                      width: 30,
+                      margin: const EdgeInsets.only(bottom: 1),
+                      alignment: Alignment.center,
+                      child: Text(
+                        e,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ],
       ),
@@ -122,16 +134,20 @@ class FrequencyCircle extends StatelessWidget {
       data.weekdayDone.forEach((e) {
         double size = (space - 8) * min(e / 4, 1.1);
         int alpha = (255 * min(e / 4, 1)).toInt();
-        content.add(Container(
+        content.add(
+          Container(
             height: space,
             margin: const EdgeInsets.only(bottom: 1),
             child: Container(
               height: size,
               width: size,
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppTheme.of(context).frequencyDot.withAlpha(alpha)),
-            )));
+                shape: BoxShape.circle,
+                color: AppTheme.of(context).frequencyDot.withAlpha(alpha),
+              ),
+            ),
+          ),
+        );
       });
     } else {
       Habit? habit =
@@ -140,30 +156,42 @@ class FrequencyCircle extends StatelessWidget {
         data.habitsMap[habit]!.forEach((e) {
           double size = (space - 8) * min(e / 4, 1.1);
           int alpha = (255 * min(e / 4, 1)).toInt();
-          content.add(Container(
+          content.add(
+            Container(
               height: space,
               margin: const EdgeInsets.only(bottom: 1),
               child: Container(
                 height: size,
                 width: size,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: habit.color.withAlpha(alpha)),
-              )));
+                  shape: BoxShape.circle,
+                  color: habit.color.withAlpha(alpha),
+                ),
+              ),
+            ),
+          );
         });
       }
     }
 
-    content.add(SizedBox(
+    content.add(
+      SizedBox(
         height: 15,
-        child: Text(data.monthText,
-            style:
-                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
-    content.add(SizedBox(
+        child: Text(
+          data.monthText,
+          style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11),
+        ),
+      ),
+    );
+    content.add(
+      SizedBox(
         height: 15,
-        child: Text(data.firstOfYear ? data.year.toString() : "",
-            style:
-                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+        child: Text(
+          data.firstOfYear ? data.year.toString() : '',
+          style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11),
+        ),
+      ),
+    );
 
     return content;
   }
@@ -171,11 +199,12 @@ class FrequencyCircle extends StatelessWidget {
   @override
   Widget build(context) {
     return SizedBox(
-        width: 28,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: _content(context),
-        ));
+      width: 28,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: _content(context),
+      ),
+    );
   }
 }

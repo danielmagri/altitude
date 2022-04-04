@@ -21,7 +21,11 @@ class TransferHabitUsecase extends BaseUsecase<TransferHabitParams, void> {
     }
 
     await _habitsRepository.transferHabit(
-        params.habit, params.competitionsId, params.daysDone, reminderCounter);
+      params.habit,
+      params.competitionsId,
+      params.daysDone,
+      reminderCounter,
+    );
   }
 }
 

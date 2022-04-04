@@ -27,7 +27,7 @@ import 'package:flutter/material.dart'
 const double HISTORIC_CHART_HEIGHT = 200;
 
 class HistoricChart extends StatelessWidget {
-  HistoricChart({Key? key, required this.list, this.selectedHabitId})
+  HistoricChart({required this.list, Key? key, this.selectedHabitId})
       : maxDataValue = list
             .reduce((e1, e2) => e1.totalScore > e2.totalScore ? e1 : e2)
             .totalScore,
@@ -44,12 +44,13 @@ class HistoricChart extends StatelessWidget {
     double space = (HISTORIC_CHART_HEIGHT - 30) / (linesCount - 1);
 
     lines = List.generate(
-        linesCount,
-        (i) => Container(
-            height: 1,
-            color: AppTheme.of(context).statisticLine,
-            margin:
-                EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1)));
+      linesCount,
+      (i) => Container(
+        height: 1,
+        color: AppTheme.of(context).statisticLine,
+        margin: EdgeInsets.only(bottom: i == linesCount - 1 ? 0 : space - 1),
+      ),
+    );
 
     lines.add(const SizedBox(height: 29));
 
@@ -58,7 +59,7 @@ class HistoricChart extends StatelessWidget {
 
   @override
   Widget build(context) {
-    return Container(
+    return SizedBox(
       height: HISTORIC_CHART_HEIGHT,
       child: Stack(
         alignment: AlignmentDirectional.centerEnd,
@@ -68,16 +69,18 @@ class HistoricChart extends StatelessWidget {
             children: lines(context),
           ),
           ListView.builder(
-              itemCount: list.length,
-              padding: const EdgeInsets.only(left: 8, right: 38),
-              shrinkWrap: true,
-              reverse: true,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemBuilder: (context, index) => HistoricBar(
-                  data: list[index],
-                  multiplier: (HISTORIC_CHART_HEIGHT - 50) / maxDataValue,
-                  selectedHabitId: selectedHabitId)),
+            itemCount: list.length,
+            padding: const EdgeInsets.only(left: 8, right: 38),
+            shrinkWrap: true,
+            reverse: true,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) => HistoricBar(
+              data: list[index],
+              multiplier: (HISTORIC_CHART_HEIGHT - 50) / maxDataValue,
+              selectedHabitId: selectedHabitId,
+            ),
+          ),
         ],
       ),
     );
@@ -85,12 +88,12 @@ class HistoricChart extends StatelessWidget {
 }
 
 class HistoricBar extends StatelessWidget {
-  const HistoricBar(
-      {Key? key,
-      required this.data,
-      required this.multiplier,
-      this.selectedHabitId})
-      : super(key: key);
+  const HistoricBar({
+    required this.data,
+    required this.multiplier,
+    Key? key,
+    this.selectedHabitId,
+  }) : super(key: key);
 
   final HistoricStatisticData data;
   final double multiplier;
@@ -102,23 +105,32 @@ class HistoricBar extends StatelessWidget {
     if (data.totalScore == 0) {
       list.add(const SizedBox(width: 28));
     } else if (selectedHabitId == null) {
-      list.add(Container(
+      list.add(
+        Container(
           height: 16,
           padding: const EdgeInsets.symmetric(horizontal: 3),
           color: AppTheme.of(context).materialTheme.backgroundColor,
-          child:
-              Text(data.totalScore.toString(), textAlign: TextAlign.center)));
-      list.add(Container(
+          child: Text(data.totalScore.toString(), textAlign: TextAlign.center),
+        ),
+      );
+      list.add(
+        Container(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           margin: const EdgeInsets.only(top: 3),
           color: AppTheme.of(context).materialTheme.backgroundColor,
           child: Column(
-              children: data.habitsMap.keys
-                  .map((key) => Container(
-                      color: key.color,
-                      height: multiplier * data.habitsMap[key]!,
-                      width: 20))
-                  .toList())));
+            children: data.habitsMap.keys
+                .map(
+                  (key) => Container(
+                    color: key.color,
+                    height: multiplier * data.habitsMap[key]!,
+                    width: 20,
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      );
     } else {
       Habit? habit =
           data.habitsMap.keys.firstWhereOrNull((e) => e.id == selectedHabitId);
@@ -126,32 +138,49 @@ class HistoricBar extends StatelessWidget {
       if (habit != null) {
         int value = data.habitsMap[habit]!;
 
-        list.add(Container(
+        list.add(
+          Container(
             height: 16,
             padding: const EdgeInsets.symmetric(horizontal: 3),
             color: AppTheme.of(context).materialTheme.backgroundColor,
-            child: Text(value.toString(), textAlign: TextAlign.center)));
-        list.add(Container(
+            child: Text(value.toString(), textAlign: TextAlign.center),
+          ),
+        );
+        list.add(
+          Container(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             margin: const EdgeInsets.only(top: 3),
             color: AppTheme.of(context).materialTheme.backgroundColor,
             child: Container(
-                color: habit.color, height: multiplier * value, width: 20)));
+              color: habit.color,
+              height: multiplier * value,
+              width: 20,
+            ),
+          ),
+        );
       } else {
         list.add(const SizedBox(width: 28));
       }
     }
 
-    list.add(SizedBox(
+    list.add(
+      SizedBox(
         height: 15,
-        child: Text(data.monthText,
-            style:
-                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
-    list.add(SizedBox(
+        child: Text(
+          data.monthText,
+          style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11),
+        ),
+      ),
+    );
+    list.add(
+      SizedBox(
         height: 15,
-        child: Text(data.firstOfYear ? data.year.toString() : "",
-            style:
-                const TextStyle(fontWeight: FontWeight.w300, fontSize: 11))));
+        child: Text(
+          data.firstOfYear ? data.year.toString() : '',
+          style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 11),
+        ),
+      ),
+    );
     return list;
   }
 

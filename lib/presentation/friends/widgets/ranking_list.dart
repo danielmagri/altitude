@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/view/generic/DataError.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:flutter/material.dart'
@@ -45,7 +45,7 @@ class RankingList extends StatelessWidget {
     } else if (position == 3) {
       return Image.asset("assets/third.png", height: 30);
     } else {
-      return Text("#$position", style: TextStyle(fontSize: 20));
+      return Text("#$position", style: const TextStyle(fontSize: 20));
     }
   }
 
@@ -105,7 +105,7 @@ class RankingList extends StatelessWidget {
           );
         }, success: (data) {
           return ListView.separated(
-              separatorBuilder: (_, index) => Divider(),
+              separatorBuilder: (_, index) => const Divider(),
               padding: const EdgeInsets.only(bottom: 80),
               physics: const BouncingScrollPhysics(),
               itemCount: data.length,
@@ -137,9 +137,9 @@ class RankingList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(person.levelText,
-                              style: TextStyle(fontSize: 16)),
+                              style: const TextStyle(fontSize: 16)),
                           Text("${person.score} Km",
-                              style: TextStyle(fontWeight: FontWeight.w300)),
+                              style: const TextStyle(fontWeight: FontWeight.w300)),
                         ],
                       )
                     ],

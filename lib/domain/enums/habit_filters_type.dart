@@ -4,9 +4,9 @@ extension HabitFiltersTypeExtension on HabitFiltersType {
   String? get title {
     switch (this) {
       case HabitFiltersType.TODAY_HABITS:
-        return "Hábitos de hoje";
+        return 'Hábitos de hoje';
       case HabitFiltersType.ALL_HABITS:
-        return "Todos os hábitos";
+        return 'Todos os hábitos';
       default:
         return null;
     }
@@ -15,9 +15,9 @@ extension HabitFiltersTypeExtension on HabitFiltersType {
   String? get emptyMessage {
     switch (this) {
       case HabitFiltersType.TODAY_HABITS:
-        return "Você não tem hábitos para hoje.";
+        return 'Você não tem hábitos para hoje.';
       case HabitFiltersType.ALL_HABITS:
-        return "Crie um novo hábito pelo botão \"+\" na tela principal.";
+        return 'Crie um novo hábito pelo botão "+" na tela principal.';
       default:
         return null;
     }

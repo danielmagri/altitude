@@ -40,7 +40,7 @@ import 'package:mobx/mobx.dart' show ObservableMap;
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarWidget extends StatelessWidget {
-  CalendarWidget({Key? key, required this.completeHabit})
+  CalendarWidget({required this.completeHabit, Key? key})
       : controller = GetIt.I.get<HabitDetailsController>(),
         super(key: key) {
     _focusedDay = DateTime.now();
@@ -59,19 +59,22 @@ class CalendarWidget extends StatelessWidget {
   }
 
   void calendarHelp(BuildContext context) {
-    Navigator.of(context).smooth(TutorialDialog(
-      hero: "helpCalendar",
-      texts: [
-        TextSpan(
-          text: "  No calendário você tem o controle de todos os dias feitos!",
-          style: TextStyle(fontWeight: FontWeight.w300),
-        ),
-        TextSpan(
-          text:
-              "\n\nMantenha pressionado no dia desejado para marcar como feito ou desmarcar.",
-        ),
-      ],
-    ));
+    Navigator.of(context).smooth(
+      TutorialDialog(
+        hero: 'helpCalendar',
+        texts: const [
+          TextSpan(
+            text:
+                '  No calendário você tem o controle de todos os dias feitos!',
+            style: TextStyle(fontWeight: FontWeight.w300),
+          ),
+          TextSpan(
+            text:
+                '\n\nMantenha pressionado no dia desejado para marcar como feito ou desmarcar.',
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _todayDayBuilder(context, date, list) {
@@ -82,8 +85,9 @@ class CalendarWidget extends StatelessWidget {
       alignment: const Alignment(0.0, 0.0),
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: controller.habitColor, width: 2)),
+        shape: BoxShape.circle,
+        border: Border.all(color: controller.habitColor, width: 2),
+      ),
     );
   }
 
@@ -92,21 +96,25 @@ class CalendarWidget extends StatelessWidget {
     return Observer(
       builder: (_) {
         return controller.calendarMonth.handleStateLoadableWithData(
-            loading: (data) => data == null
-                ? Skeleton(
-                    width: double.maxFinite,
-                    height: 240,
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                  )
-                : _calendar(data, true, context),
-            success: (data) => _calendar(data, false, context));
+          loading: (data) => data == null
+              ? const Skeleton(
+                  width: double.maxFinite,
+                  height: 240,
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                )
+              : _calendar(data, true, context),
+          success: (data) => _calendar(data, false, context),
+        );
       },
     );
   }
 
-  Widget _calendar(ObservableMap<DateTime, List<bool>> data, bool loading,
-      BuildContext context) {
-    return Container(
+  Widget _calendar(
+    ObservableMap<DateTime, List<bool>> data,
+    bool loading,
+    BuildContext context,
+  ) {
+    return SizedBox(
       width: double.maxFinite,
       child: Stack(
         children: <Widget>[
@@ -128,85 +136,95 @@ class CalendarWidget extends StatelessWidget {
               _focusedDay = focusedDate;
               controller.calendarMonthSwipe(focusedDate);
             },
-            daysOfWeekStyle: DaysOfWeekStyle(dowTextFormatter: (date, locale) {
-              switch (date.weekday) {
-                case 1:
-                  return "Seg";
-                case 2:
-                  return "Ter";
-                case 3:
-                  return "Qua";
-                case 4:
-                  return "Qui";
-                case 5:
-                  return "Sex";
-                case 6:
-                  return "Sáb";
-                case 7:
-                  return "Dom";
-                default:
-                  return "";
-              }
-            }),
+            daysOfWeekStyle: DaysOfWeekStyle(
+              dowTextFormatter: (date, locale) {
+                switch (date.weekday) {
+                  case 1:
+                    return 'Seg';
+                  case 2:
+                    return 'Ter';
+                  case 3:
+                    return 'Qua';
+                  case 4:
+                    return 'Qui';
+                  case 5:
+                    return 'Sex';
+                  case 6:
+                    return 'Sáb';
+                  case 7:
+                    return 'Dom';
+                  default:
+                    return '';
+                }
+              },
+            ),
             rowHeight: 40,
             headerStyle: HeaderStyle(
-              formatButtonTextStyle: TextStyle().copyWith(fontSize: 15.0),
+              formatButtonTextStyle: const TextStyle().copyWith(fontSize: 15.0),
               formatButtonDecoration: BoxDecoration(
                 color: controller.habitColor,
                 borderRadius: BorderRadius.circular(16.0),
               ),
             ),
             calendarBuilders: CalendarBuilders<bool>(
-                markerBuilder: (context, date, event) {
-                  return event.isNotEmpty
-                      ? Container(
-                          child: Text(
-                            date.day.toString(),
-                            style: TextStyle(color: Colors.white),
+              markerBuilder: (context, date, event) {
+                return event.isNotEmpty
+                    ? Container(
+                        child: Text(
+                          date.day.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(
+                          top: 5,
+                          bottom: 5,
+                          left: event[0] ? 0 : 5,
+                          right: event[1] ? 0 : 5,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.horizontal(
+                            left: event[0]
+                                ? const Radius.circular(0)
+                                : const Radius.circular(20),
+                            right: event[1]
+                                ? const Radius.circular(0)
+                                : const Radius.circular(20),
                           ),
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(
-                              top: 5,
-                              bottom: 5,
-                              left: event[0] ? 0 : 5,
-                              right: event[1] ? 0 : 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.horizontal(
-                                left: event[0]
-                                    ? Radius.circular(0)
-                                    : Radius.circular(20),
-                                right: event[1]
-                                    ? Radius.circular(0)
-                                    : Radius.circular(20)),
-                            color: controller.habitColor,
-                          ))
-                      : null;
-                },
-                selectedBuilder: (context, date, list) {
-                  if (DateTime.now().difference(date) < Duration(days: 1)) {
-                    return _todayDayBuilder(context, date, list);
-                  } else {
-                    return Container(
-                      child: Text(
-                        date.day.toString(),
-                        style: TextStyle(
-                            color:
-                                date.weekday >= 6 ? Colors.red : Colors.black),
+                          color: controller.habitColor,
+                        ),
+                      )
+                    : null;
+              },
+              selectedBuilder: (context, date, list) {
+                if (DateTime.now().difference(date) < const Duration(days: 1)) {
+                  return _todayDayBuilder(context, date, list);
+                } else {
+                  return Container(
+                    child: Text(
+                      date.day.toString(),
+                      style: TextStyle(
+                        color: date.weekday >= 6 ? Colors.red : Colors.black,
                       ),
-                      alignment: Alignment(0.0, 0.0),
-                    );
-                  }
-                },
-                todayBuilder: _todayDayBuilder),
+                    ),
+                    alignment: const Alignment(0.0, 0.0),
+                  );
+                }
+              },
+              todayBuilder: _todayDayBuilder,
+            ),
           ),
           Positioned(
-              right: 40,
-              top: 8,
-              child: IconButton(
-                  icon: Hero(
-                      tag: "helpCalendar", child: Icon(Icons.help_outline)),
-                  iconSize: 20,
-                  onPressed: () => calendarHelp(context))),
+            right: 40,
+            top: 8,
+            child: IconButton(
+              icon: const Hero(
+                tag: 'helpCalendar',
+                child: Icon(Icons.help_outline),
+              ),
+              iconSize: 20,
+              onPressed: () => calendarHelp(context),
+            ),
+          ),
           loading
               ? Positioned.fill(
                   child: Container(
@@ -214,12 +232,12 @@ class CalendarWidget extends StatelessWidget {
                         .materialTheme
                         .backgroundColor
                         .withOpacity(0.5),
-                    child: Center(
+                    child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );

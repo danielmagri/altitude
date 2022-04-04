@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -31,11 +31,12 @@ class _LoginPageState
 
   void savePersonData(String uid) {
     showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return TransferDataDialog(uid: uid);
-        }).then((value) {
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return TransferDataDialog(uid: uid);
+      },
+    ).then((value) {
       if (value!) navigateRemoveUntil('home');
     }).catchError(handleError);
   }
@@ -49,16 +50,19 @@ class _LoginPageState
             const Spacer(flex: 1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Image.asset("assets/logo_grande.png"),
+              child: Image.asset('assets/logo_grande.png'),
             ),
             const Spacer(flex: 2),
-            Container(
+            const SizedBox(
               width: double.maxFinite,
               child: Text(
-                "Entre agora e mude seus hábitos de vez! Está esperando o que?",
+                'Entre agora e mude seus hábitos de vez! Está esperando o que?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20, height: 1.25, fontWeight: FontWeight.bold),
+                  fontSize: 20,
+                  height: 1.25,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const Spacer(flex: 2),
@@ -67,18 +71,28 @@ class _LoginPageState
               width: double.maxFinite,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        const Color.fromARGB(255, 59, 89, 152)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(vertical: 13)),
-                    overlayColor: MaterialStateProperty.all(Colors.white24),
-                    elevation: MaterialStateProperty.all(2)),
+                  backgroundColor: MaterialStateProperty.all(
+                    const Color.fromARGB(255, 59, 89, 152),
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(vertical: 13),
+                  ),
+                  overlayColor: MaterialStateProperty.all(Colors.white24),
+                  elevation: MaterialStateProperty.all(2),
+                ),
                 onPressed: loginWithFacebook,
-                child: const Text("Entrar com Facebook",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Entrar com Facebook',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             Container(
@@ -86,32 +100,46 @@ class _LoginPageState
               width: double.maxFinite,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        const Color.fromARGB(255, 218, 67, 54)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
-                    padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(vertical: 13)),
-                    overlayColor: MaterialStateProperty.all(Colors.white24),
-                    elevation: MaterialStateProperty.all(2)),
+                  backgroundColor: MaterialStateProperty.all(
+                    const Color.fromARGB(255, 218, 67, 54),
+                  ),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(vertical: 13),
+                  ),
+                  overlayColor: MaterialStateProperty.all(Colors.white24),
+                  elevation: MaterialStateProperty.all(2),
+                ),
                 onPressed: loginWithGoogle,
-                child: const Text("Entrar com Google",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Entrar com Google',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             const Spacer(flex: 2),
             InkWell(
-                onTap: () {
-                  launch("https://altitude-4e5d4.firebaseapp.com/");
-                },
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text("termos de uso",
-                      style: const TextStyle(
-                          decoration: TextDecoration.underline)),
-                ))
+              onTap: () {
+                launch('https://altitude-4e5d4.firebaseapp.com/');
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  'termos de uso',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

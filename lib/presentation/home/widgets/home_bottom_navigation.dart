@@ -24,13 +24,13 @@ import 'package:flutter/material.dart'
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class HomebottomNavigation extends StatelessWidget {
-  HomebottomNavigation(
-      {Key? key,
-      required this.controller,
-      required this.goAddHabit,
-      required this.goStatistics,
-      required this.goCompetition})
-      : super(key: key);
+  const HomebottomNavigation({
+    required this.controller,
+    required this.goAddHabit,
+    required this.goStatistics,
+    required this.goCompetition,
+    Key? key,
+  }) : super(key: key);
 
   final Function goAddHabit;
   final Function goStatistics;
@@ -41,7 +41,7 @@ class HomebottomNavigation extends StatelessWidget {
     if (!await controller.canAddHabit()) {
       goAddHabit();
     } else {
-      showToast("Você atingiu o limite de 9 hábitos");
+      showToast('Você atingiu o limite de 9 hábitos');
     }
   }
 
@@ -54,38 +54,46 @@ class HomebottomNavigation extends StatelessWidget {
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 24, left: 24),
         decoration: BoxDecoration(
-            color: AppTheme.of(context).materialTheme.accentColor,
-            borderRadius: BorderRadius.circular(22)),
+          color: AppTheme.of(context).materialTheme.accentColor,
+          borderRadius: BorderRadius.circular(22),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButtonStatus(
-                status: false,
-                backgroundColor: AppTheme.of(context).materialTheme.accentColor,
-                icon:
-                    const Icon(Icons.show_chart, color: Colors.white, size: 28),
-                onPressed: () => goStatistics()),
+              status: false,
+              backgroundColor: AppTheme.of(context).materialTheme.accentColor,
+              icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
+              onPressed: () => goStatistics(),
+            ),
             InkWell(
               onTap: _addHabitTap,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.white),
-                child: Icon(Icons.add,
-                    color: AppTheme.of(context).materialTheme.accentColor,
-                    size: 28),
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: AppTheme.of(context).materialTheme.accentColor,
+                  size: 28,
+                ),
               ),
             ),
             Observer(
-                builder: (_) => IconButtonStatus(
-                      status: controller.pendingCompetitionStatus,
-                      backgroundColor:
-                          AppTheme.of(context).materialTheme.accentColor,
-                      icon: Image.asset("assets/ic_award.png",
-                          width: 28, color: Colors.white),
-                      onPressed: () => goCompetition(false),
-                    )),
+              builder: (_) => IconButtonStatus(
+                status: controller.pendingCompetitionStatus,
+                backgroundColor: AppTheme.of(context).materialTheme.accentColor,
+                icon: Image.asset(
+                  'assets/ic_award.png',
+                  width: 28,
+                  color: Colors.white,
+                ),
+                onPressed: () => goCompetition(false),
+              ),
+            ),
           ],
         ),
       ),

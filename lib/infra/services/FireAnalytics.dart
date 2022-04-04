@@ -4,14 +4,17 @@ import 'package:injectable/injectable.dart';
 
 @Injectable(as: IFireAnalytics)
 class FireAnalytics implements IFireAnalytics {
-  FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
+  @override
   FirebaseAnalytics get analytics => _analytics;
 
+  @override
   void setUserId(String uid) {
     analytics.setUserId(id: uid);
   }
 
+  @override
   void sendNewHabit(String? habit, String color, String freqType, int? freqTime,
       String hasReminder) {
     try {
@@ -30,6 +33,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendRemoveHabit(String? habit) {
     try {
       analytics.logEvent(
@@ -43,6 +47,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendDoneHabit(String page, int hour) {
     try {
       analytics.logEvent(
@@ -54,6 +59,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendNextLevel(String level) {
     try {
       analytics.logEvent(
@@ -67,6 +73,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendReadCue() {
     try {
       analytics.logEvent(
@@ -77,6 +84,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendSetCue(String? habit, String cue) {
     try {
       analytics.logEvent(
@@ -91,6 +99,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendRemoveCue(String? habit) {
     try {
       analytics.logEvent(
@@ -104,6 +113,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendSetAlarm(String habit, int type, int hour, int minute, String days) {
     try {
       analytics.logEvent(
@@ -120,6 +130,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendRemoveAlarm(String? habit) {
     try {
       analytics.logEvent(
@@ -133,6 +144,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendFriendRequest(bool canceled) {
     try {
       analytics.logEvent(
@@ -146,6 +158,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendFriendResponse(bool accepted) {
     try {
       analytics.logEvent(
@@ -159,6 +172,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendCreateCompetition(String title, String? habitName, int friends) {
     try {
       analytics.logEvent(
@@ -174,6 +188,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendGoCompetition(String index) {
     try {
       analytics.logEvent(
@@ -187,6 +202,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendLearn(String keyword) {
     try {
       analytics.logEvent(
@@ -200,6 +216,7 @@ class FireAnalytics implements IFireAnalytics {
     }
   }
 
+  @override
   void sendGenerateLead() {
     try {
       analytics.logGenerateLead();

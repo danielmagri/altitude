@@ -13,26 +13,34 @@ class InviteCompetitorUsecase
   final IUserRepository _userRepository;
   final INotificationsRepository _notificationsRepository;
 
-  InviteCompetitorUsecase(this._competitionsRepository, this._userRepository,
-      this._notificationsRepository);
+  InviteCompetitorUsecase(
+    this._competitionsRepository,
+    this._userRepository,
+    this._notificationsRepository,
+  );
 
   @override
   Future<void> getRawFuture(InviteCompetitorParams params) async {
     Competition competition = await _competitionsRepository
-        .getCompetition(params.competitionId ?? "");
+        .getCompetition(params.competitionId ?? '');
 
     if (competition.competitors!.length < MAX_COMPETITORS) {
       await _competitionsRepository.inviteCompetitor(
-          params.competitionId ?? '', params.competitorId);
+        params.competitionId ?? '',
+        params.competitorId,
+      );
 
-      final userName = (await _userRepository.getUserData(false)).name ?? "";
+      final userName = (await _userRepository.getUserData(false)).name ?? '';
 
       for (String? token in params.fcmTokens) {
         await _notificationsRepository.sendInviteCompetitionNotification(
-            userName, competition.title ?? '', token ?? '');
+          userName,
+          competition.title ?? '',
+          token ?? '',
+        );
       }
     } else {
-      throw "Máximo de competidores atingido.";
+      throw 'Máximo de competidores atingido.';
     }
   }
 }
@@ -42,8 +50,9 @@ class InviteCompetitorParams {
   final List<String?> competitorId;
   final List<String?> fcmTokens;
 
-  InviteCompetitorParams(
-      {this.competitionId,
-      required this.competitorId,
-      required this.fcmTokens});
+  InviteCompetitorParams({
+    required this.competitorId,
+    required this.fcmTokens,
+    this.competitionId,
+  });
 }

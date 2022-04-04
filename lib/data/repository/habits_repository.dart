@@ -15,21 +15,40 @@ import 'package:injectable/injectable.dart';
 abstract class IHabitsRepository {
   Future<List<Habit>> getHabits(bool notSave);
   Future<Habit> getHabit(String id);
-  Future<int> completeHabit(String habitId, int currentScore, DateTime date,
-      bool isAdd, List<DateTime>? daysDone, List<Competition> competitions);
+  Future<int> completeHabit(
+    String habitId,
+    int currentScore,
+    DateTime date,
+    bool isAdd,
+    List<DateTime>? daysDone,
+    List<Competition> competitions,
+  );
   Future<bool> hasDoneAtDay(String id, DateTime date);
   Future<void> updateHabit(
-      Habit habit, Habit? inititalHabit, List<String?> competitionsId);
+    Habit habit,
+    Habit? inititalHabit,
+    List<String?> competitionsId,
+  );
   Future<List<DayDone>> getDaysDone(String? id, DateTime? start, DateTime end);
-  Future<void> transferHabit(Habit habit, List<String?> competitionsId,
-      List<DayDone> daysDone, int? reminderCounter);
+  Future<void> transferHabit(
+    Habit habit,
+    List<String?> competitionsId,
+    List<DayDone> daysDone,
+    int? reminderCounter,
+  );
   Future<Map<DateTime, List<bool>>> getCalendarDaysDone(
-      String id, int month, int year);
+    String id,
+    int month,
+    int year,
+  );
   Future<List<DayDone>> getAllDaysDone(List<Habit> habits);
   Future<void> deleteHabit(Habit habit);
   Future<Habit> addHabit(Habit habit, int? reminderCounter);
   Future<void> updateReminder(
-      int? reminderId, Habit habit, int reminderCounter);
+    int? reminderId,
+    Habit habit,
+    int reminderCounter,
+  );
 }
 
 @Injectable(as: IHabitsRepository)
@@ -40,8 +59,13 @@ class HabitsRepository extends IHabitsRepository {
   final ILocalNotification _localNotification;
   final IFireAnalytics _fireAnalytics;
 
-  HabitsRepository(this._memory, this._fireDatabase, this._scoreService,
-      this._localNotification, this._fireAnalytics);
+  HabitsRepository(
+    this._memory,
+    this._fireDatabase,
+    this._scoreService,
+    this._localNotification,
+    this._fireAnalytics,
+  );
 
   @override
   Future<List<Habit>> getHabits(bool notSave) async {
@@ -71,12 +95,13 @@ class HabitsRepository extends IHabitsRepository {
 
   @override
   Future<int> completeHabit(
-      String habitId,
-      int currentScore,
-      DateTime date,
-      bool isAdd,
-      List<DateTime>? daysDone,
-      List<Competition> competitions) async {
+    String habitId,
+    int currentScore,
+    DateTime date,
+    bool isAdd,
+    List<DateTime>? daysDone,
+    List<Competition> competitions,
+  ) async {
     final habit = await getHabit(habitId);
 
     int weekDay = date.weekday == 7 ? 0 : date.weekday;
@@ -89,17 +114,24 @@ class HabitsRepository extends IHabitsRepository {
             .toList();
 
     var score = _scoreService.calculateScore(
-        isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
-        habit.frequency!,
-        days,
-        date);
+      isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
+      habit.frequency!,
+      days,
+      date,
+    );
 
     bool isLastDone =
         habit.lastDone == null || habit.lastDone!.isBeforeOrSameDay(date);
     DayDone dayDone = DayDone(date: date);
 
-    await _fireDatabase.completeHabit(habitId, isAdd, score, isLastDone,
-        dayDone, competitions.map((e) => e.id).toList());
+    await _fireDatabase.completeHabit(
+      habitId,
+      isAdd,
+      score,
+      isLastDone,
+      dayDone,
+      competitions.map((e) => e.id).toList(),
+    );
 
     _memory.person?.score = currentScore + score;
     int index = _memory.habits.indexWhere((e) => e.id == habitId);
@@ -118,7 +150,7 @@ class HabitsRepository extends IHabitsRepository {
       }
     });
 
-    print("$date $isAdd - Score: $score  Id: $habitId");
+    print('$date $isAdd - Score: $score  Id: $habitId');
 
     return score;
   }
@@ -130,7 +162,10 @@ class HabitsRepository extends IHabitsRepository {
 
   @override
   Future<void> updateHabit(
-      Habit habit, Habit? inititalHabit, List<String?> competitionsId) async {
+    Habit habit,
+    Habit? inititalHabit,
+    List<String?> competitionsId,
+  ) async {
     await _fireDatabase.updateHabit(habit, inititalHabit, competitionsId);
     int index = _memory.habits.indexWhere((e) => e.id == habit.id);
     if (index != -1) {
@@ -147,20 +182,34 @@ class HabitsRepository extends IHabitsRepository {
   }
 
   @override
-  Future<void> transferHabit(Habit habit, List<String?> competitionsId,
-      List<DayDone> daysDone, int? reminderCounter) async {
+  Future<void> transferHabit(
+    Habit habit,
+    List<String?> competitionsId,
+    List<DayDone> daysDone,
+    int? reminderCounter,
+  ) async {
     if (habit.reminder != null) {
       await _localNotification.addNotification(habit);
     }
 
     if (daysDone.length > 450) {
       String id = await _fireDatabase.transferHabit(
-          habit, reminderCounter, competitionsId, daysDone.sublist(0, 450));
+        habit,
+        reminderCounter,
+        competitionsId,
+        daysDone.sublist(0, 450),
+      );
       await _fireDatabase.transferDayDonePlus(
-          id, daysDone.sublist(450, daysDone.length));
+        id,
+        daysDone.sublist(450, daysDone.length),
+      );
     } else {
       await _fireDatabase.transferHabit(
-          habit, reminderCounter, competitionsId, daysDone);
+        habit,
+        reminderCounter,
+        competitionsId,
+        daysDone,
+      );
     }
   }
 
@@ -169,14 +218,20 @@ class HabitsRepository extends IHabitsRepository {
       String id, int month, int year) async {
     final firstDayMonth = DateTime.utc(year, month, 1);
     final lastDayMonth =
-        DateTime.utc(year, month + 1, 1).subtract(Duration(days: 1));
+        DateTime.utc(year, month + 1, 1).subtract(const Duration(days: 1));
 
-    DateTime startDate = firstDayMonth.subtract(Duration(
-        days: firstDayMonth.weekday == 7 ? 1 : firstDayMonth.weekday + 1));
-    DateTime endDate = lastDayMonth.add(Duration(
-        days: firstDayMonth.weekday == 7 ? 7 : 7 - firstDayMonth.weekday));
+    DateTime startDate = firstDayMonth.subtract(
+      Duration(
+        days: firstDayMonth.weekday == 7 ? 1 : firstDayMonth.weekday + 1,
+      ),
+    );
+    DateTime endDate = lastDayMonth.add(
+      Duration(
+        days: firstDayMonth.weekday == 7 ? 7 : 7 - firstDayMonth.weekday,
+      ),
+    );
     var data = await _fireDatabase.getDaysDone(id, startDate, endDate);
-    Map<DateTime, List<bool>> map = Map();
+    Map<DateTime, List<bool>> map = {};
     bool before = false;
     bool after = false;
 
@@ -207,8 +262,10 @@ class HabitsRepository extends IHabitsRepository {
     List<DayDone> list = [];
 
     for (Habit habit in habits) {
-      list.addAll((await _fireDatabase.getAllDaysDone(habit.id))
-          .map((e) => DayDone(date: e.date, habitId: habit.id)));
+      list.addAll(
+        (await _fireDatabase.getAllDaysDone(habit.id))
+            .map((e) => DayDone(date: e.date, habitId: habit.id)),
+      );
     }
 
     return list;
@@ -233,11 +290,12 @@ class HabitsRepository extends IHabitsRepository {
   Future<Habit> addHabit(Habit habit, int? reminderCounter) async {
     var data = await _fireDatabase.addHabit(habit, reminderCounter);
     _fireAnalytics.sendNewHabit(
-        habit.habit,
-        AppColors.habitsColorName[habit.colorCode!],
-        habit.frequency.runtimeType == DayWeek ? "Diariamente" : "Semanalmente",
-        habit.frequency!.daysCount(),
-        habit.reminder != null ? "Sim" : "Não");
+      habit.habit,
+      AppColors.habitsColorName[habit.colorCode!],
+      habit.frequency.runtimeType == DayWeek ? 'Diariamente' : 'Semanalmente',
+      habit.frequency!.daysCount(),
+      habit.reminder != null ? 'Sim' : 'Não',
+    );
 
     _memory.habits.add(data);
 
@@ -250,7 +308,10 @@ class HabitsRepository extends IHabitsRepository {
 
   @override
   Future<void> updateReminder(
-      int? reminderId, Habit habit, int reminderCounter) async {
+    int? reminderId,
+    Habit habit,
+    int reminderCounter,
+  ) async {
     if (reminderId != null) {
       await _localNotification.removeNotification(reminderId);
     }
@@ -261,7 +322,10 @@ class HabitsRepository extends IHabitsRepository {
       }
 
       await _fireDatabase.updateReminder(
-          habit.id, reminderCounter, habit.reminder);
+        habit.id,
+        reminderCounter,
+        habit.reminder,
+      );
       int index = _memory.habits.indexWhere((e) => e.id == habit.id);
       if (index != -1) {
         _memory.habits[index] = habit;

@@ -41,7 +41,7 @@ abstract class _HabitDetailsControllerBase with Store {
   DataState<bool> isHabitDone = DataState();
   DataState<double> rocketForce = DataState();
 
-  Map<DateTime?, List> currentMonth = Map();
+  Map<DateTime?, List> currentMonth = {};
 
   void fetchData(String? habitId, int? color) async {
     _id = habitId;
@@ -81,7 +81,7 @@ abstract class _HabitDetailsControllerBase with Store {
       List<DateTime?> dates = currentMonth.keys
           .toList()
           .where((e) => e!.isAfterOrSameDay(
-              DateTime.now().onlyDate.subtract(Duration(days: CYCLE_DAYS))))
+              DateTime.now().onlyDate.subtract(const Duration(days: CYCLE_DAYS))))
           .toList();
 
       int daysDoneLastCycle = dates.length;
@@ -130,37 +130,37 @@ abstract class _HabitDetailsControllerBase with Store {
       Map<DateTime, List<bool>> visibleMonthDays = calendarMonth.data!;
 
       bool yesterday =
-          visibleMonthDays.containsKey(date.subtract(Duration(days: 1)));
-      bool tomorrow = visibleMonthDays.containsKey(date.add(Duration(days: 1)));
+          visibleMonthDays.containsKey(date.subtract(const Duration(days: 1)));
+      bool tomorrow = visibleMonthDays.containsKey(date.add(const Duration(days: 1)));
 
       if (!add) {
         // Remover dia
         visibleMonthDays.remove(date);
         if (yesterday) {
           visibleMonthDays.update(
-              date.subtract(Duration(days: 1)), (old) => [old[0], false]);
+              date.subtract(const Duration(days: 1)), (old) => [old[0], false]);
         }
 
         if (tomorrow) {
           visibleMonthDays.update(
-              date.add(Duration(days: 1)), (old) => [false, old[1]]);
+              date.add(const Duration(days: 1)), (old) => [false, old[1]]);
         }
       } else {
         // Adicionar dia
         visibleMonthDays.putIfAbsent(date, () => [yesterday, tomorrow]);
         if (yesterday) {
           visibleMonthDays.update(
-              date.subtract(Duration(days: 1)), (old) => [old[0], true]);
+              date.subtract(const Duration(days: 1)), (old) => [old[0], true]);
         }
 
         if (tomorrow) {
           visibleMonthDays.update(
-              date.add(Duration(days: 1)), (old) => [true, old[1]]);
+              date.add(const Duration(days: 1)), (old) => [true, old[1]]);
         }
       }
 
       if (date
-          .isAfter(DateTime.now().subtract(Duration(days: CYCLE_DAYS + 1)))) {
+          .isAfter(DateTime.now().subtract(const Duration(days: CYCLE_DAYS + 1)))) {
         currentMonth = visibleMonthDays;
         calculateRocketForce();
       }

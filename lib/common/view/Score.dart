@@ -34,18 +34,21 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   late Animation<int> _animation;
 
   int? lastScore = 0;
-  final formatNumber = new NumberFormat.decimalPattern("pt_BR");
+  final formatNumber = NumberFormat.decimalPattern('pt_BR');
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 900));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
     _controller.addListener(() => setState(() {}));
 
     if (widget.score == 0) {
       _animation = IntTween(begin: lastScore, end: widget.score).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+      );
     }
 
     runAnimation();
@@ -66,7 +69,8 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
   void runAnimation() {
     if (widget.score != lastScore) {
       _animation = IntTween(begin: lastScore, end: widget.score).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+      );
 
       _controller.reset();
       _controller.forward().orCancel.whenComplete(() {
@@ -81,16 +85,19 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
       children: <Widget>[
         const SizedBox(height: 40),
         AutoSizeText(
-          '${formatNumber.format(_animation.value)}',
+          formatNumber.format(_animation.value),
           style: TextStyle(
-              fontSize: 70,
-              fontWeight: FontWeight.bold,
-              color: widget.color,
-              height: 0.2),
+            fontSize: 70,
+            fontWeight: FontWeight.bold,
+            color: widget.color,
+            height: 0.2,
+          ),
           maxLines: 1,
         ),
-        const Text("QUILÔMETROS",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300)),
+        const Text(
+          'QUILÔMETROS',
+          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w300),
+        ),
       ],
     );
   }

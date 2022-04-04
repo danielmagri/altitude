@@ -1,5 +1,5 @@
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/generic/DataError.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Score.dart';
@@ -38,11 +38,12 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
   void checkTransferData() async {
     if (await DatabaseService().existDB()) {
       showDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return TransferDataDialog(uid: GetIt.I.get<IFireAuth>().getUid());
-          }).then((value) {
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return TransferDataDialog(uid: GetIt.I.get<IFireAuth>().getUid());
+        },
+      ).then((value) {
         if (value!) fetchData();
       }).catchError(handleError);
     } else {
@@ -124,10 +125,11 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
   }
 
   void goCompetition(bool pop) {
-    if (pop)
+    if (pop) {
       navigatePopAndPush('competition');
-    else
+    } else {
       navigatePush('competition');
+    }
   }
 
   void goLearn() {
@@ -141,35 +143,39 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
   @override
   Widget build(context) {
     return Scaffold(
-        key: scaffoldKey,
-        drawer: HomeDrawer(
-            controller: controller,
-            goFriends: goFriends,
-            goCompetition: goCompetition,
-            goLearn: goLearn,
-            goSettings: goSettings),
-        drawerScrimColor: Colors.black12,
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Container(
-                  width: double.maxFinite,
-                  padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                          icon: const Icon(Icons.menu), onPressed: showDrawer),
-                      const Spacer(),
-                    ],
-                  ),
+      key: scaffoldKey,
+      drawer: HomeDrawer(
+        controller: controller,
+        goFriends: goFriends,
+        goCompetition: goCompetition,
+        goLearn: goLearn,
+        goSettings: goSettings,
+      ),
+      drawerScrimColor: Colors.black12,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Container(
+                width: double.maxFinite,
+                padding: const EdgeInsets.only(top: 24, left: 12, right: 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: showDrawer,
+                    ),
+                    const Spacer(),
+                  ],
                 ),
-                GestureDetector(
-                  onTap: goAllLevels,
-                  child: Container(
-                    color: AppTheme.of(context).materialTheme.backgroundColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Observer(builder: (_) {
+              ),
+              GestureDetector(
+                onTap: goAllLevels,
+                child: Container(
+                  color: AppTheme.of(context).materialTheme.backgroundColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Observer(
+                    builder: (_) {
                       return controller.user.handleState(
                         loading: () {
                           return Skeleton.custom(
@@ -177,54 +183,65 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                    width: 100,
-                                    height: 20,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(15))),
+                                  width: 100,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
                                 const SizedBox(height: 4),
                                 Container(
-                                    width: 120,
-                                    height: 70,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(15)))
+                                  width: 120,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                )
                               ],
                             ),
                           );
                         },
                         success: (data) {
-                          return Column(children: [
-                            Text(data.levelText),
-                            const SizedBox(height: 4),
-                            Score(score: data.score),
-                          ]);
+                          return Column(
+                            children: [
+                              Text(data.levelText),
+                              const SizedBox(height: 4),
+                              Score(score: data.score),
+                            ],
+                          );
                         },
                         error: (error) {
                           return const DataError();
                         },
                       );
-                    }),
+                    },
                   ),
                 ),
-                Expanded(
-                    child: HabitsPanel(
-                        controller: controller,
-                        goHabitDetails: goHabitDetails)),
-              ],
+              ),
+              Expanded(
+                child: HabitsPanel(
+                  controller: controller,
+                  goHabitDetails: goHabitDetails,
+                ),
+              ),
+            ],
+          ),
+          Observer(
+            builder: (_) => SkyDragTarget(
+              visibilty: controller.visibilty,
+              setHabitDone: setHabitDone,
             ),
-            Observer(
-                builder: (_) => SkyDragTarget(
-                    visibilty: controller.visibilty,
-                    setHabitDone: setHabitDone)),
-          ],
-        ),
-        bottomNavigationBar: HomebottomNavigation(
-            controller: controller,
-            goAddHabit: goAddHabit,
-            goStatistics: goStatistics,
-            goCompetition: goCompetition));
+          ),
+        ],
+      ),
+      bottomNavigationBar: HomebottomNavigation(
+        controller: controller,
+        goAddHabit: goAddHabit,
+        goStatistics: goStatistics,
+        goCompetition: goCompetition,
+      ),
+    );
   }
 }

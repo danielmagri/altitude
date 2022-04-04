@@ -1,6 +1,6 @@
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/ReminderDay.dart';
-import 'package:altitude/common/view/generic/BottomSheetLine.dart';
+import 'package:altitude/common/view/generic/bottom_sheet_line.dart';
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/domain/enums/reminder_type.dart';
 import 'package:altitude/domain/models/reminder_card.dart';
@@ -147,8 +147,8 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                         color: controller.habitColor)),
               ),
               const Padding(
-                padding: const EdgeInsets.all(8),
-                child: const Text(
+                padding: EdgeInsets.all(8),
+                child: Text(
                     "Você deseja ser lembrado do hábito ou do gatilho?",
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.w300)),
@@ -164,7 +164,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
               ),
               const SizedBox(height: 32),
               const Padding(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8),
                 child: Text(
                     "Selecione os dias e o horário que deseja ser lembrado:",
                     style:
@@ -197,7 +197,7 @@ class _EditAlarmDialogState extends BaseState<EditAlarmDialog> {
                           children: [
                             TextSpan(
                                 text: controller.timeText,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.bold)),
                             const TextSpan(text: " hrs"),
                           ],

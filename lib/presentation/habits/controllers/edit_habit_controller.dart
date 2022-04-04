@@ -33,7 +33,7 @@ abstract class _EditHabitControllerBase with Store {
 
   void setData(Habit habit) {
     initialHabit = habit;
-    this.frequency = habit.frequency;
+    frequency = habit.frequency;
   }
 
   @action

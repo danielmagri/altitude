@@ -4,13 +4,24 @@ import 'package:injectable/injectable.dart';
 
 abstract class INotificationsRepository {
   Future<void> sendCompetitionNotification(
-      String name, int earnedScore, List<Competition> competitions);
+    String name,
+    int earnedScore,
+    List<Competition> competitions,
+  );
   Future<void> sendInviteCompetitionNotification(
-      String userName, String competitionTitle, String friendToken);
+    String userName,
+    String competitionTitle,
+    String friendToken,
+  );
   Future<void> sendNewCompetitorNotification(
-      String userName, String competitionTitle, String friendToken);
+    String userName,
+    String competitionTitle,
+    String friendToken,
+  );
   Future<void> sendInviteFriendNotification(
-      String userName, String friendToken);
+    String userName,
+    String friendToken,
+  );
   Future<void> acceptFriendNotification(String userName, String friendToken);
 }
 
@@ -31,20 +42,22 @@ class NotificationsRepository extends INotificationsRepository {
           if (competitor.score >= oldScore &&
               (oldScore + earnedScore) > competitor.score) {
             _fireFunctions.sendNotification(
-                "Tem alguém comendo poeira!",
-                "$name acabou de te ultrapassar em ${competition.title}",
-                competitor.fcmToken ?? "");
+              'Tem alguém comendo poeira!',
+              '$name acabou de te ultrapassar em ${competition.title}',
+              competitor.fcmToken ?? '',
+            );
           } else if (earnedScore >= 4 &&
               (oldScore + earnedScore) <= competitor.score) {
             _fireFunctions.sendNotification(
-                "Cuidado!",
-                "$name está se aproximando rapidamente em ${competition.title}",
-                competitor.fcmToken ?? "");
+              'Cuidado!',
+              '$name está se aproximando rapidamente em ${competition.title}',
+              competitor.fcmToken ?? '',
+            );
           } else if (earnedScore >= 4 && oldScore > competitor.score) {
             _fireFunctions.sendNotification(
-                "Sempre é hora de reagir!",
-                "$name está se distanciando cada vez mais de você em ${competition.title}",
-                competitor.fcmToken ?? "");
+                'Sempre é hora de reagir!',
+                '$name está se distanciando cada vez mais de você em ${competition.title}',
+                competitor.fcmToken ?? '');
           }
         }
       });
@@ -53,29 +66,47 @@ class NotificationsRepository extends INotificationsRepository {
 
   @override
   Future<void> sendInviteCompetitionNotification(
-      String userName, String competitionTitle, String friendToken) async {
-    await _fireFunctions.sendNotification("Convite de competição",
-        "$userName te convidou a participar do $competitionTitle", friendToken);
+    String userName,
+    String competitionTitle,
+    String friendToken,
+  ) async {
+    await _fireFunctions.sendNotification(
+      'Convite de competição',
+      '$userName te convidou a participar do $competitionTitle',
+      friendToken,
+    );
   }
 
   @override
   Future<void> sendNewCompetitorNotification(
-      String userName, String competitionTitle, String friendToken) async {
-    await _fireFunctions.sendNotification("Novo competidor",
-        "$userName entrou em  $competitionTitle", friendToken);
+    String userName,
+    String competitionTitle,
+    String friendToken,
+  ) async {
+    await _fireFunctions.sendNotification(
+      'Novo competidor',
+      '$userName entrou em  $competitionTitle',
+      friendToken,
+    );
   }
 
   @override
   Future<void> sendInviteFriendNotification(
       String userName, String friendToken) async {
     await _fireFunctions.sendNotification(
-        "Pedido de amizade", "$userName quer ser seu amigo.", friendToken);
+      'Pedido de amizade',
+      '$userName quer ser seu amigo.',
+      friendToken,
+    );
   }
 
   @override
   Future<void> acceptFriendNotification(
       String userName, String friendToken) async {
     await _fireFunctions.sendNotification(
-        "Pedido de amizade", "$userName aceitou seu pedido.", friendToken);
+      'Pedido de amizade',
+      '$userName aceitou seu pedido.',
+      friendToken,
+    );
   }
 }

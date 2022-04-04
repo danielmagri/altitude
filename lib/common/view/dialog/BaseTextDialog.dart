@@ -34,13 +34,13 @@ import 'package:flutter/material.dart'
         Widget;
 
 class BaseTextDialog extends StatefulWidget {
-  BaseTextDialog(
-      {Key? key,
-      required this.title,
-      required this.body,
-      this.subBody,
-      required this.action})
-      : super(key: key);
+  const BaseTextDialog({
+    required this.title,
+    required this.body,
+    required this.action,
+    this.subBody,
+    Key? key,
+  }) : super(key: key);
 
   final String title;
   final String body;
@@ -61,13 +61,14 @@ class _BaseTextDialogState extends State<BaseTextDialog>
     super.initState();
 
     _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 400));
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _scaleAnimation =
         CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
 
     _controller.forward();
   }
 
+  @override
   Widget build(_) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
@@ -85,11 +86,12 @@ class _BaseTextDialogState extends State<BaseTextDialog>
             decoration: BoxDecoration(
               color: AppTheme.of(context).materialTheme.cardColor,
               borderRadius: BorderRadius.circular(16.0),
-              boxShadow: [
-                const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10.0,
-                    offset: const Offset(0.0, 10.0)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                ),
               ],
             ),
             child: Material(
@@ -101,7 +103,9 @@ class _BaseTextDialogState extends State<BaseTextDialog>
                     widget.title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -115,14 +119,16 @@ class _BaseTextDialogState extends State<BaseTextDialog>
                       widget.subBody!,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                        height: 1.1,
+                      ),
                     ),
                   const SizedBox(height: 18),
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: widget.action)
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: widget.action,
+                  )
                 ],
               ),
             ),

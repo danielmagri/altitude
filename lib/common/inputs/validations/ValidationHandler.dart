@@ -2,11 +2,11 @@ abstract class ValidationHandler {
   static String? nameTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
-      return "Por favor preencha o campo.";
+      return 'Por favor preencha o campo.';
     } else if (treatedText.length < 3) {
-      return "O nome ser maior que 3 letras.";
+      return 'O nome ser maior que 3 letras.';
     } else if (treatedText.length > 20) {
-      return "O nome pode ter no máximo 20 caracteres.";
+      return 'O nome pode ter no máximo 20 caracteres.';
     }
 
     return null;
@@ -15,11 +15,11 @@ abstract class ValidationHandler {
   static String? cueTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
-      return "Por favor preencha o campo.";
+      return 'Por favor preencha o campo.';
     } else if (treatedText.length < 3) {
-      return "A deixa precisa ser maior que 3 letras.";
+      return 'A deixa precisa ser maior que 3 letras.';
     } else if (treatedText.length > 45) {
-      return "A deixa pode ter no máximo 45 caracteres.";
+      return 'A deixa pode ter no máximo 45 caracteres.';
     }
 
     return null;
@@ -28,11 +28,11 @@ abstract class ValidationHandler {
   static String? habitTextValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
-      return "Por favor preencha o nome do hábito.";
+      return 'Por favor preencha o nome do hábito.';
     } else if (treatedText.length < 3) {
-      return "O hábito precisa ser maior que 3 letras.";
+      return 'O hábito precisa ser maior que 3 letras.';
     } else if (treatedText.length > 30) {
-      return "O hábito pode ter no máximo 30 caracteres.";
+      return 'O hábito pode ter no máximo 30 caracteres.';
     }
 
     return null;
@@ -41,11 +41,11 @@ abstract class ValidationHandler {
   static String? competitionNameValidate(String text) {
     String treatedText = text.trim();
     if (treatedText.isEmpty) {
-      return "Por favor preencha o nome.";
+      return 'Por favor preencha o nome.';
     } else if (treatedText.length < 3) {
-      return "O nome precisa ser maior que 3 letras.";
+      return 'O nome precisa ser maior que 3 letras.';
     } else if (treatedText.length > 30) {
-      return "O nome pode ter no máximo 30 caracteres.";
+      return 'O nome pode ter no máximo 30 caracteres.';
     }
 
     return null;
@@ -57,7 +57,7 @@ abstract class ValidationHandler {
     RegExp regExp = new RegExp(p);
 
     if (!regExp.hasMatch(value)) {
-      return "Email inválido.";
+      return 'Email inválido.';
     }
 
     return null;

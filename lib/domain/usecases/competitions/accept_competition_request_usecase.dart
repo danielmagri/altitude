@@ -14,8 +14,11 @@ class AcceptCompetitionRequestUsecase
   final INotificationsRepository _notificationsRepository;
   final IUserRepository _userRepository;
 
-  AcceptCompetitionRequestUsecase(this._competitionsRepository,
-      this._notificationsRepository, this._userRepository);
+  AcceptCompetitionRequestUsecase(
+    this._competitionsRepository,
+    this._notificationsRepository,
+    this._userRepository,
+  );
 
   @override
   Future<void> getRawFuture(AcceptCompetitionRequestParams params) async {
@@ -24,16 +27,22 @@ class AcceptCompetitionRequestUsecase
 
     if (competition.competitors!.length < MAX_COMPETITORS) {
       await _competitionsRepository.acceptCompetitionRequest(
-          params.competitionId, params.competitor, competition);
+        params.competitionId,
+        params.competitor,
+        competition,
+      );
 
       String userName = (await _userRepository.getUserData(false)).name ?? '';
 
       for (Competitor friend in competition.competitors!) {
         await _notificationsRepository.sendNewCompetitorNotification(
-            userName, competition.title ?? '', friend.fcmToken ?? '');
+          userName,
+          competition.title ?? '',
+          friend.fcmToken ?? '',
+        );
       }
     } else {
-      throw "Máximo de competidores atingido.";
+      throw 'Máximo de competidores atingido.';
     }
   }
 }
@@ -43,8 +52,9 @@ class AcceptCompetitionRequestParams {
   final Competition competition;
   final Competitor competitor;
 
-  AcceptCompetitionRequestParams(
-      {required this.competitionId,
-      required this.competition,
-      required this.competitor});
+  AcceptCompetitionRequestParams({
+    required this.competitionId,
+    required this.competition,
+    required this.competitor,
+  });
 }

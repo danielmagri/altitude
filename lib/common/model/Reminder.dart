@@ -9,18 +9,19 @@ class Reminder {
 
   bool? monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
-  Reminder(
-      {this.id,
-      this.type,
-      this.hour,
-      this.minute,
-      this.monday,
-      this.tuesday,
-      this.wednesday,
-      this.thursday,
-      this.friday,
-      this.saturday,
-      this.sunday});
+  Reminder({
+    this.id,
+    this.type,
+    this.hour,
+    this.minute,
+    this.monday,
+    this.tuesday,
+    this.wednesday,
+    this.thursday,
+    this.friday,
+    this.saturday,
+    this.sunday,
+  });
 
   List<Day> getAllweekdays() {
     List<Day> days = [];
@@ -49,33 +50,40 @@ class Reminder {
   }
 
   bool hasAnyDay() {
-    return monday! || tuesday! || wednesday! || thursday! || friday! || saturday! || sunday!;
+    return monday! ||
+        tuesday! ||
+        wednesday! ||
+        thursday! ||
+        friday! ||
+        saturday! ||
+        sunday!;
   }
 
-  static const ID = "id";
-  static const TYPE = "type";
-  static const HOUR = "hour";
-  static const MINUTE = "minute";
-  static const MONDAY = "monday";
-  static const TUESDAY = "tuesday";
-  static const WEDNESDAY = "wednesday";
-  static const THURSDAY = "thursday";
-  static const FRIDAY = "friday";
-  static const SATURDAY = "saturday";
-  static const SUNDAY = "sunday";
+  static const ID = 'id';
+  static const TYPE = 'type';
+  static const HOUR = 'hour';
+  static const MINUTE = 'minute';
+  static const MONDAY = 'monday';
+  static const TUESDAY = 'tuesday';
+  static const WEDNESDAY = 'wednesday';
+  static const THURSDAY = 'thursday';
+  static const FRIDAY = 'friday';
+  static const SATURDAY = 'saturday';
+  static const SUNDAY = 'sunday';
 
   factory Reminder.fromJson(Map<String, dynamic> json) => Reminder(
-      id: json[ID],
-      type: json[TYPE],
-      hour: json[HOUR],
-      minute: json[MINUTE],
-      monday: json[MONDAY],
-      tuesday: json[TUESDAY],
-      wednesday: json[WEDNESDAY],
-      thursday: json[THURSDAY],
-      friday: json[FRIDAY],
-      saturday: json[SATURDAY],
-      sunday: json[SUNDAY]);
+        id: json[ID],
+        type: json[TYPE],
+        hour: json[HOUR],
+        minute: json[MINUTE],
+        monday: json[MONDAY],
+        tuesday: json[TUESDAY],
+        wednesday: json[WEDNESDAY],
+        thursday: json[THURSDAY],
+        friday: json[FRIDAY],
+        saturday: json[SATURDAY],
+        sunday: json[SUNDAY],
+      );
 
   Map<String, dynamic> toJson() => {
         ID: id,

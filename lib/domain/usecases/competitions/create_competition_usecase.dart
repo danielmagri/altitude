@@ -31,27 +31,33 @@ class CreateCompetitionUsecase
     final person = await _userRepository.getUserData(false);
 
     Competitor competitor = Competitor(
-        uid: person.uid,
-        name: person.name,
-        fcmToken: person.fcmToken,
-        habitId: params.habit.id,
-        color: params.habit.colorCode,
-        score: await _habitsRepository.hasDoneAtDay(params.habit.id ?? '', date)
-            ? IScoreService.DAY_DONE_POINT
-            : 0,
-        you: true);
+      uid: person.uid,
+      name: person.name,
+      fcmToken: person.fcmToken,
+      habitId: params.habit.id,
+      color: params.habit.colorCode,
+      score: await _habitsRepository.hasDoneAtDay(params.habit.id ?? '', date)
+          ? IScoreService.DAY_DONE_POINT
+          : 0,
+      you: true,
+    );
 
     final competition = _competitionsRepository.createCompetition(
-        Competition(
-            title: params.title,
-            initialDate: date,
-            competitors: [competitor],
-            invitations: params.invitations),
-        params.habit.habit ?? '');
+      Competition(
+        title: params.title,
+        initialDate: date,
+        competitors: [competitor],
+        invitations: params.invitations,
+      ),
+      params.habit.habit ?? '',
+    );
 
     for (String token in params.invitationsToken) {
       await _notificationsRepository.sendInviteCompetitionNotification(
-          person.name ?? '', params.title, token);
+        person.name ?? '',
+        params.title,
+        token,
+      );
     }
 
     return competition;

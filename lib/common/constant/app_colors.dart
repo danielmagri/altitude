@@ -12,13 +12,13 @@ abstract class AppColors {
   ];
 
   static const List<String> habitsColorName = [
-    "Vermelho",
-    "Laranja",
-    "Amarelo",
-    "Verde",
-    "Azul claro",
-    "Azul escuro",
-    "Roxo"
+    'Vermelho',
+    'Laranja',
+    'Amarelo',
+    'Verde',
+    'Azul claro',
+    'Azul escuro',
+    'Roxo'
   ];
 
   static const List<Color> levelsColor = [

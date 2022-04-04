@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/result.dart';
 import 'package:flutter/material.dart' show SizedBox, Widget;
 import 'package:mobx/mobx.dart';
-import 'failure.dart';
+import 'package:altitude/common/model/failure.dart';
 
 part 'data_state.g.dart';
 
@@ -14,7 +14,7 @@ typedef _LoadingReactionCallback = void Function(bool loading);
 typedef _SuccessReactionCallback<T> = void Function(T data);
 typedef _ErrorReactionCallback = void Function(Failure error);
 
-enum StateType { SUCCESS, LOADING, ERROR }
+enum StateType { success, loading, error }
 
 /// O DataState consiste na mudança de 3 estados (`LOADING`, `SUCCESS`, `ERROR`).
 ///
@@ -28,19 +28,19 @@ enum StateType { SUCCESS, LOADING, ERROR }
 /// O [handleReactionState] é utilizado para lidar com os estados por meio da `Reaction` do MobX.
 class DataState<T> extends _DataStateBase<T> with _$DataState {
   /// Starts on `LOADING` state.
-  /// 
+  ///
   /// To start with `SUCCESS` or `ERROR` state use the constructors:
   /// - [DataState.startWithSuccess]
   /// - [DataState.startWithError]
-  DataState() : super(initialState: StateType.LOADING);
+  DataState() : super(initialState: StateType.loading);
 
   /// Starts on `SUCCESS` state.
   DataState.startWithSuccess({required T data})
-      : super(initialState: StateType.SUCCESS, initialData: data);
+      : super(initialState: StateType.success, initialData: data);
 
   /// Starts on `ERROR` state.
   DataState.startWithError({required Failure error})
-      : super(initialState: StateType.SUCCESS, initialFailure: error);
+      : super(initialState: StateType.success, initialFailure: error);
 }
 
 abstract class _DataStateBase<T> with Store {
@@ -65,29 +65,30 @@ abstract class _DataStateBase<T> with Store {
 
   @action
   void setLoadingState([bool loading = true]) {
-    _state = StateType.LOADING;
+    _state = StateType.loading;
   }
 
   @action
   void setSuccessState(T data) {
     _data = data;
-    _state = StateType.SUCCESS;
+    _state = StateType.success;
   }
 
   @action
   void setErrorState(Failure error) {
     _error = error;
-    _state = StateType.ERROR;
+    _state = StateType.error;
   }
 
-  Widget handleState(
-      {required _SimpleLoadingStateCallback loading,
-      required _SuccessStateCallback<T> success,
-      _ErrorStateCallback? error}) {
+  Widget handleState({
+    required _SimpleLoadingStateCallback loading,
+    required _SuccessStateCallback<T> success,
+    _ErrorStateCallback? error,
+  }) {
     switch (_state) {
-      case StateType.LOADING:
+      case StateType.loading:
         return loading();
-      case StateType.ERROR:
+      case StateType.error:
         if (error == null) {
           return const SizedBox();
         } else {
@@ -98,14 +99,15 @@ abstract class _DataStateBase<T> with Store {
     }
   }
 
-  Widget handleStateLoadableWithData(
-      {required _LoadingStateCallback<T> loading,
-      required _SuccessStateCallback<T> success,
-      _ErrorStateCallback? error}) {
+  Widget handleStateLoadableWithData({
+    required _LoadingStateCallback<T> loading,
+    required _SuccessStateCallback<T> success,
+    _ErrorStateCallback? error,
+  }) {
     switch (_state) {
-      case StateType.LOADING:
+      case StateType.loading:
         return loading(_data);
-      case StateType.ERROR:
+      case StateType.error:
         if (error == null) {
           return const SizedBox();
         } else {
@@ -116,20 +118,21 @@ abstract class _DataStateBase<T> with Store {
     }
   }
 
-  ReactionDisposer handleReactionState(
-      {_LoadingReactionCallback? loading,
-      _SuccessReactionCallback<T>? success,
-      _ErrorReactionCallback? error}) {
+  ReactionDisposer handleReactionState({
+    _LoadingReactionCallback? loading,
+    _SuccessReactionCallback<T>? success,
+    _ErrorReactionCallback? error,
+  }) {
     return reaction((_) => _state, (_) {
       switch (_state) {
-        case StateType.LOADING:
+        case StateType.loading:
           if (loading != null) loading(true);
           break;
-        case StateType.ERROR:
+        case StateType.error:
           if (loading != null) loading(false);
           if (error != null) error(_error as Failure);
           break;
-        case StateType.SUCCESS:
+        case StateType.success:
           if (loading != null) loading(false);
           if (success != null) success(_data as T);
           break;
@@ -140,7 +143,9 @@ abstract class _DataStateBase<T> with Store {
 
 extension FutureExtension<T> on Future<Result<T>> {
   Future<R> resultComplete<R>(
-      R Function(T data) success, R Function(Failure error) error) async {
+    R Function(T data) success,
+    R Function(Failure error) error,
+  ) async {
     var res = await this;
     if (res.isSuccess) {
       return success((res as SuccessResult<T>).value);
@@ -149,7 +154,7 @@ extension FutureExtension<T> on Future<Result<T>> {
     }
   }
 
-  Future resultCompleteState<T>(DataState<T> dataState) async {
+  Future resultCompleteState(DataState<T> dataState) async {
     var res = await this;
     if (res.isSuccess) {
       dataState.setSuccessState((res as SuccessResult<T>).value);

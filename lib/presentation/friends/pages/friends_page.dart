@@ -11,6 +11,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 
 class FriendsPage extends StatefulWidget {
+  const FriendsPage({Key? key}) : super(key: key);
+
   @override
   _FriendsPageState createState() => _FriendsPageState();
 }
@@ -67,21 +69,21 @@ class _FriendsPageState
           actions: [
             Observer(
                 builder: (_) => IconButtonStatus(
-                    icon: Icon(Icons.mail),
+                    icon: const Icon(Icons.mail),
                     status: controller.pendingStatus,
                     onPressed: goPendingFriends))
           ],
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
-              const Tab(text: "Meus amigos"),
-              const Tab(text: "Ranking"),
+              Tab(text: "Meus amigos"),
+              Tab(text: "Ranking"),
             ],
           ),
         ),
         body: TabBarView(
             children: [FriendsList(removeFriend: removeFriend), RankingList()]),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
           heroTag: null,
           backgroundColor: AppTheme.of(context).materialTheme.accentColor,
           onPressed: addNewFriend,

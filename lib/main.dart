@@ -49,9 +49,9 @@ class MyApp extends StatelessWidget {
   Widget initialPage() {
     if (!SharedPref.instance.habitTutorial &&
         !serviceLocator.get<IFireAuth>().isLogged()) {
-      return TutorialPage();
+      return const TutorialPage();
     } else if (!serviceLocator.get<IFireAuth>().isLogged()) {
-      return LoginPage();
+      return const LoginPage();
     } else {
       return HomePage();
     }

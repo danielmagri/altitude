@@ -33,13 +33,16 @@ class CueWidget extends StatelessWidget {
   Widget _setCueWidget(String cue) {
     if (cue.isEmpty) {
       return const Text(
-          "Se você quer ter sucesso no hábito então você precisa ter um gatilho inicial!",
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16));
+        'Se você quer ter sucesso no hábito então você precisa ter um gatilho inicial!',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 16),
+      );
     } else {
-      return Text(cue,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w300));
+      return Text(
+        cue,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
+      );
     }
   }
 
@@ -50,9 +53,10 @@ class CueWidget extends StatelessWidget {
         return controller.habit.handleState(
           loading: () {
             return const Skeleton(
-                width: double.maxFinite,
-                height: 130,
-                margin: const EdgeInsets.symmetric(horizontal: 8));
+              width: double.maxFinite,
+              height: 130,
+              margin: EdgeInsets.symmetric(horizontal: 8),
+            );
           },
           success: (data) {
             return SizedBox(
@@ -67,7 +71,7 @@ class CueWidget extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          "Gatilho",
+                          'Gatilho',
                           style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,

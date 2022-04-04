@@ -22,8 +22,13 @@ abstract class IUserRepository {
   Future<void> updateName(String name, List<String?> competitionsId);
   Future<void> updateLevel(int level);
   Future<void> recalculateScore();
-  Future<void> createPerson(int? level, int? reminderCounter, int? score,
-      List<String?>? friends, List<String?>? pendingFriends);
+  Future<void> createPerson(
+    int? level,
+    int? reminderCounter,
+    int? score,
+    List<String?>? friends,
+    List<String?>? pendingFriends,
+  );
 }
 
 @Injectable(as: IUserRepository)
@@ -34,14 +39,19 @@ class UserRepository extends IUserRepository {
   final IFireAuth _fireAuth;
   final IScoreService _scoreService;
 
-  UserRepository(this._memory, this._fireMessaging, this._fireDatabase,
-      this._fireAuth, this._scoreService);
+  UserRepository(
+    this._memory,
+    this._fireMessaging,
+    this._fireDatabase,
+    this._fireAuth,
+    this._scoreService,
+  );
 
   @override
   Future<Person> getUserData(bool fromServer) async {
     if (_memory.person == null || fromServer) {
       var data = await _fireDatabase.getPerson();
-      data.photoUrl = _fireAuth.getPhotoUrl() ?? "";
+      data.photoUrl = _fireAuth.getPhotoUrl() ?? '';
       _memory.person = data;
 
       if (data.fcmToken != await _fireMessaging.getToken) {
@@ -117,7 +127,9 @@ class UserRepository extends IUserRepository {
       List<DayDone> daysDone = await _fireDatabase.getAllDaysDone(habit.id);
 
       int score = _scoreService.scoreEarnedTotal(
-          habit.frequency!, daysDone.map((e) => e.date).toList());
+        habit.frequency!,
+        daysDone.map((e) => e.date).toList(),
+      );
       totalScore += score;
 
       List<Pair<String?, int>> competitionsScore = [];
@@ -126,11 +138,12 @@ class UserRepository extends IUserRepository {
           .where((e) => e.getMyCompetitor().habitId == habit.id)
           .toList()) {
         int competitionScore = _scoreService.scoreEarnedTotal(
-            habit.frequency!,
-            daysDone
-                .where((e) => e.date!.isAfterOrSameDay(competition.initialDate))
-                .map((e) => e.date)
-                .toList());
+          habit.frequency!,
+          daysDone
+              .where((e) => e.date!.isAfterOrSameDay(competition.initialDate))
+              .map((e) => e.date)
+              .toList(),
+        );
 
         competitionsScore.add(Pair(competition.id, competitionScore));
       }
@@ -139,26 +152,34 @@ class UserRepository extends IUserRepository {
     }
 
     await _fireDatabase.updateTotalScore(
-        totalScore, LevelUtils.getLevel(totalScore));
+      totalScore,
+      LevelUtils.getLevel(totalScore),
+    );
 
     _memory.clear();
   }
 
   @override
-  Future<void> createPerson(int? level, int? reminderCounter, int? score,
-      List<String?>? friends, List<String?>? pendingFriends) {
+  Future<void> createPerson(
+    int? level,
+    int? reminderCounter,
+    int? score,
+    List<String?>? friends,
+    List<String?>? pendingFriends,
+  ) {
     return getUserData(true).then((date) {
       return updateFCMToken();
     }).catchError((error) async {
       Person person = Person(
-          name: _fireAuth.getName(),
-          email: _fireAuth.getEmail(),
-          fcmToken: await _fireMessaging.getToken,
-          level: level ?? 0,
-          reminderCounter: reminderCounter ?? 0,
-          score: score ?? 0,
-          friends: friends ?? [],
-          pendingFriends: pendingFriends ?? []);
+        name: _fireAuth.getName(),
+        email: _fireAuth.getEmail(),
+        fcmToken: await _fireMessaging.getToken,
+        level: level ?? 0,
+        reminderCounter: reminderCounter ?? 0,
+        score: score ?? 0,
+        friends: friends ?? [],
+        pendingFriends: pendingFriends ?? [],
+      );
       await _fireDatabase.createPerson(person);
       person.photoUrl = _fireAuth.getPhotoUrl();
       _memory.person = person;

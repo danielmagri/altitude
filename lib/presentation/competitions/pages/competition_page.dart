@@ -3,7 +3,7 @@ import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/view/generic/DataError.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
 import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
@@ -15,6 +15,8 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CompetitionPage extends StatefulWidget {
+  const CompetitionPage({Key? key}) : super(key: key);
+
   @override
   _CompetitionPageState createState() => _CompetitionPageState();
 }
@@ -40,7 +42,6 @@ class _CompetitionPageState
       try {
         var data = await controller.getCreationData();
         showLoading(false);
-        if (data.first == null || data.second == null) throw "Vazio";
 
         var arguments = CreateCompetitionPageArguments(data.first, data.second);
         navigatePush("createCompetition", arguments: arguments);
@@ -98,7 +99,7 @@ class _CompetitionPageState
                 title: "COMPETIÇÕES",
                 button: Observer(builder: (_) {
                   return IconButtonStatus(
-                    icon: Icon(Icons.mail),
+                    icon: const Icon(Icons.mail),
                     status: controller.pendingStatus,
                     onPressed: () => navigatePush('pendingCompetition'),
                   );
@@ -107,8 +108,8 @@ class _CompetitionPageState
             Observer(
               builder: (_) => controller.ranking.handleState(
                 loading: () {
-                  return Skeleton(
-                      margin: const EdgeInsets.only(
+                  return const Skeleton(
+                      margin: EdgeInsets.only(
                           left: 16, right: 16, top: 0, bottom: 24),
                       width: double.maxFinite,
                       height: 130);
@@ -212,7 +213,7 @@ class _CompetitionPageState
                   );
                 },
                 success: (data) {
-                  if (data.isEmpty)
+                  if (data.isEmpty) {
                     return Padding(
                       padding: const EdgeInsets.only(top: 48),
                       child: Center(
@@ -224,7 +225,7 @@ class _CompetitionPageState
                                 color: Colors.black.withOpacity(0.2))),
                       ),
                     );
-                  else
+                  } else {
                     return GridView.builder(
                       itemCount: data.length,
                       physics: const NeverScrollableScrollPhysics(),
@@ -273,6 +274,7 @@ class _CompetitionPageState
                         );
                       },
                     );
+                  }
                 },
                 error: (error) {
                   return const DataError();

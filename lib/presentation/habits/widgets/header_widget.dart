@@ -49,14 +49,18 @@ class HeaderWidget extends StatelessWidget {
                 return controller.rocketForce.handleState(
                   loading: () {
                     return Skeleton.custom(
-                        child: Rocket(
-                            size: const Size(140, 140), color: Colors.white));
+                      child: Rocket(
+                        size: const Size(140, 140),
+                        color: Colors.white,
+                      ),
+                    );
                   },
                   success: (data) {
                     return SkyScene(
-                        size: const Size(140, 140),
-                        color: controller.habitColor,
-                        force: data);
+                      size: const Size(140, 140),
+                      color: controller.habitColor,
+                      force: data,
+                    );
                   },
                 );
               },
@@ -77,16 +81,18 @@ class HeaderWidget extends StatelessWidget {
                             height: 30,
                             margin: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
                           Container(
                             width: 120,
                             height: 80,
                             margin: const EdgeInsets.symmetric(horizontal: 8),
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15)),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           )
                         ],
                       ),

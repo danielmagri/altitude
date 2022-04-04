@@ -19,6 +19,8 @@ class AcceptRequestUsecase extends BaseUsecase<String, void> {
     final userName =
         await _userRepository.getUserData(false).then((value) => value.name);
     await _notificationsRepository.acceptFriendNotification(
-        userName ?? '', token);
+      userName ?? '',
+      token,
+    );
   }
 }

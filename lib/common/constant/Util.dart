@@ -27,31 +27,31 @@ abstract class Util {
   static String getMonthName(int value) {
     switch (value) {
       case 1:
-        return "jan";
+        return 'jan';
       case 2:
-        return "fev";
+        return 'fev';
       case 3:
-        return "mar";
+        return 'mar';
       case 4:
-        return "abr";
+        return 'abr';
       case 5:
-        return "mai";
+        return 'mai';
       case 6:
-        return "jun";
+        return 'jun';
       case 7:
-        return "jul";
+        return 'jul';
       case 8:
-        return "ago";
+        return 'ago';
       case 9:
-        return "set";
+        return 'set';
       case 10:
-        return "out";
+        return 'out';
       case 11:
-        return "nov";
+        return 'nov';
       case 12:
-        return "dez";
+        return 'dez';
       default:
-      return "";
+      return '';
     }
   }
 }

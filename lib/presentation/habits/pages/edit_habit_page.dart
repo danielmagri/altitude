@@ -36,7 +36,7 @@ class _EditHabitPageState
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           // Keep a reference to the ad so you can show it later.
-          this.myInterstitial = ad;
+          myInterstitial = ad;
         },
         onAdFailedToLoad: (LoadAdError error) {
           print('InterstitialAd failed to load: $error');
@@ -112,13 +112,13 @@ class _EditHabitPageState
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: <Widget>[
             Header(
                 title: "EDITAR HÁBITO",
                 button: IconButton(
-                    icon: Icon(Icons.delete), onPressed: removeHabit)),
+                    icon: const Icon(Icons.delete), onPressed: removeHabit)),
             const SizedBox(height: 10),
             Observer(builder: (_) {
               return SelectColor(

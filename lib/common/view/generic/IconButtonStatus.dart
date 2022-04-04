@@ -14,12 +14,13 @@ import 'package:flutter/material.dart'
         Widget;
 
 class IconButtonStatus extends StatelessWidget {
-  IconButtonStatus(
-      {required this.status,
-      required this.icon,
-      required this.onPressed,
-      this.color = Colors.orange,
-      this.backgroundColor});
+  IconButtonStatus({
+    required this.status,
+    required this.icon,
+    required this.onPressed,
+    this.color = Colors.orange,
+    this.backgroundColor,
+  });
 
   final Widget icon;
   final Function onPressed;
@@ -38,12 +39,17 @@ class IconButtonStatus extends StatelessWidget {
                 width: 12,
                 height: 12,
                 decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: backgroundColor ?? AppTheme.of(context).materialTheme.backgroundColor),
+                  shape: BoxShape.circle,
+                  color: backgroundColor ??
+                      AppTheme.of(context).materialTheme.backgroundColor,
+                ),
               )
             : const SizedBox(height: 10, width: 10),
         status
-            ? Container(width: 10, height: 10, decoration: BoxDecoration(shape: BoxShape.circle, color: color))
+            ? Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color))
             : const SizedBox(height: 10, width: 10),
       ],
     );

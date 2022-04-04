@@ -9,32 +9,34 @@ abstract class Frequency {
   Frequency();
 
   factory Frequency.fromJson(Map<String, dynamic> json) {
-    if (json.containsKey("days_time")) {
-      return Weekly(daysTime: json["days_time"]);
+    if (json.containsKey('days_time')) {
+      return Weekly(daysTime: json['days_time']);
     } else {
       return DayWeek(
-          monday: json["monday"],
-          tuesday: json["tuesday"],
-          wednesday: json["wednesday"],
-          thursday: json["thursday"],
-          friday: json["friday"],
-          saturday: json["saturday"],
-          sunday: json["sunday"]);
+        monday: json['monday'],
+        tuesday: json['tuesday'],
+        wednesday: json['wednesday'],
+        thursday: json['thursday'],
+        friday: json['friday'],
+        saturday: json['saturday'],
+        sunday: json['sunday'],
+      );
     }
   }
 
   factory Frequency.fromBD(Map<String, dynamic> json) {
-    if (json.containsKey("days_time")) {
-      return Weekly(daysTime: json["days_time"]);
+    if (json.containsKey('days_time')) {
+      return Weekly(daysTime: json['days_time']);
     } else {
       return DayWeek(
-          monday: json["monday"] == 0 ? false : true,
-          tuesday: json["tuesday"] == 0 ? false : true,
-          wednesday: json["wednesday"] == 0 ? false : true,
-          thursday: json["thursday"] == 0 ? false : true,
-          friday: json["friday"] == 0 ? false : true,
-          saturday: json["saturday"] == 0 ? false : true,
-          sunday: json["sunday"] == 0 ? false : true);
+        monday: json['monday'] == 0 ? false : true,
+        tuesday: json['tuesday'] == 0 ? false : true,
+        wednesday: json['wednesday'] == 0 ? false : true,
+        thursday: json['thursday'] == 0 ? false : true,
+        friday: json['friday'] == 0 ? false : true,
+        saturday: json['saturday'] == 0 ? false : true,
+        sunday: json['sunday'] == 0 ? false : true,
+      );
     }
   }
 }
@@ -42,7 +44,14 @@ abstract class Frequency {
 class DayWeek extends Frequency {
   bool? monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
-  DayWeek({this.monday, this.tuesday, this.wednesday, this.thursday, this.friday, this.saturday, this.sunday});
+  DayWeek(
+      {this.monday,
+      this.tuesday,
+      this.wednesday,
+      this.thursday,
+      this.friday,
+      this.saturday,
+      this.sunday});
 
   @override
   int daysCount() {
@@ -61,48 +70,48 @@ class DayWeek extends Frequency {
 
   @override
   String frequencyText() {
-    String text = "";
+    String text = '';
     bool hasOne = false;
     int count = daysCount();
 
     if (monday!) {
-      text += "Segunda";
+      text += 'Segunda';
       hasOne = true;
       count--;
     }
     if (tuesday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Terça";
+      text += 'Terça';
       hasOne = true;
       count--;
     }
     if (wednesday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Quarta";
+      text += 'Quarta';
       hasOne = true;
       count--;
     }
     if (thursday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Quinta";
+      text += 'Quinta';
       hasOne = true;
       count--;
     }
     if (friday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Sexta";
+      text += 'Sexta';
       hasOne = true;
       count--;
     }
     if (saturday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Sábado";
+      text += 'Sábado';
       hasOne = true;
       count--;
     }
     if (sunday!) {
       text += _frequencyTextSeparator(hasOne, count);
-      text += "Domingo";
+      text += 'Domingo';
     }
     return text;
   }
@@ -110,12 +119,12 @@ class DayWeek extends Frequency {
   String _frequencyTextSeparator(bool hasOne, int count) {
     if (hasOne) {
       if (count == 1) {
-        return " e ";
+        return ' e ';
       } else {
-        return ", ";
+        return ', ';
       }
     }
-    return "";
+    return '';
   }
 
   bool isADoneDay(DateTime day) {
@@ -135,13 +144,13 @@ class DayWeek extends Frequency {
 
   @override
   Map<String, dynamic> toJson() => {
-        "monday": monday,
-        "tuesday": tuesday,
-        "wednesday": wednesday,
-        "thursday": thursday,
-        "friday": friday,
-        "saturday": saturday,
-        "sunday": sunday,
+        'monday': monday,
+        'tuesday': tuesday,
+        'wednesday': wednesday,
+        'thursday': thursday,
+        'friday': friday,
+        'saturday': saturday,
+        'sunday': sunday,
       };
 }
 
@@ -155,10 +164,11 @@ class Weekly extends Frequency {
 
   @override
   String frequencyText() {
-    if (daysCount() == 1)
-      return "1 vez por semana";
-    else
-      return daysCount().toString() + " vezes por semana";
+    if (daysCount() == 1) {
+      return '1 vez por semana';
+    } else {
+      return daysCount().toString() + ' vezes por semana';
+    }
   }
 
   @override
@@ -166,6 +176,6 @@ class Weekly extends Frequency {
 
   @override
   Map<String, dynamic> toJson() => {
-        "days_time": daysTime,
+        'days_time': daysTime,
       };
 }

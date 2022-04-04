@@ -11,8 +11,11 @@ class HasCompetitionByHabitUsecase extends BaseUsecase<String, bool> {
   @override
   Future<bool> getRawFuture(String params) async {
     try {
-      return await _competitionsRepository.getCompetitions(false).then((list) =>
-          list.where((e) => e.getMyCompetitor().habitId == params).isNotEmpty);
+      return await _competitionsRepository.getCompetitions(false).then(
+            (list) => list
+                .where((e) => e.getMyCompetitor().habitId == params)
+                .isNotEmpty,
+          );
     } catch (e) {
       return Future.value(false);
     }

@@ -39,7 +39,7 @@ abstract class _SettingsControllerBase with Store {
   String? name = "";
 
   @observable
-  ThemeType? theme = ThemeType.SYSTEM;
+  ThemeType? theme = ThemeType.system;
 
   @observable
   bool isLogged = false;

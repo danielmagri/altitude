@@ -21,7 +21,7 @@ class DataError extends StatelessWidget {
   // final Function reload;
 
   @override
-  Widget build(_) {
+  Widget build(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

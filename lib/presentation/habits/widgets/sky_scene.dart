@@ -31,7 +31,7 @@ import 'package:flutter/material.dart'
 import 'dart:math';
 
 class SkyScene extends StatelessWidget {
-  SkyScene({Key? key, this.size, required this.color, this.force = 0})
+  SkyScene({required this.color, Key? key, this.size, this.force = 0})
       : duration = 2000 - (900 * force).toInt(),
         super(key: key);
 
@@ -40,6 +40,7 @@ class SkyScene extends StatelessWidget {
   final double force;
   final int duration;
 
+  @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
@@ -48,23 +49,23 @@ class SkyScene extends StatelessWidget {
         Cloud(
           duration: duration,
           startPoint: 1 / 4,
-          imagePath: "assets/cloud1.png",
+          imagePath: 'assets/cloud1.png',
         ),
         Cloud(
           duration: duration,
           startPoint: 2 / 4,
-          imagePath: "assets/cloud2.png",
+          imagePath: 'assets/cloud2.png',
           fromRight: true,
         ),
         Cloud(
           duration: duration,
           startPoint: 3 / 4,
-          imagePath: "assets/cloud2.png",
+          imagePath: 'assets/cloud2.png',
         ),
         Cloud(
           duration: duration,
           startPoint: 4 / 4,
-          imagePath: "assets/cloud1.png",
+          imagePath: 'assets/cloud1.png',
           fromRight: true,
         ),
         RocketAnimated(
@@ -79,13 +80,13 @@ class SkyScene extends StatelessWidget {
 }
 
 class RocketAnimated extends StatefulWidget {
-  RocketAnimated(
-      {Key? key,
-      required this.size,
-      required this.color,
-      required this.force,
-      required this.duration})
-      : super(key: key);
+  const RocketAnimated({
+    required this.size,
+    required this.color,
+    required this.force,
+    required this.duration,
+    Key? key,
+  }) : super(key: key);
 
   final Size? size;
   final Color color;
@@ -103,10 +104,11 @@ class _RocketAnimatedState extends State<RocketAnimated>
   @override
   void initState() {
     _controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration - 400),
-        vsync: this,
-        lowerBound: 2 * pi,
-        upperBound: 9 * pi);
+      duration: Duration(milliseconds: widget.duration - 400),
+      vsync: this,
+      lowerBound: 2 * pi,
+      upperBound: 9 * pi,
+    );
 
     _controller.addListener(() {
       setState(() {});
@@ -152,13 +154,13 @@ class _RocketAnimatedState extends State<RocketAnimated>
 }
 
 class Cloud extends StatefulWidget {
-  Cloud(
-      {Key? key,
-      required this.duration,
-      this.startPoint = 0,
-      required this.imagePath,
-      this.fromRight = false})
-      : super(key: key);
+  const Cloud({
+    required this.duration,
+    required this.imagePath,
+    Key? key,
+    this.startPoint = 0,
+    this.fromRight = false,
+  }) : super(key: key);
 
   final int duration;
   final double startPoint;
@@ -175,7 +177,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
   late Animation<double> opacityTop;
   late Animation<double> opacityBottom;
 
-  Random rnd = new Random();
+  Random rnd = Random();
 
   static const int range = 40;
   double positionsX = 0;
@@ -184,7 +186,9 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     _controller = AnimationController(
-        duration: Duration(milliseconds: widget.duration), vsync: this);
+      duration: Duration(milliseconds: widget.duration),
+      vsync: this,
+    );
 
     _controller.addListener(() {
       if (_controller.value > 0.94 && update) {
@@ -212,7 +216,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(
+        curve: const Interval(
           0,
           0.15,
           curve: Curves.linear,
@@ -226,7 +230,7 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(
+        curve: const Interval(
           0.85,
           0.95,
           curve: Curves.linear,

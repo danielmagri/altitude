@@ -13,12 +13,14 @@ abstract class AdsUtils {
   static String get competitionOnCreateIntersticialAdUnitId =>
       'ca-app-pub-4496000445589212/6605534046';
 
-  static AdRequest get adRequest => AdRequest();
+  static AdRequest get adRequest => const AdRequest();
 
   static NativeAdListener get adNativeListener => kReleaseMode
-      ? NativeAdListener(onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          ad.dispose();
-        })
+      ? NativeAdListener(
+          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+            ad.dispose();
+          },
+        )
       : NativeAdListener(
           onAdLoaded: (Ad ad) => print('Ad loaded.'),
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
@@ -33,9 +35,11 @@ abstract class AdsUtils {
         );
 
   static BannerAdListener get adBannerListener => kReleaseMode
-      ? BannerAdListener(onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          ad.dispose();
-        })
+      ? BannerAdListener(
+          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+            ad.dispose();
+          },
+        )
       : BannerAdListener(
           onAdLoaded: (Ad ad) => print('Ad loaded.'),
           onAdFailedToLoad: (Ad ad, LoadAdError error) {

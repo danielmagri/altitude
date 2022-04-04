@@ -3,16 +3,16 @@ import 'package:altitude/common/constant/app_colors.dart';
 
 abstract class LevelUtils {
   static const List<String> _levelsText = [
-    "Procrastinador",
-    "Novato",
-    "Aprendiz",
-    "Teimoso",
-    "Motivador",
-    "Inspirador",
-    "Nova pessoa",
-    "Coach",
-    "Mito",
-    "Astronauta"
+    'Procrastinador',
+    'Novato',
+    'Aprendiz',
+    'Teimoso',
+    'Motivador',
+    'Inspirador',
+    'Nova pessoa',
+    'Coach',
+    'Mito',
+    'Astronauta'
   ];
 
   static const List<int> _levelsValue = [
@@ -67,54 +67,54 @@ abstract class LevelUtils {
   static String getLevelImagePath(int score) {
     switch (getLevel(score)) {
       case 0:
-        return "assets/level/bronze0.png";
+        return 'assets/level/bronze0.png';
       case 1:
-        return "assets/level/bronze1.png";
+        return 'assets/level/bronze1.png';
       case 2:
-        return "assets/level/bronze2.png";
+        return 'assets/level/bronze2.png';
       case 3:
-        return "assets/level/bronze3.png";
+        return 'assets/level/bronze3.png';
       case 4:
-        return "assets/level/silver1.png";
+        return 'assets/level/silver1.png';
       case 5:
-        return "assets/level/silver2.png";
+        return 'assets/level/silver2.png';
       case 6:
-        return "assets/level/silver3.png";
+        return 'assets/level/silver3.png';
       case 7:
-        return "assets/level/gold1.png";
+        return 'assets/level/gold1.png';
       case 8:
-        return "assets/level/gold2.png";
+        return 'assets/level/gold2.png';
       case 9:
-        return "assets/level/gold3.png";
+        return 'assets/level/gold3.png';
       default:
-        return "assets/level/bronze0.png";
+        return 'assets/level/bronze0.png';
     }
   }
 
   static String getLevelImagePathByCode(int code) {
     switch (code) {
       case 0:
-        return "assets/level/bronze0.png";
+        return 'assets/level/bronze0.png';
       case 1:
-        return "assets/level/bronze1.png";
+        return 'assets/level/bronze1.png';
       case 2:
-        return "assets/level/bronze2.png";
+        return 'assets/level/bronze2.png';
       case 3:
-        return "assets/level/bronze3.png";
+        return 'assets/level/bronze3.png';
       case 4:
-        return "assets/level/silver1.png";
+        return 'assets/level/silver1.png';
       case 5:
-        return "assets/level/silver2.png";
+        return 'assets/level/silver2.png';
       case 6:
-        return "assets/level/silver3.png";
+        return 'assets/level/silver3.png';
       case 7:
-        return "assets/level/gold1.png";
+        return 'assets/level/gold1.png';
       case 8:
-        return "assets/level/gold2.png";
+        return 'assets/level/gold2.png';
       case 9:
-        return "assets/level/gold3.png";
+        return 'assets/level/gold3.png';
       default:
-        return "assets/level/bronze0.png";
+        return 'assets/level/bronze0.png';
     }
   }
 

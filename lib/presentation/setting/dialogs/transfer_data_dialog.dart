@@ -20,7 +20,7 @@ import 'package:altitude/common/model/result.dart';
 import 'package:get_it/get_it.dart';
 
 class TransferDataDialog extends StatefulWidget {
-  const TransferDataDialog({Key? key, required this.uid}) : super(key: key);
+  const TransferDataDialog({required this.uid, Key? key}) : super(key: key);
 
   final String uid;
 
@@ -63,7 +63,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
         (await _createPersonUsecase.call(CreatePersonParams()))
             .result((data) {}, (error) async {
           await _logoutUsecase.call(NoParams());
-          throw "Erro ao salvar os dados (1)";
+          throw 'Erro ao salvar os dados (1)';
         });
       } else {
         Result<Person> result = await _getUserDataUsecase.call(true);
@@ -73,26 +73,30 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           (await _createPersonUsecase.call(CreatePersonParams()))
               .result((data) {}, (error) async {
             await _logoutUsecase.call(NoParams());
-            throw "Erro ao salvar os dados (2)";
+            throw 'Erro ao salvar os dados (2)';
           });
         } else {
           Person person = (result as SuccessResult).data;
           score = (await _getHabitsUsecase.call(true)).result(
-              ((data) => data.isEmpty
-                      ? 0
-                      : data.map((e) => e.score).reduce((a, b) => a! + b!)!)
-                  as int Function(List<Habit>),
-              (error) => 0);
+            ((data) => data.isEmpty
+                    ? 0
+                    : data.map((e) => e.score).reduce((a, b) => a! + b!)!)
+                as int Function(List<Habit>),
+            (error) => 0,
+          );
 
-          (await _createPersonUsecase.call(CreatePersonParams(
-                  level: LevelUtils.getLevel(score),
-                  score: score,
-                  reminderCounter: 0,
-                  friends: person.friends,
-                  pendingFriends: person.pendingFriends)))
+          (await _createPersonUsecase.call(
+            CreatePersonParams(
+              level: LevelUtils.getLevel(score),
+              score: score,
+              reminderCounter: 0,
+              friends: person.friends,
+              pendingFriends: person.pendingFriends,
+            ),
+          ))
               .result((data) {}, (error) async {
             await _logoutUsecase.call(NoParams());
-            throw "Erro ao salvar os dados (3)";
+            throw 'Erro ao salvar os dados (3)';
           });
         }
 
@@ -111,14 +115,19 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
               await DatabaseService().getDaysDone(habit.oldId);
           habit.daysDone = daysDone.length;
           habit.score = _scoreService.scoreEarnedTotal(
-              habit.frequency!, daysDone.map((e) => e.date).toList());
+            habit.frequency!,
+            daysDone.map((e) => e.date).toList(),
+          );
 
           score += habit.score!;
 
-          await (await _transferHabitUsecase.call(TransferHabitParams(
-                  habit: habit,
-                  competitionsId: competitionsId,
-                  daysDone: daysDone)))
+          await (await _transferHabitUsecase.call(
+            TransferHabitParams(
+              habit: habit,
+              competitionsId: competitionsId,
+              daysDone: daysDone,
+            ),
+          ))
               .result((_) async {
             counter++;
 
@@ -129,7 +138,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
             await DatabaseService().deleteHabit(habit.oldId);
           }, (error) async {
             await _logoutUsecase.call(NoParams());
-            throw "Erro ao salvar os dados (4)";
+            throw 'Erro ao salvar os dados (4)';
           });
         }
 
@@ -141,42 +150,52 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
       return true;
     } catch (e) {
       await _logoutUsecase.call(NoParams());
-      throw "Erro ao salvar os dados (0)";
+      throw 'Erro ao salvar os dados (0)';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async => false,
-        child: SimpleDialog(
-            backgroundColor: AppTheme.of(context).materialTheme.cardColor,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Center(
-                  child: Column(children: [
-                    const Text("Fazendo a transferência dos dados",
-                        style: TextStyle(fontSize: 18),
-                        textAlign: TextAlign.center),
-                    const SizedBox(height: 16),
-                    LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: Color.fromARGB(255, 211, 211, 211),
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.orange)),
-                    const SizedBox(height: 16),
-                    const Text("Carregando...."),
-                    const SizedBox(height: 8),
-                    const Text("Por favor não feche o app",
-                        style: TextStyle(fontSize: 11)),
-                    const SizedBox(height: 4),
-                    const Text(
-                        "Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.",
-                        style: TextStyle(fontSize: 11)),
-                  ]),
-                ),
-              )
-            ]));
+      onWillPop: () async => false,
+      child: SimpleDialog(
+        backgroundColor: AppTheme.of(context).materialTheme.cardColor,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Center(
+              child: Column(
+                children: [
+                  const Text(
+                    'Fazendo a transferência dos dados',
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: const Color.fromARGB(255, 211, 211, 211),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.orange),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Carregando....'),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Por favor não feche o app',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Caso tenha algum problema na pontuação é possível recalcular na seção de configurações.',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

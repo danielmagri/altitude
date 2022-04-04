@@ -46,7 +46,7 @@ abstract class _PendingCompetitionControllerBase with Store {
       pendingCompetition.setSuccessState(_pendingCompetition);
     } catch (error) {
       pendingCompetition.setErrorState(Failure.genericFailure(error));
-      throw error;
+      rethrow;
     }
   }
 
@@ -63,16 +63,18 @@ abstract class _PendingCompetitionControllerBase with Store {
   void acceptedCompetitionRequest(Competition competition) {
     pendingCompetition.data!.removeWhere((item) => item.id == competition.id);
     addedCompetitions.add(competition);
-    if (pendingCompetition.data!.isEmpty)
+    if (pendingCompetition.data!.isEmpty) {
       _sharedPref.pendingCompetition = false;
+    }
   }
 
   Future declineCompetitionRequest(String id) async {
     return (await _declineCompetitionRequestUsecase.call(id)).result((data) {
       pendingCompetition.data!.removeWhere((item) => item.id == id);
 
-      if (pendingCompetition.data!.isEmpty)
+      if (pendingCompetition.data!.isEmpty) {
         _sharedPref.pendingCompetition = false;
+      }
     }, (error) => throw error);
   }
 }

@@ -18,16 +18,16 @@ class Person {
   bool? you;
   int? state; // 0-null 1-Amigo 2-Amigo pendente 3-Solicitação
 
-  static const UID = "uid";
-  static const NAME = "display_name";
-  static const EMAIL = "email";
-  static const SCORE = "score";
-  static const LEVEL = "level";
-  static const FCM_TOKEN = "fcm_token";
-  static const REMINDER_COUNTER = "reminder_counter";
-  static const FRIENDS = "friends";
-  static const PENDING_FRIENDS = "pending_friends";
-  static const STATE = "state";
+  static const UID = 'uid';
+  static const NAME = 'display_name';
+  static const EMAIL = 'email';
+  static const SCORE = 'score';
+  static const LEVEL = 'level';
+  static const FCM_TOKEN = 'fcm_token';
+  static const REMINDER_COUNTER = 'reminder_counter';
+  static const FRIENDS = 'friends';
+  static const PENDING_FRIENDS = 'pending_friends';
+  static const STATE = 'state';
 
   Person(
       {this.uid,
@@ -41,12 +41,12 @@ class Person {
       this.friends,
       this.pendingFriends,
       this.you,
-      this.state}) {
-    if (you == null) you = false;
-    if (state == null) state = 0;
+      this.state,}) {
+    you ??= false;
+    state ??= 0;
   }
 
-  String get levelText => score == null ? "" : LevelUtils.getLevelText(score!);
+  String get levelText => score == null ? '' : LevelUtils.getLevelText(score!);
 
   factory Person.fromJson(Map<String, dynamic> json, [String? id]) => Person(
       uid: id ?? json[UID],
@@ -61,7 +61,7 @@ class Person {
       state: json[STATE]);
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> map = Map();
+    Map<String, dynamic> map = {};
     if (uid != null) map.putIfAbsent(UID, () => uid);
     if (name != null) map.putIfAbsent(NAME, () => name);
     if (email != null) map.putIfAbsent(EMAIL, () => email);

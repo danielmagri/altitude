@@ -8,8 +8,7 @@ part 'app_logic.g.dart';
 class AppLogic = _AppLogicBase with _$AppLogic;
 
 abstract class _AppLogicBase with Store {
-
-  SystemUiOverlayStyle _defaultStyle = SystemUiOverlayStyle();
+  SystemUiOverlayStyle _defaultStyle = const SystemUiOverlayStyle();
 
   late SystemUiOverlayStyle _lastStyle;
 
@@ -19,9 +18,8 @@ abstract class _AppLogicBase with Store {
   }
 
   void changeSystemStyle({SystemUiOverlayStyle? style}) {
-    if (style == null) {
-      style = _defaultStyle;
-    }
+    style ??= _defaultStyle;
+
     _lastStyle = style;
     SystemChrome.setSystemUIOverlayStyle(style);
   }

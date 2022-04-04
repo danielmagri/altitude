@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class PendingFriendsPage extends StatefulWidget {
+  const PendingFriendsPage({Key? key}) : super(key: key);
+
   @override
   _PendingFriendsPageState createState() => _PendingFriendsPageState();
 }
@@ -61,15 +63,15 @@ class _PendingFriendsPageState extends BaseStateWithController<
             Observer(builder: (_) {
               return controller.pendingFriends.handleState(loading: () {
                 return Column(
-                  children: <Widget>[
-                    const SizedBox(height: 48),
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 12),
-                    const Text("Buscando pedidos de amizade...")
+                  children: const <Widget>[
+                    SizedBox(height: 48),
+                    CircularProgressIndicator(),
+                    SizedBox(height: 12),
+                    Text("Buscando pedidos de amizade...")
                   ],
                 );
               }, success: (data) {
-                if (data.isEmpty)
+                if (data.isEmpty) {
                   return Padding(
                     padding: const EdgeInsets.only(top: 48),
                     child: Text("Não tem nenhuma amizade pendente",
@@ -83,10 +85,10 @@ class _PendingFriendsPageState extends BaseStateWithController<
                                 .color!
                                 .withOpacity(0.2))),
                   );
-                else
+                } else {
                   return ListView.separated(
                     separatorBuilder: (_, __) =>
-                        Divider(endIndent: 16, indent: 16),
+                        const Divider(endIndent: 16, indent: 16),
                     padding: const EdgeInsets.only(bottom: 20),
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -134,6 +136,7 @@ class _PendingFriendsPageState extends BaseStateWithController<
                       );
                     },
                   );
+                }
               });
             }),
           ],

@@ -26,7 +26,7 @@ import 'package:flutter/material.dart'
         WrapAlignment;
 
 class DayweekDialog extends StatefulWidget {
-  DayweekDialog({Key? key, required this.color, this.frequency})
+  const DayweekDialog({Key? key, required this.color, this.frequency})
       : super(key: key);
 
   final Color color;

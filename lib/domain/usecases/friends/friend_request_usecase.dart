@@ -10,8 +10,11 @@ class FriendRequestUsecase extends BaseUsecase<String, void> {
   final INotificationsRepository _notificationsRepository;
   final IUserRepository _userRepository;
 
-  FriendRequestUsecase(this._friendsRepository, this._notificationsRepository,
-      this._userRepository);
+  FriendRequestUsecase(
+    this._friendsRepository,
+    this._notificationsRepository,
+    this._userRepository,
+  );
 
   @override
   Future<void> getRawFuture(String params) async {
@@ -20,6 +23,8 @@ class FriendRequestUsecase extends BaseUsecase<String, void> {
         await _userRepository.getUserData(false).then((value) => value.name);
 
     await _notificationsRepository.sendInviteFriendNotification(
-        userName ?? '', token);
+      userName ?? '',
+      token,
+    );
   }
 }

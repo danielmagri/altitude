@@ -27,7 +27,7 @@ class Router {
       case 'home':
         return _pageRoute(HomePage(), 'home');
       case 'login':
-        return _pageRoute(LoginPage(), 'login');
+        return _pageRoute(const LoginPage(), 'login');
       case 'addHabit':
         var arguments = settings.arguments as bool?;
         return _pageRoute(AddHabitPage(backTo: arguments ?? false), 'addHabit');
@@ -35,13 +35,13 @@ class Router {
         var arguments = settings.arguments as AllLevelsPageArguments?;
         return _pageRoute(AllLevelsPage(arguments), 'allLevels');
       case 'statistics':
-        return _pageRoute(Statisticspage(), 'statistics');
+        return _pageRoute(const Statisticspage(), 'statistics');
       case 'friends':
-        return _pageRoute(FriendsPage(), 'friends');
+        return _pageRoute(const FriendsPage(), 'friends');
       case 'pendingFriends':
-        return _pageRoute(PendingFriendsPage(), 'pendingFriends');
+        return _pageRoute(const PendingFriendsPage(), 'pendingFriends');
       case 'competition':
-        return _pageRoute(CompetitionPage(), 'competition');
+        return _pageRoute(const CompetitionPage(), 'competition');
       case 'createCompetition':
         var arguments = settings.arguments as CreateCompetitionPageArguments?;
         return _pageRoute(CreateCompetitionPage(arguments), 'createCompetition');
@@ -49,7 +49,7 @@ class Router {
         var arguments = settings.arguments as CompetitionDetailsPageArguments;
         return _pageRoute(CompetitionDetailsPage(arguments), 'competitionDetails');
       case 'pendingCompetition':
-        return _pageRoute(PendingCompetitionPage(), 'pendingCompetition');
+        return _pageRoute(const PendingCompetitionPage(), 'pendingCompetition');
       case 'habitDetails':
         var arguments = settings.arguments as HabitDetailsPageArguments?;
         return _pageRoute(HabitDetailsPage(arguments), 'habitDetails');
@@ -57,9 +57,9 @@ class Router {
         var arguments = settings.arguments as EditHabitPageArguments?;
         return _pageRoute(EditHabitPage(arguments), 'editHabit');
       case 'settings':
-        return _pageRoute(SettingsPage(), 'settings');
+        return _pageRoute(const SettingsPage(), 'settings');
       case 'help':
-        return _pageRoute(HelpPage(), 'help');
+        return _pageRoute(const HelpPage(), 'help');
       default:
         return _pageRoute(Scaffold(body: Center(child: Text('No route defined for ${settings.name}'))), 'empty');
     }

@@ -2,7 +2,7 @@ import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/domain/usecases/habits/update_habit_usecase.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
-import 'package:altitude/common/constant/Suggestions.dart';
+import 'package:altitude/common/constant/suggestions.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';

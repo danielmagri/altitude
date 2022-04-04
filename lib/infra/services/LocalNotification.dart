@@ -21,7 +21,7 @@ class LocalNotification implements ILocalNotification {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('ic_notification');
 
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
 
     await instance.flutterLocalNotificationsPlugin.initialize(
@@ -43,6 +43,7 @@ class LocalNotification implements ILocalNotification {
     }
   }
 
+  @override
   Future<void> addNotification(Habit habit) async {
     Time time = Time(habit.reminder!.hour!, habit.reminder!.minute!);
     String? title = habit.reminder!.type == 0 ? habit.habit : habit.oldCue;
@@ -87,10 +88,12 @@ class LocalNotification implements ILocalNotification {
     return scheduledDate;
   }
 
+  @override
   Future<void> removeNotification(int? id) async {
     return await flutterLocalNotificationsPlugin.cancel(id!);
   }
 
+  @override
   Future<void> removeAllNotification() async {
     return await flutterLocalNotificationsPlugin.cancelAll();
   }

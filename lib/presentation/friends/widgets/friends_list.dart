@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/view/generic/DataError.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:flutter/material.dart'
@@ -85,16 +85,16 @@ class FriendsList extends StatelessWidget {
           ),
         );
       }, success: (data) {
-        if (data.isEmpty)
+        if (data.isEmpty) {
           return Center(
             child: Text("Adicione seus amigos clicando no botão \"+\" abaixo.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 22.0, color: Colors.black.withOpacity(0.2))),
           );
-        else
+        } else {
           return ListView.separated(
-            separatorBuilder: (_, index) => Divider(),
+            separatorBuilder: (_, index) => const Divider(),
             padding: const EdgeInsets.only(bottom: 80),
             physics: const BouncingScrollPhysics(),
             itemCount: data.length,
@@ -121,9 +121,9 @@ class FriendsList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(person.levelText,
-                              style: TextStyle(fontSize: 16)),
+                              style: const TextStyle(fontSize: 16)),
                           Text("${person.score} Km",
-                              style: TextStyle(fontWeight: FontWeight.w300)),
+                              style: const TextStyle(fontWeight: FontWeight.w300)),
                         ],
                       )
                     ],
@@ -132,6 +132,7 @@ class FriendsList extends StatelessWidget {
               );
             },
           );
+        }
       }, error: (error) {
         return const DataError();
       });

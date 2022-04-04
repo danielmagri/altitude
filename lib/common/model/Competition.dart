@@ -10,35 +10,36 @@ class Competition {
   List<Competitor>? competitors;
   List<String?>? invitations;
 
-  static const ID = "id";
-  static const TITLE = "title";
-  static const INITIAL_DATE = "initial_date";
-  static const COMPETITORS_ID = "competitors_id";
-  static const COMPETITORS = "competitors";
-  static const INVITATIONS = "invitations";
+  static const ID = 'id';
+  static const TITLE = 'title';
+  static const INITIAL_DATE = 'initial_date';
+  static const COMPETITORS_ID = 'competitors_id';
+  static const COMPETITORS = 'competitors';
+  static const INVITATIONS = 'invitations';
 
-  Competition(
-      {this.id,
-      this.title,
-      this.initialDate,
-      this.competitors,
-      this.invitations}) {
+  Competition({
+    this.id,
+    this.title,
+    this.initialDate,
+    this.competitors,
+    this.invitations,
+  }) {
     if (competitors!.isNotEmpty) {
       competitors!.sort((a, b) => b.score.compareTo(a.score));
     }
   }
 
   Competitor getMyCompetitor() => competitors!.firstWhere(
-      (element) => element.uid == GetIt.I.get<IFireAuth>().getUid());
+      (element) => element.uid == GetIt.I.get<IFireAuth>().getUid(),);
 
   String listCompetitors() {
-    String list = "";
+    String list = '';
 
     if (competitors != null) {
       for (var i = 0; i < competitors!.length; i++) {
         list += competitors![i].name!;
         if (i < competitors!.length - 1) {
-          list += ", ";
+          list += ', ';
         }
       }
     }
@@ -58,9 +59,9 @@ class Competition {
         title: json[TITLE],
         initialDate: json[INITIAL_DATE] is Timestamp
             ? DateTime.fromMillisecondsSinceEpoch(
-                (json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch)
+                (json[INITIAL_DATE] as Timestamp).millisecondsSinceEpoch,)
             : DateTime.fromMillisecondsSinceEpoch(json[INITIAL_DATE]),
-        competitors: competitorsList);
+        competitors: competitorsList,);
   }
 
   Map<String, dynamic> toJson() => {
@@ -68,7 +69,7 @@ class Competition {
         INITIAL_DATE: initialDate,
         COMPETITORS_ID: competitors!.map((e) => e.uid).toList(),
         COMPETITORS: Map.fromIterable(competitors!,
-            key: (e) => e.uid, value: (e) => e.toJson()),
+            key: (e) => e.uid, value: (e) => e.toJson(),),
         INVITATIONS: invitations
       };
 }

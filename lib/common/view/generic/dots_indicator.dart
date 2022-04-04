@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class DotsIndicator extends AnimatedWidget {
-  DotsIndicator({
+  const DotsIndicator({
     required this.controller,
     this.itemCount,
     this.onPageSelected,
-    this.color: Colors.white,
-  }) : super(listenable: controller);
+    this.color = Colors.white,
+    Key? key,
+  }) : super(listenable: controller, key: key);
 
   /// The PageController that this DotsIndicator is representing.
   final PageController controller;
@@ -40,16 +41,16 @@ class DotsIndicator extends AnimatedWidget {
       ),
     );
     double zoom = 1.0 + (_kMaxZoom - 1.0) * selectedness;
-    return new Container(
+    return SizedBox(
       width: _kDotSpacing,
-      child: new Center(
-        child: new Material(
+      child: Center(
+        child: Material(
           color: color,
           type: MaterialType.circle,
-          child: new Container(
+          child: SizedBox(
             width: _kDotSize * zoom,
             height: _kDotSize * zoom,
-            child: new InkWell(
+            child: InkWell(
               onTap: () => onPageSelected!(index),
             ),
           ),
@@ -58,10 +59,11 @@ class DotsIndicator extends AnimatedWidget {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    return new Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: new List<Widget>.generate(itemCount!, _buildDot),
+      children: List<Widget>.generate(itemCount!, _buildDot),
     );
   }
 }

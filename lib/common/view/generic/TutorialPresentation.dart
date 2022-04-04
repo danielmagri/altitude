@@ -28,12 +28,13 @@ import 'package:flutter/material.dart'
         Widget;
 
 class TutorialPresentation extends StatelessWidget {
-  TutorialPresentation(
-      {required this.focusAlignment,
-      required this.focusRadius,
-      required this.textAlignment,
-      required this.text,
-      this.hasNext = false});
+  TutorialPresentation({
+    required this.focusAlignment,
+    required this.focusRadius,
+    required this.textAlignment,
+    required this.text,
+    this.hasNext = false,
+  });
 
   final Alignment focusAlignment;
   final double focusRadius;
@@ -64,7 +65,12 @@ class TutorialPresentation extends StatelessWidget {
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: const TextStyle(color: Colors.white, fontSize: 18, height: 1.2, fontFamily: "Montserrat"),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    height: 1.2,
+                    fontFamily: 'Montserrat',
+                  ),
                   children: text,
                 ),
               ),
@@ -77,15 +83,25 @@ class TutorialPresentation extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: Text(
-                  hasNext ? "próximo" : "fechar",
-                  style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  hasNext ? 'próximo' : 'fechar',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0))),
-                    padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 10)),
-                    overlayColor: MaterialStateProperty.all(Colors.black26),
-                    elevation: MaterialStateProperty.all(2)),
+                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                  padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  overlayColor: MaterialStateProperty.all(Colors.black26),
+                  elevation: MaterialStateProperty.all(2),
+                ),
               ),
             ),
           )

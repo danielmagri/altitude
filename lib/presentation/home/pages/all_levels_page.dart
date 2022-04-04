@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/level_utils.dart';
 
 class AllLevelsPage extends StatefulWidget {
-  AllLevelsPage(this.arguments);
+  const AllLevelsPage(this.arguments, {Key? key}) : super(key: key);
 
   final AllLevelsPageArguments? arguments;
 
@@ -17,16 +17,16 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
     List<Widget> widgets = [];
     widgets.add(
       Container(
-        margin: EdgeInsets.only(top: 20, bottom: 16),
+        margin: const EdgeInsets.only(top: 20, bottom: 16),
         child: Row(
-          children: <Widget>[
+          children: const <Widget>[
             SizedBox(
               width: 50,
               child: BackButton(),
             ),
             Spacer(),
             Text(
-              "NÍVEIS",
+              'NÍVEIS',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             Spacer(),
@@ -62,14 +62,17 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
                     children: <Widget>[
                       Text(
                         LevelUtils.getLevelTextByCode(i),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         '${LevelUtils.getMaxScore(i)} Km',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
                     ],
                   ),
@@ -89,7 +92,7 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: _setLevelsWidget(),
           ),

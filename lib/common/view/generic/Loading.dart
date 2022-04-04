@@ -10,6 +10,7 @@ import 'package:flutter/material.dart'
         CurvedAnimation,
         Curves,
         FadeTransition,
+        Key,
         Navigator,
         PageRouteBuilder,
         StatelessWidget,
@@ -21,17 +22,25 @@ abstract class Loading {
 
   static void showLoading(BuildContext context) {
     if (!loading) {
-      Navigator.of(context).push(new PageRouteBuilder(
+      Navigator.of(context).push(
+        PageRouteBuilder(
           opaque: false,
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
-          transitionDuration: Duration(milliseconds: 100),
-          transitionsBuilder:
-              (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) =>
-                  FadeTransition(opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut), child: child),
+          transitionDuration: const Duration(milliseconds: 100),
+          transitionsBuilder: (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                  Widget child) =>
+              FadeTransition(
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            child: child,
+          ),
           pageBuilder: (BuildContext context, _, __) {
-            return LoadingWidget();
-          }));
+            return const LoadingWidget();
+          },
+        ),
+      );
       loading = true;
     }
   }
@@ -45,10 +54,17 @@ abstract class Loading {
 }
 
 class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({Key? key}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () => Future.value(false),
-        child:
-            Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(AppTheme.of(context).loading))));
+      onWillPop: () => Future.value(false),
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(AppTheme.of(context).loading),
+        ),
+      ),
+    );
   }
 }

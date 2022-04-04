@@ -52,12 +52,12 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
   void showInitialTutorial() async {
     if (!SharedPref.instance.competitionTutorial) {
       Timer.run(() async {
-        await Future.delayed(Duration(milliseconds: 600));
+        await Future.delayed(const Duration(milliseconds: 600));
         await navigateSmooth(
           TutorialPresentation(
-              focusAlignment: Alignment(0, 0),
+              focusAlignment: const Alignment(0, 0),
               focusRadius: 0,
-              textAlignment: Alignment(0, 0),
+              textAlignment: const Alignment(0, 0),
               text: const [
                 TextSpan(
                     text:
@@ -249,7 +249,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
+      value: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.brown,
           systemNavigationBarIconBrightness: Brightness.light),
@@ -257,7 +257,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
         backgroundColor: AppTheme.of(context).sky,
         body: Column(
           children: [
-            Container(
+            SizedBox(
               height: 106,
               child: Row(
                 children: [

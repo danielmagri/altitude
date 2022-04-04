@@ -22,7 +22,7 @@ import 'package:flutter/material.dart'
 import 'package:get_it/get_it.dart';
 
 class AddCompetitorsDialog extends StatefulWidget {
-  AddCompetitorsDialog(
+  const AddCompetitorsDialog(
       {Key? key,
       required this.id,
       required this.friends,

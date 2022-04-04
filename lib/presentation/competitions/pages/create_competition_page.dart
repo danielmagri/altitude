@@ -25,8 +25,8 @@ class CreateCompetitionPage extends StatefulWidget {
   _CreateCompetitionPageState createState() => _CreateCompetitionPageState();
 }
 
-class _CreateCompetitionPageState
-    extends BaseStateWithController<CreateCompetitionPage, CreateCompetitionController> {
+class _CreateCompetitionPageState extends BaseStateWithController<
+    CreateCompetitionPage, CreateCompetitionController> {
   final TextEditingController textEditingController = TextEditingController();
 
   InterstitialAd? myInterstitial;
@@ -39,7 +39,7 @@ class _CreateCompetitionPageState
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           // Keep a reference to the ad so you can show it later.
-          this.myInterstitial = ad;
+          myInterstitial = ad;
         },
         onAdFailedToLoad: (LoadAdError error) {
           print('InterstitialAd failed to load: $error');
@@ -72,7 +72,7 @@ class _CreateCompetitionPageState
       showToast(competitionNameValidate);
     } else if (controller.selectedHabit == null) {
       showToast("Escolha um hábito para competir.");
-    } else if (controller.selectedFriends.length == 0) {
+    } else if (controller.selectedFriends.isEmpty) {
       showToast("Escolha pelo menos um amigo.");
     } else if (await controller.checkHabitCompetitionLimit()) {
       showToast(
@@ -105,8 +105,8 @@ class _CreateCompetitionPageState
               const Header(title: "CRIAR COMPETIÇÃO"),
               const SizedBox(height: 32),
               const Padding(
-                padding: const EdgeInsets.only(right: 16, left: 16),
-                child: const Text("Nome da competição",
+                padding: EdgeInsets.only(right: 16, left: 16),
+                child: Text("Nome da competição",
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
@@ -121,8 +121,8 @@ class _CreateCompetitionPageState
                 ),
               ),
               const Padding(
-                padding: const EdgeInsets.only(right: 16, left: 16, top: 42),
-                child: const Text("Escolha um hábito para competir",
+                padding: EdgeInsets.only(right: 16, left: 16, top: 42),
+                child: Text("Escolha um hábito para competir",
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
@@ -173,8 +173,8 @@ class _CreateCompetitionPageState
                 ),
               ),
               const Padding(
-                padding: const EdgeInsets.only(right: 16, left: 16, top: 42),
-                child: const Text("Convidar amigos",
+                padding:  EdgeInsets.only(right: 16, left: 16, top: 42),
+                child:  Text("Convidar amigos",
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),

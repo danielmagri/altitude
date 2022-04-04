@@ -5,9 +5,7 @@ import 'package:altitude/common/constant/app_colors.dart';
 class NewLevelDialog extends StatelessWidget {
   final int score;
 
-  NewLevelDialog({
-    required this.score,
-  });
+  const NewLevelDialog({required this.score, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +15,21 @@ class NewLevelDialog extends StatelessWidget {
         children: <Widget>[
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: BackgroundAnimated(),
+            child: const BackgroundAnimated(),
           ),
           Center(
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.0),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10.0,
-                    offset: const Offset(0.0, 10.0),
+                    offset: Offset(0.0, 10.0),
                   ),
                 ],
               ),
@@ -38,35 +37,44 @@ class NewLevelDialog extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Text(
-                    "Parabéns!",
-                    style:
-                        TextStyle(color: LevelUtils.getLevelColor(score), fontSize: 32, fontWeight: FontWeight.bold),
+                    'Parabéns!',
+                    style: TextStyle(
+                      color: LevelUtils.getLevelColor(score),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(height: 24.0),
-                  Text(
-                    "Você subiu de nível!",
+                  const SizedBox(height: 24.0),
+                  const Text(
+                    'Você subiu de nível!',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
                   ),
-                  SizedBox(height: 24.0),
+                  const SizedBox(height: 24.0),
                   Image.asset(
                     LevelUtils.getLevelImagePath(score),
                     height: 120,
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Text(
                     LevelUtils.getLevelText(score),
-                    style:
-                        TextStyle(color: LevelUtils.getLevelColor(score), fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: LevelUtils.getLevelColor(score),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text("Ok", style: TextStyle(fontSize: 18.0, color: Colors.black)),
+                      child: const Text(
+                        'Ok',
+                        style: TextStyle(fontSize: 18.0, color: Colors.black),
+                      ),
                     ),
                   ),
                 ],
@@ -80,11 +88,14 @@ class NewLevelDialog extends StatelessWidget {
 }
 
 class BackgroundAnimated extends StatefulWidget {
+  const BackgroundAnimated({Key? key}) : super(key: key);
+
   @override
   _BackgroundAnimatedState createState() => _BackgroundAnimatedState();
 }
 
-class _BackgroundAnimatedState extends State<BackgroundAnimated> with SingleTickerProviderStateMixin {
+class _BackgroundAnimatedState extends State<BackgroundAnimated>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   Animatable<Color?> background = TweenSequence<Color?>([
@@ -161,7 +172,9 @@ class _BackgroundAnimatedState extends State<BackgroundAnimated> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: background.evaluate(AlwaysStoppedAnimation(_controller.value))!.withOpacity(0.75),
+      color: background
+          .evaluate(AlwaysStoppedAnimation(_controller.value))!
+          .withOpacity(0.75),
     );
   }
 }

@@ -36,7 +36,9 @@ class ReminderDay extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-            shape: BoxShape.circle, color: state! ? color : Colors.transparent),
+          shape: BoxShape.circle,
+          color: state! ? color : Colors.transparent,
+        ),
         child: InkWell(
           onTap: onTap,
           splashColor: Colors.transparent,
@@ -45,14 +47,15 @@ class ReminderDay extends StatelessWidget {
             day,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 18,
-                color: state!
-                    ? Colors.white
-                    : AppTheme.of(context)
-                        .materialTheme
-                        .textTheme
-                        .headline1!
-                        .color),
+              fontSize: 18,
+              color: state!
+                  ? Colors.white
+                  : AppTheme.of(context)
+                      .materialTheme
+                      .textTheme
+                      .headline1!
+                      .color,
+            ),
           ),
         ),
       ),

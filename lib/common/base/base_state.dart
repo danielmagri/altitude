@@ -3,7 +3,7 @@ import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode, protected;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart' show GetIt;
@@ -17,26 +17,31 @@ import 'package:flutter/material.dart'
         CurvedAnimation,
         Curves,
         FadeTransition,
+        FontWeight,
         Navigator,
         PageRouteBuilder,
         Route,
         State,
         StatefulWidget,
+        Text,
         TextButton,
+        TextStyle,
         Widget,
         WidgetsBinding,
         protected,
         showDialog;
 
-abstract class BaseStateWithController<T extends StatefulWidget, L extends Object>
-    extends BaseState<T> {
+abstract class BaseStateWithController<T extends StatefulWidget,
+    L extends Object> extends BaseState<T> {
   L controller = GetIt.I.get<L>();
 
   @override
   dispose() async {
     super.dispose();
     await serviceLocator.resetLazySingleton<L>(instance: controller);
-    print("Disposed $L");
+    if (kDebugMode) {
+      print('Disposed $L');
+    }
   }
 }
 
@@ -93,34 +98,43 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   @protected
   void showToast(String message) {
     Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Color.fromARGB(255, 220, 220, 220),
-        textColor: Colors.black,
-        fontSize: 16.0);
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: const Color.fromARGB(255, 220, 220, 220),
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
   }
 
   @protected
   void showLoading(bool show) {
     if (!_loading && show) {
-      Navigator.of(context).push(new PageRouteBuilder(
+      Navigator.of(context).push(
+        PageRouteBuilder(
           opaque: false,
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
           fullscreenDialog: true,
-          transitionDuration: Duration(milliseconds: 100),
-          transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) =>
-              new FadeTransition(
-                  opacity: new CurvedAnimation(
-                      parent: animation, curve: Curves.easeOut),
-                  child: child),
+          transitionDuration: const Duration(milliseconds: 100),
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+            ),
+            child: child,
+          ),
           pageBuilder: (BuildContext context, _, __) {
             return LoadingWidget();
-          }));
+          },
+        ),
+      );
       _loading = true;
     } else if (_loading && !show) {
       Navigator.of(context).pop();
@@ -129,34 +143,41 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  void showSimpleDialog(String title, String body,
-      {String? subBody, Function? confirmCallback, Function? cancelCallback}) {
+  void showSimpleDialog(
+    String title,
+    String body, {
+    String? subBody,
+    Function? confirmCallback,
+    Function? cancelCallback,
+  }) {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => BaseTextDialog(
-              title: title,
-              body: body,
-              subBody: subBody,
-              action: [
-                TextButton(
-                  child: const Text("Não",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-                  onPressed: () {
-                    navigatePop();
-                    cancelCallback!();
-                  },
-                ),
-                TextButton(
-                  child: const Text("Sim", style: TextStyle(fontSize: 17)),
-                  onPressed: () {
-                    navigatePop();
-                    confirmCallback!();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => BaseTextDialog(
+        title: title,
+        body: body,
+        subBody: subBody,
+        action: [
+          TextButton(
+            child: const Text(
+              'Não',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+            ),
+            onPressed: () {
+              navigatePop();
+              cancelCallback!();
+            },
+          ),
+          TextButton(
+            child: const Text('Sim', style: TextStyle(fontSize: 17)),
+            onPressed: () {
+              navigatePop();
+              confirmCallback!();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @protected
@@ -169,13 +190,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  Future<Null> handleError(dynamic error) async {
+  Future<void> handleError(dynamic error) async {
     showLoading(false);
     if (error is String) {
       showToast(error);
     } else {
-      showToast("Ocorreu um erro");
+      showToast('Ocorreu um erro');
     }
-    return null;
+    return;
   }
 }

@@ -9,13 +9,13 @@ class DayDone {
 
   String get dateFormatted => date!.dateFormatted;
 
-  static const DATE = "date";
+  static const DATE = 'date';
 
   factory DayDone.fromJson(Map<String, dynamic> json) =>
       DayDone(date: DateTime.fromMillisecondsSinceEpoch((json[DATE] as Timestamp).millisecondsSinceEpoch).onlyDate);
 
   factory DayDone.fromDB(Map<String, dynamic> json) => DayDone(
-      date: json.containsKey("date_done") && json["date_done"] != null ? DateTime.parse(json["date_done"]) : null);
+      date: json.containsKey('date_done') && json['date_done'] != null ? DateTime.parse(json['date_done']) : null);
 
   Map<String, dynamic> toJson() => {DATE: date};
 }
