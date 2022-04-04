@@ -146,7 +146,7 @@ class HabitsRepository extends IHabitsRepository {
     competitions.forEach((competition) {
       int i = _memory.competitions.indexWhere((e) => e.id == competition.id);
       if (index != -1) {
-        _memory.competitions[i].competitors.firstWhere((e) => e.you!).score +=
+        _memory.competitions[i].competitors.firstWhere((e) => e.you).score +=
             score;
       }
     });

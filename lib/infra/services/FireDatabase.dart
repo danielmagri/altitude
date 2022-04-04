@@ -1,12 +1,12 @@
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
+import 'package:altitude/data/model/competitor_model.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -52,7 +52,9 @@ class FireDatabase implements IFireDatabase {
         competitionCollection.doc(competitionId),
         {
           CompetitionModel.competitorsTag: {
-            GetIt.I.get<IFireAuth>().getUid(): {Competitor.HABIT_ID: habit.id}
+            GetIt.I.get<IFireAuth>().getUid(): {
+              CompetitorModel.habitIdTag: habit.id
+            }
           }
         },
         SetOptions(merge: true),
@@ -108,7 +110,9 @@ class FireDatabase implements IFireDatabase {
         competitionCollection.doc(item.first),
         {
           CompetitionModel.competitorsTag: {
-            GetIt.I.get<IFireAuth>().getUid(): {Competitor.SCORE: item.second}
+            GetIt.I.get<IFireAuth>().getUid(): {
+              CompetitorModel.scoreTag: item.second
+            }
           }
         },
         SetOptions(merge: true),
@@ -145,7 +149,7 @@ class FireDatabase implements IFireDatabase {
           competitionCollection.doc(item),
           {
             CompetitionModel.competitorsTag: {
-              GetIt.I.get<IFireAuth>().getUid(): {Competitor.NAME: name}
+              GetIt.I.get<IFireAuth>().getUid(): {CompetitorModel.nameTag: name}
             }
           },
           SetOptions(merge: true),
@@ -168,7 +172,9 @@ class FireDatabase implements IFireDatabase {
           competitionCollection.doc(item),
           {
             CompetitionModel.competitorsTag: {
-              GetIt.I.get<IFireAuth>().getUid(): {Competitor.FCM_TOKEN: token}
+              GetIt.I.get<IFireAuth>().getUid(): {
+                CompetitorModel.fcmTokenTag: token
+              }
             }
           },
           SetOptions(merge: true),
@@ -233,7 +239,7 @@ class FireDatabase implements IFireDatabase {
           {
             CompetitionModel.competitorsTag: {
               GetIt.I.get<IFireAuth>().getUid(): {
-                Competitor.COLOR: habit.colorCode
+                CompetitorModel.colorTag: habit.colorCode
               }
             }
           },
@@ -288,7 +294,7 @@ class FireDatabase implements IFireDatabase {
             {
               CompetitionModel.competitorsTag: {
                 GetIt.I.get<IFireAuth>().getUid(): {
-                  Competitor.SCORE: FieldValue.increment(score)
+                  CompetitorModel.scoreTag: FieldValue.increment(score)
                 }
               }
             },
@@ -599,7 +605,7 @@ class FireDatabase implements IFireDatabase {
   Future<CompetitionModel> createCompetition(
     String title,
     DateTime date,
-    List<Competitor> competitors,
+    List<CompetitorModel> competitors,
     List<String> invitations,
   ) {
     DocumentReference doc = competitionCollection.doc();
@@ -625,7 +631,9 @@ class FireDatabase implements IFireDatabase {
     return competitionCollection.doc(competitionId).set(
       {
         CompetitionModel.competitorsTag: {
-          GetIt.I.get<IFireAuth>().getUid(): {Competitor.HABIT_ID: habitId}
+          GetIt.I.get<IFireAuth>().getUid(): {
+            CompetitorModel.habitIdTag: habitId
+          }
         }
       },
       SetOptions(merge: true),
@@ -662,7 +670,7 @@ class FireDatabase implements IFireDatabase {
   @override
   Future acceptCompetitionRequest(
     String? competitionId,
-    Competitor competitor,
+    CompetitorModel competitor,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 

@@ -4,7 +4,6 @@ import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
@@ -12,6 +11,7 @@ import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/dialog/base_text_dialog.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/presentation/competitions/controllers/competition_details_controller.dart';
 import 'package:altitude/presentation/competitions/dialog/add_competitors_dialog.dart';
@@ -231,7 +231,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
                   splashColor: Colors.transparent,
                   child: Rocket(
                     size: const Size(100, 100),
-                    color: AppColors.habitsColor[competitor.color!],
+                    color: AppColors.habitsColor[competitor.color],
                     state: RocketState.onFire,
                     fireForce: 2,
                   ),
@@ -243,11 +243,11 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
                     child: SizedBox(
                       width: 100,
                       child: Text(
-                        competitor.you! ? 'Eu' : competitor.name!,
+                        competitor.you ? 'Eu' : competitor.name,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
-                        style: competitor.you!
+                        style: competitor.you
                             ? const TextStyle(fontWeight: FontWeight.bold)
                             : null,
                       ),

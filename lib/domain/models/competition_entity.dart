@@ -1,4 +1,4 @@
-import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/domain/models/competitor_entity.dart';
 
 class Competition {
   Competition({

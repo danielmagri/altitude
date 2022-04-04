@@ -1,5 +1,6 @@
-import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/data/model/competitor_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
@@ -115,7 +116,10 @@ class CompetitionsRepository extends ICompetitionsRepository {
     Competitor competitor,
     Competition competition,
   ) async {
-    await _fireDatabase.acceptCompetitionRequest(competitionId, competitor);
+    await _fireDatabase.acceptCompetitionRequest(
+      competitionId,
+      CompetitorModel.fromEntity(competitor),
+    );
     competition.competitors.add(competitor);
     _memory.competitions.add(competition);
   }
@@ -131,7 +135,7 @@ class CompetitionsRepository extends ICompetitionsRepository {
     Competition newCompetition = await _fireDatabase.createCompetition(
       title,
       date,
-      competitors,
+      competitors.map((e) => CompetitorModel.fromEntity(e)).toList(),
       invitations,
     );
 

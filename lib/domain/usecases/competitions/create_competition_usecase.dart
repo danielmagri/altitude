@@ -1,12 +1,12 @@
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:injectable/injectable.dart';
 
@@ -32,11 +32,11 @@ class CreateCompetitionUsecase
     final person = await _userRepository.getUserData(false);
 
     Competitor competitor = Competitor(
-      uid: person.uid,
-      name: person.name,
-      fcmToken: person.fcmToken,
-      habitId: params.habit.id,
-      color: params.habit.colorCode,
+      uid: person.uid ?? '',
+      name: person.name ?? '',
+      fcmToken: person.fcmToken ?? '',
+      habitId: params.habit.id ?? '',
+      color: params.habit.colorCode ?? 0,
       score: await _habitsRepository.hasDoneAtDay(params.habit.id ?? '', date)
           ? IScoreService.DAY_DONE_POINT
           : 0,

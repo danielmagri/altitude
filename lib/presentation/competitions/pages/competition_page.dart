@@ -303,7 +303,7 @@ class _CompetitionPageState
                                                         .get<IFireAuth>()
                                                         .getUid(),
                                                   )
-                                                  .color!],
+                                                  .color],
                                           isExtend: true,
                                         ),
                                       );

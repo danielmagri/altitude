@@ -1,4 +1,4 @@
-import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/data/model/competitor_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,7 +7,7 @@ class CompetitionModel extends Competition {
     required String id,
     required String title,
     required DateTime initialDate,
-    required List<Competitor> competitors,
+    required List<CompetitorModel> competitors,
     List<String>? invitations,
   }) : super(
           id: id,
@@ -18,11 +18,11 @@ class CompetitionModel extends Competition {
         );
 
   factory CompetitionModel.fromJson(Map<String, dynamic> json, String id) {
-    List<Competitor> competitorsList = [];
+    List<CompetitorModel> competitorsList = [];
     if (json[competitorsTag] is Map) {
       final map = json[competitorsTag];
       competitorsList =
-          map.keys.map((e) => Competitor.fromJson(map[e], e)).toList();
+          map.keys.map((e) => CompetitorModel.fromJson(map[e], e)).toList();
     }
     return CompetitionModel(
       id: id,
@@ -41,7 +41,9 @@ class CompetitionModel extends Competition {
         id: competition.id,
         title: competition.title,
         initialDate: competition.initialDate,
-        competitors: competition.competitors,
+        competitors: competition.competitors
+            .map((e) => CompetitorModel.fromEntity(e))
+            .toList(),
         invitations: competition.invitations,
       );
 
@@ -56,7 +58,10 @@ class CompetitionModel extends Competition {
         titleTag: title,
         initialDateTag: initialDate,
         competitorsIdTag: competitors.map((e) => e.uid).toList(),
-        competitorsTag: {for (var e in competitors) e.uid: e.toJson()},
+        competitorsTag: {
+          for (var e in competitors)
+            e.uid: CompetitorModel.fromEntity(e).toJson()
+        },
         invitationsTag: invitations
       };
 }

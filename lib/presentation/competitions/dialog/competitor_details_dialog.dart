@@ -1,7 +1,7 @@
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:flutter/material.dart'
     show
         Column,
@@ -34,29 +34,36 @@ class CompetitorDetailsDialog extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Transform.rotate(
-                angle: 0.52,
-                child: Rocket(
-                    size: const Size(200, 200),
-                    color: AppColors.habitsColor[competitor.color!],
-                    state: RocketState.onFire,
-                    fireForce: 1,),),
+              angle: 0.52,
+              child: Rocket(
+                size: const Size(200, 200),
+                color: AppColors.habitsColor[competitor.color],
+                state: RocketState.onFire,
+                fireForce: 1,
+              ),
+            ),
           ),
           Expanded(
-            child: Column(children: [
-              Text(
-                competitor.score.toString(),
-                style: const TextStyle(fontSize: 20),
-              ),
-              const Text('Km',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),),
-            ],),
+            child: Column(
+              children: [
+                Text(
+                  competitor.score.toString(),
+                  style: const TextStyle(fontSize: 20),
+                ),
+                const Text(
+                  'Km',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
           )
         ],
       ),
       action: <Widget>[
         TextButton(
-            child: const Text('Fechar'),
-            onPressed: () => Navigator.of(context).pop(),),
+          child: const Text('Fechar'),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ],
     );
   }
