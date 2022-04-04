@@ -1,8 +1,9 @@
 import 'package:altitude/common/enums/done_page_tyype.dart';
-import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/dialog/TutorialDialog.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
+import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -35,7 +36,6 @@ import 'package:flutter/material.dart'
         Widget;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:mobx/mobx.dart' show ObservableMap;
 import 'package:table_calendar/table_calendar.dart';
 
@@ -55,14 +55,14 @@ class CalendarWidget extends StatelessWidget {
   void dayCalendarClick(DateTime selectedDay, DateTime focusedDay) {
     bool add = controller.calendarMonth.data?[selectedDay]?.isEmpty ?? true;
 
-    completeHabit(add, selectedDay, DonePageType.Calendar);
+    completeHabit(add, selectedDay, DonePageType.calendar);
   }
 
   void calendarHelp(BuildContext context) {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpCalendar',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 '  No calendário você tem o controle de todos os dias feitos!',
@@ -125,7 +125,6 @@ class CalendarWidget extends StatelessWidget {
             eventLoader: (day) {
               return data[day] ?? <bool>[];
             },
-            startingDayOfWeek: StartingDayOfWeek.sunday,
             availableGestures: AvailableGestures.horizontalSwipe,
             availableCalendarFormats: const {
               CalendarFormat.month: '',

@@ -54,7 +54,7 @@ class LightTheme implements IAppTheme {
       labelStyle: const TextStyle(fontSize: 15),
     ),
     tabBarTheme: const TabBarTheme(
-      indicator: ShapeDecoration(shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 2))),
+      indicator: ShapeDecoration(shape: UnderlineInputBorder(borderSide: BorderSide(width: 2))),
       unselectedLabelColor: Colors.black,
       labelColor: Colors.black,
       unselectedLabelStyle: TextStyle(fontSize: 16, fontFamily: 'Montserrat'),

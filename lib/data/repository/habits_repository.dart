@@ -1,15 +1,16 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/enums/score_type.dart';
-import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/infra/interface/i_fire_analytics.dart';
-import 'package:altitude/infra/interface/i_local_notification.dart';
-import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
+import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
+import 'package:altitude/infra/interface/i_local_notification.dart';
+import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/infra/services/Memory.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:injectable/injectable.dart';
 
 abstract class IHabitsRepository {
@@ -53,12 +54,6 @@ abstract class IHabitsRepository {
 
 @Injectable(as: IHabitsRepository)
 class HabitsRepository extends IHabitsRepository {
-  final Memory _memory;
-  final IFireDatabase _fireDatabase;
-  final IScoreService _scoreService;
-  final ILocalNotification _localNotification;
-  final IFireAnalytics _fireAnalytics;
-
   HabitsRepository(
     this._memory,
     this._fireDatabase,
@@ -66,6 +61,12 @@ class HabitsRepository extends IHabitsRepository {
     this._localNotification,
     this._fireAnalytics,
   );
+
+  final Memory _memory;
+  final IFireDatabase _fireDatabase;
+  final IScoreService _scoreService;
+  final ILocalNotification _localNotification;
+  final IFireAnalytics _fireAnalytics;
 
   @override
   Future<List<Habit>> getHabits(bool notSave) async {
@@ -114,7 +115,7 @@ class HabitsRepository extends IHabitsRepository {
             .toList();
 
     var score = _scoreService.calculateScore(
-      isAdd ? ScoreType.ADD : ScoreType.SUBTRACT,
+      isAdd ? ScoreType.add : ScoreType.subtract,
       habit.frequency!,
       days,
       date,
@@ -150,14 +151,16 @@ class HabitsRepository extends IHabitsRepository {
       }
     });
 
-    print('$date $isAdd - Score: $score  Id: $habitId');
+    if (kDebugMode) {
+      print('$date $isAdd - Score: $score  Id: $habitId');
+    }
 
     return score;
   }
 
   @override
   Future<bool> hasDoneAtDay(String id, DateTime date) async {
-    return await _fireDatabase.hasDoneAtDay(id, date);
+    return _fireDatabase.hasDoneAtDay(id, date);
   }
 
   @override
@@ -215,10 +218,13 @@ class HabitsRepository extends IHabitsRepository {
 
   @override
   Future<Map<DateTime, List<bool>>> getCalendarDaysDone(
-      String id, int month, int year) async {
-    final firstDayMonth = DateTime.utc(year, month, 1);
+    String id,
+    int month,
+    int year,
+  ) async {
+    final firstDayMonth = DateTime.utc(year, month);
     final lastDayMonth =
-        DateTime.utc(year, month + 1, 1).subtract(const Duration(days: 1));
+        DateTime.utc(year, month + 1).subtract(const Duration(days: 1));
 
     DateTime startDate = firstDayMonth.subtract(
       Duration(

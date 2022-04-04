@@ -1,6 +1,7 @@
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/dialog/TutorialDialog.dart';
+import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:altitude/domain/enums/frquency_type.dart';
 import 'package:altitude/presentation/habits/dialogs/dayweek_dialog.dart';
 import 'package:altitude/presentation/habits/dialogs/weekly_dialog.dart';
@@ -14,8 +15,8 @@ import 'package:flutter/material.dart'
         Color,
         Colors,
         Column,
-        Container,
         CrossAxisAlignment,
+        DecoratedBox,
         EdgeInsets,
         Flexible,
         FontWeight,
@@ -37,7 +38,6 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget,
         showDialog;
-import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class SelectFrequency extends StatelessWidget {
   const SelectFrequency({
@@ -53,9 +53,9 @@ class SelectFrequency extends StatelessWidget {
 
   void showTutorial(BuildContext context) {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpFrequency',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 '  Quais dias ou quantas vezes na semana você deseja fazer o hábito?',
@@ -104,7 +104,7 @@ class SelectFrequency extends StatelessWidget {
                 break;
             }
           },
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               color: currentFrequency?.frequencyType() == type
                   ? color

@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class CancelFriendRequestUsecase extends BaseUsecase<String, void> {
-  final IFriendsRepository _friendsRepository;
-
   CancelFriendRequestUsecase(this._friendsRepository);
+
+  final IFriendsRepository _friendsRepository;
 
   @override
   Future<void> getRawFuture(String params) async {

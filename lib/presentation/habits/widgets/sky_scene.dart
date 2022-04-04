@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -28,7 +30,6 @@ import 'package:flutter/material.dart'
         Transform,
         Tween,
         Widget;
-import 'dart:math';
 
 class SkyScene extends StatelessWidget {
   SkyScene({required this.color, Key? key, this.size, this.force = 0})
@@ -145,7 +146,7 @@ class _RocketAnimatedState extends State<RocketAnimated>
             size: widget.size,
             color: widget.color,
             fireForce: widget.force,
-            state: RocketState.ON_FIRE,
+            state: RocketState.onFire,
           ),
         ),
       ),
@@ -219,7 +220,6 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
         curve: const Interval(
           0,
           0.15,
-          curve: Curves.linear,
         ),
       ),
     );
@@ -233,7 +233,6 @@ class _CloudState extends State<Cloud> with SingleTickerProviderStateMixin {
         curve: const Interval(
           0.85,
           0.95,
-          curve: Curves.linear,
         ),
       ),
     );

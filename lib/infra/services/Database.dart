@@ -2,22 +2,22 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
-  static final DatabaseService _singleton = new DatabaseService._internal();
-
-  static final _databaseName = 'habitus.db';
-  static final _databaseVersion = 6;
-
-  static Database? _database;
-
   factory DatabaseService() {
     return _singleton;
   }
 
   DatabaseService._internal();
+
+  static final DatabaseService _singleton = DatabaseService._internal();
+
+  static const _databaseName = 'habitus.db';
+  static const _databaseVersion = 6;
+
+  static Database? _database;
 
   Future<Database?> get database async {
     if (_database != null) return _database;
@@ -26,16 +26,16 @@ class DatabaseService {
     return _database;
   }
 
-  _initDatabase() async {
+  Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), _databaseName);
-    return await openDatabase(
+    return openDatabase(
       path,
       version: _databaseVersion,
       onUpgrade: _onUpgrade,
     );
   }
 
-  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // 2.1.0
     if (oldVersion < 6) {
       await db.execute(
@@ -175,7 +175,7 @@ class DatabaseService {
     var result =
         await db.rawQuery('SELECT * FROM reminder WHERE habit_id=$id;');
 
-    if (result.length == 0) {
+    if (result.isEmpty) {
       return null;
     }
 
@@ -282,8 +282,10 @@ class DatabaseService {
   }
 
   /// Retorna uma lista com todos os dias feitos.
-  Future<List<DayDone>> getAllDaysDone(
-      {DateTime? startDate, DateTime? endDate}) async {
+  Future<List<DayDone>> getAllDaysDone({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     final db = await database;
     List<dynamic> result;
 

@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:altitude/common/constant/Util.dart';
 import 'dart:math';
 
-enum RocketState { ON_FIRE, STOPPED }
+import 'package:altitude/common/constant/util.dart';
+import 'package:flutter/material.dart';
+
+enum RocketState { onFire, stopped }
 
 class _RocketPainter extends CustomPainter {
   _RocketPainter(this.color);
@@ -162,14 +163,14 @@ class _FirePainter extends CustomPainter {
 /// Widget do foguete
 /// isExtend se estiver em true desenha o foguete em completo no tamanho entregue
 class Rocket extends StatelessWidget {
-  Rocket(
-      {Key? key,
-      required this.size,
-      required this.color,
-      this.state = RocketState.STOPPED,
-      this.isExtend = false,
-      this.fireForce = 0})
-      : super(key: key);
+  const Rocket({
+    required this.size,
+    required this.color,
+    Key? key,
+    this.state = RocketState.stopped,
+    this.isExtend = false,
+    this.fireForce = 0,
+  }) : super(key: key);
 
   final RocketState state;
   final Size? size;
@@ -180,7 +181,7 @@ class Rocket extends StatelessWidget {
   List<Widget> _listPainters() {
     List<Widget> widgets = [];
 
-    if (isExtend && state != RocketState.ON_FIRE) {
+    if (isExtend && state != RocketState.onFire) {
       widgets.add(
         CustomPaint(
           size: size!,
@@ -195,7 +196,7 @@ class Rocket extends StatelessWidget {
         ),
       );
 
-      if (state == RocketState.ON_FIRE) {
+      if (state == RocketState.onFire) {
         widgets.add(
           CustomPaint(
             size: Size(size!.width, size!.height * 0.4),

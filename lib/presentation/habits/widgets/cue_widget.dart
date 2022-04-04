@@ -1,9 +1,8 @@
-import 'package:altitude/common/view/generic/Skeleton.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart'
     show
         Align,
-        Alignment,
         BuildContext,
         Card,
         Column,
@@ -23,7 +22,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class CueWidget extends StatelessWidget {
-  CueWidget({Key? key, required this.openBottomSheet})
+  CueWidget({required this.openBottomSheet, Key? key})
       : controller = GetIt.I.get<HabitDetailsController>(),
         super(key: key);
 
@@ -80,7 +79,6 @@ class CueWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Align(
-                            alignment: Alignment.center,
                             child: _setCueWidget(data!.oldCue!),
                           ),
                         ),

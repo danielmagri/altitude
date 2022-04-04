@@ -15,7 +15,6 @@ import 'package:flutter/material.dart'
         Key,
         ListView,
         MainAxisAlignment,
-        MainAxisSize,
         SizedBox,
         Stack,
         StatelessWidget,
@@ -24,7 +23,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget;
 
-const double HISTORIC_CHART_HEIGHT = 200;
+const double historic_chart_height = 200;
 
 class HistoricChart extends StatelessWidget {
   HistoricChart({required this.list, Key? key, this.selectedHabitId})
@@ -41,7 +40,7 @@ class HistoricChart extends StatelessWidget {
 
   List<Widget> lines(BuildContext context) {
     List<Widget> lines;
-    double space = (HISTORIC_CHART_HEIGHT - 30) / (linesCount - 1);
+    double space = (historic_chart_height - 30) / (linesCount - 1);
 
     lines = List.generate(
       linesCount,
@@ -60,7 +59,7 @@ class HistoricChart extends StatelessWidget {
   @override
   Widget build(context) {
     return SizedBox(
-      height: HISTORIC_CHART_HEIGHT,
+      height: historic_chart_height,
       child: Stack(
         alignment: AlignmentDirectional.centerEnd,
         children: [
@@ -77,7 +76,7 @@ class HistoricChart extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => HistoricBar(
               data: list[index],
-              multiplier: (HISTORIC_CHART_HEIGHT - 50) / maxDataValue,
+              multiplier: (historic_chart_height - 50) / maxDataValue,
               selectedHabitId: selectedHabitId,
             ),
           ),
@@ -187,7 +186,6 @@ class HistoricBar extends StatelessWidget {
   @override
   Widget build(context) {
     return Column(
-      mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.end,
       children: barWidget(context),
     );

@@ -1,10 +1,11 @@
-import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
-import 'package:altitude/common/view/generic/dots_indicator.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/common/di/dependency_injection.dart';
+import 'package:altitude/common/view/generic/dots_indicator.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info/package_info.dart';
@@ -29,10 +30,10 @@ class _TutorialPageState extends BaseState<TutorialPage> {
   ];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
-    SharedPref.instance.habitTutorial = true;
+    serviceLocator.get<SharedPref>().habitTutorial = true;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent),
     );
@@ -45,10 +46,10 @@ class _TutorialPageState extends BaseState<TutorialPage> {
     super.dispose();
   }
 
-  void _nextTap() async {
+  Future<void> _nextTap() async {
     if (pageIndex == 3) {
       int version = int.parse((await PackageInfo.fromPlatform()).buildNumber);
-      SharedPref.instance.version = version;
+      serviceLocator.get<SharedPref>().version = version;
       if (GetIt.I.get<IFireAuth>().isLogged()) {
         navigatePushReplacement('/');
       } else {
@@ -155,7 +156,7 @@ class Initial extends StatelessWidget {
                       child: Rocket(
                         size: const Size(200, 190),
                         color: AppColors.habitsColor[3],
-                        state: RocketState.ON_FIRE,
+                        state: RocketState.onFire,
                         fireForce: 1,
                       ),
                     ),
@@ -201,7 +202,6 @@ class _CreateHabitState extends State<CreateHabit>
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
-      lowerBound: 0,
       upperBound: 0.03,
     );
     _controller.addListener(() {
@@ -241,7 +241,7 @@ class _CreateHabitState extends State<CreateHabit>
             flex: 2,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   image: const DecorationImage(
                     image: AssetImage('assets/createHabit.png'),
@@ -407,7 +407,7 @@ class _CompleteHabitState extends State<CompleteHabit>
             flex: 2,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   image: const DecorationImage(
                     image: AssetImage('assets/completeHabit.png'),
@@ -440,7 +440,7 @@ class _CompleteHabitState extends State<CompleteHabit>
                                 constraint.biggest.width * sizeRocket,
                               ),
                               color: AppColors.habitsColor[3],
-                              state: RocketState.ON_FIRE,
+                              state: RocketState.onFire,
                               fireForce: 1,
                             ),
                           ),
@@ -554,7 +554,7 @@ class _ScoreState extends State<Score> with SingleTickerProviderStateMixin {
             flex: 2,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   image: const DecorationImage(
                     image: AssetImage('assets/score.png'),

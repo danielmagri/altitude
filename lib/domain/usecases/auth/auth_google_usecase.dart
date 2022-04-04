@@ -14,7 +14,9 @@ class AuthGoogleUsecase extends BaseUsecase<NoParams, String?> {
     if (result != null) {
       GoogleSignInAuthentication googleAuth = await result.authentication;
       AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
       UserCredential fireResult =
           await FirebaseAuth.instance.signInWithCredential(credential);
       return fireResult.user!.uid;

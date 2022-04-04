@@ -1,23 +1,23 @@
-import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/common/constant/constants.dart';
+import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
-import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/base/base_usecase.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class InviteCompetitorUsecase
     extends BaseUsecase<InviteCompetitorParams, void> {
-  final ICompetitionsRepository _competitionsRepository;
-  final IUserRepository _userRepository;
-  final INotificationsRepository _notificationsRepository;
-
   InviteCompetitorUsecase(
     this._competitionsRepository,
     this._userRepository,
     this._notificationsRepository,
   );
+
+  final ICompetitionsRepository _competitionsRepository;
+  final IUserRepository _userRepository;
+  final INotificationsRepository _notificationsRepository;
 
   @override
   Future<void> getRawFuture(InviteCompetitorParams params) async {
@@ -46,13 +46,13 @@ class InviteCompetitorUsecase
 }
 
 class InviteCompetitorParams {
-  final String? competitionId;
-  final List<String?> competitorId;
-  final List<String?> fcmTokens;
-
   InviteCompetitorParams({
     required this.competitorId,
     required this.fcmTokens,
     this.competitionId,
   });
+
+  final String? competitionId;
+  final List<String?> competitorId;
+  final List<String?> fcmTokens;
 }

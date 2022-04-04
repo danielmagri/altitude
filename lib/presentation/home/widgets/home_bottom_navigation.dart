@@ -1,6 +1,6 @@
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
-import 'package:altitude/common/view/generic/Toast.dart';
+import 'package:altitude/common/view/generic/toast.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -17,7 +17,6 @@ import 'package:flutter/material.dart'
         InkWell,
         Key,
         MainAxisAlignment,
-        MainAxisSize,
         Row,
         StatelessWidget,
         Widget;
@@ -37,7 +36,7 @@ class HomebottomNavigation extends StatelessWidget {
   final Function(bool) goCompetition;
   final HomeController controller;
 
-  void _addHabitTap() async {
+  Future<void> _addHabitTap() async {
     if (!await controller.canAddHabit()) {
       goAddHabit();
     } else {
@@ -58,7 +57,6 @@ class HomebottomNavigation extends StatelessWidget {
           borderRadius: BorderRadius.circular(22),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButtonStatus(

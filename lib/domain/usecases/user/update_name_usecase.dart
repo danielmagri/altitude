@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class UpdateNameUsecase extends BaseUsecase<UpdateNameParams, void> {
-  final IUserRepository _userRepository;
-
   UpdateNameUsecase(this._userRepository);
+
+  final IUserRepository _userRepository;
 
   @override
   Future<void> getRawFuture(UpdateNameParams params) async {
@@ -15,8 +15,8 @@ class UpdateNameUsecase extends BaseUsecase<UpdateNameParams, void> {
 }
 
 class UpdateNameParams {
+  UpdateNameParams({required this.name, required this.competitionsId});
+
   final String name;
   final List<String?> competitionsId;
-
-  UpdateNameParams({required this.name, required this.competitionsId});
 }

@@ -1,10 +1,8 @@
-import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/constant/level_utils.dart';
+import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -39,6 +37,8 @@ import 'package:flutter/material.dart'
         TextOverflow,
         TextStyle,
         Widget;
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
@@ -56,16 +56,16 @@ class HomeDrawer extends StatelessWidget {
   final Function goLearn;
   final Function goSettings;
 
-  void goRateApp(BuildContext context) async {
+  Future<void> goRateApp(BuildContext context) async {
     Navigator.of(context).pop();
     //const APP_STORE_URL =
     //    'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
-    const PLAY_STORE_URL =
+    const playStoreUrl =
         'https://play.google.com/store/apps/details?id=com.magrizo.habit';
-    if (await canLaunch(PLAY_STORE_URL)) {
-      await launch(PLAY_STORE_URL);
+    if (await canLaunch(playStoreUrl)) {
+      await launch(playStoreUrl);
     } else {
-      throw 'Could not launch $PLAY_STORE_URL';
+      throw 'Could not launch $playStoreUrl';
     }
   }
 
@@ -146,8 +146,8 @@ class HomeDrawer extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(width: 4),
-                                Rocket(
-                                  size: const Size(25, 25),
+                                const Rocket(
+                                  size: Size(25, 25),
                                   color: Colors.white,
                                   isExtend: true,
                                 ),
@@ -184,7 +184,7 @@ class HomeDrawer extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Olá, ${data.name}",
+                                    'Olá, ${data.name}',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -194,7 +194,7 @@ class HomeDrawer extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    "${data.email}",
+                                    '${data.email}',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -213,7 +213,7 @@ class HomeDrawer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "${LevelUtils.getLevelText(data.score!)}",
+                              LevelUtils.getLevelText(data.score!),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -236,7 +236,7 @@ class HomeDrawer extends StatelessWidget {
             ListTile(
               title: const Text('Competição', style: TextStyle(fontSize: 16)),
               leading: Image.asset(
-                "assets/ic_award.png",
+                'assets/ic_award.png',
                 width: 25,
                 color: AppTheme.of(context).drawerIcon,
               ),
@@ -252,7 +252,7 @@ class HomeDrawer extends StatelessWidget {
               onTap: () => goCompetition(true),
             ),
             ListTile(
-              title: const Text('Amigos', style: const TextStyle(fontSize: 16)),
+              title: const Text('Amigos', style: TextStyle(fontSize: 16)),
               leading:
                   Icon(Icons.people, color: AppTheme.of(context).drawerIcon),
               trailing: controller.pendingFriendStatus
@@ -266,7 +266,7 @@ class HomeDrawer extends StatelessWidget {
                   : const SizedBox(),
               onTap: goFriends as void Function()?,
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               title: const Text('Avalie o app', style: TextStyle(fontSize: 16)),
               leading: Icon(Icons.star, color: AppTheme.of(context).drawerIcon),

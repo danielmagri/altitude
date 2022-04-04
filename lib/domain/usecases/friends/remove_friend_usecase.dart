@@ -4,12 +4,12 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class RemoveFriendUsecase extends BaseUsecase<String, void> {
-  final IFriendsRepository _friendsRepository;
-
   RemoveFriendUsecase(this._friendsRepository);
+
+  final IFriendsRepository _friendsRepository;
 
   @override
   Future<void> getRawFuture(String params) async {
-    return await _friendsRepository.removeFriend(params);
+    return _friendsRepository.removeFriend(params);
   }
 }

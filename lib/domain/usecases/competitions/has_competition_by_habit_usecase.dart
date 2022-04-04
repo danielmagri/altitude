@@ -1,12 +1,12 @@
-import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class HasCompetitionByHabitUsecase extends BaseUsecase<String, bool> {
-  final ICompetitionsRepository _competitionsRepository;
-
   HasCompetitionByHabitUsecase(this._competitionsRepository);
+
+  final ICompetitionsRepository _competitionsRepository;
 
   @override
   Future<bool> getRawFuture(String params) async {

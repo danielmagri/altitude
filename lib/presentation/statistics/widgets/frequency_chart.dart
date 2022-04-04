@@ -19,7 +19,6 @@ import 'package:flutter/material.dart'
         Key,
         ListView,
         MainAxisAlignment,
-        MainAxisSize,
         SizedBox,
         Stack,
         StatelessWidget,
@@ -30,7 +29,7 @@ import 'package:flutter/material.dart'
 const double FREQUENCY_CHART_HEIGHT = 250;
 
 class FrequencyChart extends StatelessWidget {
-  const FrequencyChart({Key? key, required this.list, this.selectedHabitId})
+  const FrequencyChart({required this.list, Key? key, this.selectedHabitId})
       : super(key: key);
 
   final List<FrequencyStatisticData>? list;
@@ -119,9 +118,12 @@ class FrequencyChart extends StatelessWidget {
 }
 
 class FrequencyCircle extends StatelessWidget {
-  const FrequencyCircle(
-      {Key? key, required this.data, required this.space, this.selectedHabitId})
-      : super(key: key);
+  const FrequencyCircle({
+    required this.data,
+    required this.space,
+    Key? key,
+    this.selectedHabitId,
+  }) : super(key: key);
 
   final FrequencyStatisticData data;
   final double space;
@@ -201,7 +203,6 @@ class FrequencyCircle extends StatelessWidget {
     return SizedBox(
       width: 28,
       child: Column(
-        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.end,
         children: _content(context),
       ),

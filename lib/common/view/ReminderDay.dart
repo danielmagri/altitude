@@ -17,18 +17,18 @@ import 'package:flutter/material.dart'
         Widget;
 
 class ReminderDay extends StatelessWidget {
+  const ReminderDay({
+    required this.day,
+    required this.color,
+    required this.onTap,
+    Key? key,
+    this.state,
+  }) : super(key: key);
+
   final String day;
   final bool? state;
   final Color color;
   final Function() onTap;
-
-  ReminderDay(
-      {Key? key,
-      required this.day,
-      this.state,
-      required this.color,
-      required this.onTap})
-      : super(key: key);
 
   @override
   Widget build(context) {

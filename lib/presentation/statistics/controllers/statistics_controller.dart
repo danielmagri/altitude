@@ -1,3 +1,7 @@
+import 'package:altitude/common/model/DayDone.dart';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/failure.dart';
 import 'package:altitude/domain/models/frequency_statistic_data.dart';
 import 'package:altitude/domain/models/habit_statistic_data.dart';
 import 'package:altitude/domain/models/historic_statistic_data.dart';
@@ -5,13 +9,10 @@ import 'package:altitude/domain/usecases/habits/get_all_days_done_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/common/model/failure.dart';
 import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'statistics_controller.g.dart';
 
 @lazySingleton
@@ -19,13 +20,17 @@ class StatisticsController = _StatisticsControllerBase
     with _$StatisticsController;
 
 abstract class _StatisticsControllerBase with Store {
+  _StatisticsControllerBase(
+    this._getHabitsUsecase,
+    this._getUserDataUsecase,
+    this._getAllDaysDoneUsecase,
+    this._scoreService,
+  );
+
   final GetHabitsUsecase _getHabitsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
   final GetAllDaysDoneUsecase _getAllDaysDoneUsecase;
   final IScoreService _scoreService;
-
-  _StatisticsControllerBase(this._getHabitsUsecase, this._getUserDataUsecase,
-      this._getAllDaysDoneUsecase, this._scoreService);
 
   DataState<ObservableList<HabitStatisticData>?> habitsData = DataState();
   DataState<List<HistoricStatisticData>> historicData = DataState();

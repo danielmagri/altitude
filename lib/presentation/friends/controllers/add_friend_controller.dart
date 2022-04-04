@@ -12,13 +12,17 @@ part 'add_friend_controller.g.dart';
 class AddFriendController = _AddFriendControllerBase with _$AddFriendController;
 
 abstract class _AddFriendControllerBase with Store {
+  _AddFriendControllerBase(
+    this._searchEmailUsecase,
+    this._friendRequestUsecase,
+    this._cancelFriendRequestUsecase,
+    this._acceptRequestUsecase,
+  );
+
   final SearchEmailUsecase _searchEmailUsecase;
   final FriendRequestUsecase _friendRequestUsecase;
   final CancelFriendRequestUsecase _cancelFriendRequestUsecase;
   final AcceptRequestUsecase _acceptRequestUsecase;
-
-  _AddFriendControllerBase(this._searchEmailUsecase, this._friendRequestUsecase,
-      this._cancelFriendRequestUsecase, this._acceptRequestUsecase);
 
   DataState<List<Person>?> searchResult =
       DataState.startWithSuccess(data: null);
@@ -32,19 +36,19 @@ abstract class _AddFriendControllerBase with Store {
   }
 
   Future sendFriendRequest(String uid) async {
-    return await _friendRequestUsecase
+    return _friendRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);
   }
 
   Future<void> cancelFriendRequest(String uid) async {
-    return await _cancelFriendRequestUsecase
+    return _cancelFriendRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);
   }
 
   Future<void> acceptFriendRequest(String uid) async {
-    return await _acceptRequestUsecase
+    return _acceptRequestUsecase
         .call(uid)
         .resultComplete((data) => data, (error) => throw error);
   }

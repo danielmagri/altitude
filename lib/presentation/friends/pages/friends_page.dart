@@ -1,7 +1,7 @@
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
-import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:altitude/presentation/friends/dialogs/add_friend_dialog.dart';
 import 'package:altitude/presentation/friends/widgets/friends_list.dart';
@@ -40,7 +40,7 @@ class _FriendsPageState
   }
 
   void addNewFriend() {
-    navigateSmooth(AddFriendDialog()).then((value) {
+    navigateSmooth(const AddFriendDialog()).then((value) {
       if (value is Person) {
         controller.addPersons([value].asObservable());
       }
@@ -48,15 +48,17 @@ class _FriendsPageState
   }
 
   void removeFriend(Person person) {
-    showSimpleDialog("Desfazer amizade",
-        "Tem certeza que deseja desfazer amizade com ${person.name}?",
-        confirmCallback: () {
-      showLoading(true);
+    showSimpleDialog(
+      'Desfazer amizade',
+      'Tem certeza que deseja desfazer amizade com ${person.name}?',
+      confirmCallback: () {
+        showLoading(true);
 
-      controller.removeFriend(person.uid!).then((_) {
-        showLoading(false);
-      }).catchError(handleError);
-    });
+        controller.removeFriend(person.uid!).then((_) {
+          showLoading(false);
+        }).catchError(handleError);
+      },
+    );
   }
 
   @override
@@ -65,23 +67,26 @@ class _FriendsPageState
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Amigos"),
+          title: const Text('Amigos'),
           actions: [
             Observer(
-                builder: (_) => IconButtonStatus(
-                    icon: const Icon(Icons.mail),
-                    status: controller.pendingStatus,
-                    onPressed: goPendingFriends))
+              builder: (_) => IconButtonStatus(
+                icon: const Icon(Icons.mail),
+                status: controller.pendingStatus,
+                onPressed: goPendingFriends,
+              ),
+            )
           ],
           bottom: const TabBar(
             tabs: [
-              Tab(text: "Meus amigos"),
-              Tab(text: "Ranking"),
+              Tab(text: 'Meus amigos'),
+              Tab(text: 'Ranking'),
             ],
           ),
         ),
         body: TabBarView(
-            children: [FriendsList(removeFriend: removeFriend), RankingList()]),
+          children: [FriendsList(removeFriend: removeFriend), RankingList()],
+        ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           heroTag: null,

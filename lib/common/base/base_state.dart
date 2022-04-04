@@ -1,17 +1,13 @@
+import 'dart:async';
+
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
-import 'package:altitude/common/view/dialog/BaseTextDialog.dart';
+import 'package:altitude/common/view/dialog/base_text_dialog.dart';
 import 'package:altitude/common/view/generic/Loading.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, protected;
-import 'package:flutter/services.dart' show SystemUiOverlayStyle;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get_it/get_it.dart' show GetIt;
-import 'package:vibration/vibration.dart';
 import 'package:flutter/material.dart'
     show
-        Animation,
-        BuildContext,
         Color,
         Colors,
         CurvedAnimation,
@@ -20,7 +16,6 @@ import 'package:flutter/material.dart'
         FontWeight,
         Navigator,
         PageRouteBuilder,
-        Route,
         State,
         StatefulWidget,
         Text,
@@ -30,15 +25,19 @@ import 'package:flutter/material.dart'
         WidgetsBinding,
         protected,
         showDialog;
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_it/get_it.dart' show GetIt;
+import 'package:vibration/vibration.dart';
 
 abstract class BaseStateWithController<T extends StatefulWidget,
     L extends Object> extends BaseState<T> {
   L controller = GetIt.I.get<L>();
 
   @override
-  dispose() async {
+  void dispose() {
     super.dispose();
-    await serviceLocator.resetLazySingleton<L>(instance: controller);
+    serviceLocator.resetLazySingleton<L>(instance: controller);
     if (kDebugMode) {
       print('Disposed $L');
     }
@@ -79,8 +78,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
   @protected
   void navigateRemoveUntil(String route) {
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
   }
 
   @protected
@@ -118,10 +116,10 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           fullscreenDialog: true,
           transitionDuration: const Duration(milliseconds: 100),
           transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
+            context,
+            animation,
+            secondaryAnimation,
+            child,
           ) =>
               FadeTransition(
             opacity: CurvedAnimation(
@@ -130,8 +128,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
             ),
             child: child,
           ),
-          pageBuilder: (BuildContext context, _, __) {
-            return LoadingWidget();
+          pageBuilder: (context, _, __) {
+            return const LoadingWidget();
           },
         ),
       );
@@ -190,7 +188,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   }
 
   @protected
-  Future<void> handleError(dynamic error) async {
+  // ignore: prefer_void_to_null
+  FutureOr<Null> handleError(dynamic error) async {
     showLoading(false);
     if (error is String) {
       showToast(error);

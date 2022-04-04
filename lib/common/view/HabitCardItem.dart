@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -112,7 +112,7 @@ class HabitCardItem extends StatelessWidget {
             feedback: Rocket(
               size: const Size(100, 100),
               color: habit.color,
-              state: RocketState.ON_FIRE,
+              state: RocketState.onFire,
               isExtend: true,
               fireForce: 1,
             ),

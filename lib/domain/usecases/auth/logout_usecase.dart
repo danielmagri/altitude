@@ -5,9 +5,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class LogoutUsecase extends BaseUsecase<NoParams, void> {
-  final IUserRepository _userRepository;
-
   LogoutUsecase(this._userRepository);
+
+  final IUserRepository _userRepository;
 
   @override
   Future<void> getRawFuture(NoParams params) async {

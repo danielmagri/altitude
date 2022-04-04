@@ -5,20 +5,22 @@ import 'package:injectable/injectable.dart';
 @injectable
 class UpdateCompetitionUsecase
     extends BaseUsecase<UpdateCompetitionParams, void> {
-  final ICompetitionsRepository _competitionsRepository;
-
   UpdateCompetitionUsecase(this._competitionsRepository);
+
+  final ICompetitionsRepository _competitionsRepository;
 
   @override
   Future<void> getRawFuture(UpdateCompetitionParams params) async {
     await _competitionsRepository.updateCompetition(
-        params.competitionId, params.title);
+      params.competitionId,
+      params.title,
+    );
   }
 }
 
 class UpdateCompetitionParams {
+  UpdateCompetitionParams({required this.competitionId, required this.title});
+
   final String competitionId;
   final String title;
-
-  UpdateCompetitionParams({required this.competitionId, required this.title});
 }

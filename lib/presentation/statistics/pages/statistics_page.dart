@@ -1,9 +1,10 @@
-import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/view/dialog/TutorialDialog.dart';
-import 'package:altitude/common/view/generic/data_error.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
+import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/domain/models/habit_statistic_data.dart';
 import 'package:altitude/presentation/statistics/controllers/statistics_controller.dart';
 import 'package:altitude/presentation/statistics/widgets/frequency_chart.dart';
@@ -12,7 +13,6 @@ import 'package:altitude/presentation/statistics/widgets/indicator.dart';
 import 'package:altitude/presentation/statistics/widgets/pie_chart_score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Statisticspage extends StatefulWidget {
@@ -46,9 +46,9 @@ class _StatisticspageState
 
   void showPercentageTutorial() {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpPercentage',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 'A porcentagem mostra a representação de cada hábito na sua quilometragem total.',
@@ -60,9 +60,9 @@ class _StatisticspageState
 
   void showHistoricTutorial() {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpHistoric',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 'O histórico mostra quantos quilômetros você ganhou em cada mês.',
@@ -74,9 +74,9 @@ class _StatisticspageState
 
   void showFrequencyTutorial() {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpFrequency',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 'A frequência mostra quais dias da semana você mais realizou seus hábitos em cada mês.',
@@ -194,7 +194,7 @@ class _StatisticspageState
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Skeleton(
                     width: double.maxFinite,
-                    height: HISTORIC_CHART_HEIGHT,
+                    height: historic_chart_height,
                   ),
                 ),
                 success: (data) => HistoricChart(

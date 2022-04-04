@@ -1,5 +1,7 @@
 include: package:flutter_lints/flutter.yaml
 analyzer:
+  errors:
+    avoid_void_async: error
   exclude:
     - "**/*.g.dart"
     - "**/*.config.dart"
@@ -9,3 +11,17 @@ linter:
     always_put_required_named_parameters_first: true
     require_trailing_commas: true
     always_use_package_imports: true
+    avoid_function_literals_in_foreach_calls: false
+    avoid_redundant_argument_values: true
+    always_declare_return_types: true
+    avoid_type_to_string: true
+    avoid_returning_null: true
+    avoid_types_on_closure_parameters: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    sort_constructors_first: true
+    sort_unnamed_constructors_first: true
+    unnecessary_await_in_return: true
+    use_colored_box: true
+    use_decorated_box: true
+    directives_ordering: true

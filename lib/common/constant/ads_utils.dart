@@ -17,18 +17,18 @@ abstract class AdsUtils {
 
   static NativeAdListener get adNativeListener => kReleaseMode
       ? NativeAdListener(
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          onAdFailedToLoad: (ad, error) {
             ad.dispose();
           },
         )
       : NativeAdListener(
-          onAdLoaded: (Ad ad) => print('Ad loaded.'),
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          onAdLoaded: (ad) => print('Ad loaded.'),
+          onAdFailedToLoad: (ad, error) {
             ad.dispose();
             print('Ad failed to load: $error');
           },
-          onAdOpened: (Ad ad) => print('Ad opened.'),
-          onAdClosed: (Ad ad) {
+          onAdOpened: (ad) => print('Ad opened.'),
+          onAdClosed: (ad) {
             ad.dispose();
             print('Ad closed.');
           },
@@ -36,18 +36,18 @@ abstract class AdsUtils {
 
   static BannerAdListener get adBannerListener => kReleaseMode
       ? BannerAdListener(
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          onAdFailedToLoad: (ad, error) {
             ad.dispose();
           },
         )
       : BannerAdListener(
-          onAdLoaded: (Ad ad) => print('Ad loaded.'),
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          onAdLoaded: (ad) => print('Ad loaded.'),
+          onAdFailedToLoad: (ad, error) {
             ad.dispose();
             print('Ad failed to load: $error');
           },
-          onAdOpened: (Ad ad) => print('Ad opened.'),
-          onAdClosed: (Ad ad) {
+          onAdOpened: (ad) => print('Ad opened.'),
+          onAdClosed: (ad) {
             ad.dispose();
             print('Ad closed.');
           },

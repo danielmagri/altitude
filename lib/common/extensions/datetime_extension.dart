@@ -1,4 +1,4 @@
-import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/constant/constants.dart';
 
 extension DateTimeExtension on DateTime {
 
@@ -19,7 +19,7 @@ extension DateTimeExtension on DateTime {
 
   /// Retorna o último dia do mês anterior
   DateTime lastDayOfPreviousMonth() {
-    return DateTime(year, month, 1).subtract(const Duration(days: 1));
+    return DateTime(year, month).subtract(const Duration(days: 1));
   }
 
   bool isAfterOrSameDay(DateTime? day2) {

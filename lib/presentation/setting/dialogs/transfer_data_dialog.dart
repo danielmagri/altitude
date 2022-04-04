@@ -1,22 +1,22 @@
+import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/constant/level_utils.dart';
+import 'package:altitude/common/model/DayDone.dart';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/model/result.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/domain/usecases/auth/logout_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/habits/transfer_habit_usecase.dart';
 import 'package:altitude/domain/usecases/user/create_person_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/domain/usecases/user/update_total_score_usecase.dart';
-import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/common/model/DayDone.dart';
-import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/model/no_params.dart';
-import 'package:altitude/infra/services/Database.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
+import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/infra/services/database.dart';
 import 'package:flutter/material.dart';
-import 'package:altitude/common/constant/level_utils.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/model/result.dart';
 import 'package:get_it/get_it.dart';
 
 class TransferDataDialog extends StatefulWidget {
@@ -47,7 +47,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
   double? progress;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     setPersonData(widget.uid).then((value) {
       navigatePop(result: value ?? true);

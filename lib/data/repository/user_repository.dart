@@ -5,11 +5,11 @@ import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/pair.dart';
-import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/infra/services/Memory.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_fire_messaging.dart';
+import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/infra/services/Memory.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class IUserRepository {
@@ -33,12 +33,6 @@ abstract class IUserRepository {
 
 @Injectable(as: IUserRepository)
 class UserRepository extends IUserRepository {
-  final IFireMessaging _fireMessaging;
-  final IFireDatabase _fireDatabase;
-  final Memory _memory;
-  final IFireAuth _fireAuth;
-  final IScoreService _scoreService;
-
   UserRepository(
     this._memory,
     this._fireMessaging,
@@ -46,6 +40,12 @@ class UserRepository extends IUserRepository {
     this._fireAuth,
     this._scoreService,
   );
+
+  final IFireMessaging _fireMessaging;
+  final IFireDatabase _fireDatabase;
+  final Memory _memory;
+  final IFireAuth _fireAuth;
+  final IScoreService _scoreService;
 
   @override
   Future<Person> getUserData(bool fromServer) async {

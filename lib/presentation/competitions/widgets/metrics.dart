@@ -16,7 +16,7 @@ import 'package:flutter/material.dart'
         Widget;
 
 class Metrics extends StatelessWidget {
-  Metrics({Key? key, required this.height}) : super(key: key);
+  const Metrics({required this.height, Key? key}) : super(key: key);
 
   final double height;
 
@@ -24,7 +24,7 @@ class Metrics extends StatelessWidget {
     List<Widget> widgets = [];
     var km = (height / 10) - 6;
 
-    widgets.insert(0, _metricWidget(context, "0", 60));
+    widgets.insert(0, _metricWidget(context, '0', 60));
 
     var h = 5;
     while (h <= km) {
@@ -53,9 +53,12 @@ class Metrics extends StatelessWidget {
       height: height,
       alignment: Alignment.topCenter,
       decoration: BoxDecoration(
-          border: Border(
-              top: BorderSide(
-                  color: AppTheme.of(context).drawerIcon.withOpacity(0.5)))),
+        border: Border(
+          top: BorderSide(
+            color: AppTheme.of(context).drawerIcon.withOpacity(0.5),
+          ),
+        ),
+      ),
       child: Text(value),
     );
   }
@@ -67,8 +70,9 @@ class Metrics extends StatelessWidget {
       width: 50,
       margin: const EdgeInsets.only(right: 10),
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: _metricList(context)),
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: _metricList(context),
+      ),
     );
   }
 }

@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class DeclineCompetitionRequestUsecase extends BaseUsecase<String, void> {
-  final ICompetitionsRepository _competitionsRepository;
-
   DeclineCompetitionRequestUsecase(this._competitionsRepository);
+
+  final ICompetitionsRepository _competitionsRepository;
 
   @override
   Future<void> getRawFuture(String params) async {

@@ -1,9 +1,10 @@
 import 'dart:ui' show ImageFilter;
+
+import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/presentation/friends/controllers/add_friend_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -74,13 +75,13 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
 
   String buttonText(int? state) {
     if (state == 0) {
-      return "Adicionar";
+      return 'Adicionar';
     } else if (state == 2) {
-      return "Cancelar\nsolicitação";
+      return 'Cancelar\nsolicitação';
     } else if (state == 3) {
-      return "Aceitar\nsolicitação";
+      return 'Aceitar\nsolicitação';
     }
-    return "";
+    return '';
   }
 
   void onClickButton(Person person) {
@@ -88,7 +89,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
       showLoading(true);
       controller.sendFriendRequest(person.uid!).then((_) {
         showLoading(false);
-        showToast("Pedido de amizade enviado.");
+        showToast('Pedido de amizade enviado.');
         Navigator.of(context).pop();
       }).catchError(handleError);
     } else if (person.state == 2) {
@@ -113,7 +114,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
     } else {
       controller.searchFriend(_textEditingController.text).then((_) {
         if (controller.searchResult.data!.isEmpty) {
-          showToast("Esse email não foi encontrado.");
+          showToast('Esse email não foi encontrado.');
         }
       }).catchError(handleError);
     }
@@ -130,7 +131,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.only(
-                  top: 16, left: 16, right: 16, bottom: 10),
+                  top: 16, left: 16, right: 16, bottom: 10,),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: AppTheme.of(context).materialTheme.cardColor,
@@ -139,7 +140,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                   BoxShadow(
                       color: Colors.black26,
                       blurRadius: 10.0,
-                      offset: Offset(0.0, 10.0))
+                      offset: Offset(0.0, 10.0),)
                 ],
               ),
               child: Column(
@@ -158,10 +159,10 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                     .materialTheme
                                     .textTheme
                                     .headline1!
-                                    .color!)),
-                        hintText: "Escreva o email do seu amigo",
+                                    .color!,),),
+                        hintText: 'Escreva o email do seu amigo',
                         hintStyle:
-                            const TextStyle(fontWeight: FontWeight.w300)),
+                            const TextStyle(fontWeight: FontWeight.w300),),
                   ),
                   SizedBox(
                     width: double.maxFinite,
@@ -174,9 +175,9 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                             const SizedBox(height: 32),
                             CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation(
-                                    AppTheme.of(context).loading)),
+                                    AppTheme.of(context).loading,),),
                             const SizedBox(height: 12),
-                            const Text("Buscando...")
+                            const Text('Buscando...')
                           ],
                         );
                       }, success: (data) {
@@ -231,20 +232,20 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     MaterialStateProperty.all(
-                                                        Colors.black),
+                                                        Colors.black,),
                                                 shape: MaterialStateProperty.all(
                                                     RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius
-                                                                .circular(20))),
+                                                                .circular(20),),),
                                                 padding: MaterialStateProperty.all(
-                                                    const EdgeInsets.all(10)),
+                                                    const EdgeInsets.all(10),),
                                                 overlayColor:
                                                     MaterialStateProperty.all(
-                                                        Colors.white24),
+                                                        Colors.white24,),
                                                 elevation:
                                                     MaterialStateProperty.all(
-                                                        0)),
+                                                        0,),),
                                             onPressed: () =>
                                                 onClickButton(person),
                                             child: Text(
@@ -253,7 +254,7 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                                  fontWeight: FontWeight.bold,),
                                             ),
                                           ),
                                   ],
@@ -262,15 +263,15 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                             },
                           );
                         }
-                      });
-                    }),
+                      },);
+                    },),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                        child: const Text("Cancelar",
-                            style: TextStyle(fontSize: 15)),
+                        child: const Text('Cancelar',
+                            style: TextStyle(fontSize: 15),),
                         onPressed: () => navigatePop(),
                       ),
                       const SizedBox(width: 5),
@@ -280,18 +281,18 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                 MaterialStateProperty.all(Colors.black),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
+                                    borderRadius: BorderRadius.circular(20),),),
                             padding: MaterialStateProperty.all(
                                 const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 10)),
+                                    horizontal: 30, vertical: 10,),),
                             overlayColor:
                                 MaterialStateProperty.all(Colors.white24),
-                            elevation: MaterialStateProperty.all(2)),
+                            elevation: MaterialStateProperty.all(2),),
                         onPressed: search,
-                        child: const Text("Buscar",
+                        child: const Text('Buscar',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold)),
+                                fontWeight: FontWeight.bold,),),
                       ),
                     ],
                   ),

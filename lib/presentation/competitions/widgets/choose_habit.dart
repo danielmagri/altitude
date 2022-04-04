@@ -1,24 +1,23 @@
-import 'package:altitude/common/constant/Constants.dart';
-import 'package:altitude/domain/usecases/competitions/accept_competition_request_usecase.dart';
-import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
-import 'package:altitude/domain/usecases/habits/get_days_done_usecase.dart';
-import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
-import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/common/constant/constants.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/view/dialog/base_dialog.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/domain/usecases/competitions/accept_competition_request_usecase.dart';
+import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
+import 'package:altitude/domain/usecases/habits/get_days_done_usecase.dart';
+import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
+import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:flutter/material.dart'
     show
         Container,
-        CrossAxisAlignment,
         DropdownButton,
         DropdownMenuItem,
         EdgeInsets,
@@ -35,8 +34,11 @@ import 'package:flutter/material.dart'
 import 'package:get_it/get_it.dart';
 
 class ChooseHabit extends StatefulWidget {
-  ChooseHabit({Key? key, required this.competition, required this.habits})
-      : super(key: key);
+  const ChooseHabit({
+    required this.competition,
+    required this.habits,
+    Key? key,
+  }) : super(key: key);
 
   final Competition competition;
   final List<Habit> habits;
@@ -58,19 +60,23 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
 
   Habit? selectedHabit;
 
-  void acceptRequest() async {
+  Future<void> acceptRequest() async {
     if (await _maxCompetitionsByHabitUsecase
         .call(selectedHabit!.id!)
         .resultComplete((data) => data, (error) => true)) {
       showToast(
-          "O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.");
+        'O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.',
+      );
     } else {
       showLoading(true);
       List<DateTime?> days = (await _getDaysDoneUsecase
-              .call(GetDaysDoneParams(
+              .call(
+                GetDaysDoneParams(
                   id: selectedHabit!.id,
                   start: widget.competition.initialDate,
-                  end: DateTime.now().onlyDate))
+                  end: DateTime.now().onlyDate,
+                ),
+              )
               .resultComplete((data) => data, (error) => throw error))
           .map((e) => e.date)
           .toList();
@@ -80,19 +86,22 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
           .resultComplete((data) => data, (error) => null);
 
       Competitor competitor = Competitor(
-          name: user?.name,
-          fcmToken: user?.fcmToken,
-          color: selectedHabit!.colorCode,
-          habitId: selectedHabit!.id,
-          uid: GetIt.I.get<IFireAuth>().getUid(),
-          score:
-              _scoreService.scoreEarnedTotal(selectedHabit!.frequency!, days),
-          you: true);
+        name: user?.name,
+        fcmToken: user?.fcmToken,
+        color: selectedHabit!.colorCode,
+        habitId: selectedHabit!.id,
+        uid: GetIt.I.get<IFireAuth>().getUid(),
+        score: _scoreService.scoreEarnedTotal(selectedHabit!.frequency!, days),
+        you: true,
+      );
       _acceptCompetitionRequestUsecase
-          .call(AcceptCompetitionRequestParams(
-              competitionId: widget.competition.id ?? "",
-              competition: widget.competition,
-              competitor: competitor))
+          .call(
+        AcceptCompetitionRequestParams(
+          competitionId: widget.competition.id ?? '',
+          competition: widget.competition,
+          competitor: competitor,
+        ),
+      )
           .then((_) {
         showLoading(false);
         navigatePop(result: widget.competition);
@@ -107,38 +116,44 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
       body: Container(
         margin: const EdgeInsets.only(right: 8, left: 8),
         child: DropdownButton<Habit>(
-            value: selectedHabit,
-            isExpanded: true,
-            hint: const Text("Escolher o hábito"),
-            items: widget.habits.map((habit) {
-              return DropdownMenuItem(
-                value: habit,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Rocket(
-                        size: const Size(30, 30),
-                        isExtend: true,
-                        color: AppColors.habitsColor[habit.colorCode!]),
-                    const SizedBox(width: 10),
-                    Text(habit.habit!),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              setState(() {
-                selectedHabit = value;
-              });
-            }),
+          value: selectedHabit,
+          isExpanded: true,
+          hint: const Text('Escolher o hábito'),
+          items: widget.habits.map((habit) {
+            return DropdownMenuItem(
+              value: habit,
+              child: Row(
+                children: [
+                  Rocket(
+                    size: const Size(30, 30),
+                    isExtend: true,
+                    color: AppColors.habitsColor[habit.colorCode!],
+                  ),
+                  const SizedBox(width: 10),
+                  Text(habit.habit!),
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              selectedHabit = value;
+            });
+          },
+        ),
       ),
       action: <Widget>[
         TextButton(
-            child: const Text('Cancelar'), onPressed: () => navigatePop()),
+          child: const Text('Cancelar'),
+          onPressed: () => navigatePop(),
+        ),
         TextButton(
-            child: const Text('Competir',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: acceptRequest),
+          child: const Text(
+            'Competir',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          onPressed: acceptRequest,
+        ),
       ],
     );
   }

@@ -1,7 +1,7 @@
+import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/domain/usecases/competitions/invite_competitor_usecase.dart';
 import 'package:flutter/material.dart'
     show
@@ -22,12 +22,12 @@ import 'package:flutter/material.dart'
 import 'package:get_it/get_it.dart';
 
 class AddCompetitorsDialog extends StatefulWidget {
-  const AddCompetitorsDialog(
-      {Key? key,
-      required this.id,
-      required this.friends,
-      required this.competitors})
-      : super(key: key);
+  const AddCompetitorsDialog({
+    required this.id,
+    required this.friends,
+    required this.competitors,
+    Key? key,
+  }) : super(key: key);
 
   final String? id;
   final List<Person> friends;
@@ -43,7 +43,7 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
 
   List<Person> selectedFriends = [];
 
-  void _addCompetitors() async {
+  Future<void> _addCompetitors() async {
     if (selectedFriends.isNotEmpty) {
       List<String?> invitations =
           selectedFriends.map((person) => person.uid).toList();
@@ -53,14 +53,17 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
       showLoading(true);
 
       _inviteCompetitorUsecase
-          .call(InviteCompetitorParams(
-              competitionId: widget.id,
-              competitorId: invitations,
-              fcmTokens: invitationsToken))
+          .call(
+        InviteCompetitorParams(
+          competitionId: widget.id,
+          competitorId: invitations,
+          fcmTokens: invitationsToken,
+        ),
+      )
           .then((res) {
         showLoading(false);
         navigatePop();
-        showToast("Convite enviado!");
+        showToast('Convite enviado!');
       }).catchError((error) {
         handleError(error);
         navigatePop();
@@ -102,9 +105,12 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
       action: <Widget>[
         TextButton(child: const Text('Cancelar'), onPressed: navigatePop),
         TextButton(
-            child: const Text('Adicionar',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: _addCompetitors)
+          child: const Text(
+            'Adicionar',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          onPressed: _addCompetitors,
+        )
       ],
     );
   }

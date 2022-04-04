@@ -1,7 +1,7 @@
-import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/base/base_state.dart';
-import 'package:flutter/material.dart';
 import 'package:altitude/common/constant/level_utils.dart';
+import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
+import 'package:flutter/material.dart';
 
 class AllLevelsPage extends StatefulWidget {
   const AllLevelsPage(this.arguments, {Key? key}) : super(key: key);
@@ -48,7 +48,6 @@ class _AllLevelsPageState extends BaseState<AllLevelsPage> {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  flex: 1,
                   child: Image.asset(
                     LevelUtils.getLevelImagePathByCode(i),
                     height: 60,

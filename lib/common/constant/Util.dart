@@ -11,15 +11,21 @@ abstract class Util {
     int g = color.green + value;
     int b = color.blue + value;
 
-    if (r > 255)
+    if (r > 255) {
       r = 255;
-    else if (r < 0) r = 0;
-    if (g > 255)
+    } else if (r < 0) {
+      r = 0;
+    }
+    if (g > 255) {
       g = 255;
-    else if (g < 0) g = 0;
-    if (b > 255)
+    } else if (g < 0) {
+      g = 0;
+    }
+    if (b > 255) {
       b = 255;
-    else if (b < 0) b = 0;
+    } else if (b < 0) {
+      b = 0;
+    }
 
     return Color.fromARGB(color.alpha, r, g, b);
   }
@@ -51,7 +57,7 @@ abstract class Util {
       case 12:
         return 'dez';
       default:
-      return '';
+        return '';
     }
   }
 }

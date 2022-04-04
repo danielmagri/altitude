@@ -1,5 +1,5 @@
 enum DonePageType {
-  Initial,
-  Detail,
-  Calendar
+  initial,
+  detail,
+  calendar
 }

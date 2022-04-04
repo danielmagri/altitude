@@ -1,24 +1,24 @@
-import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/common/constant/constants.dart';
+import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
-import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/model/Competitor.dart';
-import 'package:altitude/common/base/base_usecase.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class AcceptCompetitionRequestUsecase
     extends BaseUsecase<AcceptCompetitionRequestParams, void> {
-  final ICompetitionsRepository _competitionsRepository;
-  final INotificationsRepository _notificationsRepository;
-  final IUserRepository _userRepository;
-
   AcceptCompetitionRequestUsecase(
     this._competitionsRepository,
     this._notificationsRepository,
     this._userRepository,
   );
+
+  final ICompetitionsRepository _competitionsRepository;
+  final INotificationsRepository _notificationsRepository;
+  final IUserRepository _userRepository;
 
   @override
   Future<void> getRawFuture(AcceptCompetitionRequestParams params) async {
@@ -48,13 +48,13 @@ class AcceptCompetitionRequestUsecase
 }
 
 class AcceptCompetitionRequestParams {
-  final String competitionId;
-  final Competition competition;
-  final Competitor competitor;
-
   AcceptCompetitionRequestParams({
     required this.competitionId,
     required this.competition,
     required this.competitor,
   });
+
+  final String competitionId;
+  final Competition competition;
+  final Competitor competitor;
 }

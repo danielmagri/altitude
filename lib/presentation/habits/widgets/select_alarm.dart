@@ -1,6 +1,7 @@
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/ReminderDay.dart';
-import 'package:altitude/common/view/dialog/TutorialDialog.dart';
+import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:altitude/presentation/habits/controllers/add_habit_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -29,7 +30,6 @@ import 'package:flutter/material.dart'
         showTimePicker;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class SelectAlarm extends StatefulWidget {
   const SelectAlarm({Key? key}) : super(key: key);

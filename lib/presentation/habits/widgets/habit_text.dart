@@ -1,6 +1,9 @@
 import 'dart:async' show StreamSubscription;
-import 'package:altitude/common/view/dialog/TutorialDialog.dart';
+
+import 'package:altitude/common/constant/suggestions.dart';
+import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:flutter/material.dart'
     show
         BorderSide,
@@ -32,9 +35,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         UnderlineInputBorder,
         Widget;
-import 'package:altitude/common/constant/suggestions.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:altitude/common/extensions/navigator_extension.dart';
 
 class HabitText extends StatefulWidget {
   const HabitText({Key? key, this.color, this.controller}) : super(key: key);
@@ -55,7 +56,7 @@ class _HabitTextState extends State<HabitText> {
   String? validated;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     suggestions = getSuggestions();
@@ -89,7 +90,7 @@ class _HabitTextState extends State<HabitText> {
                 '  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.',
           ),
           TextSpan(
-              text: '\n\n  O segredo para conseguir construir um hábito é '),
+              text: '\n\n  O segredo para conseguir construir um hábito é ',),
           TextSpan(
             text: 'criar um ritual e sempre fazer a mesma coisa.',
             style: TextStyle(fontWeight: FontWeight.bold),

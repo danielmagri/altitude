@@ -1,17 +1,21 @@
 import 'package:altitude/common/enums/score_type.dart';
-import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:injectable/injectable.dart';
 
 @Injectable(as: IScoreService)
 class ScoreService extends IScoreService {
   @override
-  int calculateScore(ScoreType type, Frequency frequency, List<DateTime?> week,
-      DateTime date) {
-    if (type == ScoreType.ADD) week.add(date);
+  int calculateScore(
+    ScoreType type,
+    Frequency frequency,
+    List<DateTime?> week,
+    DateTime date,
+  ) {
+    if (type == ScoreType.add) week.add(date);
 
-    var signal = type == ScoreType.ADD ? 1 : -1;
+    var signal = type == ScoreType.add ? 1 : -1;
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {
@@ -47,16 +51,19 @@ class ScoreService extends IScoreService {
     daysDone.sort((a, b) => a!.compareTo(b!));
 
     while (index < daysDone.length) {
-      DateTime nextWeek = daysDone[index]!.lastWeekDay().add(const Duration(days: 1));
+      DateTime nextWeek =
+          daysDone[index]!.lastWeekDay().add(const Duration(days: 1));
       int lastIndexOfWeek =
           daysDone.lastIndexWhere((dayDone) => dayDone!.isBefore(nextWeek));
 
       if (lastIndexOfWeek != -1) {
         score += _calculateWeekScore(
-            frequency, daysDone.sublist(index, lastIndexOfWeek + 1));
+          frequency,
+          daysDone.sublist(index, lastIndexOfWeek + 1),
+        );
         index = lastIndexOfWeek + 1;
       } else {
-        print("lastIndexOfWeek = -1");
+        print('lastIndexOfWeek = -1');
         break;
       }
     }

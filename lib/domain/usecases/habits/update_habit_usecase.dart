@@ -1,15 +1,15 @@
+import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/base/base_usecase.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
+  UpdateHabitUsecase(this._habitsRepository, this._competitionsRepository);
+
   final IHabitsRepository _habitsRepository;
   final ICompetitionsRepository _competitionsRepository;
-
-  UpdateHabitUsecase(this._habitsRepository, this._competitionsRepository);
 
   @override
   Future<void> getRawFuture(UpdateHabitParams params) async {
@@ -30,8 +30,8 @@ class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
 }
 
 class UpdateHabitParams {
+  UpdateHabitParams({required this.habit, this.inititalHabit});
+
   final Habit habit;
   final Habit? inititalHabit;
-
-  UpdateHabitParams({required this.habit, this.inititalHabit});
 }

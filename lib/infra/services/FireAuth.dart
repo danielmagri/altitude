@@ -14,13 +14,13 @@ class FireAuth implements IFireAuth {
   @override
   String getUid() {
     User? user = FirebaseAuth.instance.currentUser;
-    return user != null ? user.uid : "";
+    return user != null ? user.uid : '';
   }
 
   @override
   String? getName() {
     User? user = FirebaseAuth.instance.currentUser;
-    return user != null ? user.displayName : "";
+    return user != null ? user.displayName : '';
   }
 
   @override
@@ -37,13 +37,13 @@ class FireAuth implements IFireAuth {
   @override
   String? getEmail() {
     User? user = FirebaseAuth.instance.currentUser;
-    return user != null ? user.email : "";
+    return user != null ? user.email : '';
   }
 
   @override
   String? getPhotoUrl() {
     User? user = FirebaseAuth.instance.currentUser;
-    return user != null ? user.photoURL : "";
+    return user != null ? user.photoURL : '';
   }
 
   @override

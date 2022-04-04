@@ -1,8 +1,8 @@
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -38,12 +38,12 @@ class HabitsPanel extends StatelessWidget {
       child: Observer(
         builder: (_) {
           return controller.habits.handleState(
-            loading: () => Skeleton.custom(
+            loading: () => const Skeleton.custom(
               child: SizedBox(
                 width: 100,
                 height: 100,
                 child: Rocket(
-                  size: const Size(100, 100),
+                  size: Size(100, 100),
                   color: Colors.white,
                 ),
               ),

@@ -1,10 +1,10 @@
-import 'package:altitude/common/enums/theme_type.dart';
-import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/enums/theme_type.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/presentation/setting/controllers/settings_controller.dart';
-import 'package:altitude/presentation/tutorialPage.dart';
+import 'package:altitude/presentation/tutorial_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,7 +21,7 @@ class _SettingsPageState
   final TextEditingController _nameTextController = TextEditingController();
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     controller.fetchData().catchError(handleError);
   }
@@ -46,7 +46,7 @@ class _SettingsPageState
     );
   }
 
-  void editName() async {
+  Future<void> editName() async {
     _nameTextController.text = controller.name!;
     showDialog(
       context: context,
@@ -75,7 +75,7 @@ class _SettingsPageState
     );
   }
 
-  void saveName() async {
+  Future<void> saveName() async {
     String? result =
         ValidationHandler.nameTextValidate(_nameTextController.text);
 
@@ -119,7 +119,7 @@ class _SettingsPageState
                   leading: Radio<ThemeType>(
                     value: ThemeType.light,
                     groupValue: controller.theme,
-                    onChanged: (ThemeType? value) =>
+                    onChanged: (value) =>
                         controller.changeTheme(context, value),
                   ),
                   onTap: () => controller.changeTheme(context, ThemeType.light),
@@ -129,7 +129,7 @@ class _SettingsPageState
                   leading: Radio<ThemeType>(
                     value: ThemeType.dark,
                     groupValue: controller.theme,
-                    onChanged: (ThemeType? value) =>
+                    onChanged: (value) =>
                         controller.changeTheme(context, value),
                   ),
                   onTap: () => controller.changeTheme(context, ThemeType.dark),
@@ -139,7 +139,7 @@ class _SettingsPageState
                   leading: Radio<ThemeType>(
                     value: ThemeType.system,
                     groupValue: controller.theme,
-                    onChanged: (ThemeType? value) =>
+                    onChanged: (value) =>
                         controller.changeTheme(context, value),
                   ),
                   onTap: () =>
@@ -200,7 +200,7 @@ class _SettingsPageState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => TutorialPage(),
+                    builder: (_) => const TutorialPage(),
                     settings: const RouteSettings(name: 'Tutorial Page'),
                   ),
                 );

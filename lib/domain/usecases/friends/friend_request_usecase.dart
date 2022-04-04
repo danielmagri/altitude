@@ -6,15 +6,15 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class FriendRequestUsecase extends BaseUsecase<String, void> {
-  final IFriendsRepository _friendsRepository;
-  final INotificationsRepository _notificationsRepository;
-  final IUserRepository _userRepository;
-
   FriendRequestUsecase(
     this._friendsRepository,
     this._notificationsRepository,
     this._userRepository,
   );
+
+  final IFriendsRepository _friendsRepository;
+  final INotificationsRepository _notificationsRepository;
+  final IUserRepository _userRepository;
 
   @override
   Future<void> getRawFuture(String params) async {

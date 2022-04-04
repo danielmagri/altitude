@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
-import 'package:altitude/common/view/generic/Toast.dart';
+import 'package:altitude/common/view/dialog/base_dialog.dart';
+import 'package:altitude/common/view/generic/toast.dart';
 import 'package:altitude/domain/models/dayweek_selection.dart';
 import 'package:flutter/material.dart'
     show
@@ -26,7 +26,7 @@ import 'package:flutter/material.dart'
         WrapAlignment;
 
 class DayweekDialog extends StatefulWidget {
-  const DayweekDialog({Key? key, required this.color, this.frequency})
+  const DayweekDialog({required this.color, Key? key, this.frequency})
       : super(key: key);
 
   final Color color;
@@ -38,17 +38,17 @@ class DayweekDialog extends StatefulWidget {
 
 class _DayweekDialogState extends State<DayweekDialog> {
   List<DayweekSelection> days = [
-    DayweekSelection("Domingo"),
-    DayweekSelection("Segunda-feira"),
-    DayweekSelection("Terça-feira"),
-    DayweekSelection("Quarta-feira"),
-    DayweekSelection("Quinta-feira"),
-    DayweekSelection("Sexta-feira"),
-    DayweekSelection("Sábado")
+    DayweekSelection('Domingo'),
+    DayweekSelection('Segunda-feira'),
+    DayweekSelection('Terça-feira'),
+    DayweekSelection('Quarta-feira'),
+    DayweekSelection('Quinta-feira'),
+    DayweekSelection('Sexta-feira'),
+    DayweekSelection('Sábado')
   ];
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     if (widget.frequency != null) {
@@ -65,68 +65,79 @@ class _DayweekDialogState extends State<DayweekDialog> {
   void _validate() {
     if (days.any((element) => element.state == true)) {
       DayWeek dayWeek = DayWeek(
-          monday: days[1].state,
-          tuesday: days[2].state,
-          wednesday: days[3].state,
-          thursday: days[4].state,
-          friday: days[5].state,
-          saturday: days[6].state,
-          sunday: days[0].state);
+        monday: days[1].state,
+        tuesday: days[2].state,
+        wednesday: days[3].state,
+        thursday: days[4].state,
+        friday: days[5].state,
+        saturday: days[6].state,
+        sunday: days[0].state,
+      );
 
       Navigator.of(context).pop(dayWeek);
     } else {
-      showToast("Selecione pelo menos um dia da semana");
+      showToast('Selecione pelo menos um dia da semana');
     }
   }
 
   @override
   Widget build(context) {
     return BaseDialog(
-      title: "Diariamente",
+      title: 'Diariamente',
       body: Column(
         children: [
           const Text(
-              "Escolha quais dias da semana você irá realizar o hábito:"),
+            'Escolha quais dias da semana você irá realizar o hábito:',
+          ),
           const SizedBox(height: 16.0),
           Wrap(
             alignment: WrapAlignment.center,
             spacing: 8,
             runSpacing: 8,
             children: days
-                .map((day) => GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          day.state = !day.state;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: day.state
-                              ? widget.color
-                              : const Color.fromARGB(255, 220, 220, 220),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Text(
-                          day.title,
-                          style: TextStyle(
-                              color: day.state ? Colors.white : Colors.black),
+                .map(
+                  (day) => GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        day.state = !day.state;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: day.state
+                            ? widget.color
+                            : const Color.fromARGB(255, 220, 220, 220),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Text(
+                        day.title,
+                        style: TextStyle(
+                          color: day.state ? Colors.white : Colors.black,
                         ),
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ],
       ),
       action: [
         TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancelar")),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancelar'),
+        ),
         TextButton(
-            onPressed: _validate,
-            child: const Text("Ok",
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          onPressed: _validate,
+          child: const Text(
+            'Ok',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       ],
     );
   }

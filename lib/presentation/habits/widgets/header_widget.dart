@@ -1,6 +1,6 @@
 import 'package:altitude/common/view/Score.dart';
-import 'package:altitude/common/view/generic/Rocket.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:altitude/presentation/habits/widgets/sky_scene.dart';
 import 'package:flutter/material.dart'
@@ -11,12 +11,10 @@ import 'package:flutter/material.dart'
         Colors,
         Column,
         Container,
-        CrossAxisAlignment,
         EdgeInsets,
         Expanded,
         Key,
         MainAxisAlignment,
-        MainAxisSize,
         Row,
         Size,
         SizedBox,
@@ -38,10 +36,9 @@ class HeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 140,
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Expanded(
             child: Observer(
@@ -74,7 +71,6 @@ class HeaderWidget extends StatelessWidget {
                     return Skeleton.custom(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
                             width: double.maxFinite,
@@ -101,7 +97,6 @@ class HeaderWidget extends StatelessWidget {
                   success: (data) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           data!.habit!,

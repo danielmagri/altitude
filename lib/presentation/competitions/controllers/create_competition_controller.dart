@@ -13,6 +13,11 @@ class CreateCompetitionController = _CreateCompetitionControllerBase
     with _$CreateCompetitionController;
 
 abstract class _CreateCompetitionControllerBase with Store {
+  _CreateCompetitionControllerBase(
+    this._createCompetitionUsecase,
+    this._maxCompetitionsByHabitUsecase,
+  );
+
   final CreateCompetitionUsecase _createCompetitionUsecase;
   final MaxCompetitionsByHabitUsecase _maxCompetitionsByHabitUsecase;
 
@@ -23,9 +28,6 @@ abstract class _CreateCompetitionControllerBase with Store {
   ObservableList<Person> selectedFriends = ObservableList();
 
   late List<Habit> habits;
-
-  _CreateCompetitionControllerBase(
-      this._createCompetitionUsecase, this._maxCompetitionsByHabitUsecase);
 
   @action
   void selectHabit(Habit? value) {
@@ -45,17 +47,18 @@ abstract class _CreateCompetitionControllerBase with Store {
 
   Future<Competition> createCompetition(String title) async {
     List<String> invitations =
-        selectedFriends.map((person) => person.uid ?? "").toList();
+        selectedFriends.map((person) => person.uid ?? '').toList();
     List<String> invitationsToken =
-        selectedFriends.map((person) => person.fcmToken ?? "").toList();
+        selectedFriends.map((person) => person.fcmToken ?? '').toList();
 
-    return await _createCompetitionUsecase
+    return _createCompetitionUsecase
         .call(
           CreateCompetitionParams(
-              title: title,
-              habit: selectedHabit!,
-              invitations: invitations,
-              invitationsToken: invitationsToken),
+            title: title,
+            habit: selectedHabit!,
+            invitations: invitations,
+            invitationsToken: invitationsToken,
+          ),
         )
         .resultComplete((data) => data, (error) => throw error);
   }

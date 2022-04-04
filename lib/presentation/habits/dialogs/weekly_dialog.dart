@@ -1,5 +1,5 @@
 import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/view/dialog/BaseDialog.dart';
+import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:flutter/material.dart'
     show
         Color,
@@ -22,20 +22,20 @@ import 'package:flutter/material.dart'
 import 'package:numberpicker/numberpicker.dart';
 
 class WeeklyDialog extends StatefulWidget {
-  WeeklyDialog({Key? key, this.color, this.frequency}) : super(key: key);
+  const WeeklyDialog({Key? key, this.color, this.frequency}) : super(key: key);
 
   final Color? color;
   final Weekly? frequency;
 
   @override
-  _WeeklyDialogState createState() => new _WeeklyDialogState();
+  _WeeklyDialogState createState() => _WeeklyDialogState();
 }
 
 class _WeeklyDialogState extends State<WeeklyDialog> {
   int? _currentValue;
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     if (widget.frequency != null) {
@@ -52,7 +52,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
   @override
   Widget build(context) {
     return BaseDialog(
-      title: "Semanalmente",
+      title: 'Semanalmente',
       body: Theme(
         data: Theme.of(context).copyWith(accentColor: widget.color),
         child: Container(
@@ -60,7 +60,8 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
           child: Column(
             children: [
               const Text(
-                  "Escolha quantos vezes por semana você irá realizar o hábito:"),
+                'Escolha quantos vezes por semana você irá realizar o hábito:',
+              ),
               const SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -73,8 +74,10 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
                     onChanged: (newValue) =>
                         setState(() => _currentValue = newValue),
                   ),
-                  const Text("vezes por semana.",
-                      style: TextStyle(fontSize: 16.0)),
+                  const Text(
+                    'vezes por semana.',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
                 ],
               ),
             ],
@@ -83,12 +86,16 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
       ),
       action: [
         TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancelar")),
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancelar'),
+        ),
         TextButton(
-            onPressed: _validate,
-            child: const Text("Ok",
-                style: TextStyle(fontWeight: FontWeight.bold))),
+          onPressed: _validate,
+          child: const Text(
+            'Ok',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
       ],
     );
   }

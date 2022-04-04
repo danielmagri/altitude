@@ -19,6 +19,7 @@ import 'package:flutter/material.dart'
         Icon,
         IconData,
         Icons,
+        Key,
         MainAxisSize,
         Material,
         Navigator,
@@ -34,7 +35,12 @@ import 'package:flutter/material.dart'
         Widget;
 
 class TutorialDialog extends StatelessWidget {
-  TutorialDialog({required this.texts, required this.hero, this.icon = Icons.help_outline});
+  const TutorialDialog({
+    required this.texts,
+    required this.hero,
+    Key? key,
+    this.icon = Icons.help_outline,
+  }) : super(key: key);
 
   final String hero;
   final List<TextSpan> texts;
@@ -49,12 +55,17 @@ class TutorialDialog extends StatelessWidget {
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(16.0),
-            margin: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
+            margin:
+                const EdgeInsets.symmetric(horizontal: 28.0, vertical: 36.0),
             decoration: BoxDecoration(
               color: AppTheme.of(context).materialTheme.cardColor,
               borderRadius: BorderRadius.circular(16.0),
               boxShadow: const [
-                BoxShadow(color: Colors.black26, blurRadius: 10.0, offset: const Offset(0.0, 10.0)),
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                ),
               ],
             ),
             child: Column(
@@ -70,7 +81,10 @@ class TutorialDialog extends StatelessWidget {
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Text.rich(
-                      TextSpan(style: const TextStyle(fontSize: 18, height: 1.2), children: texts),
+                      TextSpan(
+                        style: const TextStyle(fontSize: 18, height: 1.2),
+                        children: texts,
+                      ),
                       textAlign: TextAlign.justify,
                     ),
                   ),
@@ -82,7 +96,7 @@ class TutorialDialog extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Ok", style: const TextStyle(fontSize: 18.0)),
+                    child: const Text('Ok', style: TextStyle(fontSize: 18.0)),
                   ),
                 ),
               ],

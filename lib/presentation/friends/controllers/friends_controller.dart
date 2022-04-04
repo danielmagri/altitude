@@ -1,25 +1,30 @@
+import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/friends/get_friends_usecase.dart';
 import 'package:altitude/domain/usecases/friends/remove_friend_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/common/model/no_params.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'friends_controller.g.dart';
 
 @lazySingleton
 class FriendsController = _FriendsControllerBase with _$FriendsController;
 
 abstract class _FriendsControllerBase with Store {
+  _FriendsControllerBase(
+    this._getFriendsUsecase,
+    this._getUserDataUsecase,
+    this._removeFriendUsecase,
+    this._sharedPref,
+  );
+
   final GetFriendsUsecase _getFriendsUsecase;
   final GetUserDataUsecase _getUserDataUsecase;
   final RemoveFriendUsecase _removeFriendUsecase;
   final SharedPref _sharedPref;
-
-  _FriendsControllerBase(this._getFriendsUsecase, this._getUserDataUsecase,
-      this._removeFriendUsecase, this._sharedPref);
 
   @observable
   bool pendingStatus = false;
@@ -71,7 +76,9 @@ abstract class _FriendsControllerBase with Store {
 
   @action
   void sortLists(
-      ObservableList<Person> friends, ObservableList<Person> ranking) {
+    ObservableList<Person> friends,
+    ObservableList<Person> ranking,
+  ) {
     friends.sort((a, b) => a.name!.compareTo(b.name!));
     ranking.sort((a, b) => -a.score!.compareTo(b.score!));
   }

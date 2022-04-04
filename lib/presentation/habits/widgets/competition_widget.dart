@@ -1,8 +1,9 @@
+import 'dart:math';
+
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:flutter/material.dart'
     show
         Align,
-        Alignment,
         BuildContext,
         Card,
         Column,
@@ -18,14 +19,14 @@ import 'package:flutter/material.dart'
         TextAlign,
         TextStyle,
         Widget;
-import 'dart:math';
-
 import 'package:get_it/get_it.dart';
 
 // ignore: must_be_immutable
 class CompetitionWidget extends StatelessWidget {
-  CompetitionWidget({Key? key, required this.goCompetition})
-      : controller = GetIt.I.get<HabitDetailsController>(),
+  CompetitionWidget({
+    required this.goCompetition,
+    Key? key,
+  })  : controller = GetIt.I.get<HabitDetailsController>(),
         super(key: key);
 
   final HabitDetailsController controller;
@@ -38,11 +39,11 @@ class CompetitionWidget extends StatelessWidget {
 
     switch (index) {
       case 0:
-        return "Competir com os amigos é uma ótima forma de criar hábitos.";
+        return 'Competir com os amigos é uma ótima forma de criar hábitos.';
       case 1:
-        return "Crie uma competição com seus amigos. Quem será que vence?";
+        return 'Crie uma competição com seus amigos. Quem será que vence?';
       default:
-        return "default";
+        return 'default';
     }
   }
 
@@ -60,7 +61,7 @@ class CompetitionWidget extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  "Competição",
+                  'Competição',
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
@@ -69,10 +70,11 @@ class CompetitionWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: Align(
-                    alignment: Alignment.center,
-                    child: Text(_setTex(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 16)),
+                    child: Text(
+                      _setTex(),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               ],

@@ -54,7 +54,9 @@ class _SkyDragTargetState extends State<SkyDragTarget>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
     _controller.addListener(() => setState(() {}));
 
     _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -128,18 +130,24 @@ class _SkyDragTargetState extends State<SkyDragTarget>
             ),
           ),
           child: DragTarget<String>(
-            builder: (context, List<String?> candidateData, rejectedData) {
+            builder: (context, candidateData, rejectedData) {
               return Stack(
                 children: <Widget>[
                   Align(
                     alignment: Alignment(-1.1, -0.9 + _offsetCloud.value),
-                    child: Image.asset('assets/cloud1.png',
-                        fit: BoxFit.contain, height: 60),
+                    child: Image.asset(
+                      'assets/cloud1.png',
+                      fit: BoxFit.contain,
+                      height: 60,
+                    ),
                   ),
                   Align(
                     alignment: Alignment(1.2, 0 + _offsetCloud.value),
-                    child: Image.asset('assets/cloud2.png',
-                        fit: BoxFit.contain, height: 45),
+                    child: Image.asset(
+                      'assets/cloud2.png',
+                      fit: BoxFit.contain,
+                      height: 45,
+                    ),
                   ),
                   Align(
                     alignment: const Alignment(0, 0.6),

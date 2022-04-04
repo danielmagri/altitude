@@ -1,23 +1,34 @@
+import 'package:altitude/common/enums/theme_type.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/domain/usecases/auth/logout_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/domain/usecases/user/is_logged_usecase.dart';
-import 'package:altitude/common/enums/theme_type.dart';
-import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
-import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/user/recalculate_score_usecasse.dart';
 import 'package:altitude/domain/usecases/user/update_name_usecase.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:flutter/material.dart' show BuildContext;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'settings_controller.g.dart';
 
 @lazySingleton
 class SettingsController = _SettingsControllerBase with _$SettingsController;
 
 abstract class _SettingsControllerBase with Store {
+  _SettingsControllerBase(
+    this._sharedPref,
+    this._getCompetitionsUsecase,
+    this._updateNameUsecase,
+    this._logoutUsecase,
+    this._recalculateScoreUsecase,
+    this._isLoggedUsecase,
+    this._getUserDataUsecase,
+  );
+
   final GetCompetitionsUsecase _getCompetitionsUsecase;
   final UpdateNameUsecase _updateNameUsecase;
   final LogoutUsecase _logoutUsecase;
@@ -26,17 +37,8 @@ abstract class _SettingsControllerBase with Store {
   final GetUserDataUsecase _getUserDataUsecase;
   final SharedPref _sharedPref;
 
-  _SettingsControllerBase(
-      this._sharedPref,
-      this._getCompetitionsUsecase,
-      this._updateNameUsecase,
-      this._logoutUsecase,
-      this._recalculateScoreUsecase,
-      this._isLoggedUsecase,
-      this._getUserDataUsecase);
-
   @observable
-  String? name = "";
+  String? name = '';
 
   @observable
   ThemeType? theme = ThemeType.system;
@@ -83,7 +85,7 @@ abstract class _SettingsControllerBase with Store {
   }
 
   Future recalculateScore() async {
-    return await _recalculateScoreUsecase
+    return _recalculateScoreUsecase
         .call(NoParams())
         .resultComplete((data) => data, (error) => throw error);
   }

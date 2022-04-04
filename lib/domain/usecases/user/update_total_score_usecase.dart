@@ -4,9 +4,9 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class UpdateTotalScoreUsecase extends BaseUsecase<int, void> {
-  final IUserRepository _userRepository;
-
   UpdateTotalScoreUsecase(this._userRepository);
+
+  final IUserRepository _userRepository;
 
   @override
   Future<void> getRawFuture(int params) async {

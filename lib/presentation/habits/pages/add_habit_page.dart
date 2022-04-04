@@ -1,9 +1,9 @@
+import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/presentation/habits/controllers/add_habit_controller.dart';
 import 'package:altitude/presentation/habits/widgets/habit_text.dart';
 import 'package:altitude/presentation/habits/widgets/select_alarm.dart';
@@ -33,30 +33,34 @@ class _AddHabitPageState
 
   void _createHabitTap() {
     if (ValidationHandler.habitTextValidate(habitTextController.text) != null) {
-      showToast("O hábito precisa ser preenchido.");
+      showToast('O hábito precisa ser preenchido.');
     } else if (controller.frequency == null) {
-      showToast("Escolha qual será a frequência.");
+      showToast('Escolha qual será a frequência.');
     } else {
       Habit habit = Habit(
-          habit: habitTextController.text,
-          colorCode: controller.color,
-          frequency: controller.frequency,
-          initialDate: DateTime.now().onlyDate);
+        habit: habitTextController.text,
+        colorCode: controller.color,
+        frequency: controller.frequency,
+        initialDate: DateTime.now().onlyDate,
+      );
 
       showLoading(true);
 
       controller.createHabit(habit).then((response) {
-        response.result((data) {
-          showLoading(false);
-          if (widget.backTo) {
-            navigatePop(result: data);
-          } else {
-            showToast("O hábito foi criado com sucesso!");
-            HabitDetailsPageArguments arguments =
-                HabitDetailsPageArguments(data.id, data.colorCode);
-            navigatePushReplacement("habitDetails", arguments: arguments);
-          }
-        }, handleError);
+        response.result(
+          (data) {
+            showLoading(false);
+            if (widget.backTo) {
+              navigatePop(result: data);
+            } else {
+              showToast('O hábito foi criado com sucesso!');
+              HabitDetailsPageArguments arguments =
+                  HabitDetailsPageArguments(data.id, data.colorCode);
+              navigatePushReplacement('habitDetails', arguments: arguments);
+            }
+          },
+          handleError,
+        );
       }).catchError(handleError);
     }
   }
@@ -68,44 +72,61 @@ class _AddHabitPageState
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            const Header(title: "NOVO HÁBITO"),
+            const Header(title: 'NOVO HÁBITO'),
             const SizedBox(height: 20),
             Observer(
-                builder: (_) => SelectColor(
-                    currentColor: controller.color,
-                    onSelectColor: controller.selectColor)),
+              builder: (_) => SelectColor(
+                currentColor: controller.color,
+                onSelectColor: controller.selectColor,
+              ),
+            ),
             const SizedBox(height: 20),
             Observer(
-                builder: (_) => HabitText(
-                    color: controller.habitColor,
-                    controller: habitTextController)),
+              builder: (_) => HabitText(
+                color: controller.habitColor,
+                controller: habitTextController,
+              ),
+            ),
             const SizedBox(height: 32),
             Observer(
-                builder: (_) => SelectFrequency(
-                    color: controller.habitColor,
-                    currentFrequency: controller.frequency,
-                    selectFrequency: controller.selectFrequency)),
+              builder: (_) => SelectFrequency(
+                color: controller.habitColor,
+                currentFrequency: controller.frequency,
+                selectFrequency: controller.selectFrequency,
+              ),
+            ),
             const SizedBox(height: 42),
-            Observer(builder: (_) => SelectAlarm()),
+            Observer(builder: (_) => const SelectAlarm()),
             const SizedBox(height: 42),
             Container(
               margin: const EdgeInsets.only(top: 20, bottom: 40),
               child: Observer(
                 builder: (_) => ElevatedButton(
                   onPressed: _createHabitTap,
-                  child: const Text("CRIAR",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'CRIAR',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(controller.habitColor),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0))),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              horizontal: 50.0, vertical: 16.0)),
-                      overlayColor: MaterialStateProperty.all(Colors.white24),
-                      elevation: MaterialStateProperty.all(2)),
+                    backgroundColor:
+                        MaterialStateProperty.all(controller.habitColor),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(
+                        horizontal: 50.0,
+                        vertical: 16.0,
+                      ),
+                    ),
+                    overlayColor: MaterialStateProperty.all(Colors.white24),
+                    elevation: MaterialStateProperty.all(2),
+                  ),
                 ),
               ),
             ),

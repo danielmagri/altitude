@@ -1,4 +1,5 @@
-import 'package:altitude/common/constant/Constants.dart';
+import 'package:altitude/common/constant/constants.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/DayDone.dart';
@@ -9,7 +10,6 @@ import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -32,8 +32,12 @@ class FireDatabase implements IFireDatabase {
   // TRANSFER DATA
 
   @override
-  Future<String> transferHabit(Habit habit, int? reminderCounter,
-      List<String?> competitionsId, List<DayDone> daysDone) {
+  Future<String> transferHabit(
+    Habit habit,
+    int? reminderCounter,
+    List<String?> competitionsId,
+    List<DayDone> daysDone,
+  ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference doc = habitsCollection.doc();
@@ -88,8 +92,11 @@ class FireDatabase implements IFireDatabase {
   }
 
   @override
-  Future updateHabitScore(String? habitId, int score,
-      List<Pair<String?, int>> competitionsScore) async {
+  Future updateHabitScore(
+    String? habitId,
+    int score,
+    List<Pair<String?, int>> competitionsScore,
+  ) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference habitDoc = habitsCollection.doc(habitId);
@@ -210,8 +217,11 @@ class FireDatabase implements IFireDatabase {
   }
 
   @override
-  Future updateHabit(Habit habit,
-      [Habit? inititalHabit, List<String?>? competitionsId]) async {
+  Future updateHabit(
+    Habit habit, [
+    Habit? inititalHabit,
+    List<String?>? competitionsId,
+  ]) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     if (inititalHabit != null &&

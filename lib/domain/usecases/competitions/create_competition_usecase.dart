@@ -1,28 +1,29 @@
+import 'package:altitude/common/base/base_usecase.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/common/model/Competition.dart';
-import 'package:altitude/common/model/Competitor.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
 class CreateCompetitionUsecase
     extends BaseUsecase<CreateCompetitionParams, Competition> {
+  CreateCompetitionUsecase(
+    this._competitionsRepository,
+    this._notificationsRepository,
+    this._userRepository,
+    this._habitsRepository,
+  );
+
   final ICompetitionsRepository _competitionsRepository;
   final INotificationsRepository _notificationsRepository;
   final IUserRepository _userRepository;
   final IHabitsRepository _habitsRepository;
-
-  CreateCompetitionUsecase(
-      this._competitionsRepository,
-      this._notificationsRepository,
-      this._userRepository,
-      this._habitsRepository);
 
   @override
   Future<Competition> getRawFuture(CreateCompetitionParams params) async {
@@ -65,14 +66,15 @@ class CreateCompetitionUsecase
 }
 
 class CreateCompetitionParams {
+  CreateCompetitionParams({
+    required this.title,
+    required this.habit,
+    required this.invitations,
+    required this.invitationsToken,
+  });
+
   final String title;
   final Habit habit;
   final List<String> invitations;
   final List<String> invitationsToken;
-
-  CreateCompetitionParams(
-      {required this.title,
-      required this.habit,
-      required this.invitations,
-      required this.invitationsToken});
 }

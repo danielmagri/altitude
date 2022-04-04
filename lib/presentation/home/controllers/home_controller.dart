@@ -1,34 +1,26 @@
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/constant/level_utils.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/habits/max_habits_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
-import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/data_state.dart';
-import 'package:altitude/common/model/no_params.dart';
-import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/domain/usecases/user/update_level_usecase.dart';
+import 'package:altitude/infra/interface/i_fire_analytics.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'home_controller.g.dart';
 
 @lazySingleton
 class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
-  final GetHabitsUsecase _getHabitsUsecase;
-  final CompleteHabitUsecase _completeHabitUsecase;
-  final MaxHabitsUsecase _maxHabitsUsecase;
-  final GetUserDataUsecase _getUserDataUsecase;
-  final UpdateLevelUsecase _updateLevelUsecase;
-  final IFireAnalytics _fireAnalytics;
-  final SharedPref _sharedPref;
-  final AppLogic _appLogic;
-
   _HomeControllerBase(
     this._getHabitsUsecase,
     this._completeHabitUsecase,
@@ -39,6 +31,15 @@ abstract class _HomeControllerBase with Store {
     this._updateLevelUsecase,
     this._sharedPref,
   );
+
+  final GetHabitsUsecase _getHabitsUsecase;
+  final CompleteHabitUsecase _completeHabitUsecase;
+  final MaxHabitsUsecase _maxHabitsUsecase;
+  final GetUserDataUsecase _getUserDataUsecase;
+  final UpdateLevelUsecase _updateLevelUsecase;
+  final IFireAnalytics _fireAnalytics;
+  final SharedPref _sharedPref;
+  final AppLogic _appLogic;
 
   DataState<Person> user = DataState();
   DataState<ObservableList<Habit>> habits = DataState();
@@ -60,7 +61,7 @@ abstract class _HomeControllerBase with Store {
     });
   }
 
-  void getHabits() async {
+  Future<void> getHabits() async {
     (await _getHabitsUsecase.call(false)).result((data) {
       habits.setSuccessState(data.asObservable());
     }, (error) {
@@ -83,20 +84,25 @@ abstract class _HomeControllerBase with Store {
   Future<int?> completeHabit(String id) async {
     return (await _completeHabitUsecase
             .call(CompleteParams(habitId: id, date: DateTime.now().onlyDate)))
-        .result((_) async {
-      await getUser();
-      getHabits();
-      return user.data!.score;
-    }, (error) => throw error,);
+        .result(
+      (_) async {
+        await getUser();
+        getHabits();
+        return user.data!.score;
+      },
+      (error) => throw error,
+    );
   }
 
   Future<bool> checkLevelUp(int newScore) async {
     int newLevel = LevelUtils.getLevel(newScore);
-    int oldLevel = LevelUtils.getLevel((await _getUserDataUsecase
-                .call(false)
-                .resultComplete((data) => data, (error) => null))
-            ?.score ??
-        0,);
+    int oldLevel = LevelUtils.getLevel(
+      (await _getUserDataUsecase
+                  .call(false)
+                  .resultComplete((data) => data, (error) => null))
+              ?.score ??
+          0,
+    );
 
     if (newLevel != oldLevel) _updateLevelUsecase.call(newLevel);
 

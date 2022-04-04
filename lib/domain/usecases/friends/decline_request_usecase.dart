@@ -4,12 +4,12 @@ import 'package:injectable/injectable.dart';
 
 @injectable
 class DeclineRequestUsecase extends BaseUsecase<String, void> {
-  final IFriendsRepository _friendsRepository;
-
   DeclineRequestUsecase(this._friendsRepository);
+
+  final IFriendsRepository _friendsRepository;
 
   @override
   Future<void> getRawFuture(String params) async {
-    return await _friendsRepository.declineRequest(params);
+    return _friendsRepository.declineRequest(params);
   }
 }

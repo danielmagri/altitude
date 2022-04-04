@@ -1,14 +1,17 @@
 import 'dart:async' show Timer;
-import 'package:altitude/common/enums/done_page_tyype.dart';
-import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
-import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
-import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/generic/Skeleton.dart';
-import 'package:altitude/common/view/generic/TutorialPresentation.dart';
+
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
+import 'package:altitude/common/di/dependency_injection.dart';
+import 'package:altitude/common/enums/done_page_tyype.dart';
+import 'package:altitude/common/extensions/datetime_extension.dart';
+import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
+import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
+import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
+import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:altitude/presentation/habits/dialogs/edit_alarm_dialog.dart';
 import 'package:altitude/presentation/habits/dialogs/edit_cue_dialog.dart';
@@ -20,10 +23,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:altitude/common/extensions/datetime_extension.dart';
 
 class HabitDetailsPage extends StatefulWidget {
-  HabitDetailsPage(this.arguments);
+  const HabitDetailsPage(this.arguments, {Key? key}) : super(key: key);
 
   final HabitDetailsPageArguments? arguments;
 
@@ -52,8 +54,8 @@ class _HabitDetailsPageState
     showInitialTutorial();
   }
 
-  void showInitialTutorial() async {
-    if (!SharedPref.instance.rocketTutorial) {
+  Future<void> showInitialTutorial() async {
+    if (!serviceLocator.get<SharedPref>().rocketTutorial) {
       Timer.run(() async {
         await Future.delayed(const Duration(milliseconds: 600));
         scrollController.animateTo(
@@ -108,7 +110,7 @@ class _HabitDetailsPageState
           ),
         );
       });
-      SharedPref.instance.rocketTutorial = true;
+      serviceLocator.get<SharedPref>().rocketTutorial = true;
     }
   }
 
@@ -132,9 +134,9 @@ class _HabitDetailsPageState
   void completeHabit(bool add, DateTime date, DonePageType donePageType) {
     controller.setDoneHabit(add, date, donePageType).then((_) async {
       vibratePhone();
-      if (donePageType == DonePageType.Calendar &&
+      if (donePageType == DonePageType.calendar &&
           add &&
-          SharedPref.instance.alarmTutorial < 2 &&
+          serviceLocator.get<SharedPref>().alarmTutorial < 2 &&
           controller.reminders.data?.hasAnyDay() == true) {
         await Future.delayed(const Duration(milliseconds: 600));
         scrollController.animateTo(
@@ -159,7 +161,7 @@ class _HabitDetailsPageState
             ],
           ),
         );
-        SharedPref.instance.addAlarmTutorial();
+        serviceLocator.get<SharedPref>().addAlarmTutorial();
       }
     }).catchError(handleError);
   }
@@ -192,7 +194,7 @@ class _HabitDetailsPageState
     );
   }
 
-  void goEditHabitPage() async {
+  Future<void> goEditHabitPage() async {
     var arguments = EditHabitPageArguments(
       controller.habit.data,
       await controller.hasCompetition(),
@@ -336,7 +338,7 @@ class _HabitDetailsPageState
       ),
       onPressed: () {
         if (!data) {
-          completeHabit(true, DateTime.now().onlyDate, DonePageType.Detail);
+          completeHabit(true, DateTime.now().onlyDate, DonePageType.detail);
         }
       },
       child: loading

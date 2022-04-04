@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/common/constant/level_utils.dart';
+import 'package:flutter/material.dart';
 
 class NewLevelDialog extends StatelessWidget {
-  final int score;
-
   const NewLevelDialog({required this.score, Key? key}) : super(key: key);
+
+  final int score;
 
   @override
   Widget build(BuildContext context) {

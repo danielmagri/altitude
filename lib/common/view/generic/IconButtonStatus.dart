@@ -8,19 +8,21 @@ import 'package:flutter/material.dart'
         Colors,
         Container,
         IconButton,
+        Key,
         SizedBox,
         Stack,
         StatelessWidget,
         Widget;
 
 class IconButtonStatus extends StatelessWidget {
-  IconButtonStatus({
+  const IconButtonStatus({
     required this.status,
     required this.icon,
     required this.onPressed,
     this.color = Colors.orange,
     this.backgroundColor,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final Widget icon;
   final Function onPressed;
@@ -49,7 +51,8 @@ class IconButtonStatus extends StatelessWidget {
             ? Container(
                 width: 10,
                 height: 10,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: color))
+                decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+              )
             : const SizedBox(height: 10, width: 10),
       ],
     );

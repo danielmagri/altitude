@@ -27,13 +27,16 @@ abstract class INotificationsRepository {
 
 @Injectable(as: INotificationsRepository)
 class NotificationsRepository extends INotificationsRepository {
-  final IFireFunctions _fireFunctions;
-
   NotificationsRepository(this._fireFunctions);
+
+  final IFireFunctions _fireFunctions;
 
   @override
   Future<void> sendCompetitionNotification(
-      String name, int earnedScore, List<Competition> competitions) async {
+    String name,
+    int earnedScore,
+    List<Competition> competitions,
+  ) async {
     competitions.forEach((competition) {
       int? oldScore = competition.competitors!.firstWhere((e) => e.you!).score;
 
@@ -55,9 +58,10 @@ class NotificationsRepository extends INotificationsRepository {
             );
           } else if (earnedScore >= 4 && oldScore > competitor.score) {
             _fireFunctions.sendNotification(
-                'Sempre é hora de reagir!',
-                '$name está se distanciando cada vez mais de você em ${competition.title}',
-                competitor.fcmToken ?? '');
+              'Sempre é hora de reagir!',
+              '$name está se distanciando cada vez mais de você em ${competition.title}',
+              competitor.fcmToken ?? '',
+            );
           }
         }
       });
@@ -92,7 +96,9 @@ class NotificationsRepository extends INotificationsRepository {
 
   @override
   Future<void> sendInviteFriendNotification(
-      String userName, String friendToken) async {
+    String userName,
+    String friendToken,
+  ) async {
     await _fireFunctions.sendNotification(
       'Pedido de amizade',
       '$userName quer ser seu amigo.',
@@ -102,7 +108,9 @@ class NotificationsRepository extends INotificationsRepository {
 
   @override
   Future<void> acceptFriendNotification(
-      String userName, String friendToken) async {
+    String userName,
+    String friendToken,
+  ) async {
     await _fireFunctions.sendNotification(
       'Pedido de amizade',
       '$userName aceitou seu pedido.',
