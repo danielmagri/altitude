@@ -1,7 +1,7 @@
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/usecases/competitions/remove_competitor_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/update_competition_usecase.dart';
 import 'package:altitude/domain/usecases/friends/get_friends_usecase.dart';

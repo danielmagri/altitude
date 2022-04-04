@@ -1,11 +1,11 @@
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -24,13 +24,17 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
 
   @override
   Future<void> getRawFuture(CompleteParams params) async {
+    var userUid = await _userRepository
+        .getUserData(false)
+        .then((value) => value.uid ?? '');
+
     List<Competition> competitions =
         await _competitionsRepository.getCompetitions(false).then((list) {
       return list
           .where(
             (e) =>
-                e.getMyCompetitor().habitId == params.habitId &&
-                e.initialDate!.isBeforeOrSameDay(params.date),
+                e.getMyCompetitor(userUid).habitId == params.habitId &&
+                e.initialDate.isBeforeOrSameDay(params.date),
           )
           .toList();
     });

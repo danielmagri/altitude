@@ -2,13 +2,13 @@ import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/usecases/competitions/accept_competition_request_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_days_done_usecase.dart';
@@ -97,7 +97,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
       _acceptCompetitionRequestUsecase
           .call(
         AcceptCompetitionRequestParams(
-          competitionId: widget.competition.id ?? '',
+          competitionId: widget.competition.id,
           competition: widget.competition,
           competitor: competitor,
         ),

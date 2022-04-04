@@ -1,5 +1,5 @@
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
@@ -24,7 +24,10 @@ abstract class ICompetitionsRepository {
     Competition competition,
   );
   Future<Competition> createCompetition(
-    Competition competition,
+    String title,
+    DateTime date,
+    List<Competitor> competitors,
+    List<String> invitations,
     String habitText,
   );
 }
@@ -96,7 +99,7 @@ class CompetitionsRepository extends ICompetitionsRepository {
     await _fireDatabase.removeCompetitor(
       competition.id,
       _fireAuth.getUid(),
-      competition.competitors!.length == 1,
+      competition.competitors.length == 1,
     );
     _memory.competitions.removeWhere((element) => element.id == competition.id);
   }
@@ -113,25 +116,32 @@ class CompetitionsRepository extends ICompetitionsRepository {
     Competition competition,
   ) async {
     await _fireDatabase.acceptCompetitionRequest(competitionId, competitor);
-    competition.competitors!.add(competitor);
+    competition.competitors.add(competitor);
     _memory.competitions.add(competition);
   }
 
   @override
   Future<Competition> createCompetition(
-    Competition competition,
+    String title,
+    DateTime date,
+    List<Competitor> competitors,
+    List<String> invitations,
     String habitText,
   ) async {
-    Competition newCompetition =
-        await _fireDatabase.createCompetition(competition);
-
-    _fireAnalytics.sendCreateCompetition(
-      competition.title ?? '',
-      habitText,
-      competition.invitations?.length ?? 0,
+    Competition newCompetition = await _fireDatabase.createCompetition(
+      title,
+      date,
+      competitors,
+      invitations,
     );
 
-    _memory.competitions.add(competition);
+    _fireAnalytics.sendCreateCompetition(
+      title,
+      habitText,
+      invitations.length,
+    );
+
+    _memory.competitions.add(newCompetition);
     return newCompetition;
   }
 }

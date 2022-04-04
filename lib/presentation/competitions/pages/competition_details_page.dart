@@ -10,8 +10,8 @@ import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/dialog/base_text_dialog.dart';
-import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/common/view/generic/TutorialPresentation.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/presentation/competitions/controllers/competition_details_controller.dart';
 import 'package:altitude/presentation/competitions/dialog/add_competitors_dialog.dart';
@@ -88,7 +88,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
       showLoading(true);
       controller
           .changeTitle(
-        widget.arguments.competition.id ?? '',
+        widget.arguments.competition.id,
         titleTextController.text,
       )
           .then((res) {
@@ -134,21 +134,17 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
     showLoading(true);
     controller.getFriends().then((friends) {
       showLoading(false);
-      if (friends == null) {
-        showToast('Ocorreu um erro');
-      } else {
-        List<String?> competitors = widget.arguments.competition.competitors!
-            .map((competitor) => competitor.uid)
-            .toList();
-        showDialog(
-          context: context,
-          builder: (context) => AddCompetitorsDialog(
-            id: widget.arguments.competition.id,
-            friends: friends,
-            competitors: competitors,
-          ),
-        );
-      }
+      List<String?> competitors = widget.arguments.competition.competitors
+          .map((competitor) => competitor.uid)
+          .toList();
+      showDialog(
+        context: context,
+        builder: (context) => AddCompetitorsDialog(
+          id: widget.arguments.competition.id,
+          friends: friends,
+          competitors: competitors,
+        ),
+      );
     }).catchError(handleError);
   }
 
@@ -176,7 +172,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
         return BaseTextDialog(
           title: 'Sobre',
           body:
-              "Data de início: ${widget.arguments.competition.initialDate!.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate!.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate!.year}",
+              "Data de início: ${widget.arguments.competition.initialDate.day.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.month.toString().padLeft(2, '0')}/${widget.arguments.competition.initialDate.year}",
           action: <Widget>[
             TextButton(
               child: const Text('Fechar'),
@@ -195,10 +191,8 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
   double getMaxHeight(BuildContext context) {
     double height = 0;
 
-    if (widget.arguments.competition.competitors != null &&
-        widget.arguments.competition.competitors!.isNotEmpty) {
-      height =
-          (widget.arguments.competition.competitors![0].score * 10.0) + 200;
+    if (widget.arguments.competition.competitors.isNotEmpty) {
+      height = (widget.arguments.competition.competitors[0].score * 10.0) + 200;
     }
 
     if (height < MediaQuery.of(context).size.height) {
@@ -213,7 +207,7 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
 
     widgets.add(Metrics(height: getMaxHeight(context)));
 
-    for (Competitor competitor in widget.arguments.competition.competitors!) {
+    for (Competitor competitor in widget.arguments.competition.competitors) {
       widgets.add(
         Expanded(
           child: SizedBox(

@@ -1,4 +1,4 @@
-import 'package:altitude/domain/models/habit_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
 import 'package:flutter/material.dart'
     show
         Container,

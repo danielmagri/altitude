@@ -1,11 +1,11 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/reminder_weekday.dart';
-import 'package:altitude/domain/enums/reminder_type.dart';
-import 'package:altitude/domain/models/reminder_card.dart';
+import 'package:altitude/presentation/habits/enums/reminder_type.dart';
 import 'package:altitude/domain/usecases/habits/update_reminder_usecase.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
+import 'package:altitude/presentation/habits/models/reminder_card.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';

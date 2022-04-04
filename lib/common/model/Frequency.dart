@@ -140,7 +140,7 @@ class DayWeek extends Frequency {
   }
 
   @override
-  FrequencyType frequencyType() => FrequencyType.DAYWEEK;
+  FrequencyType frequencyType() => FrequencyType.dayweek;
 
   @override
   Map<String, dynamic> toJson() => {
@@ -172,7 +172,7 @@ class Weekly extends Frequency {
   }
 
   @override
-  FrequencyType frequencyType() => FrequencyType.WEEKLY;
+  FrequencyType frequencyType() => FrequencyType.weekly;
 
   @override
   Map<String, dynamic> toJson() => {

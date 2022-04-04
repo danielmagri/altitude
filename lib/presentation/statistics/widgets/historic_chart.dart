@@ -1,6 +1,6 @@
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/domain/models/historic_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/historic_statistic_data.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart'
     show
@@ -23,7 +23,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget;
 
-const double historic_chart_height = 200;
+const double historicChartHeight = 200;
 
 class HistoricChart extends StatelessWidget {
   HistoricChart({required this.list, Key? key, this.selectedHabitId})
@@ -40,7 +40,7 @@ class HistoricChart extends StatelessWidget {
 
   List<Widget> lines(BuildContext context) {
     List<Widget> lines;
-    double space = (historic_chart_height - 30) / (linesCount - 1);
+    double space = (historicChartHeight - 30) / (linesCount - 1);
 
     lines = List.generate(
       linesCount,
@@ -59,7 +59,7 @@ class HistoricChart extends StatelessWidget {
   @override
   Widget build(context) {
     return SizedBox(
-      height: historic_chart_height,
+      height: historicChartHeight,
       child: Stack(
         alignment: AlignmentDirectional.centerEnd,
         children: [
@@ -76,7 +76,7 @@ class HistoricChart extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => HistoricBar(
               data: list[index],
-              multiplier: (historic_chart_height - 50) / maxDataValue,
+              multiplier: (historicChartHeight - 50) / maxDataValue,
               selectedHabitId: selectedHabitId,
             ),
           ),

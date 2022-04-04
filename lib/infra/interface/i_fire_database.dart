@@ -1,10 +1,10 @@
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Competitor.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/data/model/competition_model.dart';
 
 abstract class IFireDatabase {
   Future<String> transferHabit(
@@ -94,13 +94,18 @@ abstract class IFireDatabase {
 
   Future removeFriend(String? uid);
 
-  Future<List<Competition>> getCompetitions();
+  Future<List<CompetitionModel>> getCompetitions();
 
-  Future<Competition> getCompetition(String? id);
+  Future<CompetitionModel> getCompetition(String? id);
 
-  Future<List<Competition>> getPendingCompetitions();
+  Future<List<CompetitionModel>> getPendingCompetitions();
 
-  Future<Competition> createCompetition(Competition competition);
+  Future<CompetitionModel> createCompetition(
+    String title,
+    DateTime date,
+    List<Competitor> competitors,
+    List<String> invitations,
+  );
 
   Future updateCompetition(String? competitionId, String title);
 

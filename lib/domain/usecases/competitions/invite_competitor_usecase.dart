@@ -1,9 +1,9 @@
 import 'package:altitude/common/base/base_usecase.dart';
 import 'package:altitude/common/constant/constants.dart';
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/data/repository/competitions_repository.dart';
 import 'package:altitude/data/repository/notifications_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -24,7 +24,7 @@ class InviteCompetitorUsecase
     Competition competition = await _competitionsRepository
         .getCompetition(params.competitionId ?? '');
 
-    if (competition.competitors!.length < MAX_COMPETITORS) {
+    if (competition.competitors.length < MAX_COMPETITORS) {
       await _competitionsRepository.inviteCompetitor(
         params.competitionId ?? '',
         params.competitorId,
@@ -35,7 +35,7 @@ class InviteCompetitorUsecase
       for (String? token in params.fcmTokens) {
         await _notificationsRepository.sendInviteCompetitionNotification(
           userName,
-          competition.title ?? '',
+          competition.title,
           token ?? '',
         );
       }

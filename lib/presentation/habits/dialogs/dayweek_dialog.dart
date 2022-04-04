@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/toast.dart';
-import 'package:altitude/domain/models/dayweek_selection.dart';
+import 'package:altitude/presentation/habits/models/dayweek_selection.dart';
 import 'package:flutter/material.dart'
     show
         BorderRadius,

@@ -1,4 +1,4 @@
-import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:injectable/injectable.dart';
 
@@ -38,9 +38,9 @@ class NotificationsRepository extends INotificationsRepository {
     List<Competition> competitions,
   ) async {
     competitions.forEach((competition) {
-      int? oldScore = competition.competitors!.firstWhere((e) => e.you!).score;
+      int? oldScore = competition.competitors.firstWhere((e) => e.you!).score;
 
-      competition.competitors!.forEach((competitor) {
+      competition.competitors.forEach((competitor) {
         if (!competitor.you!) {
           if (competitor.score >= oldScore &&
               (oldScore + earnedScore) > competitor.score) {

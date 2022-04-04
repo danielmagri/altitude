@@ -5,7 +5,7 @@ import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
-import 'package:altitude/domain/models/habit_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
 import 'package:altitude/presentation/statistics/controllers/statistics_controller.dart';
 import 'package:altitude/presentation/statistics/widgets/frequency_chart.dart';
 import 'package:altitude/presentation/statistics/widgets/historic_chart.dart';
@@ -194,7 +194,7 @@ class _StatisticspageState
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Skeleton(
                     width: double.maxFinite,
-                    height: historic_chart_height,
+                    height: historicChartHeight,
                   ),
                 ),
                 success: (data) => HistoricChart(
@@ -234,7 +234,7 @@ class _StatisticspageState
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Skeleton(
                     width: double.maxFinite,
-                    height: FREQUENCY_CHART_HEIGHT,
+                    height: frequencyChartHeight,
                   ),
                 ),
                 success: (data) => FrequencyChart(

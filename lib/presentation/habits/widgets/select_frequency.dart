@@ -76,7 +76,7 @@ class SelectFrequency extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             switch (type) {
-              case FrequencyType.DAYWEEK:
+              case FrequencyType.dayweek:
                 showDialog(
                   context: context,
                   builder: (_) => DayweekDialog(
@@ -89,7 +89,7 @@ class SelectFrequency extends StatelessWidget {
                   if (value is Frequency) selectFrequency(value);
                 });
                 break;
-              case FrequencyType.WEEKLY:
+              case FrequencyType.weekly:
                 showDialog(
                   context: context,
                   builder: (_) => WeeklyDialog(
@@ -173,9 +173,9 @@ class SelectFrequency extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              frequencyCard(context, FrequencyType.DAYWEEK),
+              frequencyCard(context, FrequencyType.dayweek),
               const SizedBox(width: 16),
-              frequencyCard(context, FrequencyType.WEEKLY)
+              frequencyCard(context, FrequencyType.weekly)
             ],
           ),
         ],

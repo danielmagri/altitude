@@ -1,11 +1,11 @@
-enum FrequencyType { DAYWEEK, WEEKLY }
+enum FrequencyType { dayweek, weekly }
 
 extension FrequencyTypeExtension on FrequencyType {
   String? get title {
     switch (this) {
-      case FrequencyType.DAYWEEK:
+      case FrequencyType.dayweek:
         return 'Diariamente';
-      case FrequencyType.WEEKLY:
+      case FrequencyType.weekly:
         return 'Semanalmente';
       default:
         return null;
@@ -14,9 +14,9 @@ extension FrequencyTypeExtension on FrequencyType {
 
   String? get exampleText {
     switch (this) {
-      case FrequencyType.DAYWEEK:
+      case FrequencyType.dayweek:
         return 'Ex. Segunda, Quarta e Sexta';
-      case FrequencyType.WEEKLY:
+      case FrequencyType.weekly:
         return 'Ex. 3 vezes por semana';
       default:
         return null;

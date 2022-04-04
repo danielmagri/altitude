@@ -1,15 +1,17 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/generic/IconButtonStatus.dart';
+import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/common/view/generic/toast.dart';
-import 'package:altitude/common/view/generic/data_error.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/presentation/competitions/controllers/competition_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -56,7 +58,7 @@ class _CompetitionPageState
 
   void competitionTap(Competition competition) {
     showLoading(true);
-    controller.getCompetitionDetails(competition.id!).then((value) {
+    controller.getCompetitionDetails(competition.id).then((value) {
       showLoading(false);
       var arguments = CompetitionDetailsPageArguments(value);
       navigatePush('competitionDetails', arguments: arguments);
@@ -294,9 +296,13 @@ class _CompetitionPageState
                                             constraints.maxWidth,
                                             constraints.maxWidth,
                                           ),
-                                          color: AppColors.habitsColor[
-                                              competition
-                                                  .getMyCompetitor()
+                                          color:
+                                              AppColors.habitsColor[competition
+                                                  .getMyCompetitor(
+                                                    serviceLocator
+                                                        .get<IFireAuth>()
+                                                        .getUid(),
+                                                  )
                                                   .color!],
                                           isExtend: true,
                                         ),
@@ -307,7 +313,7 @@ class _CompetitionPageState
                                 Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Text(
-                                    competition.title!,
+                                    competition.title,
                                     maxLines: 2,
                                     style: const TextStyle(fontSize: 16),
                                   ),

@@ -1,10 +1,10 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
@@ -146,7 +146,7 @@ class HabitsRepository extends IHabitsRepository {
     competitions.forEach((competition) {
       int i = _memory.competitions.indexWhere((e) => e.id == competition.id);
       if (index != -1) {
-        _memory.competitions[i].competitors!.firstWhere((e) => e.you!).score +=
+        _memory.competitions[i].competitors.firstWhere((e) => e.you!).score +=
             score;
       }
     });

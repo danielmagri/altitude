@@ -1,9 +1,9 @@
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/usecases/competitions/get_competition_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_usecase.dart';

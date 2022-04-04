@@ -1,7 +1,7 @@
-import 'package:altitude/common/model/Competition.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 
 class CompetitionDetailsPageArguments {
-  final Competition competition;
-
   CompetitionDetailsPageArguments(this.competition);
+  
+  final Competition competition;
 }

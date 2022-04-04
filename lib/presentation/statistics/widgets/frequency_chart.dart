@@ -1,7 +1,7 @@
 import 'dart:math' show min;
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/domain/models/frequency_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/frequency_statistic_data.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart'
     show
@@ -26,7 +26,7 @@ import 'package:flutter/material.dart'
         TextStyle,
         Widget;
 
-const double FREQUENCY_CHART_HEIGHT = 250;
+const double frequencyChartHeight = 250;
 
 class FrequencyChart extends StatelessWidget {
   const FrequencyChart({required this.list, Key? key, this.selectedHabitId})
@@ -46,7 +46,7 @@ class FrequencyChart extends StatelessWidget {
     'sáb'
   ];
 
-  double get space => ((FREQUENCY_CHART_HEIGHT - 30) / (linesCount - 1) - 1);
+  double get space => ((frequencyChartHeight - 30) / (linesCount - 1) - 1);
 
   List<Widget> lines(BuildContext context) {
     List<Widget> lines;
@@ -68,7 +68,7 @@ class FrequencyChart extends StatelessWidget {
   @override
   Widget build(context) {
     return SizedBox(
-      height: FREQUENCY_CHART_HEIGHT,
+      height: frequencyChartHeight,
       child: Stack(
         alignment: AlignmentDirectional.centerEnd,
         children: [

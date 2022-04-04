@@ -1,10 +1,10 @@
 import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Competition.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_fire_messaging.dart';
@@ -69,7 +69,7 @@ class UserRepository extends IUserRepository {
     List<String> competitionsId =
         await _fireDatabase.getCompetitions().then((list) {
       _memory.competitions = list;
-      return list.map((e) => e.id ?? '').toList();
+      return list.map((e) => e.id).toList();
     });
 
     final token = await _fireMessaging.getToken;
@@ -135,7 +135,9 @@ class UserRepository extends IUserRepository {
       List<Pair<String?, int>> competitionsScore = [];
 
       for (Competition competition in competitions
-          .where((e) => e.getMyCompetitor().habitId == habit.id)
+          .where(
+            (e) => e.getMyCompetitor(_fireAuth.getUid()).habitId == habit.id,
+          )
           .toList()) {
         int competitionScore = _scoreService.scoreEarnedTotal(
           habit.frequency!,

@@ -1,4 +1,4 @@
-import 'package:altitude/domain/enums/reminder_type.dart';
+import 'package:altitude/presentation/habits/enums/reminder_type.dart';
 
 class ReminderCard {
   ReminderCard(this.type, this.title);
