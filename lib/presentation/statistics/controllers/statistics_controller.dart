@@ -1,14 +1,14 @@
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/failure.dart';
-import 'package:altitude/presentation/statistics/models/frequency_statistic_data.dart';
-import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
-import 'package:altitude/presentation/statistics/models/historic_statistic_data.dart';
+import 'package:altitude/domain/models/day_done_entity.dart';
 import 'package:altitude/domain/usecases/habits/get_all_days_done_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
+import 'package:altitude/presentation/statistics/models/frequency_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
+import 'package:altitude/presentation/statistics/models/historic_statistic_data.dart';
 import 'package:collection/collection.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -56,7 +56,7 @@ abstract class _StatisticsControllerBase with Store {
 
       Map<DateTime, List<DayDone>> dateGrouped = groupBy<DayDone, DateTime>(
         daysDone,
-        (e) => DateTime(e.date!.year, e.date!.month),
+        (e) => DateTime(e.date.year, e.date.month),
       );
 
       historicData
@@ -169,7 +169,7 @@ abstract class _StatisticsControllerBase with Store {
     dateGrouped.forEach((key, value) {
       Map<DateTime, List<DayDone>> dayGrouped = groupBy<DayDone, DateTime>(
         value,
-        (e) => DateTime(e.date!.year, e.date!.month, e.date!.day),
+        (e) => DateTime(e.date.year, e.date.month, e.date.day),
       );
       Map<String?, List<DayDone>> dayGroupedHabit =
           groupBy<DayDone, String?>(value, (e) => e.habitId);
@@ -185,8 +185,8 @@ abstract class _StatisticsControllerBase with Store {
               (i) => value
                   .where(
                     (e) =>
-                        e.date!.weekday == i ||
-                        (e.date!.weekday == 7 && i == 0),
+                        e.date.weekday == i ||
+                        (e.date.weekday == 7 && i == 0),
                   )
                   .length,
             ),

@@ -1,11 +1,11 @@
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
 import 'package:altitude/data/model/competitor_model.dart';
+import 'package:altitude/data/model/day_done_model.dart';
 import 'package:altitude/data/model/person_model.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
@@ -36,7 +36,7 @@ class FireDatabase implements IFireDatabase {
     Habit habit,
     int? reminderCounter,
     List<String?> competitionsId,
-    List<DayDone> daysDone,
+    List<DayDoneModel> daysDone,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -62,7 +62,7 @@ class FireDatabase implements IFireDatabase {
     }
 
     CollectionReference daysDoneCollection = doc.collection(_daysDone);
-    for (DayDone dayDone in daysDone) {
+    for (DayDoneModel dayDone in daysDone) {
       batch.set(
         daysDoneCollection.doc(dayDone.dateFormatted),
         dayDone.toJson(),
@@ -73,12 +73,12 @@ class FireDatabase implements IFireDatabase {
   }
 
   @override
-  Future transferDayDonePlus(String habitId, List<DayDone> daysDone) {
+  Future transferDayDonePlus(String habitId, List<DayDoneModel> daysDone) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection(_daysDone);
-    for (DayDone dayDone in daysDone) {
+    for (DayDoneModel dayDone in daysDone) {
       batch.set(
         daysDoneCollection.doc(dayDone.dateFormatted),
         dayDone.toJson(),
@@ -90,7 +90,8 @@ class FireDatabase implements IFireDatabase {
 
   @override
   Future updateTotalScore(int? score, int level) {
-    return userDoc.update({PersonModel.scoreTag: score, PersonModel.levelTag: level});
+    return userDoc
+        .update({PersonModel.scoreTag: score, PersonModel.levelTag: level});
   }
 
   @override
@@ -132,8 +133,8 @@ class FireDatabase implements IFireDatabase {
   @override
   Future<PersonModel> getPerson() {
     return userDoc.get().then(
-          (value) =>
-              PersonModel.fromJson(value.data() as Map<String, dynamic>, value.id),
+          (value) => PersonModel.fromJson(
+              value.data() as Map<String, dynamic>, value.id),
         );
   }
 
@@ -278,7 +279,7 @@ class FireDatabase implements IFireDatabase {
     bool isAdd,
     int score,
     bool isLastDone,
-    DayDone dayDone,
+    DayDoneModel dayDone,
     List<String?> competitions,
   ) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
@@ -328,7 +329,8 @@ class FireDatabase implements IFireDatabase {
         throw 'Erro desconhecido';
       }
 
-      batch.update(userDoc, {PersonModel.scoreTag: FieldValue.increment(score)});
+      batch
+          .update(userDoc, {PersonModel.scoreTag: FieldValue.increment(score)});
       batch.update(habitDoc, habitMap);
 
       return batch.commit();
@@ -343,14 +345,15 @@ class FireDatabase implements IFireDatabase {
   // DAYS DONE
 
   @override
-  Future<List<DayDone>> getAllDaysDone(String? id) {
+  Future<List<DayDoneModel>> getAllDaysDone(String? id) {
     return habitsCollection.doc(id).collection(_daysDone).get().then(
-          (value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList(),
+          (value) =>
+              value.docs.map((e) => DayDoneModel.fromJson(e.data())).toList(),
         );
   }
 
   @override
-  Future<List<DayDone>> getDaysDone(
+  Future<List<DayDoneModel>> getDaysDone(
     String? id,
     DateTime? startDate,
     DateTime endDate,
@@ -358,11 +361,12 @@ class FireDatabase implements IFireDatabase {
     return habitsCollection
         .doc(id)
         .collection(_daysDone)
-        .where(DayDone.DATE, isGreaterThanOrEqualTo: startDate)
-        .where(DayDone.DATE, isLessThanOrEqualTo: endDate)
+        .where(DayDoneModel.dateTag, isGreaterThanOrEqualTo: startDate)
+        .where(DayDoneModel.dateTag, isLessThanOrEqualTo: endDate)
         .get()
         .then(
-          (value) => value.docs.map((e) => DayDone.fromJson(e.data())).toList(),
+          (value) =>
+              value.docs.map((e) => DayDoneModel.fromJson(e.data())).toList(),
         );
   }
 
@@ -381,12 +385,14 @@ class FireDatabase implements IFireDatabase {
   @override
   Future<List<PersonModel>> getFriendsDetails() {
     return userCollection
-        .where(PersonModel.friendsTag, arrayContains: GetIt.I.get<IFireAuth>().getUid())
+        .where(PersonModel.friendsTag,
+            arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .get()
         .then(
           (value) => value.docs
               .map(
-                (e) => PersonModel.fromJson(e.data() as Map<String, dynamic>, e.id),
+                (e) => PersonModel.fromJson(
+                    e.data() as Map<String, dynamic>, e.id),
               )
               .toList(),
         );
@@ -403,7 +409,8 @@ class FireDatabase implements IFireDatabase {
         .then(
           (value) => value.docs
               .map(
-                (e) => PersonModel.fromJson(e.data() as Map<String, dynamic>, e.id),
+                (e) => PersonModel.fromJson(
+                    e.data() as Map<String, dynamic>, e.id),
               )
               .toList(),
         );
@@ -413,13 +420,15 @@ class FireDatabase implements IFireDatabase {
   Future<List<PersonModel>> getRankingFriends(int limit) {
     return userCollection
         .orderBy(PersonModel.scoreTag, descending: true)
-        .where(PersonModel.friendsTag, arrayContains: GetIt.I.get<IFireAuth>().getUid())
+        .where(PersonModel.friendsTag,
+            arrayContains: GetIt.I.get<IFireAuth>().getUid())
         .limit(limit)
         .get()
         .then(
           (value) => value.docs
               .map(
-                (e) => PersonModel.fromJson(e.data() as Map<String, dynamic>, e.id),
+                (e) => PersonModel.fromJson(
+                    e.data() as Map<String, dynamic>, e.id),
               )
               .toList(),
         );
@@ -430,7 +439,10 @@ class FireDatabase implements IFireDatabase {
     String email,
     List<String?> myPendingFriends,
   ) {
-    return userCollection.where(PersonModel.emailTag, isEqualTo: email).get().then(
+    return userCollection
+        .where(PersonModel.emailTag, isEqualTo: email)
+        .get()
+        .then(
           (value) => value.docs.map((e) {
             PersonModel person =
                 PersonModel.fromJson(e.data() as Map<String, dynamic>, e.id);
@@ -440,7 +452,8 @@ class FireDatabase implements IFireDatabase {
               state = 1;
             } else if (myPendingFriends.contains(person.uid)) {
               state = 2;
-            } else if (person.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
+            } else if (person.pendingFriends
+                .contains(GetIt.I.get<IFireAuth>().getUid())) {
               state = 3;
             }
 
@@ -453,8 +466,8 @@ class FireDatabase implements IFireDatabase {
   @override
   Future<String> friendRequest(String? uid) async {
     var person = (await userDoc.get().then(
-          (value) =>
-              PersonModel.fromJson(value.data() as Map<String, dynamic>, value.id),
+          (value) => PersonModel.fromJson(
+              value.data() as Map<String, dynamic>, value.id),
         ));
     if (person.friends.length >= maxFriends) {
       throw 'Máximo de amigos atingido.';
@@ -469,8 +482,8 @@ class FireDatabase implements IFireDatabase {
     }
 
     var friendData = (await userCollection.doc(uid).get().then(
-          (value) =>
-              PersonModel.fromJson(value.data() as Map<String, dynamic>, value.id),
+          (value) => PersonModel.fromJson(
+              value.data() as Map<String, dynamic>, value.id),
         ));
     if (friendData.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
       throw 'Já tem uma solicitação.';
@@ -489,14 +502,15 @@ class FireDatabase implements IFireDatabase {
                     value.id,
                   ),
                 ))
-            .friends.length >=
+            .friends
+            .length >=
         maxFriends) {
       throw 'Máximo de amigos atingido.';
     }
 
     var friendData = (await userCollection.doc(uid).get().then(
-          (value) =>
-              PersonModel.fromJson(value.data() as Map<String, dynamic>, value.id),
+          (value) => PersonModel.fromJson(
+              value.data() as Map<String, dynamic>, value.id),
         ));
     if (friendData.friends.length >= maxFriends) {
       throw 'Seu amigo atingiu o máximo de amigos.';
@@ -510,7 +524,8 @@ class FireDatabase implements IFireDatabase {
     batch.update(userCollection.doc(uid), {
       PersonModel.pendingFriendsTag:
           FieldValue.arrayRemove([GetIt.I.get<IFireAuth>().getUid()]),
-      PersonModel.friendsTag: FieldValue.arrayUnion([GetIt.I.get<IFireAuth>().getUid()])
+      PersonModel.friendsTag:
+          FieldValue.arrayUnion([GetIt.I.get<IFireAuth>().getUid()])
     });
 
     return batch.commit().then((value) => friendData.fcmToken);

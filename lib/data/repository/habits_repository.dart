@@ -1,10 +1,11 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/data/model/day_done_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/day_done_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
@@ -130,7 +131,7 @@ class HabitsRepository extends IHabitsRepository {
       isAdd,
       score,
       isLastDone,
-      dayDone,
+      DayDoneModel.fromEntity(dayDone),
       competitions.map((e) => e.id).toList(),
     );
 
@@ -200,18 +201,24 @@ class HabitsRepository extends IHabitsRepository {
         habit,
         reminderCounter,
         competitionsId,
-        daysDone.sublist(0, 450),
+        daysDone
+            .sublist(0, 450)
+            .map((e) => DayDoneModel.fromEntity(e))
+            .toList(),
       );
       await _fireDatabase.transferDayDonePlus(
         id,
-        daysDone.sublist(450, daysDone.length),
+        daysDone
+            .sublist(450, daysDone.length)
+            .map((e) => DayDoneModel.fromEntity(e))
+            .toList(),
       );
     } else {
       await _fireDatabase.transferHabit(
         habit,
         reminderCounter,
         competitionsId,
-        daysDone,
+        daysDone.map((e) => DayDoneModel.fromEntity(e)).toList(),
       );
     }
   }
@@ -243,7 +250,7 @@ class HabitsRepository extends IHabitsRepository {
 
     for (int i = 0; i < data.length; i++) {
       if (i - 1 >= 0 &&
-          data[i].date!.difference(data[i - 1].date!) ==
+          data[i].date.difference(data[i - 1].date) ==
               const Duration(days: 1)) {
         before = true;
       } else {
@@ -251,14 +258,14 @@ class HabitsRepository extends IHabitsRepository {
       }
 
       if (i + 1 < data.length &&
-          data[i + 1].date!.difference(data[i].date!) ==
+          data[i + 1].date.difference(data[i].date) ==
               const Duration(days: 1)) {
         after = true;
       } else {
         after = false;
       }
 
-      map.putIfAbsent(data[i].date!, () => [before, after]);
+      map.putIfAbsent(data[i].date, () => [before, after]);
     }
     return map;
   }

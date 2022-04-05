@@ -1,8 +1,8 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/data/repository/habits_repository.dart';
 import 'package:altitude/data/repository/user_repository.dart';
+import 'package:altitude/domain/models/day_done_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
@@ -37,6 +37,6 @@ class TransferHabitParams {
   });
 
   final Habit habit;
-  final List<String?> competitionsId;
+  final List<String> competitionsId;
   final List<DayDone> daysDone;
 }

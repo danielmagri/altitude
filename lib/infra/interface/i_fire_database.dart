@@ -1,9 +1,9 @@
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
 import 'package:altitude/data/model/competitor_model.dart';
+import 'package:altitude/data/model/day_done_model.dart';
 import 'package:altitude/data/model/person_model.dart';
 
 abstract class IFireDatabase {
@@ -11,10 +11,10 @@ abstract class IFireDatabase {
     Habit habit,
     int? reminderCounter,
     List<String?> competitionsId,
-    List<DayDone> daysDone,
+    List<DayDoneModel> daysDone,
   );
 
-  Future transferDayDonePlus(String habitId, List<DayDone> daysDone);
+  Future transferDayDonePlus(String habitId, List<DayDoneModel> daysDone);
 
   Future updateTotalScore(int? score, int level);
 
@@ -57,15 +57,15 @@ abstract class IFireDatabase {
     bool isAdd,
     int score,
     bool isLastDone,
-    DayDone dayDone,
+    DayDoneModel dayDone,
     List<String?> competitions,
   );
 
   Future deleteHabit(String? id);
 
-  Future<List<DayDone>> getAllDaysDone(String? id);
+  Future<List<DayDoneModel>> getAllDaysDone(String? id);
 
-  Future<List<DayDone>> getDaysDone(
+  Future<List<DayDoneModel>> getDaysDone(
     String? id,
     DateTime? startDate,
     DateTime endDate,

@@ -1,7 +1,7 @@
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/Reminder.dart';
+import 'package:altitude/data/model/day_done_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -243,7 +243,7 @@ class DatabaseService {
   }
 
   /// Retorna uma lista com os dias feitos do hábito.
-  Future<List<DayDone>> getDaysDone(
+  Future<List<DayDoneModel>> getDaysDone(
     int? id, {
     DateTime? startDate,
     DateTime? endDate,
@@ -276,13 +276,14 @@ class DatabaseService {
       );
     }
 
-    List<DayDone> list =
-        result.isNotEmpty ? result.map((c) => DayDone.fromDB(c)).toList() : [];
+    List<DayDoneModel> list = result.isNotEmpty
+        ? result.map((c) => DayDoneModel.fromDB(c)).toList()
+        : [];
     return list;
   }
 
   /// Retorna uma lista com todos os dias feitos.
-  Future<List<DayDone>> getAllDaysDone({
+  Future<List<DayDoneModel>> getAllDaysDone({
     DateTime? startDate,
     DateTime? endDate,
   }) async {
@@ -309,8 +310,8 @@ class DatabaseService {
       result = await db!.rawQuery('SELECT * FROM day_done ORDER BY date_done;');
     }
 
-    List<DayDone> list = result.isNotEmpty
-        ? result.map((c) => DayDone.fromJson(c)).toList()
+    List<DayDoneModel> list = result.isNotEmpty
+        ? result.map((c) => DayDoneModel.fromJson(c)).toList()
         : [];
     return list;
   }
@@ -538,7 +539,7 @@ class DatabaseService {
   // }
 
   /// Listar competições
-  Future<List<String?>> listCompetitionsIds({int? habitId}) async {
+  Future<List<String>> listCompetitionsIds({int? habitId}) async {
     final db = await database;
 
     List<Map<String, dynamic>> result;
@@ -550,7 +551,7 @@ class DatabaseService {
           .rawQuery('SELECT id FROM competition WHERE habit_id==$habitId;');
     }
 
-    List<String?> list = [];
+    List<String> list = [];
     result.forEach((c) => list.add(c['id']));
 
     return list;

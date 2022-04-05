@@ -1,10 +1,10 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/level_utils.dart';
-import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/common/model/result.dart';
 import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/domain/models/day_done_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/auth/logout_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
@@ -109,7 +109,7 @@ class _TransferDataDialogState extends BaseState<TransferDataDialog> {
           habit.frequency = await DatabaseService().getFrequency(habit.oldId);
           habit.reminder = await DatabaseService().getReminders(habit.oldId);
 
-          List<String?> competitionsId =
+          List<String> competitionsId =
               await DatabaseService().listCompetitionsIds(habitId: habit.oldId);
           List<DayDone> daysDone =
               await DatabaseService().getDaysDone(habit.oldId);
