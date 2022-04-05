@@ -1,6 +1,6 @@
 import 'package:altitude/common/base/base_usecase.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/data/repository/user_repository.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable

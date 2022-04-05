@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/friends/get_friends_usecase.dart';
 import 'package:altitude/domain/usecases/friends/remove_friend_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
@@ -79,8 +79,8 @@ abstract class _FriendsControllerBase with Store {
     ObservableList<Person> friends,
     ObservableList<Person> ranking,
   ) {
-    friends.sort((a, b) => a.name!.compareTo(b.name!));
-    ranking.sort((a, b) => -a.score!.compareTo(b.score!));
+    friends.sort((a, b) => a.name.compareTo(b.name));
+    ranking.sort((a, b) => -a.score.compareTo(b.score));
   }
 
   @action

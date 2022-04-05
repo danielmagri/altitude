@@ -1,4 +1,4 @@
-import 'package:altitude/common/model/Person.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/services/Memory.dart';
@@ -60,7 +60,7 @@ class FriendsRepository extends IFriendsRepository {
     _fireAnalytics.sendFriendRequest(false);
     return _fireDatabase.friendRequest(friendUid).then((token) async {
       if (_memory.person != null) {
-        _memory.person!.pendingFriends!.add(friendUid);
+        _memory.person!.pendingFriends.add(friendUid);
       }
       return token;
     });
@@ -77,7 +77,7 @@ class FriendsRepository extends IFriendsRepository {
     _fireAnalytics.sendFriendRequest(true);
     return _fireDatabase.cancelFriendRequest(friendUid).then((value) {
       if (_memory.person != null) {
-        _memory.person!.pendingFriends!.remove(friendUid);
+        _memory.person!.pendingFriends.remove(friendUid);
       }
     });
   }
@@ -87,7 +87,7 @@ class FriendsRepository extends IFriendsRepository {
     _fireAnalytics.sendFriendResponse(true);
     return _fireDatabase.acceptRequest(friendUid).then((token) async {
       if (_memory.person != null) {
-        _memory.person!.friends!.add(friendUid);
+        _memory.person!.friends.add(friendUid);
       }
       return token;
     });

@@ -2,9 +2,9 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/add_friend_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -87,20 +87,20 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
   void onClickButton(Person person) {
     if (person.state == 0) {
       showLoading(true);
-      controller.sendFriendRequest(person.uid!).then((_) {
+      controller.sendFriendRequest(person.uid).then((_) {
         showLoading(false);
         showToast('Pedido de amizade enviado.');
         Navigator.of(context).pop();
       }).catchError(handleError);
     } else if (person.state == 2) {
       showLoading(true);
-      controller.cancelFriendRequest(person.uid!).then((_) {
+      controller.cancelFriendRequest(person.uid).then((_) {
         showLoading(false);
         Navigator.of(context).pop();
       }).catchError(handleError);
     } else if (person.state == 3) {
       showLoading(true);
-      controller.acceptFriendRequest(person.uid!).then((_) {
+      controller.acceptFriendRequest(person.uid).then((_) {
         showLoading(false);
         Navigator.of(context).pop(person);
       }).catchError(handleError);
@@ -193,7 +193,6 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                 width: double.maxFinite,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Expanded(
                                       child: Column(
@@ -203,20 +202,19 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                                             MainAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            person.name!,
+                                            person.name,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style: TextStyle(
                                               fontSize: 17,
                                               fontWeight: FontWeight.bold,
-                                              decoration: person.you!
-                                                  ? TextDecoration.underline
+                                              decoration: person.you? TextDecoration.underline
                                                   : TextDecoration.none,
                                             ),
                                           ),
                                           const SizedBox(height: 5),
                                           Text(
-                                            person.email!,
+                                            person.email,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                             style:

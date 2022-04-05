@@ -7,7 +7,7 @@ import 'package:flutter/material.dart'
         BuildContext,
         ButtonStyle,
         Colors,
-        Container,
+        DecoratedBox,
         EdgeInsets,
         ElevatedButton,
         FontWeight,
@@ -48,12 +48,12 @@ class TutorialPresentation extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: <Widget>[
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               gradient: RadialGradient(
                 colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
                 center: focusAlignment,
-                stops: [0.9, 1],
+                stops: const [0.9, 1],
                 radius: focusRadius,
               ),
             ),

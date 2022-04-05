@@ -18,7 +18,7 @@ class HasCompetitionByHabitUsecase extends BaseUsecase<String, bool> {
     try {
       var userUid = await _userRepository
           .getUserData(false)
-          .then((value) => value.uid ?? '');
+          .then((value) => value.uid);
       return await _competitionsRepository.getCompetitions(false).then(
             (list) => list
                 .where((e) => e.getMyCompetitor(userUid).habitId == params)

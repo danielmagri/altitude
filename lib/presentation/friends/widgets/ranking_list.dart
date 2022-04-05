@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -128,13 +128,13 @@ class RankingList extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          person.you! ? 'Eu' : person.name!,
+                          person.you ? 'Eu' : person.name,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            decoration: person.you!
+                            decoration: person.you
                                 ? TextDecoration.underline
                                 : TextDecoration.none,
                           ),

@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/friends/accept_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/decline_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/get_pending_friends_usecase.dart';
@@ -43,7 +43,7 @@ abstract class _PendingFriendsControllerBase with Store {
   @action
   Future<void> acceptRequest(Person person) async {
     await _acceptRequestUsecase
-        .call(person.uid!)
+        .call(person.uid)
         .resultComplete((data) => data, (error) => throw error);
     addedFriends.add(person);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
@@ -54,7 +54,7 @@ abstract class _PendingFriendsControllerBase with Store {
   @action
   Future<void> declineRequest(Person person) async {
     await _declineRequestUsecase
-        .call(person.uid!)
+        .call(person.uid)
         .resultComplete((data) => data, (error) => throw error);
     pendingFriends.data!.removeWhere((item) => item.uid == person.uid);
 

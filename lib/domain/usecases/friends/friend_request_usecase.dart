@@ -23,7 +23,7 @@ class FriendRequestUsecase extends BaseUsecase<String, void> {
         await _userRepository.getUserData(false).then((value) => value.name);
 
     await _notificationsRepository.sendInviteFriendNotification(
-      userName ?? '',
+      userName,
       token,
     );
   }

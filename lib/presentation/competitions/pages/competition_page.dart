@@ -148,12 +148,12 @@ class _CompetitionPageState
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
-                                    person.name!,
+                                    person.name,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     style: TextStyle(
                                       fontSize: 16,
-                                      fontWeight: person.you!
+                                      fontWeight: person.you
                                           ? FontWeight.bold
                                           : FontWeight.normal,
                                     ),

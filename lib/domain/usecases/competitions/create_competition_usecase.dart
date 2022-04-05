@@ -32,9 +32,9 @@ class CreateCompetitionUsecase
     final person = await _userRepository.getUserData(false);
 
     Competitor competitor = Competitor(
-      uid: person.uid ?? '',
-      name: person.name ?? '',
-      fcmToken: person.fcmToken ?? '',
+      uid: person.uid,
+      name: person.name,
+      fcmToken: person.fcmToken,
       habitId: params.habit.id ?? '',
       color: params.habit.colorCode ?? 0,
       score: await _habitsRepository.hasDoneAtDay(params.habit.id ?? '', date)
@@ -53,7 +53,7 @@ class CreateCompetitionUsecase
 
     for (String token in params.invitationsToken) {
       await _notificationsRepository.sendInviteCompetitionNotification(
-        person.name ?? '',
+        person.name,
         params.title,
         token,
       );

@@ -24,13 +24,13 @@ class InviteCompetitorUsecase
     Competition competition = await _competitionsRepository
         .getCompetition(params.competitionId ?? '');
 
-    if (competition.competitors.length < MAX_COMPETITORS) {
+    if (competition.competitors.length < maxCompetitors) {
       await _competitionsRepository.inviteCompetitor(
         params.competitionId ?? '',
         params.competitorId,
       );
 
-      final userName = (await _userRepository.getUserData(false)).name ?? '';
+      final userName = (await _userRepository.getUserData(false)).name;
 
       for (String? token in params.fcmTokens) {
         await _notificationsRepository.sendInviteCompetitionNotification(

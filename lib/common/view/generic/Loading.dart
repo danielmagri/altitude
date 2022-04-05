@@ -2,7 +2,6 @@ import 'package:altitude/common/theme/app_theme.dart';
 import 'package:flutter/material.dart'
     show
         AlwaysStoppedAnimation,
-        Animation,
         BuildContext,
         Center,
         CircularProgressIndicator,
@@ -28,15 +27,15 @@ abstract class Loading {
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
           transitionDuration: const Duration(milliseconds: 100),
-          transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) =>
+          transitionsBuilder: (context,
+                  animation,
+                  secondaryAnimation,
+                  child) =>
               FadeTransition(
             opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
             child: child,
           ),
-          pageBuilder: (BuildContext context, _, __) {
+          pageBuilder: (context, _, __) {
             return const LoadingWidget();
           },
         ),

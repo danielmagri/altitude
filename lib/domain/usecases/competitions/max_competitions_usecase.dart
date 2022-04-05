@@ -16,7 +16,7 @@ class MaxCompetitionsUsecase extends BaseUsecase<NoParams, bool> {
       int length =
           (await _competitionsRepository.getCompetitions(false)).length;
 
-      return length >= MAX_COMPETITIONS;
+      return length >= maxCompetitions;
     } catch (e) {
       return Future.value(true);
     }

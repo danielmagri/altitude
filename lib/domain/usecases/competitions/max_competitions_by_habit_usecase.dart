@@ -19,7 +19,7 @@ class MaxCompetitionsByHabitUsecase extends BaseUsecase<String, bool> {
     try {
       var userUid = await _userRepository
           .getUserData(false)
-          .then((value) => value.uid ?? '');
+          .then((value) => value.uid);
 
       int length = await _competitionsRepository.getCompetitions(false).then(
             (list) => list
@@ -27,7 +27,7 @@ class MaxCompetitionsByHabitUsecase extends BaseUsecase<String, bool> {
                 .length,
           );
 
-      return length >= MAX_HABIT_COMPETITIONS;
+      return length >= maxHabitCompetitions;
     } catch (e) {
       return Future.value(true);
     }

@@ -13,7 +13,7 @@ extension DateTimeExtension on DateTime {
 
   /// Retorna o último dia da semana
   DateTime lastWeekDay() {
-    int days = weekday == 7 ? LAST_WEEKDAY : LAST_WEEKDAY - weekday;
+    int days = weekday == 7 ? lastWeekday : lastWeekday - weekday;
     return add(Duration(days: days));
   }
 

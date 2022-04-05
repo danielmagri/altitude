@@ -15,7 +15,7 @@ class MaxHabitsUsecase extends BaseUsecase<NoParams, bool> {
     try {
       int length = (await _habitsRepository.getHabits(false)).length;
 
-      return length >= MAX_HABITS;
+      return length >= maxHabits;
     } catch (e) {
       return Future.value(true);
     }

@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:flutter/material.dart'
     show
@@ -121,7 +121,7 @@ class FriendsList extends StatelessWidget {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              person.name!,
+                              person.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: const TextStyle(

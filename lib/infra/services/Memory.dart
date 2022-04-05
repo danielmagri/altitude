@@ -1,12 +1,12 @@
+import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
-import 'package:get_it/get_it.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:injectable/injectable.dart';
 
 @singleton
 class Memory {
-  static Memory get getI => GetIt.I.get<Memory>();
+  static Memory get getI => serviceLocator.get<Memory>();
 
   Person? person;
   List<Habit> habits = [];

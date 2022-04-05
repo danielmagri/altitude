@@ -1,10 +1,10 @@
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
 import 'package:altitude/data/model/competitor_model.dart';
+import 'package:altitude/data/model/person_model.dart';
 
 abstract class IFireDatabase {
   Future<String> transferHabit(
@@ -24,9 +24,9 @@ abstract class IFireDatabase {
     List<Pair<String?, int>> competitionsScore,
   );
 
-  Future createPerson(Person person);
+  Future createPerson(PersonModel person);
 
-  Future<Person> getPerson();
+  Future<PersonModel> getPerson();
 
   Future updateName(String name, List<String?> competitionsId);
 
@@ -73,13 +73,13 @@ abstract class IFireDatabase {
 
   Future<bool> hasDoneAtDay(String? id, DateTime date);
 
-  Future<List<Person>> getFriendsDetails();
+  Future<List<PersonModel>> getFriendsDetails();
 
-  Future<List<Person>> getPendingFriends();
+  Future<List<PersonModel>> getPendingFriends();
 
-  Future<List<Person>> getRankingFriends(int limit);
+  Future<List<PersonModel>> getRankingFriends(int limit);
 
-  Future<List<Person>> searchEmail(
+  Future<List<PersonModel>> searchEmail(
     String email,
     List<String?> myPendingFriends,
   );
@@ -115,7 +115,10 @@ abstract class IFireDatabase {
 
   Future removeCompetitor(String? competitionId, String uid, bool removeAll);
 
-  Future acceptCompetitionRequest(String? competitionId, CompetitorModel competitor);
+  Future acceptCompetitionRequest(
+    String? competitionId,
+    CompetitorModel competitor,
+  );
 
   Future declineCompetitionRequest(String? competitionId);
 }

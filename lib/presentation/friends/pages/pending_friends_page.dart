@@ -1,7 +1,7 @@
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/pending_friends_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -100,7 +100,7 @@ class _PendingFriendsPageState extends BaseStateWithController<
                         physics: const BouncingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: data.length,
-                        itemBuilder: (_, int index) {
+                        itemBuilder: (_, index) {
                           Person person = data[index];
                           return Padding(
                             padding: const EdgeInsets.symmetric(
@@ -116,20 +116,20 @@ class _PendingFriendsPageState extends BaseStateWithController<
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
-                                        person.name!,
+                                        person.name,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
-                                          decoration: person.you!
+                                          decoration: person.you
                                               ? TextDecoration.underline
                                               : TextDecoration.none,
                                         ),
                                       ),
                                       const SizedBox(height: 5),
                                       Text(
-                                        person.email!,
+                                        person.email,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: const TextStyle(fontSize: 15),

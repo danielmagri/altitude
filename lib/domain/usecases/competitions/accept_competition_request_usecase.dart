@@ -25,14 +25,14 @@ class AcceptCompetitionRequestUsecase
     Competition competition =
         await _competitionsRepository.getCompetition(params.competitionId);
 
-    if (competition.competitors.length < MAX_COMPETITORS) {
+    if (competition.competitors.length < maxCompetitors) {
       await _competitionsRepository.acceptCompetitionRequest(
         params.competitionId,
         params.competitor,
         competition,
       );
 
-      String userName = (await _userRepository.getUserData(false)).name ?? '';
+      String userName = (await _userRepository.getUserData(false)).name;
 
       for (Competitor friend in competition.competitors) {
         await _notificationsRepository.sendNewCompetitorNotification(

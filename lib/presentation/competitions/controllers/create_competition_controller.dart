@@ -1,7 +1,7 @@
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/competitions/create_competition_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
 import 'package:injectable/injectable.dart';
@@ -47,9 +47,9 @@ abstract class _CreateCompetitionControllerBase with Store {
 
   Future<Competition> createCompetition(String title) async {
     List<String> invitations =
-        selectedFriends.map((person) => person.uid ?? '').toList();
+        selectedFriends.map((person) => person.uid).toList();
     List<String> invitationsToken =
-        selectedFriends.map((person) => person.fcmToken ?? '').toList();
+        selectedFriends.map((person) => person.fcmToken).toList();
 
     return _createCompetitionUsecase
         .call(

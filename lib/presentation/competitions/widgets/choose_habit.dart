@@ -3,12 +3,12 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/competitor_entity.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/competitions/accept_competition_request_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_days_done_usecase.dart';
@@ -65,7 +65,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
         .call(selectedHabit!.id!)
         .resultComplete((data) => data, (error) => true)) {
       showToast(
-        'O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.',
+        'O hábito já faz parte de $maxHabitCompetitions competições.',
       );
     } else {
       showLoading(true);

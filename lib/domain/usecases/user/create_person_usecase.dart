@@ -32,6 +32,6 @@ class CreatePersonParams {
   final int? level;
   final int? reminderCounter;
   final int? score;
-  final List<String?>? friends;
-  final List<String?>? pendingFriends;
+  final List<String>? friends;
+  final List<String>? pendingFriends;
 }

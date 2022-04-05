@@ -13,42 +13,42 @@ class SharedPref extends SharedPrefHandler {
   }
 
   // Version
-  int get version => getInt(VERSION) ?? 0;
-  set version(int value) => saveInt(VERSION, value);
+  int get version => getInt(versionKey) ?? 0;
+  set version(int value) => saveInt(versionKey, value);
 
   // Theme
-  String get theme => getString(THEME) ?? "";
-  set theme(String value) => saveString(THEME, value);
+  String get theme => getString(themeKey) ?? "";
+  set theme(String value) => saveString(themeKey, value);
 
   // Score
-  int get score => getInt(SCORE) ?? 0;
+  int get score => getInt(scoreKey) ?? 0;
 
   // Pending Friends
-  bool get pendingFriends => getBool(PENDING_FRIENDS) ?? false;
-  set pendingFriends(bool value) => saveBool(PENDING_FRIENDS, value);
+  bool get pendingFriends => getBool(pendingFriendsKey) ?? false;
+  set pendingFriends(bool value) => saveBool(pendingFriendsKey, value);
 
   // Pending Competition
-  bool get pendingCompetition => getBool(COMPETITION_FRIENDS) ?? false;
-  set pendingCompetition(bool value) => saveBool(COMPETITION_FRIENDS, value);
+  bool get pendingCompetition => getBool(competitionFriendsKey) ?? false;
+  set pendingCompetition(bool value) => saveBool(competitionFriendsKey, value);
 
   // Pending Learn
-  int get pendingLearn => getInt(NEW_LEARN_TEXT) ?? 0;
-  set pendingLearn(int value) => saveInt(NEW_LEARN_TEXT, value);
+  int get pendingLearn => getInt(newLearnTextKey) ?? 0;
+  set pendingLearn(int value) => saveInt(newLearnTextKey, value);
 
   // TUTORIAL
   // Habit Tutorial
-  bool get habitTutorial => getBool(HABIT_TUTORIAL) ?? false;
-  set habitTutorial(bool value) => saveBool(HABIT_TUTORIAL, value);
+  bool get habitTutorial => getBool(habitTutorialKey) ?? false;
+  set habitTutorial(bool value) => saveBool(habitTutorialKey, value);
 
   // Competition Tutorial
-  bool get competitionTutorial => getBool(COMPETITION_TUTORIAL) ?? false;
-  set competitionTutorial(bool value) => saveBool(COMPETITION_TUTORIAL, value);
+  bool get competitionTutorial => getBool(competitionTutorialKey) ?? false;
+  set competitionTutorial(bool value) => saveBool(competitionTutorialKey, value);
 
   // Rocket Tutorial
-  bool get rocketTutorial => getBool(ROCKET_ON_DETAILS_PAGE) ?? false;
-  set rocketTutorial(bool value) => saveBool(ROCKET_ON_DETAILS_PAGE, value);
+  bool get rocketTutorial => getBool(rocketOnDetailsPageKey) ?? false;
+  set rocketTutorial(bool value) => saveBool(rocketOnDetailsPageKey, value);
 
   // Alarm Tutorial
-  int get alarmTutorial => getInt(ALARM_ON_DETAILS_PAGE) ?? 0;
-  void addAlarmTutorial() => saveInt(ALARM_ON_DETAILS_PAGE, alarmTutorial + 1);
+  int get alarmTutorial => getInt(alarmOnDetailsPageKey) ?? 0;
+  void addAlarmTutorial() => saveInt(alarmOnDetailsPageKey, alarmTutorial + 1);
 }

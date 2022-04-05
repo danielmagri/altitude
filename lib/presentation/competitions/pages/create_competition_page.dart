@@ -2,22 +2,22 @@ import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart'
-    show MAX_HABIT_COMPETITIONS;
+    show maxHabitCompetitions;
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
 import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
-import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
+import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/presentation/competitions/controllers/create_competition_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class CreateCompetitionPage extends StatefulWidget {
-  CreateCompetitionPage(this.arguments);
+  const CreateCompetitionPage(this.arguments, {Key? key}) : super(key: key);
 
   final CreateCompetitionPageArguments? arguments;
 
@@ -76,7 +76,7 @@ class _CreateCompetitionPageState extends BaseStateWithController<
       showToast('Escolha pelo menos um amigo.');
     } else if (await controller.checkHabitCompetitionLimit()) {
       showToast(
-        'O hábito já faz parte de $MAX_HABIT_COMPETITIONS competições.',
+        'O hábito já faz parte de $maxHabitCompetitions competições.',
       );
     } else {
       showLoading(true);
@@ -206,7 +206,7 @@ class _CreateCompetitionPageState extends BaseStateWithController<
                       children: widget.arguments!.friends
                           .map(
                             (friend) => ChoiceChip(
-                              label: Text(friend.name!),
+                              label: Text(friend.name),
                               selected:
                                   controller.selectedFriends.contains(friend),
                               selectedColor: AppTheme.of(context).chipSelected,

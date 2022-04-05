@@ -3,8 +3,8 @@ import 'package:altitude/common/router/arguments/AllLevelsPageArguments.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Score.dart';
-import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
+import 'package:altitude/common/view/generic/skeleton.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/services/database.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
@@ -62,7 +62,7 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
   @override
   void onPageBack(Object? value) {
     controller.getUser().then((_) {
-      hasLevelUp(controller.user.data!.score!);
+      hasLevelUp(controller.user.data!.score);
     });
 
     controller.getHabits();

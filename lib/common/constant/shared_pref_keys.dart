@@ -1,14 +1,14 @@
 // App
-const VERSION = 'VERSION';
+const versionKey = 'VERSION';
 // User data
-const String SCORE = 'USER_SCORE';
-const String THEME = 'THEME';
-const String PENDING_FRIENDS = 'USER_PENDING_FRIENDS';
-const String COMPETITION_FRIENDS = 'USER_COMPETITION_FRIENDS';
-const String NEW_LEARN_TEXT = 'NEW_LEARN_TEXT';
-const String PENDING_STATISTICS = 'PENDING_STATISTICS';
+const String scoreKey = 'USER_SCORE';
+const String themeKey = 'THEME';
+const String pendingFriendsKey = 'USER_PENDING_FRIENDS';
+const String competitionFriendsKey = 'USER_COMPETITION_FRIENDS';
+const String newLearnTextKey = 'NEW_LEARN_TEXT';
+const String pendingStatisticsKey = 'PENDING_STATISTICS';
 // Tutorials
-const String HABIT_TUTORIAL = 'HABIT_TUTORIAL';
-const String COMPETITION_TUTORIAL = 'COMPETITION_TUTORIAL';
-const String ROCKET_ON_DETAILS_PAGE = 'ROCKET_ON_DETAILS_PAGE';
-const String ALARM_ON_DETAILS_PAGE = 'ALARM_ON_DETAILS_PAGE';
+const String habitTutorialKey = 'HABIT_TUTORIAL';
+const String competitionTutorialKey = 'COMPETITION_TUTORIAL';
+const String rocketOnDetailsPageKey = 'ROCKET_ON_DETAILS_PAGE';
+const String alarmOnDetailsPageKey = 'ALARM_ON_DETAILS_PAGE';

@@ -1,7 +1,7 @@
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/competitions/invite_competitor_usecase.dart';
 import 'package:flutter/material.dart'
     show
@@ -85,7 +85,7 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
             alignment: WrapAlignment.center,
             children: widget.friends.map((friend) {
               return ChoiceChip(
-                label: Text(friend.name!),
+                label: Text(friend.name),
                 selected: selectedFriends.contains(friend),
                 selectedColor: AppTheme.of(context).chipSelected,
                 onSelected: widget.competitors.contains(friend.uid)

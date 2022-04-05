@@ -2,9 +2,10 @@ import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/DayDone.dart';
 import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Person.dart';
 import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/data/model/person_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_fire_messaging.dart';
@@ -26,8 +27,8 @@ abstract class IUserRepository {
     int? level,
     int? reminderCounter,
     int? score,
-    List<String?>? friends,
-    List<String?>? pendingFriends,
+    List<String>? friends,
+    List<String>? pendingFriends,
   );
 }
 
@@ -72,7 +73,7 @@ class UserRepository extends IUserRepository {
       return list.map((e) => e.id).toList();
     });
 
-    final token = await _fireMessaging.getToken;
+    final token = await _fireMessaging.getToken ?? '';
 
     await _fireDatabase.updateFcmToken(token, competitionsId);
     _memory.person?.fcmToken = token;
@@ -166,16 +167,16 @@ class UserRepository extends IUserRepository {
     int? level,
     int? reminderCounter,
     int? score,
-    List<String?>? friends,
-    List<String?>? pendingFriends,
+    List<String>? friends,
+    List<String>? pendingFriends,
   ) {
-    return getUserData(true).then((date) {
+    return getUserData(true).then((data) {
       return updateFCMToken();
     }).catchError((error) async {
-      Person person = Person(
-        name: _fireAuth.getName(),
-        email: _fireAuth.getEmail(),
-        fcmToken: await _fireMessaging.getToken,
+      PersonModel person = PersonModel(
+        name: _fireAuth.getName() ?? '',
+        email: _fireAuth.getEmail() ?? '',
+        fcmToken: await _fireMessaging.getToken ?? '',
         level: level ?? 0,
         reminderCounter: reminderCounter ?? 0,
         score: score ?? 0,

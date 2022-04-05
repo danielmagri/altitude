@@ -194,7 +194,7 @@ class HomeDrawer extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    '${data.email}',
+                                    data.email,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -213,7 +213,7 @@ class HomeDrawer extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              LevelUtils.getLevelText(data.score!),
+                              LevelUtils.getLevelText(data.score),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -221,7 +221,7 @@ class HomeDrawer extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Image.asset(
-                              LevelUtils.getLevelImagePath(data.score!),
+                              LevelUtils.getLevelImagePath(data.score),
                               height: 25,
                               width: 25,
                             ),

@@ -94,7 +94,7 @@ abstract class _HabitDetailsControllerBase with Store {
             (e) => e!.isAfterOrSameDay(
               DateTime.now()
                   .onlyDate
-                  .subtract(const Duration(days: CYCLE_DAYS)),
+                  .subtract(const Duration(days: cycleDays)),
             ),
           )
           .toList();
@@ -196,7 +196,7 @@ abstract class _HabitDetailsControllerBase with Store {
       }
 
       if (date.isAfter(
-        DateTime.now().subtract(const Duration(days: CYCLE_DAYS + 1)),
+        DateTime.now().subtract(const Duration(days: cycleDays + 1)),
       )) {
         currentMonth = visibleMonthDays;
         calculateRocketForce();
