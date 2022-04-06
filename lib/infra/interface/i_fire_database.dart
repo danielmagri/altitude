@@ -1,14 +1,16 @@
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
 import 'package:altitude/data/model/competitor_model.dart';
 import 'package:altitude/data/model/day_done_model.dart';
+import 'package:altitude/data/model/habit_model.dart';
 import 'package:altitude/data/model/person_model.dart';
+import 'package:altitude/data/model/reminder_model.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/reminder_entity.dart';
 
 abstract class IFireDatabase {
   Future<String> transferHabit(
-    Habit habit,
+    HabitModel habit,
     int? reminderCounter,
     List<String?> competitionsId,
     List<DayDoneModel> daysDone,
@@ -34,22 +36,29 @@ abstract class IFireDatabase {
 
   Future updateLevel(int level);
 
-  Future<Habit> addHabit(Habit habit, int? reminderCounter);
+  Future<HabitModel> addHabit(
+    String habit,
+    int colorCode,
+    Frequency frequency,
+    DateTime initialDate,
+    Reminder? reminder,
+    int? reminderCounter,
+  );
 
-  Future<List<Habit>> getHabits();
+  Future<List<HabitModel>> getHabits();
 
-  Future<Habit> getHabit(String? id);
+  Future<HabitModel> getHabit(String? id);
 
   Future updateHabit(
-    Habit habit, [
-    Habit? inititalHabit,
+    HabitModel habit, [
+    HabitModel? inititalHabit,
     List<String?>? competitionsId,
   ]);
 
   Future updateReminder(
     String? habitId,
     int? reminderCounter,
-    Reminder? reminder,
+    ReminderModel? reminder,
   );
 
   Future completeHabit(

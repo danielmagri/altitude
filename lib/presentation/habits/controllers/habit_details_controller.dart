@@ -2,11 +2,11 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/enums/done_page_tyype.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/failure.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
+import 'package:altitude/domain/models/reminder_entity.dart';
 import 'package:altitude/domain/usecases/competitions/has_competition_by_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_calendar_days_done_usecase.dart';
@@ -34,10 +34,10 @@ abstract class _HabitDetailsControllerBase with Store {
   final HasCompetitionByHabitUsecase _hasCompetitionByHabitUsecase;
   final GetCalendarDaysDoneUsecase _getCalendarDaysDoneUsecase;
 
-  String? _id;
-  int? _color;
+  late String _id;
+  late int _color;
 
-  Color get habitColor => AppColors.habitsColor[_color!];
+  Color get habitColor => AppColors.habitsColor[_color];
 
   DataState<Habit?> habit = DataState();
   DataState<Frequency?> frequency = DataState();
@@ -48,7 +48,7 @@ abstract class _HabitDetailsControllerBase with Store {
 
   Map<DateTime?, List> currentMonth = {};
 
-  Future<void> fetchData(String? habitId, int? color) async {
+  Future<void> fetchData(String habitId, int color) async {
     _id = habitId;
     _color = color;
 
@@ -57,7 +57,7 @@ abstract class _HabitDetailsControllerBase with Store {
     DateTime today = DateTime.now().onlyDate;
     (await _getCalendarDaysDoneUsecase.call(
       GetCalendarDaysDoneParams(
-        id: _id ?? '',
+        id: _id,
         month: today.month,
         year: today.year,
       ),
@@ -73,7 +73,7 @@ abstract class _HabitDetailsControllerBase with Store {
   }
 
   Future<void> getHabitDetail() async {
-    (await _getHabitUsecase.call(_id!)).result((data) {
+    (await _getHabitUsecase.call(_id)).result((data) {
       habit.setSuccessState(data);
       frequency.setSuccessState(data.frequency);
       reminders.setSuccessState(data.reminder);
@@ -87,14 +87,12 @@ abstract class _HabitDetailsControllerBase with Store {
   void calculateRocketForce() {
     try {
       double force;
-      int timesDays = habit.data!.frequency!.daysCount()!;
+      int timesDays = habit.data!.frequency.daysCount();
       List<DateTime?> dates = currentMonth.keys
           .toList()
           .where(
             (e) => e!.isAfterOrSameDay(
-              DateTime.now()
-                  .onlyDate
-                  .subtract(const Duration(days: cycleDays)),
+              DateTime.now().onlyDate.subtract(const Duration(days: cycleDays)),
             ),
           )
           .toList();
@@ -114,7 +112,7 @@ abstract class _HabitDetailsControllerBase with Store {
     calendarMonth.setLoadingState();
     (await _getCalendarDaysDoneUsecase.call(
       GetCalendarDaysDoneParams(
-        id: _id ?? '',
+        id: _id,
         month: focusedDay.month,
         year: focusedDay.year,
       ),
@@ -147,7 +145,7 @@ abstract class _HabitDetailsControllerBase with Store {
     return (_completeHabitUsecase
         .call(
       CompleteParams(
-        habitId: _id ?? '',
+        habitId: _id,
         date: DateTime(date.year, date.month, date.day),
         isAdd: add,
         daysDone: days,
@@ -240,7 +238,7 @@ abstract class _HabitDetailsControllerBase with Store {
 
   Future<bool> hasCompetition() {
     return _hasCompetitionByHabitUsecase
-        .call(_id!)
+        .call(_id)
         .resultComplete((data) => data, (error) => false);
   }
 }

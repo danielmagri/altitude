@@ -30,7 +30,7 @@ class HabitsPanel extends StatelessWidget {
   }) : super(key: key);
 
   final HomeController controller;
-  final Function(String? id, int? color) goHabitDetails;
+  final Function(String id, int color) goHabitDetails;
 
   @override
   Widget build(context) {

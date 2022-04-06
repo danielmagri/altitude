@@ -167,7 +167,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   gh.factory<_i29.LogoutUsecase>(
       () => _i29.LogoutUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i30.MaxCompetitionsByHabitUsecase>(() =>
-      _i30.MaxCompetitionsByHabitUsecase(get<_i23.ICompetitionsRepository>()));
+      _i30.MaxCompetitionsByHabitUsecase(
+          get<_i23.ICompetitionsRepository>(), get<_i26.IUserRepository>()));
   gh.factory<_i31.MaxCompetitionsUsecase>(
       () => _i31.MaxCompetitionsUsecase(get<_i23.ICompetitionsRepository>()));
   gh.factoryAsync<_i32.MaxHabitsUsecase>(() async =>
@@ -189,7 +190,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       () => _i39.UpdateFCMTokenUsecase(get<_i26.IUserRepository>()));
   gh.factoryAsync<_i40.UpdateHabitUsecase>(() async => _i40.UpdateHabitUsecase(
       await get.getAsync<_i25.IHabitsRepository>(),
-      get<_i23.ICompetitionsRepository>()));
+      get<_i23.ICompetitionsRepository>(),
+      get<_i26.IUserRepository>()));
   gh.factory<_i41.UpdateLevelUsecase>(
       () => _i41.UpdateLevelUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i42.UpdateNameUsecase>(
@@ -267,7 +269,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   gh.factory<_i69.GetUserDataUsecase>(
       () => _i69.GetUserDataUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i70.HasCompetitionByHabitUsecase>(() =>
-      _i70.HasCompetitionByHabitUsecase(get<_i23.ICompetitionsRepository>()));
+      _i70.HasCompetitionByHabitUsecase(
+          get<_i23.ICompetitionsRepository>(), get<_i26.IUserRepository>()));
   gh.lazySingletonAsync<_i71.HomeController>(() async => _i71.HomeController(
       await get.getAsync<_i64.GetHabitsUsecase>(),
       await get.getAsync<_i49.CompleteHabitUsecase>(),

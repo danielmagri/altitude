@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/util.dart';
-import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 
 class FrequencyStatisticData {
   FrequencyStatisticData(

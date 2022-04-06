@@ -1,6 +1,8 @@
+import 'dart:developer' show log;
+
 import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
 import 'package:injectable/injectable.dart';
 
@@ -19,25 +21,25 @@ class ScoreService extends IScoreService {
 
     if (frequency is DayWeek) {
       if (!_hasDoneCorrectDayWeek(frequency, week)) {
-        return signal * IScoreService.DAY_DONE_POINT;
+        return signal * IScoreService.dayDonePoint;
       } else if (frequency.isADoneDay(date)) {
         return signal *
-            (IScoreService.DAY_DONE_POINT +
-                (week.length * IScoreService.CYCLE_DONE_POINT));
+            (IScoreService.dayDonePoint +
+                (week.length * IScoreService.cycleDonePoint));
       } else {
         return signal *
-            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+            (IScoreService.dayDonePoint + IScoreService.cycleDonePoint);
       }
     } else if (frequency is Weekly) {
-      if (week.length > frequency.daysCount()!) {
+      if (week.length > frequency.daysCount()) {
         return signal *
-            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+            (IScoreService.dayDonePoint + IScoreService.cycleDonePoint);
       } else if (week.length == frequency.daysCount()) {
         return signal *
-            (IScoreService.DAY_DONE_POINT +
-                (week.length * IScoreService.CYCLE_DONE_POINT));
+            (IScoreService.dayDonePoint +
+                (week.length * IScoreService.cycleDonePoint));
       } else {
-        return signal * (IScoreService.DAY_DONE_POINT);
+        return signal * (IScoreService.dayDonePoint);
       }
     } else {
       return 0;
@@ -63,7 +65,7 @@ class ScoreService extends IScoreService {
         );
         index = lastIndexOfWeek + 1;
       } else {
-        print('lastIndexOfWeek = -1');
+        log('lastIndexOfWeek = -1');
         break;
       }
     }
@@ -78,16 +80,16 @@ class ScoreService extends IScoreService {
     if (frequency is DayWeek) {
       if (_hasDoneCorrectDayWeek(frequency, week)) {
         return week.length *
-            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+            (IScoreService.dayDonePoint + IScoreService.cycleDonePoint);
       } else {
-        return week.length * IScoreService.DAY_DONE_POINT;
+        return week.length * IScoreService.dayDonePoint;
       }
     } else if (frequency is Weekly) {
-      if (week.length >= frequency.daysCount()!) {
+      if (week.length >= frequency.daysCount()) {
         return week.length *
-            (IScoreService.DAY_DONE_POINT + IScoreService.CYCLE_DONE_POINT);
+            (IScoreService.dayDonePoint + IScoreService.cycleDonePoint);
       } else {
-        return week.length * IScoreService.DAY_DONE_POINT;
+        return week.length * IScoreService.dayDonePoint;
       }
     } else {
       return 0;
@@ -96,25 +98,25 @@ class ScoreService extends IScoreService {
 
   /// Checa se a frequêcia do DayWeek está completa
   bool _hasDoneCorrectDayWeek(DayWeek dayWeek, List<DateTime?> week) {
-    if (dayWeek.monday! && !week.any((dayDone) => dayDone!.weekday == 1)) {
+    if (dayWeek.monday&& !week.any((dayDone) => dayDone!.weekday == 1)) {
       return false;
     }
-    if (dayWeek.tuesday! && !week.any((dayDone) => dayDone!.weekday == 2)) {
+    if (dayWeek.tuesday&& !week.any((dayDone) => dayDone!.weekday == 2)) {
       return false;
     }
-    if (dayWeek.wednesday! && !week.any((dayDone) => dayDone!.weekday == 3)) {
+    if (dayWeek.wednesday&& !week.any((dayDone) => dayDone!.weekday == 3)) {
       return false;
     }
-    if (dayWeek.thursday! && !week.any((dayDone) => dayDone!.weekday == 4)) {
+    if (dayWeek.thursday&& !week.any((dayDone) => dayDone!.weekday == 4)) {
       return false;
     }
-    if (dayWeek.friday! && !week.any((dayDone) => dayDone!.weekday == 5)) {
+    if (dayWeek.friday&& !week.any((dayDone) => dayDone!.weekday == 5)) {
       return false;
     }
-    if (dayWeek.saturday! && !week.any((dayDone) => dayDone!.weekday == 6)) {
+    if (dayWeek.saturday&& !week.any((dayDone) => dayDone!.weekday == 6)) {
       return false;
     }
-    if (dayWeek.sunday! && !week.any((dayDone) => dayDone!.weekday == 7)) {
+    if (dayWeek.sunday&& !week.any((dayDone) => dayDone!.weekday == 7)) {
       return false;
     }
     return true;

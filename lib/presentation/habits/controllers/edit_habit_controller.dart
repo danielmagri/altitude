@@ -1,7 +1,7 @@
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/result.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/usecases/habits/delete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/update_habit_usecase.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
@@ -24,13 +24,13 @@ abstract class _EditHabitControllerBase with Store {
   Habit? initialHabit;
 
   @observable
-  int? color;
+  late int color;
 
   @observable
-  Frequency? frequency;
+  late Frequency frequency;
 
   @computed
-  Color get habitColor => AppColors.habitsColor[color!];
+  Color get habitColor => AppColors.habitsColor[color];
 
   void setData(Habit habit) {
     initialHabit = habit;
@@ -66,7 +66,7 @@ abstract class _EditHabitControllerBase with Store {
     );
 
     if (editedHabit.color != initialHabit!.color ||
-        editedHabit.habit!.compareTo(initialHabit!.habit!) != 0 ||
+        editedHabit.habit.compareTo(initialHabit!.habit) != 0 ||
         !compareFrequency(initialHabit!.frequency, frequency)) {
       (await _updateHabitUsecase.call(
         UpdateHabitParams(

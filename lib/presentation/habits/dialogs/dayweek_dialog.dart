@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/toast.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:altitude/presentation/habits/models/dayweek_selection.dart';
 import 'package:flutter/material.dart'
     show
@@ -52,13 +52,13 @@ class _DayweekDialogState extends State<DayweekDialog> {
     super.initState();
 
     if (widget.frequency != null) {
-      days[0].state = widget.frequency!.sunday! ? true : false;
-      days[1].state = widget.frequency!.monday! ? true : false;
-      days[2].state = widget.frequency!.tuesday! ? true : false;
-      days[3].state = widget.frequency!.wednesday! ? true : false;
-      days[4].state = widget.frequency!.thursday! ? true : false;
-      days[5].state = widget.frequency!.friday! ? true : false;
-      days[6].state = widget.frequency!.saturday! ? true : false;
+      days[0].state = widget.frequency!.sunday? true : false;
+      days[1].state = widget.frequency!.monday? true : false;
+      days[2].state = widget.frequency!.tuesday? true : false;
+      days[3].state = widget.frequency!.wednesday? true : false;
+      days[4].state = widget.frequency!.thursday? true : false;
+      days[5].state = widget.frequency!.friday? true : false;
+      days[6].state = widget.frequency!.saturday? true : false;
     }
   }
 

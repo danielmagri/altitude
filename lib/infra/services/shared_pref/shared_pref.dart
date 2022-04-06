@@ -17,7 +17,7 @@ class SharedPref extends SharedPrefHandler {
   set version(int value) => saveInt(versionKey, value);
 
   // Theme
-  String get theme => getString(themeKey) ?? "";
+  String get theme => getString(themeKey) ?? '';
   set theme(String value) => saveString(themeKey, value);
 
   // Score

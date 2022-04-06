@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:injectable/injectable.dart';
@@ -15,8 +17,13 @@ class FireAnalytics implements IFireAnalytics {
   }
 
   @override
-  void sendNewHabit(String? habit, String color, String freqType, int? freqTime,
-      String hasReminder) {
+  void sendNewHabit(
+    String? habit,
+    String color,
+    String freqType,
+    int? freqTime,
+    String hasReminder,
+  ) {
     try {
       analytics.logEvent(
         name: 'new_habit',
@@ -29,7 +36,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -43,7 +50,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -55,7 +62,7 @@ class FireAnalytics implements IFireAnalytics {
         parameters: <String, dynamic>{'page': page, 'hour': hour.toString()},
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -69,7 +76,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -80,7 +87,7 @@ class FireAnalytics implements IFireAnalytics {
         name: 'read_cue',
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -95,7 +102,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -109,7 +116,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -121,12 +128,12 @@ class FireAnalytics implements IFireAnalytics {
         parameters: <String, dynamic>{
           'habit': habit,
           'type': type,
-          'time': "$hour:$minute",
+          'time': '$hour:$minute',
           'days': days,
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -140,7 +147,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -150,11 +157,11 @@ class FireAnalytics implements IFireAnalytics {
       analytics.logEvent(
         name: 'friend_request',
         parameters: <String, dynamic>{
-          'state': canceled ? "Enviado" : "Cancelado",
+          'state': canceled ? 'Enviado' : 'Cancelado',
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -164,11 +171,11 @@ class FireAnalytics implements IFireAnalytics {
       analytics.logEvent(
         name: 'friend_response',
         parameters: <String, dynamic>{
-          'state': accepted ? "Aceito" : "Recusado",
+          'state': accepted ? 'Aceito' : 'Recusado',
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -184,7 +191,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -198,7 +205,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -212,7 +219,7 @@ class FireAnalytics implements IFireAnalytics {
         },
       );
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -221,7 +228,7 @@ class FireAnalytics implements IFireAnalytics {
     try {
       analytics.logGenerateLead();
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 }

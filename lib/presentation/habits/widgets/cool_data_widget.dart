@@ -70,15 +70,15 @@ class CoolDataWidget extends StatelessWidget {
                           TextSpan(
                             style:
                                 const TextStyle(fontWeight: FontWeight.normal),
-                            text: data!.initialDate!.day
+                            text: data!.initialDate.day
                                     .toString()
                                     .padLeft(2, '0') +
                                 '/' +
-                                data.initialDate!.month
+                                data.initialDate.month
                                     .toString()
                                     .padLeft(2, '0') +
                                 '/' +
-                                data.initialDate!.year.toString() +
+                                data.initialDate.year.toString() +
                                 '\n',
                           ),
                           TextSpan(

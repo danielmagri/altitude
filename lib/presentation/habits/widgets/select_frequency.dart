@@ -1,8 +1,8 @@
 import 'package:altitude/common/extensions/navigator_extension.dart';
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:altitude/domain/enums/frquency_type.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:altitude/presentation/habits/dialogs/dayweek_dialog.dart';
 import 'package:altitude/presentation/habits/dialogs/weekly_dialog.dart';
 import 'package:flutter/material.dart'

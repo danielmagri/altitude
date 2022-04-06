@@ -1,12 +1,12 @@
 import 'dart:math' show Random;
 
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
-import 'package:altitude/common/model/reminder_weekday.dart';
 import 'package:altitude/common/model/result.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
+import 'package:altitude/domain/models/reminder_entity.dart';
 import 'package:altitude/domain/usecases/habits/add_habit_usecase.dart';
+import 'package:altitude/presentation/habits/models/reminder_weekday.dart';
 import 'package:flutter/material.dart' show Color, TimeOfDay;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
@@ -17,15 +17,14 @@ part 'add_habit_controller.g.dart';
 class AddHabitController = _AddHabitControllerBase with _$AddHabitController;
 
 abstract class _AddHabitControllerBase with Store {
-  _AddHabitControllerBase(this._addHabitUsecase) {
-    color = Random().nextInt(AppColors.habitsColor.length);
-    reminderTime = TimeOfDay.now();
-  }
+  _AddHabitControllerBase(this._addHabitUsecase)
+      : reminderTime = TimeOfDay.now(),
+        color = Random().nextInt(AppColors.habitsColor.length);
 
   final AddHabitUsecase _addHabitUsecase;
 
   @observable
-  int? color;
+  int color;
 
   @observable
   Frequency? frequency;
@@ -41,16 +40,16 @@ abstract class _AddHabitControllerBase with Store {
   ];
 
   @observable
-  TimeOfDay? reminderTime;
+  TimeOfDay reminderTime;
 
   @computed
   String get timeText =>
-      reminderTime!.hour.toString().padLeft(2, '0') +
+      reminderTime.hour.toString().padLeft(2, '0') +
       ' : ' +
-      reminderTime!.minute.toString().padLeft(2, '0');
+      reminderTime.minute.toString().padLeft(2, '0');
 
   @computed
-  Color get habitColor => AppColors.habitsColor[color!];
+  Color get habitColor => AppColors.habitsColor[color];
 
   @action
   void selectColor(int value) {
@@ -72,11 +71,16 @@ abstract class _AddHabitControllerBase with Store {
     if (time != null) reminderTime = time;
   }
 
-  Future<Result<Habit>> createHabit(Habit habit) async {
-    Reminder reminder = Reminder(
+  Future<Result<Habit>> createHabit(
+    String habit,
+    int colorCode,
+    Frequency frequency,
+    DateTime initialDate,
+  ) async {
+    Reminder? reminder = Reminder(
       type: 0,
-      hour: reminderTime!.hour,
-      minute: reminderTime!.minute,
+      hour: reminderTime.hour,
+      minute: reminderTime.minute,
       sunday: reminderWeekday[0].state,
       monday: reminderWeekday[1].state,
       tuesday: reminderWeekday[2].state,
@@ -86,8 +90,14 @@ abstract class _AddHabitControllerBase with Store {
       saturday: reminderWeekday[6].state,
     );
 
-    if (reminder.hasAnyDay()) habit.reminder = reminder;
-
-    return _addHabitUsecase.call(habit);
+    return _addHabitUsecase.call(
+      AddHabitParams(
+        habit,
+        colorCode,
+        frequency,
+        initialDate,
+        reminder.hasAnyDay() ? reminder : null,
+      ),
+    );
   }
 }

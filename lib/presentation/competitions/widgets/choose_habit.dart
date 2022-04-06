@@ -2,12 +2,12 @@ import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/competitor_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/competitions/accept_competition_request_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
@@ -62,7 +62,7 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
 
   Future<void> acceptRequest() async {
     if (await _maxCompetitionsByHabitUsecase
-        .call(selectedHabit!.id!)
+        .call(selectedHabit!.id)
         .resultComplete((data) => data, (error) => true)) {
       showToast(
         'O hábito já faz parte de $maxHabitCompetitions competições.',
@@ -88,10 +88,10 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
       Competitor competitor = Competitor(
         name: user?.name ?? '',
         fcmToken: user?.fcmToken ?? '',
-        color: selectedHabit!.colorCode ?? 0,
-        habitId: selectedHabit!.id ?? '',
+        color: selectedHabit!.colorCode,
+        habitId: selectedHabit!.id,
         uid: GetIt.I.get<IFireAuth>().getUid(),
-        score: _scoreService.scoreEarnedTotal(selectedHabit!.frequency!, days),
+        score: _scoreService.scoreEarnedTotal(selectedHabit!.frequency, days),
         you: true,
       );
       _acceptCompetitionRequestUsecase
@@ -127,10 +127,10 @@ class _ChooseHabitState extends BaseState<ChooseHabit> {
                   Rocket(
                     size: const Size(30, 30),
                     isExtend: true,
-                    color: AppColors.habitsColor[habit.colorCode!],
+                    color: AppColors.habitsColor[habit.colorCode],
                   ),
                   const SizedBox(width: 10),
-                  Text(habit.habit!),
+                  Text(habit.habit),
                 ],
               ),
             );

@@ -1,11 +1,14 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/enums/score_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Frequency.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/data/model/day_done_model.dart';
+import 'package:altitude/data/model/habit_model.dart';
+import 'package:altitude/data/model/reminder_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/day_done_entity.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
+import 'package:altitude/domain/models/reminder_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
@@ -45,7 +48,14 @@ abstract class IHabitsRepository {
   );
   Future<List<DayDone>> getAllDaysDone(List<Habit> habits);
   Future<void> deleteHabit(Habit habit);
-  Future<Habit> addHabit(Habit habit, int? reminderCounter);
+  Future<Habit> addHabit(
+    String habit,
+    int colorCode,
+    Frequency frequency,
+    DateTime initialDate,
+    Reminder? reminder,
+    int? reminderCounter,
+  );
   Future<void> updateReminder(
     int? reminderId,
     Habit habit,
@@ -117,7 +127,7 @@ class HabitsRepository extends IHabitsRepository {
 
     var score = _scoreService.calculateScore(
       isAdd ? ScoreType.add : ScoreType.subtract,
-      habit.frequency!,
+      habit.frequency,
       days,
       date,
     );
@@ -138,9 +148,9 @@ class HabitsRepository extends IHabitsRepository {
     _memory.person?.score = currentScore + score;
     int index = _memory.habits.indexWhere((e) => e.id == habitId);
     if (index != -1) {
-      _memory.habits[index].score = habit.score! + score;
+      _memory.habits[index].score = habit.score + score;
       _memory.habits[index].daysDone =
-          isAdd ? habit.daysDone! + 1 : habit.daysDone! - 1;
+          isAdd ? habit.daysDone + 1 : habit.daysDone - 1;
       if (isLastDone) _memory.habits[index].lastDone = isAdd ? date : null;
     }
 
@@ -170,7 +180,11 @@ class HabitsRepository extends IHabitsRepository {
     Habit? inititalHabit,
     List<String?> competitionsId,
   ) async {
-    await _fireDatabase.updateHabit(habit, inititalHabit, competitionsId);
+    await _fireDatabase.updateHabit(
+      HabitModel.fromEntity(habit),
+      inititalHabit != null ? HabitModel.fromEntity(inititalHabit) : null,
+      competitionsId,
+    );
     int index = _memory.habits.indexWhere((e) => e.id == habit.id);
     if (index != -1) {
       _memory.habits[index] = habit;
@@ -193,12 +207,12 @@ class HabitsRepository extends IHabitsRepository {
     int? reminderCounter,
   ) async {
     if (habit.reminder != null) {
-      await _localNotification.addNotification(habit);
+      await _localNotification.addNotification(HabitModel.fromEntity(habit));
     }
 
     if (daysDone.length > 450) {
       String id = await _fireDatabase.transferHabit(
-        habit,
+        HabitModel.fromEntity(habit),
         reminderCounter,
         competitionsId,
         daysDone
@@ -215,7 +229,7 @@ class HabitsRepository extends IHabitsRepository {
       );
     } else {
       await _fireDatabase.transferHabit(
-        habit,
+        HabitModel.fromEntity(habit),
         reminderCounter,
         competitionsId,
         daysDone.map((e) => DayDoneModel.fromEntity(e)).toList(),
@@ -300,20 +314,34 @@ class HabitsRepository extends IHabitsRepository {
   }
 
   @override
-  Future<Habit> addHabit(Habit habit, int? reminderCounter) async {
-    var data = await _fireDatabase.addHabit(habit, reminderCounter);
+  Future<Habit> addHabit(
+    String habit,
+    int colorCode,
+    Frequency frequency,
+    DateTime initialDate,
+    Reminder? reminder,
+    int? reminderCounter,
+  ) async {
+    var data = await _fireDatabase.addHabit(
+      habit,
+      colorCode,
+      frequency,
+      initialDate,
+      reminder,
+      reminderCounter,
+    );
     _fireAnalytics.sendNewHabit(
-      habit.habit,
-      AppColors.habitsColorName[habit.colorCode!],
-      habit.frequency.runtimeType == DayWeek ? 'Diariamente' : 'Semanalmente',
-      habit.frequency!.daysCount(),
-      habit.reminder != null ? 'Sim' : 'Não',
+      habit,
+      AppColors.habitsColorName[colorCode],
+      frequency is DayWeek ? 'Diariamente' : 'Semanalmente',
+      frequency.daysCount(),
+      reminder != null ? 'Sim' : 'Não',
     );
 
     _memory.habits.add(data);
 
-    if (habit.reminder != null) {
-      await _localNotification.addNotification(habit);
+    if (reminder != null) {
+      await _localNotification.addNotification(data);
     }
 
     return data;
@@ -337,13 +365,13 @@ class HabitsRepository extends IHabitsRepository {
       await _fireDatabase.updateReminder(
         habit.id,
         reminderCounter,
-        habit.reminder,
+        ReminderModel.fromEntity(habit.reminder!),
       );
       int index = _memory.habits.indexWhere((e) => e.id == habit.id);
       if (index != -1) {
         _memory.habits[index] = habit;
       }
-      await _localNotification.addNotification(habit);
+      await _localNotification.addNotification(HabitModel.fromEntity(habit));
     } else {
       await _fireDatabase.updateReminder(habit.id, null, null);
       int index = _memory.habits.indexWhere((e) => e.id == habit.id);

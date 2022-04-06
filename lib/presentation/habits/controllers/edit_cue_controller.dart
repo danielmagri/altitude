@@ -1,5 +1,5 @@
 import 'package:altitude/common/constant/suggestions.dart';
-import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/usecases/habits/update_habit_usecase.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';

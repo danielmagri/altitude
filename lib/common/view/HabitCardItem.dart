@@ -1,5 +1,5 @@
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:flutter/material.dart'
     show
         Alignment,
@@ -38,10 +38,11 @@ class HabitCardItem extends StatelessWidget {
   }) : super(key: key);
 
   final Habit habit;
-  final Function(String? id, int? color) goHabitDetails;
+  final Function(String id, int color) goHabitDetails;
   final Function(bool) showDragTarget;
   final bool done;
 
+  @override
   Widget build(BuildContext context) {
     return done
         ? InkWell(
@@ -72,7 +73,7 @@ class HabitCardItem extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            border: Border.all(color: Colors.black, width: 0.5),
+                            border: Border.all(width: 0.5),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: const Text(
@@ -90,7 +91,7 @@ class HabitCardItem extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        habit.habit!,
+                        habit.habit,
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -134,11 +135,11 @@ class HabitCardItem extends StatelessWidget {
                     Expanded(
                       child: Center(
                         child: Text(
-                          habit.habit!,
+                          habit.habit,
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
                           ),
@@ -160,7 +161,7 @@ class HabitCardItem extends StatelessWidget {
                   Expanded(
                     child: Center(
                       child: Text(
-                        habit.habit!,
+                        habit.habit,
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

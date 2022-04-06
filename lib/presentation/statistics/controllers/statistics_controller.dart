@@ -1,7 +1,7 @@
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/failure.dart';
 import 'package:altitude/domain/models/day_done_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/usecases/habits/get_all_days_done_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
@@ -104,7 +104,7 @@ abstract class _StatisticsControllerBase with Store {
           habitsMap.putIfAbsent(
             habit,
             () => _scoreService.scoreEarnedTotal(
-              habit.frequency!,
+              habit.frequency,
               value.map((e) => e.date).toList(),
             ),
           );
@@ -185,8 +185,7 @@ abstract class _StatisticsControllerBase with Store {
               (i) => value
                   .where(
                     (e) =>
-                        e.date.weekday == i ||
-                        (e.date.weekday == 7 && i == 0),
+                        e.date.weekday == i || (e.date.weekday == 7 && i == 0),
                   )
                   .length,
             ),

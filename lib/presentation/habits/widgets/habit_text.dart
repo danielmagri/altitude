@@ -82,9 +82,9 @@ class _HabitTextState extends State<HabitText> {
 
   void showTutorial() {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpHabit',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 '  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.',

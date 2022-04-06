@@ -12,10 +12,6 @@ class DayDoneModel extends DayDone {
         ).onlyDate,
       );
 
-  factory DayDoneModel.fromDB(Map<String, dynamic> json) => DayDoneModel(
-        date: DateTime.parse(json['date_done']),
-      );
-
   factory DayDoneModel.fromEntity(DayDone entity) => DayDoneModel(
         date: entity.date,
         habitId: entity.habitId,

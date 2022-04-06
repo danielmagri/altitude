@@ -1,5 +1,7 @@
+import 'dart:developer' show log;
+
 import 'package:altitude/common/constant/app_colors.dart';
-import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/data/model/habit_model.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
 import 'package:altitude/infra/services/FireMenssaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -39,13 +41,13 @@ class LocalNotification implements ILocalNotification {
 
   static Future onSelectNotification(String? payload) async {
     if (payload != null) {
-      print('notification payload: ' + payload);
+      log('notification payload: ' + payload);
     }
   }
 
   @override
-  Future<void> addNotification(Habit habit) async {
-    Time time = Time(habit.reminder!.hour!, habit.reminder!.minute!);
+  Future<void> addNotification(HabitModel habit) async {
+    Time time = Time(habit.reminder!.hour, habit.reminder!.minute);
     String? title = habit.reminder!.type == 0 ? habit.habit : habit.oldCue;
 
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -54,7 +56,7 @@ class LocalNotification implements ILocalNotification {
       'Aviso para não esquecer sobre o hábito', // channel description
       importance: Importance.max,
       priority: Priority.high,
-      color: AppColors.habitsColor[habit.colorCode!],
+      color: AppColors.habitsColor[habit.colorCode],
     );
     var platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);

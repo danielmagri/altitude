@@ -1,12 +1,14 @@
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Habit.dart';
-import 'package:altitude/common/model/Reminder.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/competition_model.dart';
 import 'package:altitude/data/model/competitor_model.dart';
 import 'package:altitude/data/model/day_done_model.dart';
+import 'package:altitude/data/model/habit_model.dart';
 import 'package:altitude/data/model/person_model.dart';
+import 'package:altitude/data/model/reminder_model.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
+import 'package:altitude/domain/models/reminder_entity.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,7 +35,7 @@ class FireDatabase implements IFireDatabase {
 
   @override
   Future<String> transferHabit(
-    Habit habit,
+    HabitModel habit,
     int? reminderCounter,
     List<String?> competitionsId,
     List<DayDoneModel> daysDone,
@@ -104,7 +106,7 @@ class FireDatabase implements IFireDatabase {
 
     DocumentReference habitDoc = habitsCollection.doc(habitId);
 
-    batch.update(habitDoc, {Habit.SCORE: score});
+    batch.update(habitDoc, {HabitModel.scoreTag: score});
 
     for (Pair<String?, int> item in competitionsScore) {
       batch.set(
@@ -134,7 +136,9 @@ class FireDatabase implements IFireDatabase {
   Future<PersonModel> getPerson() {
     return userDoc.get().then(
           (value) => PersonModel.fromJson(
-              value.data() as Map<String, dynamic>, value.id),
+            value.data() as Map<String, dynamic>,
+            value.id,
+          ),
         );
   }
 
@@ -194,39 +198,51 @@ class FireDatabase implements IFireDatabase {
   // HABIT
 
   @override
-  Future<Habit> addHabit(Habit habit, int? reminderCounter) {
+  Future<HabitModel> addHabit(
+    String habit,
+    int colorCode,
+    Frequency frequency,
+    DateTime initialDate,
+    Reminder? reminder,
+    int? reminderCounter,
+  ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
     DocumentReference doc = habitsCollection.doc();
-    habit.id = doc.id;
 
-    batch.set(doc, habit.toJson());
+    var habitModel = HabitModel(
+        id: doc.id,
+        habit: habit,
+        colorCode: colorCode,
+        frequency: frequency,
+        initialDate: initialDate);
+
+    batch.set(doc, habitModel.toJson());
     if (reminderCounter != null) {
       batch.update(userDoc, {PersonModel.reminderCounterTag: reminderCounter});
     }
-    return batch.commit().then((value) => habit);
+    return batch.commit().then((value) => habitModel);
   }
 
   @override
-  Future<List<Habit>> getHabits() {
+  Future<List<HabitModel>> getHabits() {
     return habitsCollection.get().then(
           (value) => value.docs
-              .map((e) => Habit.fromJson(e.data() as Map<String, dynamic>))
+              .map((e) => HabitModel.fromJson(e.data() as Map<String, dynamic>))
               .toList(),
         );
   }
 
   @override
-  Future<Habit> getHabit(String? id) {
-    return habitsCollection
-        .doc(id)
-        .get()
-        .then((value) => Habit.fromJson(value.data() as Map<String, dynamic>));
+  Future<HabitModel> getHabit(String? id) {
+    return habitsCollection.doc(id).get().then(
+          (value) => HabitModel.fromJson(value.data() as Map<String, dynamic>),
+        );
   }
 
   @override
   Future updateHabit(
-    Habit habit, [
-    Habit? inititalHabit,
+    HabitModel habit, [
+    HabitModel? inititalHabit,
     List<String?>? competitionsId,
   ]) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -258,13 +274,13 @@ class FireDatabase implements IFireDatabase {
   Future updateReminder(
     String? habitId,
     int? reminderCounter,
-    Reminder? reminder,
+    ReminderModel? reminder,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     batch.update(
       habitsCollection.doc(habitId),
-      {Habit.REMINDER: reminder?.toJson()},
+      {HabitModel.reminderTag: reminder?.toJson()},
     );
     if (reminderCounter != null) {
       batch.update(userDoc, {PersonModel.reminderCounterTag: reminderCounter});
@@ -305,22 +321,26 @@ class FireDatabase implements IFireDatabase {
       }
 
       Map<String, dynamic> habitMap = {};
-      habitMap.putIfAbsent(Habit.SCORE, () => FieldValue.increment(score));
       habitMap.putIfAbsent(
-        Habit.DAYS_DONE_COUNT,
+        HabitModel.scoreTag,
+        () => FieldValue.increment(score),
+      );
+      habitMap.putIfAbsent(
+        HabitModel.daysDoneCountTag,
         () => FieldValue.increment(isAdd ? 1 : -1),
       );
 
       if (!date.exists && isAdd) {
         if (isLastDone) {
-          habitMap.putIfAbsent(Habit.LAST_DONE, () => dayDone.date);
+          habitMap.putIfAbsent(HabitModel.lastDoneTag, () => dayDone.date);
         }
         batch.set(
           daysDoneCollection.doc(dayDone.dateFormatted),
           dayDone.toJson(),
         );
       } else if (date.exists && !isAdd) {
-        if (isLastDone) habitMap.putIfAbsent(Habit.LAST_DONE, () => null);
+        if (isLastDone)
+          habitMap.putIfAbsent(HabitModel.lastDoneTag, () => null);
         batch.delete(daysDoneCollection.doc(dayDone.dateFormatted));
       } else {
         if (date.exists && isAdd) {
@@ -385,14 +405,18 @@ class FireDatabase implements IFireDatabase {
   @override
   Future<List<PersonModel>> getFriendsDetails() {
     return userCollection
-        .where(PersonModel.friendsTag,
-            arrayContains: GetIt.I.get<IFireAuth>().getUid())
+        .where(
+          PersonModel.friendsTag,
+          arrayContains: GetIt.I.get<IFireAuth>().getUid(),
+        )
         .get()
         .then(
           (value) => value.docs
               .map(
                 (e) => PersonModel.fromJson(
-                    e.data() as Map<String, dynamic>, e.id),
+                  e.data() as Map<String, dynamic>,
+                  e.id,
+                ),
               )
               .toList(),
         );
@@ -410,7 +434,9 @@ class FireDatabase implements IFireDatabase {
           (value) => value.docs
               .map(
                 (e) => PersonModel.fromJson(
-                    e.data() as Map<String, dynamic>, e.id),
+                  e.data() as Map<String, dynamic>,
+                  e.id,
+                ),
               )
               .toList(),
         );
@@ -420,15 +446,19 @@ class FireDatabase implements IFireDatabase {
   Future<List<PersonModel>> getRankingFriends(int limit) {
     return userCollection
         .orderBy(PersonModel.scoreTag, descending: true)
-        .where(PersonModel.friendsTag,
-            arrayContains: GetIt.I.get<IFireAuth>().getUid())
+        .where(
+          PersonModel.friendsTag,
+          arrayContains: GetIt.I.get<IFireAuth>().getUid(),
+        )
         .limit(limit)
         .get()
         .then(
           (value) => value.docs
               .map(
                 (e) => PersonModel.fromJson(
-                    e.data() as Map<String, dynamic>, e.id),
+                  e.data() as Map<String, dynamic>,
+                  e.id,
+                ),
               )
               .toList(),
         );
@@ -467,7 +497,9 @@ class FireDatabase implements IFireDatabase {
   Future<String> friendRequest(String? uid) async {
     var person = (await userDoc.get().then(
           (value) => PersonModel.fromJson(
-              value.data() as Map<String, dynamic>, value.id),
+            value.data() as Map<String, dynamic>,
+            value.id,
+          ),
         ));
     if (person.friends.length >= maxFriends) {
       throw 'Máximo de amigos atingido.';
@@ -483,7 +515,9 @@ class FireDatabase implements IFireDatabase {
 
     var friendData = (await userCollection.doc(uid).get().then(
           (value) => PersonModel.fromJson(
-              value.data() as Map<String, dynamic>, value.id),
+            value.data() as Map<String, dynamic>,
+            value.id,
+          ),
         ));
     if (friendData.pendingFriends.contains(GetIt.I.get<IFireAuth>().getUid())) {
       throw 'Já tem uma solicitação.';
@@ -510,7 +544,9 @@ class FireDatabase implements IFireDatabase {
 
     var friendData = (await userCollection.doc(uid).get().then(
           (value) => PersonModel.fromJson(
-              value.data() as Map<String, dynamic>, value.id),
+            value.data() as Map<String, dynamic>,
+            value.id,
+          ),
         ));
     if (friendData.friends.length >= maxFriends) {
       throw 'Seu amigo atingiu o máximo de amigos.';

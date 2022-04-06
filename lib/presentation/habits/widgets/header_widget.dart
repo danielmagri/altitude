@@ -45,9 +45,9 @@ class HeaderWidget extends StatelessWidget {
               builder: (_) {
                 return controller.rocketForce.handleState(
                   loading: () {
-                    return Skeleton.custom(
+                    return const Skeleton.custom(
                       child: Rocket(
-                        size: const Size(140, 140),
+                        size: Size(140, 140),
                         color: Colors.white,
                       ),
                     );
@@ -99,7 +99,7 @@ class HeaderWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Text(
-                          data!.habit!,
+                          data!.habit,
                           textAlign: TextAlign.center,
                           softWrap: false,
                           overflow: TextOverflow.ellipsis,

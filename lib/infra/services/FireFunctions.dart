@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:altitude/infra/interface/i_fire_functions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:injectable/injectable.dart';
@@ -18,9 +20,9 @@ class FireFunctions implements IFireFunctions {
 
   void _handleError(Object error, {String from = 'Error'}) {
     if (error is FirebaseFunctionsException) {
-      print('$from: ${error.message}');
+      log('$from: ${error.message}');
     } else {
-      print('$from: $error');
+      log('$from: $error');
     }
   }
 }

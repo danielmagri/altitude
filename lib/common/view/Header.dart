@@ -28,10 +28,13 @@ class Header extends StatelessWidget {
         children: [
           const SizedBox(width: 50, child: BackButton()),
           Expanded(
-              child: Text(title!,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            child: Text(
+              title!,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
           SizedBox(width: 50, child: button),
         ],
       ),

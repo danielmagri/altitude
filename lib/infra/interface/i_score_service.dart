@@ -1,9 +1,9 @@
 import 'package:altitude/common/enums/score_type.dart';
-import 'package:altitude/common/model/Frequency.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
 
 abstract class IScoreService {
-  static const int DAY_DONE_POINT = 2;
-  static const int CYCLE_DONE_POINT = 1;
+  static const int dayDonePoint = 2;
+  static const int cycleDonePoint = 1;
 
   /// Calcula os pontos a ser adicionado ou retirado
   /// frequency: frequência do hábito

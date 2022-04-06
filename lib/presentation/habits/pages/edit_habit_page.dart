@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
@@ -13,7 +15,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class EditHabitPage extends StatefulWidget {
-  EditHabitPage(this.arguments);
+  const EditHabitPage(this.arguments, {Key? key}) : super(key: key);
 
   final EditHabitPageArguments? arguments;
 
@@ -34,12 +36,12 @@ class _EditHabitPageState
       adUnitId: AdsUtils.edithabitOnSaveIntersticialAdUnitId,
       request: AdsUtils.adRequest,
       adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
+        onAdLoaded: (ad) {
           // Keep a reference to the ad so you can show it later.
           myInterstitial = ad;
         },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('InterstitialAd failed to load: $error');
+        onAdFailedToLoad: (error) {
+          log('InterstitialAd failed to load: $error');
         },
       ),
     );
@@ -47,7 +49,7 @@ class _EditHabitPageState
     controller.setData(widget.arguments!.habit!);
 
     controller.color = widget.arguments!.habit!.colorCode;
-    habitTextController.text = widget.arguments!.habit!.habit!;
+    habitTextController.text = widget.arguments!.habit!.habit;
   }
 
   @override
@@ -62,8 +64,6 @@ class _EditHabitPageState
         ValidationHandler.habitTextValidate(habitTextController.text);
     if (habitValidation != null) {
       showToast(habitValidation);
-    } else if (controller.frequency == null) {
-      showToast('Escolha qual será a frequência.');
     } else {
       showLoading(true);
       controller.updateHabit(habitTextController.text).then((_) async {

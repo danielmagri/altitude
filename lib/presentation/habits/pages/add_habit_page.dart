@@ -1,7 +1,6 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/presentation/habits/controllers/add_habit_controller.dart';
@@ -13,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class AddHabitPage extends StatefulWidget {
-  AddHabitPage({Key? key, this.backTo = false}) : super(key: key);
+  const AddHabitPage({Key? key, this.backTo = false}) : super(key: key);
 
   final bool backTo;
 
@@ -37,16 +36,16 @@ class _AddHabitPageState
     } else if (controller.frequency == null) {
       showToast('Escolha qual será a frequência.');
     } else {
-      Habit habit = Habit(
-        habit: habitTextController.text,
-        colorCode: controller.color,
-        frequency: controller.frequency,
-        initialDate: DateTime.now().onlyDate,
-      );
-
       showLoading(true);
 
-      controller.createHabit(habit).then((response) {
+      controller
+          .createHabit(
+        habitTextController.text,
+        controller.color,
+        controller.frequency!,
+        DateTime.now().onlyDate,
+      )
+          .then((response) {
         response.result(
           (data) {
             showLoading(false);

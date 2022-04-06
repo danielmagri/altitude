@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -22,15 +24,15 @@ abstract class AdsUtils {
           },
         )
       : NativeAdListener(
-          onAdLoaded: (ad) => print('Ad loaded.'),
+          onAdLoaded: (ad) => log('Ad loaded.'),
           onAdFailedToLoad: (ad, error) {
             ad.dispose();
-            print('Ad failed to load: $error');
+            log('Ad failed to load: $error');
           },
-          onAdOpened: (ad) => print('Ad opened.'),
+          onAdOpened: (ad) => log('Ad opened.'),
           onAdClosed: (ad) {
             ad.dispose();
-            print('Ad closed.');
+            log('Ad closed.');
           },
         );
 
@@ -41,15 +43,15 @@ abstract class AdsUtils {
           },
         )
       : BannerAdListener(
-          onAdLoaded: (ad) => print('Ad loaded.'),
+          onAdLoaded: (ad) => log('Ad loaded.'),
           onAdFailedToLoad: (ad, error) {
             ad.dispose();
-            print('Ad failed to load: $error');
+            log('Ad failed to load: $error');
           },
-          onAdOpened: (ad) => print('Ad opened.'),
+          onAdOpened: (ad) => log('Ad opened.'),
           onAdClosed: (ad) {
             ad.dispose();
-            print('Ad closed.');
+            log('Ad closed.');
           },
         );
 }

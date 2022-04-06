@@ -1,10 +1,10 @@
 import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/data/model/person_model.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/day_done_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
@@ -128,7 +128,7 @@ class UserRepository extends IUserRepository {
       List<DayDone> daysDone = await _fireDatabase.getAllDaysDone(habit.id);
 
       int score = _scoreService.scoreEarnedTotal(
-        habit.frequency!,
+        habit.frequency,
         daysDone.map((e) => e.date).toList(),
       );
       totalScore += score;
@@ -141,7 +141,7 @@ class UserRepository extends IUserRepository {
           )
           .toList()) {
         int competitionScore = _scoreService.scoreEarnedTotal(
-          habit.frequency!,
+          habit.frequency,
           daysDone
               .where((e) => e.date.isAfterOrSameDay(competition.initialDate))
               .map((e) => e.date)

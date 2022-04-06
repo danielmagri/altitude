@@ -1,7 +1,7 @@
-import 'package:altitude/common/model/Habit.dart';
+import 'package:altitude/data/model/habit_model.dart';
 
 abstract class ILocalNotification {
-  Future<void> addNotification(Habit habit);
+  Future<void> addNotification(HabitModel habit);
 
   Future<void> removeNotification(int? id);
 

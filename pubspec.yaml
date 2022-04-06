@@ -18,7 +18,6 @@ dependencies:
   injectable: 1.5.3
   # local database
   shared_preferences: 2.0.13
-  sqflite: 2.0.2
   # firebase
   firebase_core: 1.13.1
   firebase_auth: 3.3.11

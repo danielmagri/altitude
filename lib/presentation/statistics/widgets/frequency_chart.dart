@@ -1,6 +1,6 @@
 import 'dart:math' show min;
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/theme/app_theme.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/presentation/statistics/models/frequency_statistic_data.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart'

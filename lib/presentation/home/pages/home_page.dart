@@ -5,18 +5,14 @@ import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
-import 'package:altitude/infra/interface/i_fire_auth.dart';
-import 'package:altitude/infra/services/database.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
 import 'package:altitude/presentation/home/dialogs/new_level_dialog.dart';
 import 'package:altitude/presentation/home/widgets/habits_panel.dart';
 import 'package:altitude/presentation/home/widgets/home_bottom_navigation.dart';
 import 'package:altitude/presentation/home/widgets/home_drawer.dart';
 import 'package:altitude/presentation/home/widgets/sky_drag_target.dart';
-import 'package:altitude/presentation/setting/dialogs/transfer_data_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -33,24 +29,8 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
   void initState() {
     super.initState();
 
-    checkTransferData();
+    fetchData();
     WidgetsBinding.instance!.addObserver(this);
-  }
-
-  Future<void> checkTransferData() async {
-    if (await DatabaseService().existDB()) {
-      showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return TransferDataDialog(uid: GetIt.I.get<IFireAuth>().getUid());
-        },
-      ).then((value) {
-        if (value!) fetchData();
-      }).catchError(handleError);
-    } else {
-      fetchData();
-    }
   }
 
   void fetchData() {
@@ -113,7 +93,7 @@ class _HomePageState extends BaseStateWithController<HomePage, HomeController>
     navigatePush('addHabit');
   }
 
-  void goHabitDetails(String? id, int? color) {
+  void goHabitDetails(String id, int color) {
     var arguments = HabitDetailsPageArguments(id, color);
     navigatePush('habitDetails', arguments: arguments);
   }

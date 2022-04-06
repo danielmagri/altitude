@@ -1,8 +1,8 @@
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/common/model/pair.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/competitions/get_competition_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.dart';
@@ -96,14 +96,14 @@ abstract class _CompetitionControllerBase with Store {
       .resultComplete((data) => data, (error) => true);
 
   Future<Pair<List<Habit>, List<Person>>> getCreationData() async {
-    List habits = await _getHabitsUsecase
+    final habits = await _getHabitsUsecase
         .call(false)
         .resultComplete((data) => data, (error) => throw error);
-    List friends = await _getFriendsUsecase
+    final friends = await _getFriendsUsecase
         .call(NoParams())
         .resultComplete((data) => data, (error) => throw error);
 
-    return Pair(habits as List<Habit>, friends as List<Person>);
+    return Pair(habits, friends);
   }
 
   @action

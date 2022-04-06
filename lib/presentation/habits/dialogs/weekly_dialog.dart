@@ -1,5 +1,5 @@
-import 'package:altitude/common/model/Frequency.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
+import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:flutter/material.dart'
     show
         Color,
@@ -46,7 +46,7 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
   }
 
   void _validate() {
-    Navigator.of(context).pop(Weekly(daysTime: _currentValue));
+    Navigator.of(context).pop(Weekly(daysTime: _currentValue ?? 0));
   }
 
   @override

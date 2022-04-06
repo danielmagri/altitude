@@ -1,9 +1,9 @@
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';

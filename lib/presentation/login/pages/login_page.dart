@@ -1,5 +1,4 @@
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/presentation/setting/dialogs/transfer_data_dialog.dart';
 import 'package:altitude/presentation/login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,7 +16,7 @@ class _LoginPageState
     showLoading(true);
     controller.loginFacebook().then((uid) {
       showLoading(false);
-      if (uid != null) savePersonData(uid);
+      if (uid != null) navigateRemoveUntil('home');
     }).catchError(handleError);
   }
 
@@ -25,19 +24,7 @@ class _LoginPageState
     showLoading(true);
     controller.loginGoogle().then((uid) {
       showLoading(false);
-      if (uid != null) savePersonData(uid);
-    }).catchError(handleError);
-  }
-
-  void savePersonData(String uid) {
-    showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return TransferDataDialog(uid: uid);
-      },
-    ).then((value) {
-      if (value!) navigateRemoveUntil('home');
+      if (uid != null) navigateRemoveUntil('home');
     }).catchError(handleError);
   }
 
@@ -47,7 +34,7 @@ class _LoginPageState
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            const Spacer(flex: 1),
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Image.asset('assets/logo_grande.png'),

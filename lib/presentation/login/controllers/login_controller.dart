@@ -10,9 +10,9 @@ part 'login_controller.g.dart';
 class LoginController = _LoginControllerBase with _$LoginController;
 
 abstract class _LoginControllerBase with Store {
-  final AuthGoogleUsecase _authGoogleUsecase;
-
   _LoginControllerBase(this._authGoogleUsecase);
+
+  final AuthGoogleUsecase _authGoogleUsecase;
 
   Future<String?> loginFacebook() async {
     // var result = await FacebookLogin().logIn(['email', 'public_profile']);

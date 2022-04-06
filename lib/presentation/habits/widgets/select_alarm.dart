@@ -43,9 +43,9 @@ class _SelectAlarmState extends State<SelectAlarm> {
 
   void showTutorial() {
     Navigator.of(context).smooth(
-      TutorialDialog(
+      const TutorialDialog(
         hero: 'helpAlarm',
-        texts: const [
+        texts: [
           TextSpan(
             text:
                 '  Caso queira, nós podemos te lembrar na hora e nos dias que desejar. ',
@@ -61,7 +61,7 @@ class _SelectAlarmState extends State<SelectAlarm> {
 
   void reminderTimeClick(BuildContext context) {
     showTimePicker(
-      initialTime: controller.reminderTime!,
+      initialTime: controller.reminderTime,
       context: context,
       builder: (context, child) {
         return Theme(

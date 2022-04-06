@@ -1,9 +1,9 @@
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/model/Habit.dart';
 import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
+import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/presentation/competitions/controllers/pending_competition_controller.dart';
 import 'package:altitude/presentation/competitions/widgets/choose_habit.dart';
 import 'package:flutter/material.dart';
