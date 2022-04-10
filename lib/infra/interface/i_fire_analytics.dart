@@ -5,7 +5,13 @@ abstract class IFireAnalytics {
 
   void setUserId(String uid);
 
-  void sendNewHabit(String? habit, String color, String freqType, int? freqTime, String hasReminder);
+  void sendNewHabit(
+    String? habit,
+    String color,
+    String freqType,
+    int? freqTime,
+    String hasReminder,
+  );
 
   void sendRemoveHabit(String? habit);
 

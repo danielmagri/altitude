@@ -14,9 +14,7 @@ class FireMessaging implements IFireMessaging {
 
       await GetIt.I.isReady<SharedPref>();
 
-      if (message.data != null) {
-        _pendingRequest(message.data);
-      }
+      _pendingRequest(message.data);
     });
 
     FirebaseMessaging.onMessage.listen((message) {

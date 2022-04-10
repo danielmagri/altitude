@@ -1,7 +1,7 @@
 import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/ReminderDay.dart';
 import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
+import 'package:altitude/common/view/reminder_day.dart';
 import 'package:altitude/presentation/habits/controllers/add_habit_controller.dart';
 import 'package:flutter/material.dart'
     show

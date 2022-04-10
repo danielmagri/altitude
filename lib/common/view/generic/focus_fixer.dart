@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart'
-    show BuildContext, FocusNode, FocusScope, GestureDetector, Key, StatelessWidget, Widget;
+    show
+        BuildContext,
+        FocusNode,
+        FocusScope,
+        GestureDetector,
+        Key,
+        StatelessWidget,
+        Widget;
 
 class FocusFixer extends StatelessWidget {
   FocusFixer({required this.child, Key? key}) : super(key: key);

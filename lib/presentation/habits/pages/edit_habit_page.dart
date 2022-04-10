@@ -2,10 +2,10 @@ import 'dart:developer' show log;
 
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
-import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/base_text_dialog.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/presentation/habits/controllers/edit_habit_controller.dart';
 import 'package:altitude/presentation/habits/widgets/habit_text.dart';
 import 'package:altitude/presentation/habits/widgets/select_color.dart';

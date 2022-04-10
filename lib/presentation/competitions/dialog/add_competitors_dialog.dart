@@ -45,9 +45,9 @@ class _AddCompetitorsDialogState extends BaseState<AddCompetitorsDialog> {
 
   Future<void> _addCompetitors() async {
     if (selectedFriends.isNotEmpty) {
-      List<String?> invitations =
+      List<String> invitations =
           selectedFriends.map((person) => person.uid).toList();
-      List<String?> invitationsToken =
+      List<String> invitationsToken =
           selectedFriends.map((person) => person.fcmToken).toList();
 
       showLoading(true);

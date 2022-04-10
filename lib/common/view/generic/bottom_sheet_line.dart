@@ -9,7 +9,9 @@ class BottomSheetLine extends StatelessWidget {
       width: 40,
       height: 10,
       decoration: BoxDecoration(
-          color: Colors.grey[350], borderRadius: BorderRadius.circular(20)),
+        color: Colors.grey[350],
+        borderRadius: BorderRadius.circular(20),
+      ),
     );
   }
 }

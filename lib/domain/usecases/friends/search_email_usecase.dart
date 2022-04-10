@@ -15,7 +15,7 @@ class SearchEmailUsecase extends BaseUsecase<String, List<Person>> {
   Future<List<Person>> getRawFuture(String params) async {
     final person = await _userRepository.getUserData(false);
     if (params != person.email) {
-      List<String?> myPendingFriends = person.pendingFriends;
+      List<String> myPendingFriends = person.pendingFriends;
       return _friendsRepository.searchEmail(params, myPendingFriends);
     } else {
       return [];

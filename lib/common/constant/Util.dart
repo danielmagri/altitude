@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 abstract class Util {
-  // static Future<bool> checkUpdatedVersion() async {
-  //   return (await SharedPref().getVersion()) >= int.parse((await PackageInfo.fromPlatform()).buildNumber);
-  // }
-
   /// Clareia a cor de acordo com o 'value' de 0 a 255
   static Color setWhitening(Color color, int value) {
     int r = color.red + value;

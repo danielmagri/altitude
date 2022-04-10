@@ -1,7 +1,7 @@
 import 'dart:ui' show ImageFilter;
 
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
 import 'package:altitude/domain/models/person_entity.dart';
@@ -131,16 +131,21 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.only(
-                  top: 16, left: 16, right: 16, bottom: 10,),
+                top: 16,
+                left: 16,
+                right: 16,
+                bottom: 10,
+              ),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: AppTheme.of(context).materialTheme.cardColor,
                 borderRadius: BorderRadius.circular(16.0),
                 boxShadow: const [
                   BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: Offset(0.0, 10.0),)
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: Offset(0.0, 10.0),
+                  )
                 ],
               ),
               child: Column(
@@ -153,144 +158,178 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
                     minLines: 1,
                     style: const TextStyle(fontSize: 16),
                     decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppTheme.of(context)
-                                    .materialTheme
-                                    .textTheme
-                                    .headline1!
-                                    .color!,),),
-                        hintText: 'Escreva o email do seu amigo',
-                        hintStyle:
-                            const TextStyle(fontWeight: FontWeight.w300),),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppTheme.of(context)
+                              .materialTheme
+                              .textTheme
+                              .headline1!
+                              .color!,
+                        ),
+                      ),
+                      hintText: 'Escreva o email do seu amigo',
+                      hintStyle: const TextStyle(fontWeight: FontWeight.w300),
+                    ),
                   ),
                   SizedBox(
                     width: double.maxFinite,
                     height: 200,
-                    child: Observer(builder: (_) {
-                      return controller.searchResult
-                          .handleStateLoadableWithData(loading: (data) {
-                        return Column(
-                          children: <Widget>[
-                            const SizedBox(height: 32),
-                            CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(
-                                    AppTheme.of(context).loading,),),
-                            const SizedBox(height: 12),
-                            const Text('Buscando...')
-                          ],
-                        );
-                      }, success: (data) {
-                        if (data == null) {
-                          return const SizedBox();
-                        } else {
-                          return ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: data.length,
-                            itemBuilder: (_, index) {
-                              Person person = data[index];
-                              return SizedBox(
-                                width: double.maxFinite,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            person.name,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.bold,
-                                              decoration: person.you? TextDecoration.underline
-                                                  : TextDecoration.none,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            person.email,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    person.state == 1
-                                        ? Container()
-                                        : ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.black,),
-                                                shape: MaterialStateProperty.all(
-                                                    RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),),),
-                                                padding: MaterialStateProperty.all(
-                                                    const EdgeInsets.all(10),),
-                                                overlayColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.white24,),
-                                                elevation:
-                                                    MaterialStateProperty.all(
-                                                        0,),),
-                                            onPressed: () =>
-                                                onClickButton(person),
-                                            child: Text(
-                                              buttonText(person.state),
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,),
-                                            ),
-                                          ),
-                                  ],
+                    child: Observer(
+                      builder: (_) {
+                        return controller.searchResult
+                            .handleStateLoadableWithData(
+                          loading: (data) {
+                            return Column(
+                              children: <Widget>[
+                                const SizedBox(height: 32),
+                                CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(
+                                    AppTheme.of(context).loading,
+                                  ),
                                 ),
+                                const SizedBox(height: 12),
+                                const Text('Buscando...')
+                              ],
+                            );
+                          },
+                          success: (data) {
+                            if (data == null) {
+                              return const SizedBox();
+                            } else {
+                              return ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: data.length,
+                                itemBuilder: (_, index) {
+                                  Person person = data[index];
+                                  return SizedBox(
+                                    width: double.maxFinite,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                person.name,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  decoration: person.you
+                                                      ? TextDecoration.underline
+                                                      : TextDecoration.none,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                person.email,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        person.state == 1
+                                            ? Container()
+                                            : ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                    Colors.black,
+                                                  ),
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                        20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  padding:
+                                                      MaterialStateProperty.all(
+                                                    const EdgeInsets.all(10),
+                                                  ),
+                                                  overlayColor:
+                                                      MaterialStateProperty.all(
+                                                    Colors.white24,
+                                                  ),
+                                                  elevation:
+                                                      MaterialStateProperty.all(
+                                                    0,
+                                                  ),
+                                                ),
+                                                onPressed: () =>
+                                                    onClickButton(person),
+                                                child: Text(
+                                                  buttonText(person.state),
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          );
-                        }
-                      },);
-                    },),
+                            }
+                          },
+                        );
+                      },
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
-                        child: const Text('Cancelar',
-                            style: TextStyle(fontSize: 15),),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(fontSize: 15),
+                        ),
                         onPressed: () => navigatePop(),
                       ),
                       const SizedBox(width: 5),
                       ElevatedButton(
                         style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.black),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),),),
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 10,),),
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.white24),
-                            elevation: MaterialStateProperty.all(2),),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.black),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 10,
+                            ),
+                          ),
+                          overlayColor:
+                              MaterialStateProperty.all(Colors.white24),
+                          elevation: MaterialStateProperty.all(2),
+                        ),
                         onPressed: search,
-                        child: const Text('Buscar',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,),),
+                        child: const Text(
+                          'Buscar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),

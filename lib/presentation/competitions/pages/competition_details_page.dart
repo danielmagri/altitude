@@ -3,14 +3,14 @@ import 'dart:async' show Timer;
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/di/dependency_injection.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/router/arguments/CompetitionDetailsPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/dialog/base_text_dialog.dart';
-import 'package:altitude/common/view/generic/TutorialPresentation.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/common/view/generic/tutorial_presentation.dart';
 import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:altitude/presentation/competitions/controllers/competition_details_controller.dart';
@@ -56,11 +56,11 @@ class _CompetitionDetailsPageState extends BaseStateWithController<
       Timer.run(() async {
         await Future.delayed(const Duration(milliseconds: 600));
         await navigateSmooth(
-          TutorialPresentation(
-            focusAlignment: const Alignment(0, 0),
+          const TutorialPresentation(
+            focusAlignment: Alignment(0, 0),
             focusRadius: 0,
-            textAlignment: const Alignment(0, 0),
-            text: const [
+            textAlignment: Alignment(0, 0),
+            text: [
               TextSpan(
                 text:
                     '  E que comece a competição! Qual de vocês consegue ir mais longe?',

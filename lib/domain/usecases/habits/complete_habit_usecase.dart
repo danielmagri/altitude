@@ -24,9 +24,8 @@ class CompleteHabitUsecase extends BaseUsecase<CompleteParams, void> {
 
   @override
   Future<void> getRawFuture(CompleteParams params) async {
-    var userUid = await _userRepository
-        .getUserData(false)
-        .then((value) => value.uid);
+    var userUid =
+        await _userRepository.getUserData(false).then((value) => value.uid);
 
     List<Competition> competitions =
         await _competitionsRepository.getCompetitions(false).then((list) {

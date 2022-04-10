@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-
 import 'package:altitude/common/theme/dark_theme.dart';
 import 'package:altitude/common/theme/interface/app_theme_interface.dart';
 import 'package:altitude/common/theme/light_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 typedef Builder = Widget Function(ThemeMode themeMode);
 
 class AppTheme extends StatefulWidget {
+  const AppTheme({Key? key, this.builder, this.themeChanged, this.initialTheme})
+      : super(key: key);
+
   final Builder? builder;
   final ThemeMode? initialTheme;
   final Function(IAppTheme theme)? themeChanged;
@@ -38,9 +40,6 @@ class AppTheme extends StatefulWidget {
         .state
         .changeTheme(mode);
   }
-
-  const AppTheme({Key? key, this.builder, this.themeChanged, this.initialTheme})
-      : super(key: key);
 
   @override
   _AppThemeState createState() => _AppThemeState();
@@ -91,15 +90,15 @@ class _AppThemeState extends State<AppTheme> {
 }
 
 class _InheritedThemeState extends InheritedWidget {
-  final ThemeMode mode;
-  final _AppThemeState state;
-
   const _InheritedThemeState({
     required this.mode,
     required this.state,
     required Widget child,
     Key? key,
   }) : super(key: key, child: child);
+
+  final ThemeMode mode;
+  final _AppThemeState state;
 
   @override
   bool updateShouldNotify(_InheritedThemeState old) => mode != old.mode;

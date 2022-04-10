@@ -17,9 +17,8 @@ class MaxCompetitionsByHabitUsecase extends BaseUsecase<String, bool> {
   @override
   Future<bool> getRawFuture(String params) async {
     try {
-      var userUid = await _userRepository
-          .getUserData(false)
-          .then((value) => value.uid);
+      var userUid =
+          await _userRepository.getUserData(false).then((value) => value.uid);
 
       int length = await _competitionsRepository.getCompetitions(false).then(
             (list) => list

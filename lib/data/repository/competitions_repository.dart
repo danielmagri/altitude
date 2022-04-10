@@ -4,7 +4,7 @@ import 'package:altitude/domain/models/competitor_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/services/memory.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
 import 'package:injectable/injectable.dart';
 
@@ -15,7 +15,7 @@ abstract class ICompetitionsRepository {
   Future<List<Competition>> getPendingCompetitions();
   Future<void> inviteCompetitor(
     String competitionId,
-    List<String?> competitorsId,
+    List<String> competitorsId,
   );
   Future<void> removeCompetitor(Competition competition);
   Future<void> declineCompetitionRequest(String competitionId);
@@ -90,7 +90,7 @@ class CompetitionsRepository extends ICompetitionsRepository {
   @override
   Future<void> inviteCompetitor(
     String competitionId,
-    List<String?> competitorsId,
+    List<String> competitorsId,
   ) async {
     await _fireDatabase.inviteCompetitor(competitionId, competitorsId);
   }

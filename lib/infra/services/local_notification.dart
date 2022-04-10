@@ -3,7 +3,7 @@ import 'dart:developer' show log;
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/data/model/habit_model.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
-import 'package:altitude/infra/services/FireMenssaging.dart';
+import 'package:altitude/infra/services/fire_menssaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:timezone/data/latest.dart' as tz;

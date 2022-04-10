@@ -5,13 +5,13 @@ import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart'
     show maxHabitCompetitions;
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/model/back_data_item.dart';
 import 'package:altitude/common/router/arguments/CreateCompetitionPageArguments.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/generic/focus_fixer.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/presentation/competitions/controllers/create_competition_controller.dart';
 import 'package:flutter/material.dart';

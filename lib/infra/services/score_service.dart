@@ -98,25 +98,25 @@ class ScoreService extends IScoreService {
 
   /// Checa se a frequêcia do DayWeek está completa
   bool _hasDoneCorrectDayWeek(DayWeek dayWeek, List<DateTime?> week) {
-    if (dayWeek.monday&& !week.any((dayDone) => dayDone!.weekday == 1)) {
+    if (dayWeek.monday && !week.any((dayDone) => dayDone!.weekday == 1)) {
       return false;
     }
-    if (dayWeek.tuesday&& !week.any((dayDone) => dayDone!.weekday == 2)) {
+    if (dayWeek.tuesday && !week.any((dayDone) => dayDone!.weekday == 2)) {
       return false;
     }
-    if (dayWeek.wednesday&& !week.any((dayDone) => dayDone!.weekday == 3)) {
+    if (dayWeek.wednesday && !week.any((dayDone) => dayDone!.weekday == 3)) {
       return false;
     }
-    if (dayWeek.thursday&& !week.any((dayDone) => dayDone!.weekday == 4)) {
+    if (dayWeek.thursday && !week.any((dayDone) => dayDone!.weekday == 4)) {
       return false;
     }
-    if (dayWeek.friday&& !week.any((dayDone) => dayDone!.weekday == 5)) {
+    if (dayWeek.friday && !week.any((dayDone) => dayDone!.weekday == 5)) {
       return false;
     }
-    if (dayWeek.saturday&& !week.any((dayDone) => dayDone!.weekday == 6)) {
+    if (dayWeek.saturday && !week.any((dayDone) => dayDone!.weekday == 6)) {
       return false;
     }
-    if (dayWeek.sunday&& !week.any((dayDone) => dayDone!.weekday == 7)) {
+    if (dayWeek.sunday && !week.any((dayDone) => dayDone!.weekday == 7)) {
       return false;
     }
     return true;

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:altitude/common/constant/app_colors.dart';
+import 'package:altitude/common/theme/interface/app_theme_interface.dart';
 import 'package:flutter/material.dart'
     show
         AppBarTheme,
@@ -20,7 +21,6 @@ import 'package:flutter/material.dart'
         ThemeData,
         UnderlineInputBorder;
 import 'package:flutter/services.dart' show Brightness, SystemUiOverlayStyle;
-import 'package:altitude/common/theme/interface/app_theme_interface.dart';
 
 class LightTheme implements IAppTheme {
   @override
@@ -38,8 +38,13 @@ class LightTheme implements IAppTheme {
       centerTitle: true,
       color: Colors.transparent,
       actionsIconTheme: IconThemeData(color: Colors.black),
-      textTheme:
-          TextTheme(headline6: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold)),
+      textTheme: TextTheme(
+        headline6: TextStyle(
+          fontSize: 18,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       iconTheme: IconThemeData(color: Colors.black),
     ),
     radioTheme: RadioThemeData(
@@ -54,11 +59,17 @@ class LightTheme implements IAppTheme {
       labelStyle: const TextStyle(fontSize: 15),
     ),
     tabBarTheme: const TabBarTheme(
-      indicator: ShapeDecoration(shape: UnderlineInputBorder(borderSide: BorderSide(width: 2))),
+      indicator: ShapeDecoration(
+        shape: UnderlineInputBorder(borderSide: BorderSide(width: 2)),
+      ),
       unselectedLabelColor: Colors.black,
       labelColor: Colors.black,
       unselectedLabelStyle: TextStyle(fontSize: 16, fontFamily: 'Montserrat'),
-      labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+      labelStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Montserrat',
+      ),
     ),
     textTheme: const TextTheme(
       caption: TextStyle(fontFamily: 'Montserrat'),
@@ -78,12 +89,14 @@ class LightTheme implements IAppTheme {
   );
 
   @override
-  SystemUiOverlayStyle get defaultSystemOverlayStyle => const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: AppColors.colorLightBackground,
-      systemNavigationBarIconBrightness: Brightness.dark);
+  SystemUiOverlayStyle get defaultSystemOverlayStyle =>
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: AppColors.colorLightBackground,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      );
 
   @override
   Color get cloud => AppColors.colorLightCloud;
@@ -101,7 +114,8 @@ class LightTheme implements IAppTheme {
   Color get shimmerHighlight => AppColors.colorLightShimmerHighlight;
 
   @override
-  Color get disableHabitCreationCard => AppColors.colorLightDisableHabitCreation;
+  Color get disableHabitCreationCard =>
+      AppColors.colorLightDisableHabitCreation;
 
   @override
   Color get chipSelected => AppColors.colorLightChipSelected;

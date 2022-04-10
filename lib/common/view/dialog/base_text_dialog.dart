@@ -60,8 +60,10 @@ class _BaseTextDialogState extends State<BaseTextDialog>
   void initState() {
     super.initState();
 
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
     _scaleAnimation =
         CurvedAnimation(parent: _controller, curve: Curves.easeOutBack);
 

@@ -1,7 +1,7 @@
 import 'dart:async' show StreamSubscription;
 
 import 'package:altitude/common/base/base_state.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/view/generic/bottom_sheet_line.dart';
 import 'package:altitude/presentation/habits/controllers/edit_cue_controller.dart';
 import 'package:flutter/gestures.dart';

@@ -1,6 +1,6 @@
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
-import 'package:altitude/common/enums/done_page_tyype.dart';
+import 'package:altitude/common/enums/done_page_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/model/failure.dart';
 import 'package:altitude/common/model/result.dart';

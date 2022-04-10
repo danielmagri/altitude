@@ -1,7 +1,6 @@
 import 'package:altitude/common/constant/constants.dart';
 
 extension DateTimeExtension on DateTime {
-
   /// Retorna somente o date do `DateTime`
   DateTime get onlyDate {
     return DateTime.utc(year, month, day);
@@ -32,6 +31,9 @@ extension DateTimeExtension on DateTime {
 
   /// Checa se é a mesma data, sem verificar as horas
   bool isSameDay(DateTime? day2) {
-    return day2 != null && year == day2.year && month == day2.month && day == day2.day;
+    return day2 != null &&
+        year == day2.year &&
+        month == day2.month &&
+        day == day2.day;
   }
 }

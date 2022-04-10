@@ -53,6 +53,6 @@ class InviteCompetitorParams {
   });
 
   final String? competitionId;
-  final List<String?> competitorId;
-  final List<String?> fcmTokens;
+  final List<String> competitorId;
+  final List<String> fcmTokens;
 }

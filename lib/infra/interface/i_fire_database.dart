@@ -12,7 +12,7 @@ abstract class IFireDatabase {
   Future<String> transferHabit(
     HabitModel habit,
     int? reminderCounter,
-    List<String?> competitionsId,
+    List<String> competitionsId,
     List<DayDoneModel> daysDone,
   );
 
@@ -30,9 +30,9 @@ abstract class IFireDatabase {
 
   Future<PersonModel> getPerson();
 
-  Future updateName(String name, List<String?> competitionsId);
+  Future updateName(String name, List<String> competitionsId);
 
-  Future updateFcmToken(String? name, List<String?> competitionsId);
+  Future updateFcmToken(String? name, List<String> competitionsId);
 
   Future updateLevel(int level);
 
@@ -52,7 +52,7 @@ abstract class IFireDatabase {
   Future updateHabit(
     HabitModel habit, [
     HabitModel? inititalHabit,
-    List<String?>? competitionsId,
+    List<String>? competitionsId,
   ]);
 
   Future updateReminder(
@@ -67,7 +67,7 @@ abstract class IFireDatabase {
     int score,
     bool isLastDone,
     DayDoneModel dayDone,
-    List<String?> competitions,
+    List<String> competitions,
   );
 
   Future deleteHabit(String? id);
@@ -90,7 +90,7 @@ abstract class IFireDatabase {
 
   Future<List<PersonModel>> searchEmail(
     String email,
-    List<String?> myPendingFriends,
+    List<String> myPendingFriends,
   );
 
   Future<String> friendRequest(String? uid);
@@ -120,7 +120,7 @@ abstract class IFireDatabase {
 
   Future updateCompetitor(String competitionId, String habitId);
 
-  Future inviteCompetitor(String? competitionId, List<String?> competitorId);
+  Future inviteCompetitor(String? competitionId, List<String> competitorId);
 
   Future removeCompetitor(String? competitionId, String uid, bool removeAll);
 

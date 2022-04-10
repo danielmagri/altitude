@@ -1,14 +1,14 @@
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
-import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/services/memory.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class IFriendsRepository {
   Future<List<Person>> getFriends();
   Future<List<Person>> searchEmail(
     String email,
-    List<String?> userPendingFriends,
+    List<String> userPendingFriends,
   );
   Future<void> removeFriend(String friendUid);
   Future<List<Person>> getRankingFriends(int length);
@@ -35,7 +35,7 @@ class FriendsRepository extends IFriendsRepository {
   @override
   Future<List<Person>> searchEmail(
     String email,
-    List<String?> userPendingFriends,
+    List<String> userPendingFriends,
   ) {
     return _fireDatabase.searchEmail(email, userPendingFriends);
   }

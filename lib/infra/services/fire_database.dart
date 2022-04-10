@@ -37,7 +37,7 @@ class FireDatabase implements IFireDatabase {
   Future<String> transferHabit(
     HabitModel habit,
     int? reminderCounter,
-    List<String?> competitionsId,
+    List<String> competitionsId,
     List<DayDoneModel> daysDone,
   ) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -143,48 +143,44 @@ class FireDatabase implements IFireDatabase {
   }
 
   @override
-  Future updateName(String name, List<String?> competitionsId) {
+  Future updateName(String name, List<String> competitionsId) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     userDoc.update({PersonModel.nameTag: name});
 
-    if (competitionsId != null) {
-      for (String? item in competitionsId) {
-        batch.set(
-          competitionCollection.doc(item),
-          {
-            CompetitionModel.competitorsTag: {
-              GetIt.I.get<IFireAuth>().getUid(): {CompetitorModel.nameTag: name}
-            }
-          },
-          SetOptions(merge: true),
-        );
-      }
+    for (String? item in competitionsId) {
+      batch.set(
+        competitionCollection.doc(item),
+        {
+          CompetitionModel.competitorsTag: {
+            GetIt.I.get<IFireAuth>().getUid(): {CompetitorModel.nameTag: name}
+          }
+        },
+        SetOptions(merge: true),
+      );
     }
 
     return batch.commit();
   }
 
   @override
-  Future updateFcmToken(String? token, List<String?> competitionsId) {
+  Future updateFcmToken(String? token, List<String> competitionsId) {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
     userDoc.update({PersonModel.fcmTokenTag: token});
 
-    if (competitionsId != null) {
-      for (String? item in competitionsId) {
-        batch.set(
-          competitionCollection.doc(item),
-          {
-            CompetitionModel.competitorsTag: {
-              GetIt.I.get<IFireAuth>().getUid(): {
-                CompetitorModel.fcmTokenTag: token
-              }
+    for (String? item in competitionsId) {
+      batch.set(
+        competitionCollection.doc(item),
+        {
+          CompetitionModel.competitorsTag: {
+            GetIt.I.get<IFireAuth>().getUid(): {
+              CompetitorModel.fcmTokenTag: token
             }
-          },
-          SetOptions(merge: true),
-        );
-      }
+          }
+        },
+        SetOptions(merge: true),
+      );
     }
 
     return batch.commit();
@@ -244,7 +240,7 @@ class FireDatabase implements IFireDatabase {
   Future updateHabit(
     HabitModel habit, [
     HabitModel? inititalHabit,
-    List<String?>? competitionsId,
+    List<String>? competitionsId,
   ]) async {
     WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -297,7 +293,7 @@ class FireDatabase implements IFireDatabase {
     int score,
     bool isLastDone,
     DayDoneModel dayDone,
-    List<String?> competitions,
+    List<String> competitions,
   ) {
     DocumentReference habitDoc = habitsCollection.doc(habitId);
     CollectionReference daysDoneCollection = habitDoc.collection(_daysDone);
@@ -305,20 +301,18 @@ class FireDatabase implements IFireDatabase {
     return daysDoneCollection.doc(dayDone.dateFormatted).get().then((date) {
       WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      if (competitions != null) {
-        for (String? item in competitions) {
-          batch.set(
-            competitionCollection.doc(item),
-            {
-              CompetitionModel.competitorsTag: {
-                GetIt.I.get<IFireAuth>().getUid(): {
-                  CompetitorModel.scoreTag: FieldValue.increment(score)
-                }
+      for (String? item in competitions) {
+        batch.set(
+          competitionCollection.doc(item),
+          {
+            CompetitionModel.competitorsTag: {
+              GetIt.I.get<IFireAuth>().getUid(): {
+                CompetitorModel.scoreTag: FieldValue.increment(score)
               }
-            },
-            SetOptions(merge: true),
-          );
-        }
+            }
+          },
+          SetOptions(merge: true),
+        );
       }
 
       Map<String, dynamic> habitMap = {};
@@ -340,8 +334,9 @@ class FireDatabase implements IFireDatabase {
           dayDone.toJson(),
         );
       } else if (date.exists && !isAdd) {
-        if (isLastDone)
+        if (isLastDone) {
           habitMap.putIfAbsent(HabitModel.lastDoneTag, () => null);
+        }
         batch.delete(daysDoneCollection.doc(dayDone.dateFormatted));
       } else {
         if (date.exists && isAdd) {
@@ -468,7 +463,7 @@ class FireDatabase implements IFireDatabase {
   @override
   Future<List<PersonModel>> searchEmail(
     String email,
-    List<String?> myPendingFriends,
+    List<String> myPendingFriends,
   ) {
     return userCollection
         .where(PersonModel.emailTag, isEqualTo: email)
@@ -690,7 +685,7 @@ class FireDatabase implements IFireDatabase {
   }
 
   @override
-  Future inviteCompetitor(String? competitionId, List<String?> competitorId) {
+  Future inviteCompetitor(String? competitionId, List<String> competitorId) {
     return competitionCollection.doc(competitionId).update(
       {CompetitionModel.invitationsTag: FieldValue.arrayUnion(competitorId)},
     );

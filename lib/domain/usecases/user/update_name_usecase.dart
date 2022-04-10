@@ -18,5 +18,5 @@ class UpdateNameParams {
   UpdateNameParams({required this.name, required this.competitionsId});
 
   final String name;
-  final List<String?> competitionsId;
+  final List<String> competitionsId;
 }

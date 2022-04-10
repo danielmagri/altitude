@@ -1,6 +1,6 @@
-import 'package:altitude/common/view/Score.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/common/view/score.dart';
 import 'package:altitude/presentation/habits/controllers/habit_details_controller.dart';
 import 'package:altitude/presentation/habits/widgets/sky_scene.dart';
 import 'package:flutter/material.dart'

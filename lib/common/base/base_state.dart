@@ -4,7 +4,7 @@ import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/di/dependency_injection.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/view/dialog/base_text_dialog.dart';
-import 'package:altitude/common/view/generic/Loading.dart';
+import 'package:altitude/common/view/generic/loading.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, protected;
 import 'package:flutter/material.dart'
     show

@@ -1,6 +1,6 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/generic/IconButtonStatus.dart';
+import 'package:altitude/common/view/generic/icon_button_status.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/friends_controller.dart';
 import 'package:altitude/presentation/friends/dialogs/add_friend_dialog.dart';

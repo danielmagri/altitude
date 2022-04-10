@@ -42,7 +42,8 @@ class SharedPref extends SharedPrefHandler {
 
   // Competition Tutorial
   bool get competitionTutorial => getBool(competitionTutorialKey) ?? false;
-  set competitionTutorial(bool value) => saveBool(competitionTutorialKey, value);
+  set competitionTutorial(bool value) =>
+      saveBool(competitionTutorialKey, value);
 
   // Rocket Tutorial
   bool get rocketTutorial => getBool(rocketOnDetailsPageKey) ?? false;

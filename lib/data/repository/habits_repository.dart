@@ -13,7 +13,7 @@ import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_local_notification.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/services/memory.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:injectable/injectable.dart';
 
@@ -32,12 +32,12 @@ abstract class IHabitsRepository {
   Future<void> updateHabit(
     Habit habit,
     Habit? inititalHabit,
-    List<String?> competitionsId,
+    List<String> competitionsId,
   );
   Future<List<DayDone>> getDaysDone(String? id, DateTime? start, DateTime end);
   Future<void> transferHabit(
     Habit habit,
-    List<String?> competitionsId,
+    List<String> competitionsId,
     List<DayDone> daysDone,
     int? reminderCounter,
   );
@@ -178,7 +178,7 @@ class HabitsRepository extends IHabitsRepository {
   Future<void> updateHabit(
     Habit habit,
     Habit? inititalHabit,
-    List<String?> competitionsId,
+    List<String> competitionsId,
   ) async {
     await _fireDatabase.updateHabit(
       HabitModel.fromEntity(habit),
@@ -202,7 +202,7 @@ class HabitsRepository extends IHabitsRepository {
   @override
   Future<void> transferHabit(
     Habit habit,
-    List<String?> competitionsId,
+    List<String> competitionsId,
     List<DayDone> daysDone,
     int? reminderCounter,
   ) async {

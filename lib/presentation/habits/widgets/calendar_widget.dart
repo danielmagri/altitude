@@ -1,4 +1,4 @@
-import 'package:altitude/common/enums/done_page_tyype.dart';
+import 'package:altitude/common/enums/done_page_type.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
 import 'package:altitude/common/theme/app_theme.dart';

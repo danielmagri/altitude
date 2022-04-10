@@ -60,7 +60,7 @@ abstract class _SettingsControllerBase with Store {
 
   @action
   Future<void> changeName(String newName) async {
-    List<String?> competitionsId = (await _getCompetitionsUsecase
+    List<String> competitionsId = (await _getCompetitionsUsecase
             .call(true)
             .resultComplete((data) => data, (error) => throw error))
         .map((e) => e.id)

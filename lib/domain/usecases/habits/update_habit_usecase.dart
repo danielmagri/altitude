@@ -22,7 +22,7 @@ class UpdateHabitUsecase extends BaseUsecase<UpdateHabitParams, void> {
     var userUid =
         await _userRepository.getUserData(false).then((value) => value.uid);
 
-    List<String?> competitions =
+    List<String> competitions =
         await _competitionsRepository.getCompetitions(false).then(
               (list) => list
                   .where(

@@ -2,7 +2,7 @@ import 'dart:async' show StreamSubscription;
 
 import 'package:altitude/common/constant/suggestions.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:flutter/material.dart'
     show
@@ -90,7 +90,8 @@ class _HabitTextState extends State<HabitText> {
                 '  Vamos começar escolhendo qual será o hábito que deseja construir no seu cotidiano.',
           ),
           TextSpan(
-              text: '\n\n  O segredo para conseguir construir um hábito é ',),
+            text: '\n\n  O segredo para conseguir construir um hábito é ',
+          ),
           TextSpan(
             text: 'criar um ritual e sempre fazer a mesma coisa.',
             style: TextStyle(fontWeight: FontWeight.bold),

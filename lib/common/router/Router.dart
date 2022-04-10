@@ -19,7 +19,14 @@ import 'package:altitude/presentation/setting/pages/help_page.dart';
 import 'package:altitude/presentation/setting/pages/settings_page.dart';
 import 'package:altitude/presentation/statistics/pages/statistics_page.dart';
 import 'package:flutter/material.dart'
-    show Center, MaterialPageRoute, Route, RouteSettings, Scaffold, StatefulWidget, Text;
+    show
+        Center,
+        MaterialPageRoute,
+        Route,
+        RouteSettings,
+        Scaffold,
+        StatefulWidget,
+        Text;
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -44,10 +51,12 @@ class Router {
         return _pageRoute(const CompetitionPage(), 'competition');
       case 'createCompetition':
         var arguments = settings.arguments as CreateCompetitionPageArguments?;
-        return _pageRoute(CreateCompetitionPage(arguments), 'createCompetition');
+        return _pageRoute(
+            CreateCompetitionPage(arguments), 'createCompetition',);
       case 'competitionDetails':
         var arguments = settings.arguments as CompetitionDetailsPageArguments;
-        return _pageRoute(CompetitionDetailsPage(arguments), 'competitionDetails');
+        return _pageRoute(
+            CompetitionDetailsPage(arguments), 'competitionDetails',);
       case 'pendingCompetition':
         return _pageRoute(const PendingCompetitionPage(), 'pendingCompetition');
       case 'habitDetails':
@@ -61,10 +70,15 @@ class Router {
       case 'help':
         return _pageRoute(const HelpPage(), 'help');
       default:
-        return _pageRoute(Scaffold(body: Center(child: Text('No route defined for ${settings.name}'))), 'empty');
+        return _pageRoute(
+            Scaffold(
+                body: Center(
+                    child: Text('No route defined for ${settings.name}'),),),
+            'empty',);
     }
   }
 
   static MaterialPageRoute _pageRoute(StatefulWidget widget, String title) =>
-      MaterialPageRoute(builder: (_) => widget, settings: RouteSettings(name: title));
+      MaterialPageRoute(
+          builder: (_) => widget, settings: RouteSettings(name: title),);
 }

@@ -1,6 +1,6 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/theme/app_theme.dart';
-import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/presentation/friends/controllers/pending_friends_controller.dart';
 import 'package:flutter/material.dart';

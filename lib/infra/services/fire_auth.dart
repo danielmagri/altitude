@@ -27,7 +27,7 @@ class FireAuth implements IFireAuth {
   Future<bool> setName(String name) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      user.updateProfile(displayName: name);
+      user.updateDisplayName(name);
       return true;
     } else {
       return false;

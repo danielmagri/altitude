@@ -24,8 +24,7 @@ abstract class _EditAlarmControllerBase with Store {
     if (reminder != null && reminder!.hasAnyDay()) {
       cardTypeSelected = ReminderType.values
           .firstWhere((type) => type.value == reminder!.type);
-      reminderTime =
-          TimeOfDay(hour: reminder!.hour, minute: reminder!.minute);
+      reminderTime = TimeOfDay(hour: reminder!.hour, minute: reminder!.minute);
       reminder!.getAllweekdays().forEach((reminder) {
         reminderWeekdaySelection[reminder.value - 1].state = true;
       });

@@ -116,7 +116,9 @@ class FriendsList extends StatelessWidget {
                     onLongPress: () => removeFriend(person),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 16,),
+                        horizontal: 18,
+                        vertical: 16,
+                      ),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -141,7 +143,8 @@ class FriendsList extends StatelessWidget {
                               Text(
                                 '${person.score} Km',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w300,),
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
                             ],
                           )

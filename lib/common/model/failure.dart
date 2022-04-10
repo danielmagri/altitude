@@ -20,13 +20,6 @@ class DataFailure extends Failure {
   String get message => value;
 }
 
-class AuthFailure extends Failure {
-  AuthFailure() : super._();
-
-  @override
-  String get message => 'Sem token';
-}
-
 class GenericFailure extends Failure {
   GenericFailure(this.value) : super._();
 
@@ -34,13 +27,6 @@ class GenericFailure extends Failure {
 
   @override
   String get message => kDebugMode ? value.toString() : 'Generic Error message';
-}
-
-class NoParamsFailure extends Failure {
-  NoParamsFailure() : super._();
-
-  @override
-  String get message => kDebugMode ? 'NoParams' : 'Generic Error message';
 }
 
 class NoConnectionFailure extends Failure {

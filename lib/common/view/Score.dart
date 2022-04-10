@@ -20,7 +20,7 @@ import 'package:flutter/material.dart'
 import 'package:intl/intl.dart';
 
 class Score extends StatefulWidget {
-  const Score({Key? key, this.color, required this.score}) : super(key: key);
+  const Score({required this.score, Key? key, this.color}) : super(key: key);
 
   final Color? color;
   final int? score;

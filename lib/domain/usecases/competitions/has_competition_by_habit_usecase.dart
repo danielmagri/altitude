@@ -16,9 +16,8 @@ class HasCompetitionByHabitUsecase extends BaseUsecase<String, bool> {
   @override
   Future<bool> getRawFuture(String params) async {
     try {
-      var userUid = await _userRepository
-          .getUserData(false)
-          .then((value) => value.uid);
+      var userUid =
+          await _userRepository.getUserData(false).then((value) => value.uid);
       return await _competitionsRepository.getCompetitions(false).then(
             (list) => list
                 .where((e) => e.getMyCompetitor(userUid).habitId == params)

@@ -1,8 +1,8 @@
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/view/HabitCardItem.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/common/view/habit_card_item.dart';
 import 'package:altitude/presentation/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart'
     show

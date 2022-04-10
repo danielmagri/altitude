@@ -6,7 +6,6 @@ const String themeKey = 'THEME';
 const String pendingFriendsKey = 'USER_PENDING_FRIENDS';
 const String competitionFriendsKey = 'USER_COMPETITION_FRIENDS';
 const String newLearnTextKey = 'NEW_LEARN_TEXT';
-const String pendingStatisticsKey = 'PENDING_STATISTICS';
 // Tutorials
 const String habitTutorialKey = 'HABIT_TUTORIAL';
 const String competitionTutorialKey = 'COMPETITION_TUTORIAL';

@@ -1,8 +1,8 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/enums/theme_type.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
-import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/presentation/setting/controllers/settings_controller.dart';
 import 'package:altitude/presentation/tutorial_page.dart';
 import 'package:flutter/material.dart';
@@ -215,11 +215,11 @@ class _SettingsPageState
             ListTile(
               title: const Text('Siga o Altitude no Instagram'),
               onTap: () async {
-                const INSTAGRAM_URL = 'https://www.instagram.com/sejaaltitude';
-                if (await canLaunch(INSTAGRAM_URL)) {
-                  await launch(INSTAGRAM_URL);
+                const instagramUrl = 'https://www.instagram.com/sejaaltitude';
+                if (await canLaunch(instagramUrl)) {
+                  await launch(instagramUrl);
                 } else {
-                  throw 'Could not launch $INSTAGRAM_URL';
+                  throw 'Could not launch $instagramUrl';
                 }
               },
             ),

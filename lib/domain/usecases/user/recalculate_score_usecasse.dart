@@ -9,7 +9,6 @@ class RecalculateScoreUsecase extends BaseUsecase<NoParams, void> {
 
   final IUserRepository _userRepository;
 
-
   @override
   Future<void> getRawFuture(NoParams params) async {
     return _userRepository.recalculateScore();

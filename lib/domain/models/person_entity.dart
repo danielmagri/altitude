@@ -35,6 +35,5 @@ class Person {
   bool you;
   int state; // 0-null 1-Amigo 2-Amigo pendente 3-Solicitação
 
-
   String get levelText => LevelUtils.getLevelText(score);
 }

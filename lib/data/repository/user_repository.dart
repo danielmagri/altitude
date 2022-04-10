@@ -10,7 +10,7 @@ import 'package:altitude/infra/interface/i_fire_auth.dart';
 import 'package:altitude/infra/interface/i_fire_database.dart';
 import 'package:altitude/infra/interface/i_fire_messaging.dart';
 import 'package:altitude/infra/interface/i_score_service.dart';
-import 'package:altitude/infra/services/Memory.dart';
+import 'package:altitude/infra/services/memory.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class IUserRepository {
@@ -20,7 +20,7 @@ abstract class IUserRepository {
   bool isLogged();
   Future<void> logout();
   Future<void> updateTotalScore(int score);
-  Future<void> updateName(String name, List<String?> competitionsId);
+  Future<void> updateName(String name, List<String> competitionsId);
   Future<void> updateLevel(int level);
   Future<void> recalculateScore();
   Future<void> createPerson(
@@ -104,7 +104,7 @@ class UserRepository extends IUserRepository {
   }
 
   @override
-  Future<void> updateName(String name, List<String?> competitionsId) async {
+  Future<void> updateName(String name, List<String> competitionsId) async {
     await _fireAuth.setName(name);
     await _fireDatabase.updateName(name, competitionsId);
     _memory.person?.name = name;

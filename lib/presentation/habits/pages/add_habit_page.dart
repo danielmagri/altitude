@@ -1,8 +1,8 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/inputs/validations/ValidationHandler.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
 import 'package:altitude/common/router/arguments/HabitDetailsPageArguments.dart';
-import 'package:altitude/common/view/Header.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/presentation/habits/controllers/add_habit_controller.dart';
 import 'package:altitude/presentation/habits/widgets/habit_text.dart';
 import 'package:altitude/presentation/habits/widgets/select_alarm.dart';

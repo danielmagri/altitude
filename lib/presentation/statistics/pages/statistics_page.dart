@@ -1,10 +1,10 @@
 import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/ads_utils.dart';
 import 'package:altitude/common/extensions/navigator_extension.dart';
-import 'package:altitude/common/view/Header.dart';
 import 'package:altitude/common/view/dialog/tutorial_dialog.dart';
 import 'package:altitude/common/view/generic/data_error.dart';
 import 'package:altitude/common/view/generic/skeleton.dart';
+import 'package:altitude/common/view/header.dart';
 import 'package:altitude/presentation/statistics/controllers/statistics_controller.dart';
 import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
 import 'package:altitude/presentation/statistics/widgets/frequency_chart.dart';
