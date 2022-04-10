@@ -1,6 +1,6 @@
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
 import 'package:altitude/common/model/pair.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
@@ -13,6 +13,7 @@ import 'package:altitude/domain/usecases/friends/get_ranking_friends_usecase.dar
 import 'package:altitude/domain/usecases/habits/get_habits_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 

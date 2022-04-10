@@ -1,11 +1,13 @@
-import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/friends/accept_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/cancel_friend_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/friend_request_usecase.dart';
 import 'package:altitude/domain/usecases/friends/search_email_usecase.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'add_friend_controller.g.dart';
 
 @lazySingleton

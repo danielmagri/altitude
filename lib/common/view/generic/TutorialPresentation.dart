@@ -11,6 +11,7 @@ import 'package:flutter/material.dart'
         EdgeInsets,
         ElevatedButton,
         FontWeight,
+        Key,
         MaterialStateProperty,
         Navigator,
         Padding,
@@ -28,13 +29,14 @@ import 'package:flutter/material.dart'
         Widget;
 
 class TutorialPresentation extends StatelessWidget {
-  TutorialPresentation({
+  const TutorialPresentation({
     required this.focusAlignment,
     required this.focusRadius,
     required this.textAlignment,
     required this.text,
     this.hasNext = false,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final Alignment focusAlignment;
   final double focusRadius;

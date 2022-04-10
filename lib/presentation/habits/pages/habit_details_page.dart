@@ -64,11 +64,11 @@ class _HabitDetailsPageState
           curve: Curves.easeInOut,
         );
         await navigateSmooth(
-          TutorialPresentation(
-            focusAlignment: const Alignment(-0.55, -0.6),
+          const TutorialPresentation(
+            focusAlignment: Alignment(-0.55, -0.6),
             focusRadius: 0.42,
-            textAlignment: const Alignment(0, 0.5),
-            text: const [
+            textAlignment: Alignment(0, 0.5),
+            text: [
               TextSpan(
                 text: 'Esse é seu hábito em forma de foguete..',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -92,11 +92,11 @@ class _HabitDetailsPageState
           curve: Curves.easeInOut,
         );
         await navigateSmooth(
-          TutorialPresentation(
-            focusAlignment: const Alignment(0.0, -0.35),
+          const TutorialPresentation(
+            focusAlignment: Alignment(0.0, -0.35),
             focusRadius: 0.45,
-            textAlignment: const Alignment(0, 0.51),
-            text: const [
+            textAlignment: Alignment(0, 0.51),
+            text: [
               TextSpan(
                 text:
                     'No calendário você tem o controle de todos os dias feitos!',
@@ -145,11 +145,11 @@ class _HabitDetailsPageState
           curve: Curves.easeInOut,
         );
         navigateSmooth(
-          TutorialPresentation(
-            focusAlignment: const Alignment(0.65, -0.85),
+          const TutorialPresentation(
+            focusAlignment: Alignment(0.65, -0.85),
             focusRadius: 0.15,
-            textAlignment: const Alignment(0, 0),
-            text: const [
+            textAlignment: Alignment(0, 0),
+            text: [
               TextSpan(
                 text: 'Esqueceu de marcar como feito o hábito?',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),

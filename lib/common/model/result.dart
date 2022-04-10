@@ -1,4 +1,5 @@
 import 'package:altitude/common/model/failure.dart';
+import 'package:data_state_mobx/data_state.dart';
 
 typedef Success<R, T> = R Function(T data);
 typedef Error<R> = R Function(dynamic error);
@@ -35,4 +36,27 @@ class FailureResult<T> extends Result<T> {
   FailureResult(this.e) : super._();
 
   final Failure e;
+}
+
+extension FutureExtension<T> on Future<Result<T>> {
+  Future<R> resultComplete<R>(
+    R Function(T data) success,
+    R Function(Failure error) error,
+  ) async {
+    var res = await this;
+    if (res.isSuccess) {
+      return success((res as SuccessResult<T>).value);
+    } else {
+      return error((res as FailureResult).e);
+    }
+  }
+
+  Future resultCompleteState(DataState<T> dataState) async {
+    var res = await this;
+    if (res.isSuccess) {
+      dataState.setSuccessState((res as SuccessResult<T>).value);
+    } else {
+      dataState.setErrorState((res as FailureResult).e);
+    }
+  }
 }

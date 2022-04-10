@@ -2,8 +2,8 @@ import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/enums/done_page_tyype.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/failure.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/reminder_entity.dart';
@@ -11,6 +11,7 @@ import 'package:altitude/domain/usecases/competitions/has_competition_by_habit_u
 import 'package:altitude/domain/usecases/habits/complete_habit_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_calendar_days_done_usecase.dart';
 import 'package:altitude/domain/usecases/habits/get_habit_usecase.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';

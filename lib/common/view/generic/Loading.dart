@@ -27,10 +27,12 @@ abstract class Loading {
           barrierColor: Colors.black.withOpacity(0.2),
           barrierDismissible: false,
           transitionDuration: const Duration(milliseconds: 100),
-          transitionsBuilder: (context,
-                  animation,
-                  secondaryAnimation,
-                  child) =>
+          transitionsBuilder: (
+            context,
+            animation,
+            secondaryAnimation,
+            child,
+          ) =>
               FadeTransition(
             opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
             child: child,

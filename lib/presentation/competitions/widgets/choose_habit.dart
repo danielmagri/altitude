@@ -2,7 +2,7 @@ import 'package:altitude/common/base/base_state.dart';
 import 'package:altitude/common/constant/app_colors.dart';
 import 'package:altitude/common/constant/constants.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/common/view/generic/rocket.dart';
 import 'package:altitude/domain/models/competition_entity.dart';

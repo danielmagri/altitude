@@ -15,7 +15,10 @@ import 'package:flutter/material.dart'
         Widget;
 
 class DataError extends StatelessWidget {
-  const DataError({Key? key, this.message = "Ocorreu um problema. Tente novamente mais tarde."}) : super(key: key);
+  const DataError({
+    Key? key,
+    this.message = 'Ocorreu um problema. Tente novamente mais tarde.',
+  }) : super(key: key);
 
   final String message;
   // final Function reload;
@@ -28,9 +31,15 @@ class DataError extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           const SizedBox(height: 16),
-          Text(message,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w300, color: Colors.grey),
-              textAlign: TextAlign.center),
+          Text(
+            message,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w300,
+              color: Colors.grey,
+            ),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 12),
           // OutlineButton(
           //   color: AppColors.colorAccent,

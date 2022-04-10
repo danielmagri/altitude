@@ -1,1 +1,1 @@
-enum BackDataItemType { ADD, UPDATE, REMOVE }
+enum BackDataItemType { add, update, remove }

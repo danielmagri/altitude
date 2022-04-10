@@ -1,8 +1,8 @@
 import 'package:altitude/common/app_logic.dart';
 import 'package:altitude/common/constant/level_utils.dart';
 import 'package:altitude/common/extensions/datetime_extension.dart';
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/habits/complete_habit_usecase.dart';
@@ -12,6 +12,7 @@ import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/domain/usecases/user/update_level_usecase.dart';
 import 'package:altitude/infra/interface/i_fire_analytics.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 

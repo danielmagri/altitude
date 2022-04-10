@@ -10,9 +10,9 @@ import 'package:altitude/presentation/competitions/pages/pending_competition_pag
 import 'package:altitude/presentation/friends/pages/friends_page.dart';
 import 'package:altitude/presentation/friends/pages/pending_friends_page.dart';
 import 'package:altitude/presentation/habits/pages/add_habit_page.dart';
-import 'package:altitude/presentation/home/pages/all_levels_page.dart';
 import 'package:altitude/presentation/habits/pages/edit_habit_page.dart';
 import 'package:altitude/presentation/habits/pages/habit_details_page.dart';
+import 'package:altitude/presentation/home/pages/all_levels_page.dart';
 import 'package:altitude/presentation/home/pages/home_page.dart';
 import 'package:altitude/presentation/login/pages/login_page.dart';
 import 'package:altitude/presentation/setting/pages/help_page.dart';

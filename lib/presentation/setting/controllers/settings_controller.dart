@@ -1,6 +1,6 @@
 import 'package:altitude/common/enums/theme_type.dart';
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/domain/usecases/auth/logout_usecase.dart';
 import 'package:altitude/domain/usecases/competitions/get_competitions_usecase.dart';

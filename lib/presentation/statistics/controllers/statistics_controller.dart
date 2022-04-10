@@ -1,5 +1,5 @@
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/failure.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/day_done_entity.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/usecases/habits/get_all_days_done_usecase.dart';
@@ -10,6 +10,7 @@ import 'package:altitude/presentation/statistics/models/frequency_statistic_data
 import 'package:altitude/presentation/statistics/models/habit_statistic_data.dart';
 import 'package:altitude/presentation/statistics/models/historic_statistic_data.dart';
 import 'package:collection/collection.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 

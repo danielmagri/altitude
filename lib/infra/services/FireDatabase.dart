@@ -210,11 +210,12 @@ class FireDatabase implements IFireDatabase {
     DocumentReference doc = habitsCollection.doc();
 
     var habitModel = HabitModel(
-        id: doc.id,
-        habit: habit,
-        colorCode: colorCode,
-        frequency: frequency,
-        initialDate: initialDate);
+      id: doc.id,
+      habit: habit,
+      colorCode: colorCode,
+      frequency: frequency,
+      initialDate: initialDate,
+    );
 
     batch.set(doc, habitModel.toJson());
     if (reminderCounter != null) {

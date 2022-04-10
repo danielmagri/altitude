@@ -1,4 +1,4 @@
-import 'package:altitude/common/model/data_state.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/competition_entity.dart';
 import 'package:altitude/domain/models/habit_entity.dart';
 import 'package:altitude/domain/models/person_entity.dart';
@@ -6,6 +6,7 @@ import 'package:altitude/domain/usecases/competitions/create_competition_usecase
 import 'package:altitude/domain/usecases/competitions/max_competitions_by_habit_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
+
 part 'create_competition_controller.g.dart';
 
 @lazySingleton

@@ -1,10 +1,11 @@
-import 'package:altitude/common/model/data_state.dart';
 import 'package:altitude/common/model/no_params.dart';
+import 'package:altitude/common/model/result.dart';
 import 'package:altitude/domain/models/person_entity.dart';
 import 'package:altitude/domain/usecases/friends/get_friends_usecase.dart';
 import 'package:altitude/domain/usecases/friends/remove_friend_usecase.dart';
 import 'package:altitude/domain/usecases/user/get_user_data_usecase.dart';
 import 'package:altitude/infra/services/shared_pref/shared_pref.dart';
+import 'package:data_state_mobx/data_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mobx/mobx.dart';
 
