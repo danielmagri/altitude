@@ -90,7 +90,7 @@ class _FriendsPageState
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           heroTag: null,
-          backgroundColor: AppTheme.of(context).materialTheme.accentColor,
+          backgroundColor: AppTheme.of(context).materialTheme.colorScheme.secondary,
           onPressed: addNewFriend,
         ),
       ),

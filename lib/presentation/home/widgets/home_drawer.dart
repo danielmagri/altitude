@@ -80,7 +80,7 @@ class HomeDrawer extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 10),
               decoration: BoxDecoration(
-                color: AppTheme.of(context).materialTheme.accentColor,
+                color: AppTheme.of(context).materialTheme.colorScheme.secondary,
               ),
               child: Observer(
                 builder: (_) {

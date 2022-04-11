@@ -200,7 +200,7 @@ class _CompetitionPageState
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(
-                        AppTheme.of(context).materialTheme.accentColor,
+                        AppTheme.of(context).materialTheme.colorScheme.secondary,
                       ),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(

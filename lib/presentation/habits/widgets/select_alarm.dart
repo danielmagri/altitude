@@ -66,11 +66,16 @@ class _SelectAlarmState extends State<SelectAlarm> {
       builder: (context, child) {
         return Theme(
           data: AppTheme.of(context).materialTheme.copyWith(
-                accentColor: controller.habitColor,
                 primaryColor: controller.habitColor,
                 colorScheme: AppTheme.isDark(context)
-                    ? ColorScheme.dark(primary: controller.habitColor)
-                    : ColorScheme.light(primary: controller.habitColor),
+                    ? ColorScheme.dark(
+                        primary: controller.habitColor,
+                        secondary: controller.habitColor,
+                      )
+                    : ColorScheme.light(
+                        primary: controller.habitColor,
+                        secondary: controller.habitColor,
+                      ),
               ),
           child: child!,
         );

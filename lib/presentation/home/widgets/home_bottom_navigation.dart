@@ -53,7 +53,7 @@ class HomebottomNavigation extends StatelessWidget {
         height: 55,
         margin: const EdgeInsets.only(bottom: 8, right: 24, left: 24),
         decoration: BoxDecoration(
-          color: AppTheme.of(context).materialTheme.accentColor,
+          color: AppTheme.of(context).materialTheme.colorScheme.secondary,
           borderRadius: BorderRadius.circular(22),
         ),
         child: Row(
@@ -61,7 +61,8 @@ class HomebottomNavigation extends StatelessWidget {
           children: <Widget>[
             IconButtonStatus(
               status: false,
-              backgroundColor: AppTheme.of(context).materialTheme.accentColor,
+              backgroundColor:
+                  AppTheme.of(context).materialTheme.colorScheme.secondary,
               icon: const Icon(Icons.show_chart, color: Colors.white, size: 28),
               onPressed: () => goStatistics(),
             ),
@@ -75,7 +76,8 @@ class HomebottomNavigation extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.add,
-                  color: AppTheme.of(context).materialTheme.accentColor,
+                  color:
+                      AppTheme.of(context).materialTheme.colorScheme.secondary,
                   size: 28,
                 ),
               ),
@@ -83,7 +85,8 @@ class HomebottomNavigation extends StatelessWidget {
             Observer(
               builder: (_) => IconButtonStatus(
                 status: controller.pendingCompetitionStatus,
-                backgroundColor: AppTheme.of(context).materialTheme.accentColor,
+                backgroundColor:
+                    AppTheme.of(context).materialTheme.colorScheme.secondary,
                 icon: Image.asset(
                   'assets/ic_award.png',
                   width: 28,

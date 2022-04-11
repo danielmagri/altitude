@@ -1,8 +1,10 @@
+import 'package:altitude/common/theme/app_theme.dart';
 import 'package:altitude/common/view/dialog/base_dialog.dart';
 import 'package:altitude/domain/models/frequency_entity.dart';
 import 'package:flutter/material.dart'
     show
         Color,
+        ColorScheme,
         Column,
         Container,
         EdgeInsets,
@@ -22,9 +24,10 @@ import 'package:flutter/material.dart'
 import 'package:numberpicker/numberpicker.dart';
 
 class WeeklyDialog extends StatefulWidget {
-  const WeeklyDialog({Key? key, this.color, this.frequency}) : super(key: key);
+  const WeeklyDialog({required this.color, Key? key, this.frequency})
+      : super(key: key);
 
-  final Color? color;
+  final Color color;
   final Weekly? frequency;
 
   @override
@@ -54,7 +57,15 @@ class _WeeklyDialogState extends State<WeeklyDialog> {
     return BaseDialog(
       title: 'Semanalmente',
       body: Theme(
-        data: Theme.of(context).copyWith(accentColor: widget.color),
+        data: Theme.of(context).copyWith(
+          colorScheme: AppTheme.isDark(context)
+              ? ColorScheme.dark(
+                  secondary: widget.color,
+                )
+              : ColorScheme.light(
+                  secondary: widget.color,
+                ),
+        ),
         child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(

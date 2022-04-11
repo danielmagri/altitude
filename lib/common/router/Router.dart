@@ -32,7 +32,7 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case 'home':
-        return _pageRoute(HomePage(), 'home');
+        return _pageRoute(const HomePage(), 'home');
       case 'login':
         return _pageRoute(const LoginPage(), 'login');
       case 'addHabit':
