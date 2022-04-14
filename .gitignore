@@ -16,11 +16,9 @@
 *.iws
 .idea/
 
-# Visual Studio Code related
-.vscode/
-
 # Flutter/Dart/Pub related
 **/doc/api/
+*.g.dart
 .dart_tool/
 .flutter-plugins
 .packages
@@ -69,6 +67,9 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-key/pass.txt
-key/key.jks
-android/key.properties
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/flutter_export_environment.sh
+.flutter-plugins-dependencies
+
+key/
+**/key.properties

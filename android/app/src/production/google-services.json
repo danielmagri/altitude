@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "906913726843",
+    "firebase_url": "https://altitude-4e5d4.firebaseio.com",
+    "project_id": "altitude-4e5d4",
+    "storage_bucket": "altitude-4e5d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906913726843:android:40cc2c86bdb005cb",
+        "android_client_info": {
+          "package_name": "com.magrizo.habit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "906913726843-jsltahm6nh1r356j7td9e4h04vpn8pc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.magrizo.habit",
+            "certificate_hash": "45f3097680b04bc8dd0a66b921c3d73b18dc4c0c"
+          }
+        },
+        {
+          "client_id": "906913726843-oq5p0cae1me2vqblb4b9ccr2dhjjruof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGgeql2T3fHvctfsPvwOnFeMgraCcelAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "906913726843-oq5p0cae1me2vqblb4b9ccr2dhjjruof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
