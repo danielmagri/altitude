@@ -1,34 +1,45 @@
+import 'package:altitude/common/theme/dark_theme.dart';
+import 'package:altitude/common/theme/interface/app_theme_interface.dart';
+import 'package:altitude/common/theme/light_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
-import 'dark_theme.dart';
-import 'interface/app_theme_interface.dart';
-import 'light_theme.dart';
 
 typedef Builder = Widget Function(ThemeMode themeMode);
 
 class AppTheme extends StatefulWidget {
-  final Builder builder;
-  final ThemeMode initialTheme;
-  final Function(IAppTheme theme) themeChanged;
+  const AppTheme({Key? key, this.builder, this.themeChanged, this.initialTheme})
+      : super(key: key);
+
+  final Builder? builder;
+  final ThemeMode? initialTheme;
+  final Function(IAppTheme theme)? themeChanged;
 
   static IAppTheme of(BuildContext context) {
-    return (context.dependOnInheritedWidgetOfExactType<_InheritedThemeState>()).state.theme;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedThemeState>()!
+        .state
+        .theme;
   }
 
   static bool isDark(BuildContext context) {
-    return (context.dependOnInheritedWidgetOfExactType<_InheritedThemeState>()).state.isDark;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedThemeState>()!
+        .state
+        .isDark;
   }
 
   static ThemeMode themeMode(BuildContext context) {
-    return (context.dependOnInheritedWidgetOfExactType<_InheritedThemeState>()).mode;
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedThemeState>()!
+        .mode;
   }
 
   static void changeTheme(BuildContext context, ThemeMode mode) {
-    (context.dependOnInheritedWidgetOfExactType<_InheritedThemeState>()).state.changeTheme(mode);
+    context
+        .dependOnInheritedWidgetOfExactType<_InheritedThemeState>()!
+        .state
+        .changeTheme(mode);
   }
-
-  const AppTheme({Key key, this.builder, this.themeChanged, this.initialTheme}) : super(key: key);
 
   @override
   _AppThemeState createState() => _AppThemeState();
@@ -43,13 +54,15 @@ class _AppThemeState extends State<AppTheme> {
   @override
   void initState() {
     mode = widget.initialTheme ?? ThemeMode.system;
-    widget.themeChanged(theme);
+    widget.themeChanged!(theme);
     super.initState();
   }
 
   bool get isDark =>
       mode == ThemeMode.dark ||
-      (mode == ThemeMode.system && SchedulerBinding.instance.window.platformBrightness == Brightness.dark);
+      (mode == ThemeMode.system &&
+          SchedulerBinding.instance!.window.platformBrightness ==
+              Brightness.dark);
 
   IAppTheme get theme {
     if (isDark) {
@@ -63,7 +76,7 @@ class _AppThemeState extends State<AppTheme> {
     setState(() {
       this.mode = mode;
     });
-    widget.themeChanged(theme);
+    widget.themeChanged!(theme);
   }
 
   @override
@@ -71,17 +84,21 @@ class _AppThemeState extends State<AppTheme> {
     return _InheritedThemeState(
       mode: mode,
       state: this,
-      child: widget.builder(mode),
+      child: widget.builder!(mode),
     );
   }
 }
 
 class _InheritedThemeState extends InheritedWidget {
+  const _InheritedThemeState({
+    required this.mode,
+    required this.state,
+    required Widget child,
+    Key? key,
+  }) : super(key: key, child: child);
+
   final ThemeMode mode;
   final _AppThemeState state;
-
-  _InheritedThemeState({Key key, @required this.mode, @required this.state, @required Widget child})
-      : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(_InheritedThemeState old) => mode != old.mode;

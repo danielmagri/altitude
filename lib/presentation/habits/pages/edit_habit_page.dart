@@ -1,0 +1,199 @@
+import 'dart:developer' show log;
+
+import 'package:altitude/common/base/base_state.dart';
+import 'package:altitude/common/constant/ads_utils.dart';
+import 'package:altitude/common/inputs/validations/validation_handler.dart';
+import 'package:altitude/common/router/arguments/EditHabitPageArguments.dart';
+import 'package:altitude/common/view/dialog/base_text_dialog.dart';
+import 'package:altitude/common/view/header.dart';
+import 'package:altitude/presentation/habits/controllers/edit_habit_controller.dart';
+import 'package:altitude/presentation/habits/widgets/habit_text.dart';
+import 'package:altitude/presentation/habits/widgets/select_color.dart';
+import 'package:altitude/presentation/habits/widgets/select_frequency.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+class EditHabitPage extends StatefulWidget {
+  const EditHabitPage(this.arguments, {Key? key}) : super(key: key);
+
+  final EditHabitPageArguments arguments;
+
+  @override
+  _EditHabitPageState createState() => _EditHabitPageState();
+}
+
+class _EditHabitPageState
+    extends BaseStateWithController<EditHabitPage, EditHabitController> {
+  final habitTextController = TextEditingController();
+
+  InterstitialAd? myInterstitial;
+
+  @override
+  void initState() {
+    controller.setData(widget.arguments.habit);
+
+    super.initState();
+    InterstitialAd.load(
+      adUnitId: AdsUtils.edithabitOnSaveIntersticialAdUnitId,
+      request: AdsUtils.adRequest,
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          // Keep a reference to the ad so you can show it later.
+          myInterstitial = ad;
+        },
+        onAdFailedToLoad: (error) {
+          log('InterstitialAd failed to load: $error');
+        },
+      ),
+    );
+
+    controller.color = widget.arguments.habit.colorCode;
+    habitTextController.text = widget.arguments.habit.habit;
+  }
+
+  @override
+  void dispose() {
+    habitTextController.dispose();
+    myInterstitial?.dispose();
+    super.dispose();
+  }
+
+  void updateHabit() {
+    String? habitValidation =
+        ValidationHandler.habitTextValidate(habitTextController.text);
+    if (habitValidation != null) {
+      showToast(habitValidation);
+    } else {
+      showLoading(true);
+      controller.updateHabit(habitTextController.text).then((_) async {
+        showLoading(false);
+        showToast('O hábito foi editado!');
+        myInterstitial?.show();
+        Navigator.pop(context);
+      }).catchError(handleError);
+    }
+  }
+
+  Future<void> removeHabit() async {
+    if (widget.arguments.hasCompetition) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return BaseTextDialog(
+            title: 'Opss',
+            body:
+                'É preciso sair das competições que esse hábito faz parte para poder deletá-lo.',
+            action: <Widget>[
+              TextButton(
+                child: const Text(
+                  'Ok',
+                  style: TextStyle(fontSize: 17, color: Colors.black),
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showSimpleDialog(
+        'Deletar',
+        'Você estava indo tão bem... Tem certeza que quer deletá-lo?',
+        subBody:
+            '(Todo o progresso dele será perdido e a quilômetragem perdida)',
+        confirmCallback: () async {
+          showLoading(true);
+          (await controller.removeHabit()).result(
+            (data) {
+              showLoading(false);
+              navigatePop(result: false);
+            },
+            (error) => handleError,
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: <Widget>[
+            Header(
+              title: 'EDITAR HÁBITO',
+              button: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: removeHabit,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Observer(
+              builder: (_) {
+                return SelectColor(
+                  currentColor: controller.color,
+                  onSelectColor: controller.selectColor,
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            Observer(
+              builder: (_) {
+                return HabitText(
+                  color: controller.habitColor,
+                  controller: habitTextController,
+                );
+              },
+            ),
+            Observer(
+              builder: (_) {
+                return SelectFrequency(
+                  color: controller.habitColor,
+                  currentFrequency: controller.frequency,
+                  selectFrequency: controller.selectFrequency,
+                );
+              },
+            ),
+            Observer(
+              builder: (_) {
+                return Container(
+                  margin: const EdgeInsets.only(top: 30, bottom: 28),
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(controller.habitColor),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                          horizontal: 50.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      overlayColor: MaterialStateProperty.all(Colors.white24),
+                      elevation: MaterialStateProperty.all(2),
+                    ),
+                    onPressed: updateHabit,
+                    child: const Text(
+                      'SALVAR',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

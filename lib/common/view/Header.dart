@@ -15,10 +15,10 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 
 class Header extends StatelessWidget {
-  const Header({Key key, this.title, this.button}) : super(key: key);
+  const Header({Key? key, this.title, this.button}) : super(key: key);
 
-  final String title;
-  final Widget button;
+  final String? title;
+  final Widget? button;
 
   @override
   Widget build(context) {
@@ -28,10 +28,13 @@ class Header extends StatelessWidget {
         children: [
           const SizedBox(width: 50, child: BackButton()),
           Expanded(
-              child: Text(title,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            child: Text(
+              title!,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
           SizedBox(width: 50, child: button),
         ],
       ),

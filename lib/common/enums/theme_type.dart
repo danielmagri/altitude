@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 
-enum ThemeType { LIGHT, DARK, SYSTEM }
+enum ThemeType { light, dark, system }
 
-extension ThemeTypeExtension on ThemeType {
+extension ThemeTypeExtension on ThemeType? {
   String get themeString {
     switch (this) {
-      case ThemeType.LIGHT:
-        return "light";
-      case ThemeType.DARK:
-        return "dark";
-      case ThemeType.SYSTEM:
+      case ThemeType.light:
+        return 'light';
+      case ThemeType.dark:
+        return 'dark';
+      case ThemeType.system:
       default:
-        return "system";
+        return 'system';
     }
   }
 
   String get themePrettyString {
     switch (this) {
-      case ThemeType.LIGHT:
-        return "Tema Claro";
-      case ThemeType.DARK:
-        return "Tema Escuro";
-      case ThemeType.SYSTEM:
+      case ThemeType.light:
+        return 'Tema Claro';
+      case ThemeType.dark:
+        return 'Tema Escuro';
+      case ThemeType.system:
       default:
-        return "Padrão do sistema";
+        return 'Padrão do sistema';
     }
   }
 
   ThemeMode get toThemeMode {
     switch (this) {
-      case ThemeType.LIGHT:
+      case ThemeType.light:
         return ThemeMode.light;
-      case ThemeType.DARK:
+      case ThemeType.dark:
         return ThemeMode.dark;
-      case ThemeType.SYSTEM:
+      case ThemeType.system:
       default:
         return ThemeMode.system;
     }
@@ -42,12 +42,12 @@ extension ThemeTypeExtension on ThemeType {
 
 ThemeType getThemeType(String value) {
   switch (value) {
-    case "light":
-      return ThemeType.LIGHT;
-    case "dark":
-      return ThemeType.DARK;
-    case "system":
+    case 'light':
+      return ThemeType.light;
+    case 'dark':
+      return ThemeType.dark;
+    case 'system':
     default:
-      return ThemeType.SYSTEM;
+      return ThemeType.system;
   }
 }
