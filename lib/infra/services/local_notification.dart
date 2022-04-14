@@ -9,6 +9,7 @@ import 'package:injectable/injectable.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+@preResolve
 @Singleton(as: ILocalNotification)
 class LocalNotification implements ILocalNotification {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;

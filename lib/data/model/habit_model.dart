@@ -60,6 +60,7 @@ class HabitModel extends Habit {
         frequency: entity.frequency,
         initialDate: entity.initialDate,
         daysDone: entity.daysDone,
+        reminder: entity.reminder,
       );
 
   static const idTag = 'id';

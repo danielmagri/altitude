@@ -77,13 +77,13 @@ import '../../infra/interface/i_fire_functions.dart' as _i11;
 import '../../infra/interface/i_fire_messaging.dart' as _i13;
 import '../../infra/interface/i_local_notification.dart' as _i15;
 import '../../infra/interface/i_score_service.dart' as _i18;
-import '../../infra/services/FireAnalytics.dart' as _i6;
-import '../../infra/services/FireAuth.dart' as _i8;
-import '../../infra/services/FireDatabase.dart' as _i10;
-import '../../infra/services/FireFunctions.dart' as _i12;
-import '../../infra/services/FireMenssaging.dart' as _i14;
-import '../../infra/services/LocalNotification.dart' as _i16;
-import '../../infra/services/Memory.dart' as _i21;
+import '../../infra/services/fire_analytics.dart' as _i6;
+import '../../infra/services/fire_auth.dart' as _i8;
+import '../../infra/services/fire_database.dart' as _i10;
+import '../../infra/services/fire_functions.dart' as _i12;
+import '../../infra/services/fire_menssaging.dart' as _i14;
+import '../../infra/services/local_notification.dart' as _i16;
+import '../../infra/services/memory.dart' as _i21;
 import '../../infra/services/score_service.dart' as _i19;
 import '../../infra/services/shared_pref/shared_pref.dart' as _i22;
 import '../../presentation/competitions/controllers/competition_controller.dart'
@@ -128,8 +128,9 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   gh.factory<_i9.IFireDatabase>(() => _i10.FireDatabase());
   gh.factory<_i11.IFireFunctions>(() => _i12.FireFunctions());
   gh.factory<_i13.IFireMessaging>(() => _i14.FireMessaging());
-  gh.singletonAsync<_i15.ILocalNotification>(
-      () => _i16.LocalNotification.initialize());
+  await gh.singletonAsync<_i15.ILocalNotification>(
+      () => _i16.LocalNotification.initialize(),
+      preResolve: true);
   gh.factory<_i17.INotificationsRepository>(
       () => _i17.NotificationsRepository(get<_i11.IFireFunctions>()));
   gh.factory<_i18.IScoreService>(() => _i19.ScoreService());
@@ -146,11 +147,11 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       get<_i5.IFireAnalytics>()));
   gh.factory<_i24.IFriendsRepository>(() => _i24.FriendsRepository(
       get<_i9.IFireDatabase>(), get<_i5.IFireAnalytics>(), get<_i21.Memory>()));
-  gh.factoryAsync<_i25.IHabitsRepository>(() async => _i25.HabitsRepository(
+  gh.factory<_i25.IHabitsRepository>(() => _i25.HabitsRepository(
       get<_i21.Memory>(),
       get<_i9.IFireDatabase>(),
       get<_i18.IScoreService>(),
-      await get.getAsync<_i15.ILocalNotification>(),
+      get<_i15.ILocalNotification>(),
       get<_i5.IFireAnalytics>()));
   gh.factory<_i26.IUserRepository>(() => _i26.UserRepository(
       get<_i21.Memory>(),
@@ -171,8 +172,8 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
           get<_i23.ICompetitionsRepository>(), get<_i26.IUserRepository>()));
   gh.factory<_i31.MaxCompetitionsUsecase>(
       () => _i31.MaxCompetitionsUsecase(get<_i23.ICompetitionsRepository>()));
-  gh.factoryAsync<_i32.MaxHabitsUsecase>(() async =>
-      _i32.MaxHabitsUsecase(await get.getAsync<_i25.IHabitsRepository>()));
+  gh.factory<_i32.MaxHabitsUsecase>(
+      () => _i32.MaxHabitsUsecase(get<_i25.IHabitsRepository>()));
   gh.factory<_i33.RecalculateScoreUsecase>(
       () => _i33.RecalculateScoreUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i34.RemoveCompetitorUsecase>(
@@ -181,24 +182,22 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       () => _i35.RemoveFriendUsecase(get<_i24.IFriendsRepository>()));
   gh.factory<_i36.SearchEmailUsecase>(() => _i36.SearchEmailUsecase(
       get<_i24.IFriendsRepository>(), get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i37.TransferHabitUsecase>(() async =>
-      _i37.TransferHabitUsecase(await get.getAsync<_i25.IHabitsRepository>(),
-          get<_i26.IUserRepository>()));
+  gh.factory<_i37.TransferHabitUsecase>(() => _i37.TransferHabitUsecase(
+      get<_i25.IHabitsRepository>(), get<_i26.IUserRepository>()));
   gh.factory<_i38.UpdateCompetitionUsecase>(
       () => _i38.UpdateCompetitionUsecase(get<_i23.ICompetitionsRepository>()));
   gh.factory<_i39.UpdateFCMTokenUsecase>(
       () => _i39.UpdateFCMTokenUsecase(get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i40.UpdateHabitUsecase>(() async => _i40.UpdateHabitUsecase(
-      await get.getAsync<_i25.IHabitsRepository>(),
+  gh.factory<_i40.UpdateHabitUsecase>(() => _i40.UpdateHabitUsecase(
+      get<_i25.IHabitsRepository>(),
       get<_i23.ICompetitionsRepository>(),
       get<_i26.IUserRepository>()));
   gh.factory<_i41.UpdateLevelUsecase>(
       () => _i41.UpdateLevelUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i42.UpdateNameUsecase>(
       () => _i42.UpdateNameUsecase(get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i43.UpdateReminderUsecase>(() async =>
-      _i43.UpdateReminderUsecase(await get.getAsync<_i25.IHabitsRepository>(),
-          get<_i26.IUserRepository>()));
+  gh.factory<_i43.UpdateReminderUsecase>(() => _i43.UpdateReminderUsecase(
+      get<_i25.IHabitsRepository>(), get<_i26.IUserRepository>()));
   gh.factory<_i44.UpdateTotalScoreUsecase>(
       () => _i44.UpdateTotalScoreUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i45.AcceptCompetitionRequestUsecase>(() =>
@@ -208,23 +207,20 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       get<_i24.IFriendsRepository>(),
       get<_i17.INotificationsRepository>(),
       get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i47.AddHabitUsecase>(() async => _i47.AddHabitUsecase(
-      await get.getAsync<_i25.IHabitsRepository>(),
-      get<_i26.IUserRepository>()));
+  gh.factory<_i47.AddHabitUsecase>(() => _i47.AddHabitUsecase(
+      get<_i25.IHabitsRepository>(), get<_i26.IUserRepository>()));
   gh.factory<_i48.CancelFriendRequestUsecase>(
       () => _i48.CancelFriendRequestUsecase(get<_i24.IFriendsRepository>()));
-  gh.factoryAsync<_i49.CompleteHabitUsecase>(() async =>
-      _i49.CompleteHabitUsecase(
-          await get.getAsync<_i25.IHabitsRepository>(),
-          get<_i23.ICompetitionsRepository>(),
-          get<_i17.INotificationsRepository>(),
-          get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i50.CreateCompetitionUsecase>(() async =>
-      _i50.CreateCompetitionUsecase(
-          get<_i23.ICompetitionsRepository>(),
-          get<_i17.INotificationsRepository>(),
-          get<_i26.IUserRepository>(),
-          await get.getAsync<_i25.IHabitsRepository>()));
+  gh.factory<_i49.CompleteHabitUsecase>(() => _i49.CompleteHabitUsecase(
+      get<_i25.IHabitsRepository>(),
+      get<_i23.ICompetitionsRepository>(),
+      get<_i17.INotificationsRepository>(),
+      get<_i26.IUserRepository>()));
+  gh.factory<_i50.CreateCompetitionUsecase>(() => _i50.CreateCompetitionUsecase(
+      get<_i23.ICompetitionsRepository>(),
+      get<_i17.INotificationsRepository>(),
+      get<_i26.IUserRepository>(),
+      get<_i25.IHabitsRepository>()));
   gh.factory<_i51.CreatePersonUsecase>(
       () => _i51.CreatePersonUsecase(get<_i26.IUserRepository>()));
   gh.factory<_i52.DeclineCompetitionRequestUsecase>(() =>
@@ -232,32 +228,30 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
           get<_i23.ICompetitionsRepository>()));
   gh.factory<_i53.DeclineRequestUsecase>(
       () => _i53.DeclineRequestUsecase(get<_i24.IFriendsRepository>()));
-  gh.factoryAsync<_i54.DeleteHabitUsecase>(() async =>
-      _i54.DeleteHabitUsecase(await get.getAsync<_i25.IHabitsRepository>()));
-  gh.lazySingletonAsync<_i55.EditHabitController>(() async =>
-      _i55.EditHabitController(await get.getAsync<_i40.UpdateHabitUsecase>(),
-          await get.getAsync<_i54.DeleteHabitUsecase>()));
+  gh.factory<_i54.DeleteHabitUsecase>(
+      () => _i54.DeleteHabitUsecase(get<_i25.IHabitsRepository>()));
+  gh.lazySingleton<_i55.EditHabitController>(() => _i55.EditHabitController(
+      get<_i40.UpdateHabitUsecase>(), get<_i54.DeleteHabitUsecase>()));
   gh.factory<_i56.FriendRequestUsecase>(() => _i56.FriendRequestUsecase(
       get<_i24.IFriendsRepository>(),
       get<_i17.INotificationsRepository>(),
       get<_i26.IUserRepository>()));
-  gh.factoryAsync<_i57.GetAllDaysDoneUsecase>(() async =>
-      _i57.GetAllDaysDoneUsecase(await get.getAsync<_i25.IHabitsRepository>()));
-  gh.factoryAsync<_i58.GetCalendarDaysDoneUsecase>(() async =>
-      _i58.GetCalendarDaysDoneUsecase(
-          await get.getAsync<_i25.IHabitsRepository>()));
+  gh.factory<_i57.GetAllDaysDoneUsecase>(
+      () => _i57.GetAllDaysDoneUsecase(get<_i25.IHabitsRepository>()));
+  gh.factory<_i58.GetCalendarDaysDoneUsecase>(
+      () => _i58.GetCalendarDaysDoneUsecase(get<_i25.IHabitsRepository>()));
   gh.factory<_i59.GetCompetitionUsecase>(
       () => _i59.GetCompetitionUsecase(get<_i23.ICompetitionsRepository>()));
   gh.factory<_i60.GetCompetitionsUsecase>(
       () => _i60.GetCompetitionsUsecase(get<_i23.ICompetitionsRepository>()));
-  gh.factoryAsync<_i61.GetDaysDoneUsecase>(() async =>
-      _i61.GetDaysDoneUsecase(await get.getAsync<_i25.IHabitsRepository>()));
+  gh.factory<_i61.GetDaysDoneUsecase>(
+      () => _i61.GetDaysDoneUsecase(get<_i25.IHabitsRepository>()));
   gh.factory<_i62.GetFriendsUsecase>(
       () => _i62.GetFriendsUsecase(get<_i24.IFriendsRepository>()));
-  gh.factoryAsync<_i63.GetHabitUsecase>(() async =>
-      _i63.GetHabitUsecase(await get.getAsync<_i25.IHabitsRepository>()));
-  gh.factoryAsync<_i64.GetHabitsUsecase>(() async =>
-      _i64.GetHabitsUsecase(await get.getAsync<_i25.IHabitsRepository>()));
+  gh.factory<_i63.GetHabitUsecase>(
+      () => _i63.GetHabitUsecase(get<_i25.IHabitsRepository>()));
+  gh.factory<_i64.GetHabitsUsecase>(
+      () => _i64.GetHabitsUsecase(get<_i25.IHabitsRepository>()));
   gh.factory<_i65.GetPendingCompetitionsUsecase>(() =>
       _i65.GetPendingCompetitionsUsecase(get<_i23.ICompetitionsRepository>()));
   gh.factory<_i66.GetPendingFriendsUsecase>(
@@ -271,19 +265,19 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
   gh.factory<_i70.HasCompetitionByHabitUsecase>(() =>
       _i70.HasCompetitionByHabitUsecase(
           get<_i23.ICompetitionsRepository>(), get<_i26.IUserRepository>()));
-  gh.lazySingletonAsync<_i71.HomeController>(() async => _i71.HomeController(
-      await get.getAsync<_i64.GetHabitsUsecase>(),
-      await get.getAsync<_i49.CompleteHabitUsecase>(),
-      await get.getAsync<_i32.MaxHabitsUsecase>(),
+  gh.lazySingleton<_i71.HomeController>(() => _i71.HomeController(
+      get<_i64.GetHabitsUsecase>(),
+      get<_i49.CompleteHabitUsecase>(),
+      get<_i32.MaxHabitsUsecase>(),
       get<_i5.IFireAnalytics>(),
       get<_i3.AppLogic>(),
       get<_i69.GetUserDataUsecase>(),
       get<_i41.UpdateLevelUsecase>(),
       get<_i22.SharedPref>()));
-  gh.lazySingletonAsync<_i72.PendingCompetitionController>(() async =>
+  gh.lazySingleton<_i72.PendingCompetitionController>(() =>
       _i72.PendingCompetitionController(
           get<_i31.MaxCompetitionsUsecase>(),
-          await get.getAsync<_i64.GetHabitsUsecase>(),
+          get<_i64.GetHabitsUsecase>(),
           get<_i22.SharedPref>(),
           get<_i65.GetPendingCompetitionsUsecase>(),
           get<_i52.DeclineCompetitionRequestUsecase>()));
@@ -301,59 +295,54 @@ Future<_i1.GetIt> $initGetIt(_i1.GetIt get,
       get<_i33.RecalculateScoreUsecase>(),
       get<_i28.IsLoggedUsecase>(),
       get<_i69.GetUserDataUsecase>()));
-  gh.lazySingletonAsync<_i75.StatisticsController>(() async =>
-      _i75.StatisticsController(
-          await get.getAsync<_i64.GetHabitsUsecase>(),
-          get<_i69.GetUserDataUsecase>(),
-          await get.getAsync<_i57.GetAllDaysDoneUsecase>(),
-          get<_i18.IScoreService>()));
+  gh.lazySingleton<_i75.StatisticsController>(() => _i75.StatisticsController(
+      get<_i64.GetHabitsUsecase>(),
+      get<_i69.GetUserDataUsecase>(),
+      get<_i57.GetAllDaysDoneUsecase>(),
+      get<_i18.IScoreService>()));
   gh.lazySingleton<_i76.AddFriendController>(() => _i76.AddFriendController(
       get<_i36.SearchEmailUsecase>(),
       get<_i56.FriendRequestUsecase>(),
       get<_i48.CancelFriendRequestUsecase>(),
       get<_i46.AcceptRequestUsecase>()));
-  gh.lazySingletonAsync<_i77.AddHabitController>(() async =>
-      _i77.AddHabitController(await get.getAsync<_i47.AddHabitUsecase>()));
-  gh.lazySingletonAsync<_i78.CompetitionController>(() async =>
-      _i78.CompetitionController(
-          await get.getAsync<_i64.GetHabitsUsecase>(),
-          get<_i67.GetRankingFriendsUsecase>(),
-          get<_i69.GetUserDataUsecase>(),
-          get<_i60.GetCompetitionsUsecase>(),
-          get<_i59.GetCompetitionUsecase>(),
-          get<_i31.MaxCompetitionsUsecase>(),
-          get<_i22.SharedPref>(),
-          get<_i34.RemoveCompetitorUsecase>(),
-          get<_i62.GetFriendsUsecase>()));
+  gh.lazySingleton<_i77.AddHabitController>(
+      () => _i77.AddHabitController(get<_i47.AddHabitUsecase>()));
+  gh.lazySingleton<_i78.CompetitionController>(() => _i78.CompetitionController(
+      get<_i64.GetHabitsUsecase>(),
+      get<_i67.GetRankingFriendsUsecase>(),
+      get<_i69.GetUserDataUsecase>(),
+      get<_i60.GetCompetitionsUsecase>(),
+      get<_i59.GetCompetitionUsecase>(),
+      get<_i31.MaxCompetitionsUsecase>(),
+      get<_i22.SharedPref>(),
+      get<_i34.RemoveCompetitorUsecase>(),
+      get<_i62.GetFriendsUsecase>()));
   gh.lazySingleton<_i79.CompetitionDetailsController>(() =>
       _i79.CompetitionDetailsController(
           get<_i62.GetFriendsUsecase>(),
           get<_i34.RemoveCompetitorUsecase>(),
           get<_i38.UpdateCompetitionUsecase>()));
-  gh.lazySingletonAsync<_i80.CreateCompetitionController>(() async =>
-      _i80.CreateCompetitionController(
-          await get.getAsync<_i50.CreateCompetitionUsecase>(),
+  gh.lazySingleton<_i80.CreateCompetitionController>(() =>
+      _i80.CreateCompetitionController(get<_i50.CreateCompetitionUsecase>(),
           get<_i30.MaxCompetitionsByHabitUsecase>()));
   gh.lazySingleton<_i81.FriendsController>(() => _i81.FriendsController(
       get<_i62.GetFriendsUsecase>(),
       get<_i69.GetUserDataUsecase>(),
       get<_i35.RemoveFriendUsecase>(),
       get<_i22.SharedPref>()));
-  gh.lazySingletonAsync<_i82.HabitDetailsController>(() async =>
+  gh.lazySingleton<_i82.HabitDetailsController>(() =>
       _i82.HabitDetailsController(
-          await get.getAsync<_i49.CompleteHabitUsecase>(),
-          await get.getAsync<_i63.GetHabitUsecase>(),
+          get<_i49.CompleteHabitUsecase>(),
+          get<_i63.GetHabitUsecase>(),
           get<_i70.HasCompetitionByHabitUsecase>(),
-          await get.getAsync<_i58.GetCalendarDaysDoneUsecase>()));
-  gh.lazySingletonAsync<_i83.EditAlarmController>(() async =>
-      _i83.EditAlarmController(
-          await get.getAsync<_i82.HabitDetailsController>(),
-          await get.getAsync<_i43.UpdateReminderUsecase>(),
-          get<_i5.IFireAnalytics>()));
-  gh.lazySingletonAsync<_i84.EditCueController>(() async =>
-      _i84.EditCueController(
-          await get.getAsync<_i40.UpdateHabitUsecase>(),
-          get<_i5.IFireAnalytics>(),
-          await get.getAsync<_i82.HabitDetailsController>()));
+          get<_i58.GetCalendarDaysDoneUsecase>()));
+  gh.lazySingleton<_i83.EditAlarmController>(() => _i83.EditAlarmController(
+      get<_i82.HabitDetailsController>(),
+      get<_i43.UpdateReminderUsecase>(),
+      get<_i5.IFireAnalytics>()));
+  gh.lazySingleton<_i84.EditCueController>(() => _i84.EditCueController(
+      get<_i40.UpdateHabitUsecase>(),
+      get<_i5.IFireAnalytics>(),
+      get<_i82.HabitDetailsController>()));
   return get;
 }

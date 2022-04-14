@@ -5,10 +5,10 @@ class PersonModel extends Person {
     required String name,
     required String email,
     required int score,
-    required int level,
     required String fcmToken,
     required List<String> friends,
     required List<String> pendingFriends,
+    int? level,
     String? uid,
     int? reminderCounter,
     int? state,
@@ -35,7 +35,6 @@ class PersonModel extends Person {
         reminderCounter: json[reminderCounterTag] ?? 0,
         friends: List<String>.from(json[friendsTag] ?? []),
         pendingFriends: List<String>.from(json[pendingFriendsTag] ?? []),
-        level: json[levelTag],
         state: json[stateTag],
       );
 

@@ -17,7 +17,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class EditHabitPage extends StatefulWidget {
   const EditHabitPage(this.arguments, {Key? key}) : super(key: key);
 
-  final EditHabitPageArguments? arguments;
+  final EditHabitPageArguments arguments;
 
   @override
   _EditHabitPageState createState() => _EditHabitPageState();
@@ -31,6 +31,8 @@ class _EditHabitPageState
 
   @override
   void initState() {
+    controller.setData(widget.arguments.habit);
+
     super.initState();
     InterstitialAd.load(
       adUnitId: AdsUtils.edithabitOnSaveIntersticialAdUnitId,
@@ -46,10 +48,8 @@ class _EditHabitPageState
       ),
     );
 
-    controller.setData(widget.arguments!.habit!);
-
-    controller.color = widget.arguments!.habit!.colorCode;
-    habitTextController.text = widget.arguments!.habit!.habit;
+    controller.color = widget.arguments.habit.colorCode;
+    habitTextController.text = widget.arguments.habit.habit;
   }
 
   @override
@@ -76,7 +76,7 @@ class _EditHabitPageState
   }
 
   Future<void> removeHabit() async {
-    if (widget.arguments!.hasCompetition) {
+    if (widget.arguments.hasCompetition) {
       showDialog(
         context: context,
         builder: (context) {

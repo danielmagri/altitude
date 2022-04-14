@@ -24,14 +24,13 @@ import 'package:flutter/material.dart'
         WidgetsFlutterBinding,
         runApp;
 import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
-import 'package:get_it/get_it.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 // ignore: avoid_void_async
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  configureDependencies();
+  await configureDependencies();
   MobileAds.instance.initialize().then((status) {
     MobileAds.instance.updateRequestConfiguration(
       RequestConfiguration(
@@ -41,8 +40,6 @@ void main() async {
   });
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  await GetIt.I.allReady();
-
   runApp(const MyApp());
 }
 
@@ -67,9 +64,10 @@ class MyApp extends StatelessWidget {
     );
 
     return AppTheme(
-      initialTheme: getThemeType(GetIt.I.get<SharedPref>().theme).toThemeMode,
+      initialTheme:
+          getThemeType(serviceLocator.get<SharedPref>().theme).toThemeMode,
       themeChanged: (theme) {
-        GetIt.I
+        serviceLocator
             .get<AppLogic>()
             .setDefaultStyle(theme.defaultSystemOverlayStyle);
       },

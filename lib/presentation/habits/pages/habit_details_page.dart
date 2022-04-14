@@ -196,7 +196,7 @@ class _HabitDetailsPageState
 
   Future<void> goEditHabitPage() async {
     var arguments = EditHabitPageArguments(
-      controller.habit.data,
+      controller.habit.data!,
       await controller.hasCompetition(),
     );
     navigatePush('editHabit', arguments: arguments);

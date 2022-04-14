@@ -10,9 +10,7 @@ import 'package:injectable/injectable.dart';
 class FireMessaging implements IFireMessaging {
   FireMessaging() {
     FirebaseMessaging.onBackgroundMessage((message) async {
-      configureDependencies();
-
-      await GetIt.I.isReady<SharedPref>();
+      await configureDependencies();
 
       _pendingRequest(message.data);
     });

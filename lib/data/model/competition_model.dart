@@ -20,7 +20,7 @@ class CompetitionModel extends Competition {
   factory CompetitionModel.fromJson(Map<String, dynamic> json, String id) {
     List<CompetitorModel> competitorsList = [];
     if (json[competitorsTag] is Map) {
-      final map = json[competitorsTag];
+      Map<String, dynamic> map = json[competitorsTag];
       competitorsList =
           map.keys.map((e) => CompetitorModel.fromJson(map[e], e)).toList();
     }

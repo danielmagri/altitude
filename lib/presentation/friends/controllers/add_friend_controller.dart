@@ -26,12 +26,11 @@ abstract class _AddFriendControllerBase with Store {
   final CancelFriendRequestUsecase _cancelFriendRequestUsecase;
   final AcceptRequestUsecase _acceptRequestUsecase;
 
-  DataState<List<Person>?> searchResult =
-      DataState.startWithSuccess(data: null);
+  final searchResult = DataState<List<Person>?>.startWithSuccess(data: null);
 
   Future<void> searchFriend(String email) async {
     searchResult.setLoadingState();
-    List<Person> list = await _searchEmailUsecase
+    List<Person>? list = await _searchEmailUsecase
         .call(email)
         .resultComplete((data) => data, (error) => throw error);
     searchResult.setSuccessState(list);

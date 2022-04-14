@@ -113,7 +113,8 @@ class _AddFriendDialogState extends BaseState<AddFriendDialog> {
       showToast(result);
     } else {
       controller.searchFriend(_textEditingController.text).then((_) {
-        if (controller.searchResult.data!.isEmpty) {
+        if (controller.searchResult.data == null ||
+            controller.searchResult.data?.isEmpty == true) {
           showToast('Esse email não foi encontrado.');
         }
       }).catchError(handleError);

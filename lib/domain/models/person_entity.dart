@@ -6,17 +6,18 @@ class Person {
     required this.name,
     required this.email,
     required this.score,
-    required this.level,
     required this.fcmToken,
     required this.friends,
     required this.pendingFriends,
     this.photoUrl,
+    int? level,
     int? reminderCounter,
     bool? you,
     int? state,
   })  : you = you ?? false,
         state = state ?? 0,
-        reminderCounter = reminderCounter ?? 0;
+        reminderCounter = reminderCounter ?? 0,
+        level = level ?? LevelUtils.getLevel(score);
 
   String uid;
 

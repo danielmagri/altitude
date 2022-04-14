@@ -50,7 +50,7 @@ class Router {
       case 'competition':
         return _pageRoute(const CompetitionPage(), 'competition');
       case 'createCompetition':
-        var arguments = settings.arguments as CreateCompetitionPageArguments?;
+        var arguments = settings.arguments as CreateCompetitionPageArguments;
         return _pageRoute(
             CreateCompetitionPage(arguments), 'createCompetition',);
       case 'competitionDetails':
@@ -60,10 +60,10 @@ class Router {
       case 'pendingCompetition':
         return _pageRoute(const PendingCompetitionPage(), 'pendingCompetition');
       case 'habitDetails':
-        var arguments = settings.arguments as HabitDetailsPageArguments?;
+        var arguments = settings.arguments as HabitDetailsPageArguments;
         return _pageRoute(HabitDetailsPage(arguments), 'habitDetails');
       case 'editHabit':
-        var arguments = settings.arguments as EditHabitPageArguments?;
+        var arguments = settings.arguments as EditHabitPageArguments;
         return _pageRoute(EditHabitPage(arguments), 'editHabit');
       case 'settings':
         return _pageRoute(const SettingsPage(), 'settings');

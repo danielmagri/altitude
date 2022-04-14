@@ -84,7 +84,7 @@ class HabitsRepository extends IHabitsRepository {
     if (_memory.habits.isEmpty) {
       var data = await _fireDatabase.getHabits();
       if (!notSave) {
-        _memory.habits = data;
+        _memory.habits.addAll(data);
       }
       return data;
     } else {

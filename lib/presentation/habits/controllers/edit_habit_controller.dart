@@ -21,20 +21,21 @@ abstract class _EditHabitControllerBase with Store {
   final UpdateHabitUsecase _updateHabitUsecase;
   final DeleteHabitUsecase _deleteHabitUsecase;
 
-  Habit? initialHabit;
+  late Habit initialHabit;
 
   @observable
-  late int color;
+  int? color;
 
   @observable
-  late Frequency frequency;
+  Frequency? frequency;
 
   @computed
-  Color get habitColor => AppColors.habitsColor[color];
+  Color get habitColor => AppColors.habitsColor[color!];
 
   void setData(Habit habit) {
     initialHabit = habit;
     frequency = habit.frequency;
+    color = habit.colorCode;
   }
 
   @action
@@ -48,26 +49,26 @@ abstract class _EditHabitControllerBase with Store {
   }
 
   Future<Result<void>> removeHabit() {
-    return _deleteHabitUsecase.call(initialHabit!);
+    return _deleteHabitUsecase.call(initialHabit);
   }
 
   Future updateHabit(String habit) async {
     Habit editedHabit = Habit(
-      id: initialHabit!.id,
+      id: initialHabit.id,
       habit: habit,
-      colorCode: color,
-      score: initialHabit!.score,
-      oldCue: initialHabit!.oldCue,
-      frequency: frequency,
-      reminder: initialHabit!.reminder,
-      lastDone: initialHabit!.lastDone,
-      initialDate: initialHabit!.initialDate,
-      daysDone: initialHabit!.daysDone,
+      colorCode: color!,
+      score: initialHabit.score,
+      oldCue: initialHabit.oldCue,
+      frequency: frequency!,
+      reminder: initialHabit.reminder,
+      lastDone: initialHabit.lastDone,
+      initialDate: initialHabit.initialDate,
+      daysDone: initialHabit.daysDone,
     );
 
-    if (editedHabit.color != initialHabit!.color ||
-        editedHabit.habit.compareTo(initialHabit!.habit) != 0 ||
-        !compareFrequency(initialHabit!.frequency, frequency)) {
+    if (editedHabit.color != initialHabit.color ||
+        editedHabit.habit.compareTo(initialHabit.habit) != 0 ||
+        !compareFrequency(initialHabit.frequency, frequency)) {
       (await _updateHabitUsecase.call(
         UpdateHabitParams(
           habit: editedHabit,
